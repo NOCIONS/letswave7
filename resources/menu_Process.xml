@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LW_Manager Label="Process">
+    <menu Label="Segmentation">
+        <submenu Label="Segmentation related to events" callback="FLW_segmentation"/>
+        <submenu Label="Segmentation related to events (one file per event code)" callback="FLW_segmentation_separate"/>
+        <submenu Label="Segmentation related to events (SS-EPs)" />
+        <submenu Label="Segment epochs in to successive chunks " />
+    </menu>
+    <menu Label="Spatial analysis">
+        <submenu Label="Rereference" callback="FLW_rereference"/>
+        <submenu Label="Rereference advanced" callback="FLW_rereference_advanced"/>
+        <submenu Label="Current Source Density(CSD)"/>
+    </menu>
+    <menu Label="Baseline Operations">
+        <submenu Label="Baseline correction" callback="FLW_baseline"/>
+        <submenu Label="Frequency Spectrum SNR" callback="FLW_baseline_SNR"/>
+        <submenu Label="DCremoval and linear detrend" callback="FLW_dc_removal"/>
+    </menu>
+    <menu Label="Frequency filter">
+        <submenu Label="FFT filter" callback="FLW_FFT_filter"/>
+        <submenu Label="Butterworth filter" callback="FLW_butterworth_filter"/>
+    </menu>
+    <menu Label="Artifact">
+        <submenu Label="Remove ocular artifact"/>
+        <submenu Label="Reject epochs (amplitude criterion)"/>
+        <submenu Label="Reject epochs (visiual inspection)"/>
+        <submenu Label="Suppress artifact (latency-defined)"/>
+        <submenu Label="Suppress artifact (event-defined)"/>
+    </menu>
+    <menu Label="Frequency analysis">
+        <submenu Label="FFT" callback="FLW_FFT"/>
+        <submenu Label="iFFT" callback="FLW_iFFT"/>
+        <submenu Label="Continue Wavelet Transform (CWT)"/>
+        <submenu Label="Short-Time Fourier Transform (STFT)"/>
+        <submenu Label="Hilbert transform "/>
+        <submenu Label="Hilbert transform and FFT across frequency bands"/>
+        <submenu Label="Canonical Correlation Analysis (CCA)"/>
+        <submenu Label="Time course of Fourier-transformed response"/>
+    </menu>
+    <menu Label="Average">
+        <submenu Label="Avg/Std/Median of epochs" callback="FLW_average_epochs"/>
+        <submenu Label="Sliding operation along dimension"/>
+        <submenu Label="Sliding average across trials (ERPimage)"/>
+        <submenu Label="Grand average (weighted)"/>
+        <submenu Label="Linear channel map"/>
+        <submenu Label="Pool channel"/>
+        <submenu Label="Weighted channel average (create tempelate)"/>
+        <submenu Label="Weighted channel average (apply tempelate)"/>
+    </menu>
+    <menu Label="Math">
+        <submenu Label="Computer signal derivative"/>
+        <submenu Label="Math operation using two datasets"/>
+        <submenu Label="Math operation with a constant"/>
+        <submenu Label="Rectify or square signals"/>
+        <submenu Label="Threshold signals"/>
+    </menu>
+</LW_Manager>

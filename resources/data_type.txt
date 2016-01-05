@@ -1,0 +1,11 @@
+time_amplitude
+
+frequency_power
+frequency_amplitude
+frequency_phase
+frequency_complex
+
+frequency_time_amplitude
+frequency_time_power
+frequency_time_phase
+frequency_time_complex

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LW_Manager Label="Edit">
+    <menu Label="Electrode">
+        <submenu Label="Edit coordinates"/>
+        <submenu Label="Labels edit"/>
+        <submenu Label="Flip left/right electrodes"/>
+        <submenu Label="Electrode bridge detector"/>
+        <submenu Label="Interploate channel with neighbouring electrodes"/>
+    </menu>
+    <menu Label="Event">
+        <submenu Label="Browse and edit event"/>
+        <submenu Label="Creat events from level trigger"/>
+        <submenu Label="Merge event codes and latnecies"/>
+    </menu>
+    <menu Label="Epochdata">
+        <submenu Label="Add or edit epochdata"/>
+    </menu>
+    <menu Label="Arrang signals">
+        <submenu Label="Rearrange/Delete channels"/>
+        <submenu Label="Rearrange/Delete epochs"/>
+        <submenu Label="Rearrange/Delete indexes"/>
+        <submenu Label="Merge datasets(channel/epoch/index)" callback="FLW_merge"/>
+        <submenu Label="Select"/>
+    </menu>
+    <menu Label="Resample Signals">
+        <submenu Label="Crop signal"/>
+        <submenu Label="Downsample signals(integer ratio)"/>
+        <submenu Label="New channel: linear mix"/>
+        <submenu Label="Resample signals(user difined sampling rate)"/>
+    </menu>
+    <menu Label="Edit datafile properties"/>
+</LW_Manager>

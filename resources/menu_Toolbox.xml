@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LW_Manager Label="Toolbox">
+    <menu Label="ICA analysis">
+        <submenu Label="Computer ICA matrix" />
+        <submenu Label="assign ICA matrix" />
+        <submenu Label="apply ICA spatial filter"/>
+        <submenu Label="ICA unmix signal (sensors->ICs)"/>
+        <submenu Label="ICA remix signal (ICs->sensors)"/>
+    </menu>
+    <menu Label="Source Analysis">
+        <submenu Label="Computer ICA matrix" />
+        <submenu Label="assign ICA matrix" />
+        <submenu Label="apply ICA spatial filter"/>
+        <submenu Label="ICA unmix signal (sensors->ICs)"/>
+        <submenu Label="ICA remix signal (ICs->sensors)"/>
+    </menu>
+    <menu Label="SEEG">
+        <submenu Label="Edit coordinates"/>
+    </menu>
+    <menu Label="EKG processing">
+        <submenu Label="Find EKG QRS event"/>
+        <submenu Label="Computer PCA matrix"/>
+    </menu>
+    <menu Label="Time-frequencyfilters">
+    </menu>
+    <menu Label="Single trial Analysis">
+        
+    </menu>
+</LW_Manager>
