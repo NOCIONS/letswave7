@@ -25,9 +25,10 @@ if ~isfield(header,'index_labels')
     header.index_labels=tp;
 end
 
-if ~isfield(header,'events')
+if ~isfield(header,'events')|| isempty(header.events)
     header.events=struct('code',{},'latency',{},'epoch',{});
-end 
+end
+
 if ~isfield(header,'chanlocs')
     error('***No chanlocs header.chanlocs***');
 %     header.chanlocs(header.datasize(2))=struct('labels',[],'topo_enabled',[],...

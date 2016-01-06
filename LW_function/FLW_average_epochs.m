@@ -48,7 +48,9 @@ classdef FLW_average_epochs<CLW_generic
         function header_out= get_header(header_in,option)
             header_out=header_in;
             header_out.datasize(1)=1;
-            [header_out.events.epoch]=deal(1);
+            if~isempty(header_out.events)
+                [header_out.events.epoch]=deal(1);
+            end
             header_out=CLW_events_duplicate_check(header_out);
             if isfield(header_out,'epochdata');
                 header_out=rmfield(header_out,'epochdata');

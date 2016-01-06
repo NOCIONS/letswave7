@@ -4,4 +4,6 @@
     <menu Label="export"/>
     <menu Label="Delete" callback="GLW_delete"/>
     <menu Label="Rename" callback="GLW_rename"/>
+    <menu Label="Update"/>
+    <menu Label="Help"/>
 </LW_Manager>

@@ -18,6 +18,9 @@ Manager_Init();
                 continue;
             end
             s= xml2struct(str);
+            if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
+                continue;                
+            end
             root = uimenu(handles.fig,'Label',s.LW_Manager.Attributes.Label);
             s=s.LW_Manager.menu;
             if ~iscell(s); s={s};end
@@ -58,9 +61,11 @@ Manager_Init();
             end
         end
         hcmenu = uicontextmenu;
+        uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
         uimenu(hcmenu,'Label','rename','Callback',{@(obj,events)menu_callback('GLW_rename')});
         uimenu(hcmenu,'Label','delete','Callback',{@(obj,events)menu_callback('GLW_delete')});
-        uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
+        uimenu(hcmenu,'Label','send to workspace','Callback',{@(obj,events)sendworkspace_btn_Callback});
+        uimenu(hcmenu,'Label','read from workspace','Callback',{@(obj,events)readworkspace_btn_Callback});
         
         %% init the controler
         icon=load('icon.mat');
@@ -134,6 +139,7 @@ Manager_Init();
             dataset_view();
         end
     end
+
     function file_listbox_select_changed()
         str=get(handles.file_listbox,'userdata');
         idx=get(handles.file_listbox,'value');
@@ -200,6 +206,51 @@ Manager_Init();
         end
         option.file_str  = [str(idx)];
         option.file_path = get(handles.path_edit,'userdata');
+    end
+
+    function sendworkspace_btn_Callback()
+        option=get_selectfile();
+        if isempty(option)
+            return;
+        end
+        for k=1:length(option.file_str)
+            [lwdata(k).header,lwdata(k).data]=...
+                CLW_load(fullfile(option.file_path,option.file_str{k}));
+        end
+        assignin('base','lwdata',lwdata);
+    end
+
+    function readworkspace_btn_Callback()
+        option=get_selectfile();
+        if isempty(option)
+            return;
+        end
+        if isempty(option)|| length(option.file_str)>1
+            disp('Please select one file');
+            return;
+        end
+        
+        try
+            lwdata=evalin('base','lwdata');
+        catch
+            disp('lwdata variable not found,in workspace');
+            return;
+        end
+        lwdata=lwdata(1);
+        if isfield(lwdata,'header')&&isfield(lwdata,'data')
+            t=questdlg('Are you sure?');
+            if strcmpi(t,'Yes');
+                lwdata.header.name=option.file_str{1};
+                CLW_save(lwdata,'path',option.file_path);
+            end
+        else
+            if ~isfield(lwdata,'header')
+            disp('!!! Header field not found');
+            end
+            if ~isfield(lwdata,'data')
+            disp('!!! Data field not found');
+            end
+        end
     end
 
     function menu_callback(fun_name)

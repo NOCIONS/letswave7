@@ -40,14 +40,19 @@ h_fig=handle.fig;
         set(handle.toolbar_run,'ClickedCallback',{@run_script});
         
         
-        menu_name={'File','Edit','Process','Toolbox','Static','View',...
+        menu_name={'Edit','Process','Toolbox','Static',...
             'Plugins','Addition1','Addition2','Addition3'};
+        root = uimenu(handle.fig,'Label','File','BusyAction','cancel');
+        mh = uimenu(root,'Label','load', 'callback',@(obj,event)add_function('FLW_load'));
         for k=1:length(menu_name)
             str=['menu_',menu_name{k},'.xml'];
             if ~exist(str,'file')
                 continue;
             end
             s= xml2struct(str);
+            if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
+                continue;                
+            end
             root = uimenu(handle.fig,'Label',s.LW_Manager.Attributes.Label,'BusyAction','cancel');
             s=s.LW_Manager.menu;
             if ~iscell(s); s={s};end
