@@ -1,4 +1,4 @@
-function CLW_set_path()
+function LW_Init()
 str=which('letswave7');
 p=fileparts(str);
 str=strsplit(path,';');

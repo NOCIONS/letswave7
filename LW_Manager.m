@@ -1,6 +1,6 @@
 function LW_Manager()
 clc;
-CLW_set_path;
+LW_Init();
 handles=[];
 Manager_Init();
 
