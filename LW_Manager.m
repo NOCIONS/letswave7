@@ -69,8 +69,8 @@ Manager_Init();
         
         %% init the controler
         icon=load('icon.mat');
-        handles.refresh_btn=uicontrol('style','pushbutton','CData',icon.icon_refresh,'position',[3,635,32,32]);
-        handles.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,'position',[38,635,32,32]);
+        handles.refresh_btn=uicontrol('style','pushbutton','CData',icon.icon_refresh,'position',[3,635,32,32],'TooltipString','refresh the folder');
+        handles.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,'position',[38,635,32,32],'TooltipString','browse for folder');
         handles.path_edit=uicontrol('style','edit','string',pwd,'HorizontalAlignment','left','position',[73,637,420,28]);
         uicontrol('style','text','string','Selected:','HorizontalAlignment','left','position',[5,600,80,28]);
         handles.isfilter_checkbox=uicontrol('style','checkbox','string','Filter','position',[80,608,100,28]);

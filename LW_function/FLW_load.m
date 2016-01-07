@@ -49,11 +49,16 @@ classdef FLW_load<CLW_generic
                 end
                 switch e
                     case '.lw6'
-                    st=[st,cellstr(n)];
+                        if strcmp(p,pwd) && sum(strcmp(n,{obj.virtual_filelist.filename}))
+                            st{end+1}=['<HTML><BODY color="red">',n];
+                        else
+                            st{end+1}=n;
+                        end
+                    
                     case {'.lw4','.lw5'}
-                    st=[st,cellstr(['<HTML><BODY color="blue">',n,e])];
+                    st{end+1}=['<HTML><BODY color="blue">',n,e];
                 end
-                st_userdata=[st_userdata,cellstr(fullfile(p,[n,e]))];
+                st_userdata{end+1}=fullfile(p,[n,e]);
             end
             set(obj.h_file_list,'String',st);
             set(obj.h_file_list,'Userdata',st_userdata);
@@ -62,25 +67,8 @@ classdef FLW_load<CLW_generic
         function dataset_Add(obj,varargin)
             [FileName,PathName] = GLW_getfile({obj.virtual_filelist.filename});
             if(PathName~=0)
-                st_userdata=get(obj.h_file_list,'Userdata');
-                for k=1:length(FileName)
-                    st_userdata{end+1}=fullfile(PathName,FileName{k});
-                end
-                st={};
-                for data_pos=1:length(st_userdata)
-                    [p,n]=fileparts(st_userdata{data_pos});
-                    if isempty(p)
-                        p=pwd;
-                    end
-                    if strcmp(p,pwd) && sum(strcmp(n,{obj.virtual_filelist.filename}))
-                        st{end+1}=['<HTML><BODY color="red">',n];
-                    else
-                        st{end+1}=n;
-                    end
-                    %st_userdata{data_pos}=cellstr(fullfile(p,[n,'.lw6']));
-                end
-                set(obj.h_file_list,'String',st);
-                set(obj.h_file_list,'Userdata',st_userdata);
+                filename=fullfile(PathName,FileName);
+                obj.add_file(filename);
             end
         end
         
@@ -143,19 +131,52 @@ classdef FLW_load<CLW_generic
         
         function GUI_update(obj,batch_pre)
             obj.virtual_filelist=batch_pre.virtual_filelist;
-            st_userdata=get(obj.h_file_list,'userdata');
-            for data_pos=1:length(st_userdata)
-                [p,n]=fileparts(char(st_userdata{data_pos}));
+            st=[];
+            st_userdata=[];
+            filename=get(obj.h_file_list,'Userdata');
+            for data_pos=1:length(filename)
+                [p,n,e]=fileparts(filename{data_pos});
                 if isempty(p)
                     p=pwd;
                 end
-                if strcmp(p,pwd) && sum(strcmp(n,{obj.virtual_filelist.filename}))
-                else
-                     if exist(fullfile(p,[n,'.lw6']),'file')~=2
-                         error(['***file [',fullfile(p,[n,'.lw6']),'] does not exist any more.***']);
-                     end
+                if isempty(e)
+                    e='.lw6';
                 end
+                switch e
+                    case '.lw6'
+                        if strcmp(p,pwd) && sum(strcmp(n,{obj.virtual_filelist.filename}))
+                            st{end+1}=['<HTML><BODY color="red">',n];
+                        else
+                            if exist(fullfile(p,[n,'.lw6']),'file')~=2
+                                error(['***file [',fullfile(p,[n,'.lw6']),'] does not exist any more.***']);
+                            end
+                            st{end+1}=n;
+                        end
+                    case '.lw5'
+                     if exist(fullfile(p,[n,e]),'file')~=2
+                         error(['***file [',fullfile(p,[n,e]),'] does not exist any more.***']);
+                     end
+                     st{end+1}=['<HTML><BODY color="blue">',n,e];
+                end
+                st_userdata{end+1}=fullfile(p,[n,e]);
             end
+            set(obj.h_file_list,'String',st);
+            set(obj.h_file_list,'Userdata',st_userdata);
+            
+            
+%             st_userdata=get(obj.h_file_list,'userdata');
+%             for data_pos=1:length(st_userdata)
+%                 [p,n]=fileparts(char(st_userdata{data_pos}));
+%                 if isempty(p)
+%                     p=pwd;
+%                 end
+%                 if strcmp(p,pwd) && sum(strcmp(n,{obj.virtual_filelist.filename}))
+%                 else
+%                      if exist(fullfile(p,[n,'.lw6']),'file')~=2
+%                          error(['***file [',fullfile(p,[n,'.lw6']),'] does not exist any more.***']);
+%                      end
+%                 end
+%             end
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
         end
         

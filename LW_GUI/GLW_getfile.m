@@ -165,13 +165,12 @@ PathName=handles.file_path;
         file_str=[];
         file_path=0;
         if ~isempty(idx)
-            str=get(handles.file_listbox,'String');
-            str=strrep(str,'<HTML><BODY color="red">','');
-            str=strrep(str,'<HTML><BODY color="blue">','');
+            str=get(handles.file_listbox,'userdata');
             file_path=get(handles.path_edit,'userdata');
             if ~isempty(str)
                 for k=1:length(idx)
-                    file_str{k}=char(str(idx(k)));
+                    [p,n,e]=fileparts(char(str(idx(k))));
+                    file_str{k}=[n,e];
                 end
             end
         end
@@ -202,14 +201,17 @@ PathName=handles.file_path;
                     filelist{k}=['<HTML><BODY color="blue">',filename{k}];
             end
         end
-        
         if strcmp(fullfile(st,'0'),fullfile(pwd,'0'))
             for k=1:length(handles.virtual_filelist)
                 if ~strcmp(handles.virtual_filelist{k},filelist)
                     filelist{end+1}=handles.virtual_filelist{k};
+                    filename{end+1}=handles.virtual_filelist{k};
+                    filelist_affix{end+1}=textscan(filename{end}(1:end-4),'%s');
+                    filelist_affix{end}=filelist_affix{end}{1}';
                 end
             end
         end
+        
         affix=sort(unique([filelist_affix{:}]));
         str=get(handles.affix_selected_listbox,'String');
         idx=get(handles.affix_selected_listbox,'value');

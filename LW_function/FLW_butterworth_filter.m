@@ -78,13 +78,13 @@ classdef FLW_butterworth_filter<CLW_generic
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
             set(obj.h_all_option,'visible','on');
-            switch(index)
-                case 1%lowpass
+            switch(option.filter_type)
+                case 'lowpass'
                     set(obj.h_filtertype_pop,'value',1);
                     set(obj.h_low_cutoff_edt,'string',num2str(option.low_cutoff));
                     set(obj.h_low_cutoff_txt,'visible','off');
                     set(obj.h_low_cutoff_edt,'visible','off');
-                case 2%highpass
+                case 'highpass'
                     set(obj.h_filtertype_pop,'value',2);
                     set(obj.h_high_cutoff_edt,'string',num2str(option.high_cutoff));
                     set(obj.h_high_cutoff_txt,'visible','off');

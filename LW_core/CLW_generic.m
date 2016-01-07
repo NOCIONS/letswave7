@@ -63,6 +63,7 @@ classdef CLW_generic<handle
         end
         
         function header_update(obj,batch_pre)
+            obj.virtual_filelist=batch_pre.virtual_filelist;
             lwdataset=batch_pre.lwdataset;
             option=get_option(obj);
             for data_pos=1:length(lwdataset)

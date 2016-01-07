@@ -1823,7 +1823,7 @@ GLW_my_view_OpeningFcn;
                 [datasets_header(end+1).header, datasets_data(end+1).data]=CLW_load([PathName,FileName{k}]);
                 chan_used=find([datasets_header(end).header.chanlocs.topo_enabled]==1, 1);
                 if isempty(chan_used)
-                    datasets_header(end).header=RLW_edit_electrodes(datasets_header(end).header,userdata.chanlocs);
+                    datasets_header(end).header=CLW_edit_electrodes(datasets_header(end).header,userdata.chanlocs);
                 end
                 %datasets_header(end).header=CLW_make_spl(datasets_header(end).header);
             end

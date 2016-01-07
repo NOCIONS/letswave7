@@ -24,6 +24,21 @@ if ~isfield(header,'index_labels')
     end
     header.index_labels=tp;
 end
+header.datasize=double(header.datasize);
+header.xstep=double(header.xstep);
+header.xstart=double(header.xstart);
+header.ystep=double(header.ystep);
+header.ystart=double(header.ystart);
+header.zstep=double(header.zstep);
+header.zstart=double(header.zstart);
+
+if ~isfield(header,'index_labels')
+    tp={};
+    for i=1:header.datasize(3);
+        tp{i}=['index ' num2str(i)];
+    end
+    header.index_labels=tp;
+end
 
 if ~isfield(header,'events')|| isempty(header.events)
     header.events=struct('code',{},'latency',{},'epoch',{});

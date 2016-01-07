@@ -413,8 +413,12 @@ h_fig=handle.fig;
         end
         temp=[section_num(2:end)-section_num(1:end-1)];
         section_num=setdiff(section_num,section_num(temp==1));
+        
+        script{end+1}='LW_Init();';
         for section_pos=1:length(section_num)
+            if length(section_num)~=1
             script{end+1}=['% section ',num2str(section_pos)];
+            end
             k=section_num(section_pos);
             switch(batch{k+1}.FLW_TYPE)
                 case {1,3}

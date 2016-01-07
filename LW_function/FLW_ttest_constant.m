@@ -115,7 +115,7 @@ classdef FLW_ttest_constant<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            get(obj.h_constant_edit,'string',str2num(option.constant));
+            set(obj.h_constant_edit,'string',num2str(option.constant));
             switch(option.tails)
                 case 'both'
                     set(obj.h_tail_pop,'value',1)
@@ -127,11 +127,7 @@ classdef FLW_ttest_constant<CLW_generic
             set(obj.h_alpha_edit,'string',num2str(option.alpha));
             
             set(obj.h_permutation_test_chk,'value',option.permutation);
-            if option.permutation
-                set(obj.panel,'visible','on');
-            else
-                set(obj.panel,'visible','off');
-            end
+            obj.showpanel();
             set(obj.h_alpha_edit,'string',num2str(option.alpha));
             switch option.cluster_statistic
                 case 'perc_mean'
@@ -145,7 +141,7 @@ classdef FLW_ttest_constant<CLW_generic
             end
             set(obj.h_threshold_edit,'string',num2str(option.cluster_threshold));
             set(obj.h_number_edit,'string',num2str(option.num_permutations));
-            set(obj.h_show_progress_chk,'value',num2str(option.show_progress));
+            set(obj.h_show_progress_chk,'value',option.show_progress);
         end
         
         function str=get_Script(obj)
@@ -286,6 +282,7 @@ classdef FLW_ttest_constant<CLW_generic
                     case 'sd_max'
                         criticals=option.cluster_threshold*std(blob_size_max,[],3)+mean(blob_size_max,3);
                 end
+                data_threshold=zeros(size(data_cutoff));
                 for chanpos=1:size(lwdata_in.data,2)
                     for dz=1:size(lwdata_in.data,4)
                         data_cutoff(:,:,1,chanpos,1,dz)=data_cutoff(:,:,1,chanpos,1,dz)>criticals(chanpos,dz);

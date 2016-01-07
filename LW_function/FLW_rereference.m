@@ -59,12 +59,11 @@ classdef FLW_rereference<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            
-            st=get(obj.h_reference_list,'string');
-            [~,selected] = intersect(st, option.reference_list);
-            set(obj.h_reference_list,'Value',selected); 
-            [~,selected] = intersect(st, option.apply_list);
-            set(obj.h_apply_list,'Value',selected);  
+            set(obj.h_reference_list,'String',option.reference_list);
+            set(obj.h_reference_list,'value',1:length(option.reference_list));
+%           
+            set(obj.h_apply_list,'String',option.apply_list);
+            set(obj.h_apply_list,'value',1:length(option.apply_list));
         end
         
         function str=get_Script(obj)
@@ -124,9 +123,9 @@ classdef FLW_rereference<CLW_generic
             set(obj.h_apply_list,'String',channel_labels);
             
             
-            [~,idx] = intersect(reference_idx,channel_labels,'stable');
+            [~,~,idx] = intersect(reference_idx,channel_labels,'stable');
             set(obj.h_reference_list,'value',idx);
-            [~,idx] = intersect(apply_idx,channel_labels,'stable');
+            [~,~,idx] = intersect(apply_idx,channel_labels,'stable');
             set(obj.h_apply_list,'value',idx);
             obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
