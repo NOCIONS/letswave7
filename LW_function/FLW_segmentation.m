@@ -121,37 +121,37 @@ classdef FLW_segmentation<CLW_generic
                 event_idx=[event_idx,find(strcmp({events_in.code},...
                     option.event_labels{event_labels_pos}))];
             end
+            latency=[events_in(event_idx).latency];
+            event_idx=event_idx(latency+option.x_start>=header_in.xstart...
+                &latency+option.x_start+option.x_duration<=...
+                header_in.xstart+header_in.xstep*header_in.datasize(6));
+            
             if isempty(event_idx);
                 error(['***event code ''',...
                     strjoin(option.event_labels,''', '''), ...
                     ''' can not found in dataset ',header_in.name,'***']);
             end
-            
             dxsize=fix((option.x_duration)/header_in.xstep);
-            epoch_pos=0;
-            event_pos=0;
-            events_out=struct('code',{},'latency',{},'epoch',{});
-            for k=event_idx
-                dx1=fix((((events_in(k).latency+option.x_start)-header_in.xstart)/header_in.xstep))+1;
-                dx2=(dx1+dxsize)-1;
-                if dx1<1 || dx2>header_in.datasize(6)
-                    continue;
-                end
-                %scan for events within epoch
-                epoch_pos=epoch_pos+1;
-                event_pos_temp=find([events_in.epoch]==events_in(k).epoch);
-                event_latency_temp=[events_in(event_pos_temp).latency]-events_in(k).latency;
-                event_pos_temp=event_pos_temp(event_latency_temp>=option.x_start & ...
-                    event_latency_temp<=(option.x_start+(dxsize-1)*header_in.xstep));
-                for j=event_pos_temp
-                    event_pos=event_pos+1;
-                    events_out(event_pos)=events_in(j);
-                    events_out(event_pos).latency=events_out(event_pos).latency-events_in(k).latency;
-                    events_out(event_pos).epoch=epoch_pos;
-                end
-            end
+            
+            tic;
+            latency_event=[events_in(event_idx).latency];
+            latency_all=[events_in.latency];
+            latency_1=latency_event+option.x_start;
+            latency_2=latency_event+option.x_start+(dxsize-1)*header_in.xstep;
+            epoch_event=[events_in(event_idx).epoch];
+            epoch_all=[events_in.epoch];
+            A=find((ones(length(dx1),1)*latency_all>=latency_1'*ones(1,length(latency_all)))...
+                & (ones(length(dx1),1)*latency_all<=latency_2'*ones(1,length(latency_all)))...
+                & (ones(length(dx1),1)*epoch_all==epoch_event'*ones(1,length(latency_all))));
+            [I,J] = ind2sub([length(dx1),length(latency_all)],A);
+            code={events_in(J).code};
+            epoch=num2cell(I)';
+            latency=num2cell(latency_all(J)-latency_event(I));
+            events_out=struct('code',code,'latency',latency,'epoch',epoch);
+            toc;
+            
             header_out=header_in;
-            header_out.datasize(1)=epoch_pos;
+            header_out.datasize(1)=length(events_out);
             header_out.datasize(6)=dxsize;
             header_out.xstart=option.x_start;
             header_out.events=events_out;
