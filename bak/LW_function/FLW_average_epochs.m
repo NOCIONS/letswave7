@@ -5,32 +5,16 @@ classdef FLW_average_epochs<CLW_generic
         h_method_pop;
     end
     methods
-        function obj = FLW_average_epochs(batch_handle)
-            obj@CLW_generic(batch_handle,'average_epoch','avg',...
+        function obj = FLW_average_epochs(tabgp)
+            obj@CLW_generic(tabgp,'average','avg',...
                 'Get the average/stdev/median of the data.');
             
-            uicontrol('style','text','position',[35,470,200,20],...
+            uicontrol('style','text','position',[35,520,200,20],...
                 'string','Operation','HorizontalAlignment','left',...
-                'parent',obj.h_panel);
+                'parent',obj.h_tab);
             obj.h_method_pop=uicontrol('style','popupmenu',...
                 'String',{'average','stdev','median'},'value',1,...
-                'callback',@obj.item_Changed,...
-                'position',[35,440,150,30],'parent',obj.h_panel);
-        end
-        
-        function item_Changed(obj,varargin)
-            st_value=get(obj.h_method_pop,'value');
-            str=get(obj.h_affix_edit,'string');
-            if sum(strcmp(str,{'avg','std','median'}))
-                switch(st_value)
-                    case 1
-                        set(obj.h_affix_edit,'string','avg');
-                    case 2
-                        set(obj.h_affix_edit,'string','std');
-                    case 3
-                        set(obj.h_affix_edit,'string','median');
-                end
-            end
+                'position',[35,490,150,30],'parent',obj.h_tab);
         end
         
         function option=get_option(obj)

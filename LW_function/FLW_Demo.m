@@ -11,10 +11,10 @@ classdef FLW_Demo<CLW_generic
     
     methods
         % the constructor of this class
-        function obj = FLW_Demo(tabgp)
+        function obj = FLW_Demo(batch_handle)
             %call the constructor of the superclass
             %CLW_generic(tabgp,fun_name,affix_name,help_str)
-            obj@CLW_generic(tabgp,'Demo','demo',...
+            obj@CLW_generic(batch_handle,'Demo','demo',...
                 'Just make a demo for how to the FLW file.');
             %to be edited...
             

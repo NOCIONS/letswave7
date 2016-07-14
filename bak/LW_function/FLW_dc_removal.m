@@ -5,12 +5,12 @@ classdef FLW_dc_removal<CLW_generic
     end
     
     methods
-        function obj = FLW_dc_removal(batch_handle)
-            obj@CLW_generic(batch_handle,'dc removal','dc',...
+        function obj = FLW_dc_removal(tabgp)
+            obj@CLW_generic(tabgp,'dc removal','dc',...
                 'Just make a dc_removal for how to the FLW file.');
             obj.h_dc_chx=uicontrol('style','checkbox',...
                 'String','apply linear detrend in addition to DC removal','value',1,...
-                'position',[35,440,250,30],'parent',obj.h_panel);
+                'position',[35,440,250,30],'parent',obj.h_tab);
         end
         
         function option=get_option(obj)

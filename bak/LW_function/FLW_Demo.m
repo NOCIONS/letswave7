@@ -1,4 +1,4 @@
-classdef FLW_arrange<CLW_generic
+classdef FLW_Demo<CLW_generic
     properties
         % set the type of the FLW class
         % 0 for load (only input);
@@ -11,34 +11,13 @@ classdef FLW_arrange<CLW_generic
     
     methods
         % the constructor of this class
-        function obj = FLW_arrange(tabgp)
+        function obj = FLW_Demo(tabgp)
             %call the constructor of the superclass
             %CLW_generic(tabgp,fun_name,affix_name,help_str)
-            obj@CLW_generic(tabgp,'Arrange','arrange',...
-                'Arrange the signal by channel/epoch/index.');
-            uicontrol('style','text','position',[35,520,200,20],...
-                'string','Arrange Items:','HorizontalAlignment','left',...
-                'parent',obj.h_tab);
-            obj.h_arrange_items_pop=uicontrol('style','popupmenu',...
-                'String',{'epoch','channel','index'},...
-                'callback',@obj.item_Changed,'position',[35,490,150,30],...
-                'parent',obj.h_tab);
+            obj@CLW_generic(tabgp,'Demo','demo',...
+                'Just make a demo for how to the FLW file.');
+            %to be edited...
             
-        end
-        
-         function item_Changed(obj,varargin)
-            st_value=get(obj.h_arrange_items_pop,'value');
-            str=get(obj.h_affix_edit,'string');
-            if sum(strcmp(str,{'sel_epoch','sel_channel','sel_index'}))
-                switch(st_value)
-                    case 1
-                        set(obj.h_affix_edit,'string','sel_epoch');
-                    case 2
-                        set(obj.h_affix_edit,'string','sel_channel');
-                    case 3
-                        set(obj.h_affix_edit,'string','sel_index');
-                end
-            end
         end
         
         %get the parameters setting from the GUI

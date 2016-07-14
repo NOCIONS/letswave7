@@ -2,11 +2,6 @@ classdef CLW_generic<handle
     %CLW_generic
     properties
         h_tab;
-        h_panel;
-        index_num=1;
-        is_selected=1;
-        
-        
         h_txt_cmt;
         h_btn_script;
         h_affix_txt;
@@ -19,30 +14,34 @@ classdef CLW_generic<handle
     end
     
     methods
-        function obj = CLW_generic(batch_handle,fun_name,affix_name,help_str)
+        function obj = CLW_generic(tabgp,fun_name,affix_name,help_str)
             obj.h_title_str=['==========',class(obj),'=========='];
             obj.h_help_str=help_str;
-            
-            obj.h_tab = uicontrol(batch_handle.tab_panel,'style','pushbutton',...
-                'string',fun_name);
-            obj.h_panel=uipanel(batch_handle.fig,...
-                'units','pixels','position',[99,45,421,526]);
-            
-            obj.h_txt_cmt = uicontrol('parent',obj.h_panel,'style','edit','max',2,'Enable','inactive',...
-                'position',[5,5,305,120],'HorizontalAlignment','left',...
-                'backgroundcolor',[1,1,1]);
+            obj.h_tab = uitab(tabgp,'Title',fun_name);
+            obj.h_txt_cmt = uicontrol('style','edit','max',2,'Enable','inactive',...
+                'position',[5,5,310,120],'HorizontalAlignment','left',...
+                'backgroundcolor',[1,1,1],'parent',obj.h_tab);
+            fun_name=[fun_name,char(' ')*ones(1,20)];
+            set(obj.h_txt_cmt,'string',fun_name);
+            p=get(obj.h_txt_cmt,'extent');
+            while p(3)>45
+                fun_name=fun_name(1:end-1);
+                set(obj.h_txt_cmt,'string',fun_name);
+                p=get(obj.h_txt_cmt,'extent');
+            end
+            set(obj.h_tab,'Title',fun_name);
             set(obj.h_txt_cmt,'string',{obj.h_title_str,obj.h_help_str});
             
-            obj.h_affix_txt=uicontrol('style','text','position',[315,100,40,20],...
+            obj.h_affix_txt=uicontrol('style','text','position',[320,100,40,20],...
                 'string','prefix:',...
-                'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_affix_edit=uicontrol('style','edit','position',[315,80,100,25],...
-                'HorizontalAlignment','left','string',affix_name,'parent',obj.h_panel);
+                'HorizontalAlignment','left','parent',obj.h_tab);
+            obj.h_affix_edit=uicontrol('style','edit','position',[320,80,100,25],...
+                'HorizontalAlignment','left','string',affix_name,'parent',obj.h_tab);
             obj.h_is_save_chx=uicontrol('style','checkbox','value',1,...
-                'position',[315,50,200,30],'string','save','parent',obj.h_panel);
+                'position',[320,50,200,30],'string','save','parent',obj.h_tab);
             obj.h_btn_script = uicontrol('style','pushbutton',...
-                'String','Script','position',[315,5,100,35],...
-                'parent',obj.h_panel,'Callback',@obj.view_Script);
+                'String','Script','position',[320,5,100,35],...
+                'parent',obj.h_tab,'Callback',@obj.view_Script);
             obj.virtual_filelist=struct('filename',{},'header',{});
         end
                 

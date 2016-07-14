@@ -5,13 +5,13 @@ classdef FLW_iFFT<CLW_generic
     end
     
     methods
-        function obj = FLW_iFFT(batch_handle)
-            obj@CLW_generic(batch_handle,'iFFT','ifft',...
+        function obj = FLW_iFFT(tabgp)
+            obj@CLW_generic(tabgp,'iFFT','ifft',...
                 'Compute the inverse FFT transform. This requires a dataset with complex FFT values.Due to slight rounding imprecisions, the inverse FFT of the the FFT of a real signal may, in some cases, not return real values. To ensure that the output are real values, check the option to Force the output to be real.');
             
             obj.h_force_real_chx=uicontrol('style','checkbox',...
                 'String','force output to be Real','value',1,...
-                'position',[35,390,250,30],'parent',obj.h_panel);
+                'position',[35,440,250,30],'parent',obj.h_tab);
         end
         
         function option=get_option(obj)
