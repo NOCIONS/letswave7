@@ -6,7 +6,6 @@ classdef CLW_generic<handle
         index_num=1;
         is_selected=1;
         
-        
         h_txt_cmt;
         h_btn_script;
         h_affix_txt;

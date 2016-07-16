@@ -6,10 +6,16 @@ classdef FLW_ttest_constant<CLW_generic
         h_alpha_edit;
         h_permutation_test_chk;
         h_permutation_panel;
-        h_method_pop;
         h_threshold_edit;
         h_number_edit;
         h_show_progress_chk;
+        h_cluster_union_chk;
+        
+        h_multiple_sensor_panel;
+        h_multiple_sensor_chk;
+        h_chan_dist_txt;
+        h_chan_dist_edit;
+        h_chan_dist_btn;
     end
     
     methods
@@ -17,71 +23,122 @@ classdef FLW_ttest_constant<CLW_generic
             obj@CLW_generic(batch_handle,'ttest','ttest',...
                 'Just make a ttest_constant for how to the FLW file.');
             
-            uicontrol('style','text','position',[35,483,200,20],...
-                'string','Compare to constant','HorizontalAlignment','left',...
-                'parent',obj.h_panel);
-            obj.h_constant_edit=uicontrol('style','edit','String','0',...
-                'position',[35,460,200,25],'parent',obj.h_panel);
-            
-            uicontrol('style','text','position',[35,420,200,20],...
+            uicontrol('style','text','position',[35,490,200,20],...
                 'string','Type of alternative hypothsis:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_tail_pop=uicontrol('style','popupmenu','value',1,...
                 'String',{'two-tailed test','left-tailed test','right-tailed test'},...
-                'position',[35,390,200,30],'parent',obj.h_panel);
+                'position',[35,465,200,30],'parent',obj.h_panel);
             
-            uicontrol('style','text','position',[35,350,200,20],...
+            uicontrol('style','text','position',[35,435,200,20],...
+                'string','Compare to constant','HorizontalAlignment','left',...
+                'parent',obj.h_panel);
+            obj.h_constant_edit=uicontrol('style','edit','String','0',...
+                'position',[35,415,200,25],'parent',obj.h_panel);
+            
+            uicontrol('style','text','position',[35,380,200,20],...
                 'string','Alpha level:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_alpha_edit=uicontrol('style','edit','String','0.05',...
-                'position',[35,327,200,25],'parent',obj.h_panel);
+                'callback',@obj.alpha_level_Callback,...
+                'position',[35,357,200,25],'parent',obj.h_panel);
             
             
-            obj.h_permutation_panel=uipanel('unit','pixels','position',[20,135,400,225],...
-                'parent',obj.h_panel);
+            obj.h_permutation_panel=uipanel('unit','pixels',...
+                'position',[10,135,400,205],'parent',obj.h_panel,...
+                'title','Cluster-Based Permutation Test');
             obj.h_permutation_test_chk=uicontrol('style','checkbox',...
-                'String','Clustersize-based permutation testing',...
-                'position',[15,190,350,25],'callback',@obj.showpanel,...
+                'String','Enable',...
+                'position',[15,165,350,25],'callback',@obj.showpanel,...
                 'parent',obj.h_permutation_panel);
             
-            uicontrol('style','text','position',[15,160,200,20],...
-                'string','Criteria for the threshold:','tag','permute',...
-                'HorizontalAlignment','left','parent',obj.h_permutation_panel);
-            obj.h_method_pop=uicontrol('style','popupmenu','value',1,...
-                'String',{'Percentile of mean cluster sum',...
-                'Percentile of max cluster sum',...
-                'Standard-deviation of mean cluster sum',...
-                'Standard-deviation of max cluster sum'},'tag','permute',...
-                'position',[15,130,200,30],'parent',obj.h_permutation_panel);
-            
-            uicontrol('style','text','position',[15,100,200,20],...
+            uicontrol('style','text','position',[15,130,200,20],...
                 'string','Cluster threshold:','tag','permute',...
                 'HorizontalAlignment','left','parent',obj.h_permutation_panel);
-            obj.h_threshold_edit=uicontrol('style','edit','String','95',...
-                'position',[15,75,200,25],'tag','permute',...
+            obj.h_threshold_edit=uicontrol('style','edit','String','0.05',...
+                'callback',@obj.alpha_level_Callback,...
+                'position',[15,105,220,25],'tag','permute',...
                 'parent',obj.h_permutation_panel);
             
-            uicontrol('style','text','position',[15,40,200,20],...
-                'string','Number of permutations:','tag','permute',...
+            
+            uicontrol('style','text','position',[15,70,200,20],...
+                'string','Number of permutation:','tag','permute',...
                 'HorizontalAlignment','left','parent',obj.h_permutation_panel);
-            obj.h_number_edit=uicontrol('style','edit','String',2000,...
-                'position',[15,10,200,25],'tag','permute',...
-                'parent',obj.h_permutation_panel);
             obj.h_show_progress_chk=uicontrol('style','checkbox',...
                 'String','show progress','value',1,...
-                'position',[225,10,200,25],'tag','permute',...
+                'position',[135,70,100,25],'tag','permute',...
                 'parent',obj.h_permutation_panel);
+            obj.h_number_edit=uicontrol('style','edit','String',2000,...
+                'position',[15,45,220,25],'tag','permute',...
+                'parent',obj.h_permutation_panel);
+            
+            obj.h_cluster_union_chk=uicontrol('style','checkbox',...
+                'String','Apply Cluster Union Method','value',1,...
+                'callback',@obj.set_alpha_level,...
+                'position',[15,5,100,25],'tag','permute',...
+                'parent',obj.h_permutation_panel);
+            
+            obj.h_multiple_sensor_panel=uipanel( 'unit','pixels',...
+                'title','multiple sensor analysis',...
+                'position',[255,5,135,150],'parent',obj.h_permutation_panel);
+            obj.h_multiple_sensor_chk=uicontrol('style','checkbox',...
+                'String','Enable','value',0,'callback',@obj.showpanel2,...
+                'position',[5,110,135,25],'tag','permute',...
+                'parent',obj.h_multiple_sensor_panel);
+            
+            obj.h_chan_dist_txt=uicontrol('style','text','position',[5,80,120,20],...
+                'string','channel distance:','tag','permute',...
+                'HorizontalAlignment','left','parent',obj.h_multiple_sensor_panel);
+            obj.h_chan_dist_edit=uicontrol('style','edit','String','0',...
+                'position',[5,55,120,25],'tag','permute',...
+                'parent',obj.h_multiple_sensor_panel);
+            obj.h_chan_dist_btn=uicontrol('style','pushbutton',...
+                'String','Set Distance',...
+                'position',[5,10,120,25],'tag','permute',...
+                'parent',obj.h_multiple_sensor_panel);
             
             h=findobj(obj.h_permutation_panel,'tag','permute');
             set(h,'enable','off');
+        end
+        
+        function alpha_level_Callback(obj,varargin)
+            str=get(varargin{1},'String');
+            if get(obj.h_cluster_union_chk,'value')
+                set(obj.h_threshold_edit,'string',str);
+                set(obj.h_alpha_edit,'string',str);
+            end
+        end
+        
+        function set_alpha_level(obj,varargin)
+            if get(obj.h_cluster_union_chk,'value')
+                set(obj.h_threshold_edit,...
+                    'string',get(obj.h_alpha_edit,'string'));
+            end
         end
         
         function showpanel(obj,varargin)
             h=findobj(obj.h_permutation_panel,'tag','permute');
             if get(obj.h_permutation_test_chk,'value')
                 set(h,'enable','on');
+                if ~get(obj.h_multiple_sensor_chk,'value')
+                    set(obj.h_chan_dist_txt,'enable','off');
+                    set(obj.h_chan_dist_edit,'enable','off');
+                    set(obj.h_chan_dist_btn,'enable','off');
+                end
             else
                 set(h,'enable','off');
+            end
+        end
+        
+        function showpanel2(obj,varargin)
+            if ~get(obj.h_multiple_sensor_chk,'value')
+                set(obj.h_chan_dist_txt,'enable','off');
+                set(obj.h_chan_dist_edit,'enable','off');
+                set(obj.h_chan_dist_btn,'enable','off');
+            else
+                set(obj.h_chan_dist_txt,'enable','on');
+                set(obj.h_chan_dist_edit,'enable','on');
+                set(obj.h_chan_dist_btn,'enable','on');
             end
         end
         
@@ -98,19 +155,13 @@ classdef FLW_ttest_constant<CLW_generic
             end
             option.alpha=str2num(get(obj.h_alpha_edit,'string'));
             option.permutation=get(obj.h_permutation_test_chk,'value');
-            switch get(obj.h_method_pop,'value')
-                case 1
-                    option.cluster_statistic='perc_mean';
-                case 2
-                    option.cluster_statistic='perc_max';
-                case 3
-                    option.cluster_statistic='sd_mean';
-                case 4
-                    option.cluster_statistic='sd_max';
-            end
             option.cluster_threshold=str2num(get(obj.h_threshold_edit,'string'));
             option.num_permutations=str2num(get(obj.h_number_edit,'string'));
             option.show_progress=get(obj.h_show_progress_chk,'value');
+            
+            option.cluster_union=get(obj.h_cluster_union_chk,'value');
+            option.multiple_sensor=get(obj.h_multiple_sensor_chk,'value');
+            option.chan_dist=str2num(get(obj.h_chan_dist_edit,'string'));
         end
         
         function set_option(obj,option)
@@ -127,21 +178,16 @@ classdef FLW_ttest_constant<CLW_generic
             set(obj.h_alpha_edit,'string',num2str(option.alpha));
             
             set(obj.h_permutation_test_chk,'value',option.permutation);
-            obj.showpanel();
             set(obj.h_alpha_edit,'string',num2str(option.alpha));
-            switch option.cluster_statistic
-                case 'perc_mean'
-                    set(obj.h_method_pop,'value',1);
-                case 'perc_max'
-                    set(obj.h_method_pop,'value',2);
-                case 'sd_mean'
-                    set(obj.h_method_pop,'value',3);
-                case 'sd_max'
-                    set(obj.h_method_pop,'value',4);
-            end
             set(obj.h_threshold_edit,'string',num2str(option.cluster_threshold));
             set(obj.h_number_edit,'string',num2str(option.num_permutations));
             set(obj.h_show_progress_chk,'value',option.show_progress);
+            set(obj.h_cluster_union_chk,'value',option.cluster_union);
+            set(obj.h_multiple_sensor_chk,'value',option.multiple_sensor);
+            set(obj.h_chan_dist_edit,'string',num2str(option.chan_dist));
+            
+            obj.showpanel2();
+            obj.showpanel();
         end
         
         function str=get_Script(obj)
@@ -153,16 +199,24 @@ classdef FLW_ttest_constant<CLW_generic
                 option.tails,''','];
             frag_code=[frag_code,'''alpha'',',...
                 num2str(option.alpha),','];
-            frag_code=[frag_code,'''permutation'',',...
-                num2str(option.permutation),','];
-            frag_code=[frag_code,'''cluster_statistic'',''',...
-                option.cluster_statistic,''','];
-            frag_code=[frag_code,'''cluster_threshold'',',...
-                num2str(option.cluster_threshold),','];
-            frag_code=[frag_code,'''num_permutations'',',...
-                num2str(option.num_permutations),',']; 
-            frag_code=[frag_code,'''show_progress'',',...
-                num2str(option.show_progress),',']; 
+            if option.permutation
+                frag_code=[frag_code,'''permutation'',',...
+                    num2str(option.permutation),','];
+                frag_code=[frag_code,'''cluster_threshold'',',...
+                    num2str(option.cluster_threshold),','];
+                frag_code=[frag_code,'''num_permutations'',',...
+                    num2str(option.num_permutations),','];
+                frag_code=[frag_code,'''show_progress'',',...
+                    num2str(option.show_progress),','];
+                frag_code=[frag_code,'''cluster_union'',',...
+                    num2str(option.cluster_union),','];
+                if option.multiple_sensor
+                    frag_code=[frag_code,'''multiple_sensor'',',...
+                        num2str(option.multiple_sensor),','];
+                    frag_code=[frag_code,'''chan_dist'',',...
+                        num2str(option.chan_dist),','];
+                end
+            end
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
     end
@@ -194,16 +248,19 @@ classdef FLW_ttest_constant<CLW_generic
             option.tails='both';
             option.alpha=0.05;
             option.permutation=0;
-            option.num_permutations=250;
-            option.cluster_statistic='perc_mean'; 
-            option.cluster_threshold=95;
+            option.num_permutations=2000;
+            option.cluster_threshold=0.05;
             option.show_progress=1;
+            option.cluster_union=1;
+            option.multiple_sensor=0;
+            option.chan_dist=0;
             
             option.affix='ttest';
             option.is_save=0;
             option=CLW_check_input(option,{'constant','tails','alpha',...
                 'permutation','num_permutations','cluster_statistic',...
-                'cluster_threshold','show_progress','affix','is_save'},...
+                'cluster_threshold','show_progress','cluster_union',...
+                'multiple_sensor','chan_dist','affix','is_save'},...
                 varargin);
             header=FLW_ttest_constant.get_header(lwdata_in.header,option);
             
@@ -231,8 +288,8 @@ classdef FLW_ttest_constant<CLW_generic
                     rnd_data=randn(size(tp_data));
                     rnd_data=tp_data.*rnd_data./abs(rnd_data);
                     
-%                     rnd_data=tp_data;
-%                     rnd_data(2:2:end,:,:,:,:,:)=-rnd_data(2:2:end,:,:,:,:,:);
+                    %                     rnd_data=tp_data;
+                    %                     rnd_data(2:2:end,:,:,:,:,:)=-rnd_data(2:2:end,:,:,:,:,:);
                     [H,~,~,STATS]=ttest(rnd_data,0,option.alpha,option.tails);
                     Tvalue=H.*STATS.tstat;
                     Tvalue=permute(Tvalue,[5,6,1,2,3,4]);
@@ -263,10 +320,11 @@ classdef FLW_ttest_constant<CLW_generic
                             case 'sd_max'
                                 criticals=option.cluster_threshold*std(blob_size_max,[],3)+mean(blob_size_max,3);
                         end
+                        
+                        curve=[curve,criticals(:,1)];
                         if ~ishandle(h_fig)
                             h_fig=figure();
                         end
-                        curve=[curve,criticals(:,1)];
                         plot(1:iter,curve);
                         xlim([1,option.num_permutations])
                         drawnow;

@@ -33,9 +33,6 @@ classdef FLW_selection<CLW_generic
     
     methods
         function obj = FLW_selection(batch_handle)
-            %call the constructor of the superclass
-            %CLW_generic(tabgp,fun_name,affix_name,help_str)
-            
             icon=load('icon.mat');
             obj@CLW_generic(batch_handle,'Selection','sel_chan',...
                 'Selection the signal by channel/epoch/index.');
@@ -193,7 +190,7 @@ classdef FLW_selection<CLW_generic
                     frag_code=[frag_code,','];
                 end
             end
-            frag_code=[frag_code,'}},'];      
+            frag_code=[frag_code,'}},'];
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
@@ -212,8 +209,7 @@ classdef FLW_selection<CLW_generic
             end
             
             lwdataset=batch_pre.lwdataset;
-            set(obj.h_not_equal_txt,'visible','off');
-                    
+            
             obj.isequal_chan=0;
             obj.labels_chan={lwdataset(1).header.chanlocs.labels};
             for dataset_pos=2:length(lwdataset)
@@ -221,7 +217,6 @@ classdef FLW_selection<CLW_generic
                 obj.labels_chan=intersect(obj.labels_chan,...
                     labels_chan_temp,'stable');
                 if length(obj.labels_chan)<length(labels_chan_temp)
-                    set(obj.h_not_equal_txt,'visible','on');
                     obj.isequal_chan=1;
                 end
             end
@@ -229,12 +224,11 @@ classdef FLW_selection<CLW_generic
                 error('***No common channels.***')
             end
             
-                    obj.isequal_epoch=0;
+            obj.isequal_epoch=0;
             epoch_size=lwdataset(1).header.datasize(1);
             for dataset_pos=2:length(lwdataset)
                 epoch_size_temp=lwdataset(dataset_pos).header.datasize(1);
                 if epoch_size_temp<epoch_size
-                    set(obj.h_not_equal_txt,'visible','on');
                     obj.isequal_epoch=1;
                 end
                 epoch_size=min(epoch_size,epoch_size_temp);
@@ -255,7 +249,6 @@ classdef FLW_selection<CLW_generic
                     idx_size_temp);
             end
             if idx_size_temp<idx_size
-                set(obj.h_not_equal_txt,'visible','on');
                 obj.isequal_idx=1;
             end
             if idx_size==0;
@@ -266,9 +259,14 @@ classdef FLW_selection<CLW_generic
                 obj.labels_idx{k}=num2str(k);
             end
             
+            
+            set(obj.h_not_equal_txt,'visible','off');
             st_value=get(obj.h_selection_items_pop,'value');
             switch(st_value)
                 case 1%epoch
+                    if obj.isequal_epoch
+                        set(obj.h_not_equal_txt,'visible','on');
+                    end
                     set(obj.h_old_list,'String',obj.labels_epoch);
                     temp= intersect(obj.labels_epoch,new_list,'stable');
                     set(obj.h_new_list,'String',temp);
@@ -277,6 +275,9 @@ classdef FLW_selection<CLW_generic
                     [~,~,idx] = intersect(new_idx,temp,'stable');
                     set(obj.h_new_list,'value',idx);
                 case 2%channel
+                    if obj.isequal_chan
+                        set(obj.h_not_equal_txt,'visible','on');
+                    end
                     set(obj.h_old_list,'String',obj.labels_chan);
                     temp= intersect(obj.labels_chan,new_list,'stable');
                     set(obj.h_new_list,'String',temp);
@@ -285,6 +286,9 @@ classdef FLW_selection<CLW_generic
                     [~,~,idx] = intersect(new_idx,temp,'stable');
                     set(obj.h_new_list,'value',idx);
                 case 3%index
+                    if obj.isequal_idx
+                        set(obj.h_not_equal_txt,'visible','on');
+                    end
                     set(obj.h_old_list,'String',obj.labels_idx);
                     temp= intersect(obj.labels_idx,new_list,'stable');
                     set(obj.h_new_list,'String',temp);
@@ -534,7 +538,7 @@ classdef FLW_selection<CLW_generic
                 case 'epoch'
                     epoch_idx=[];
                     for k=1:length(option.items)
-                            epoch_idx=[epoch_idx,str2num(option.items{k})];
+                        epoch_idx=[epoch_idx,str2num(option.items{k})];
                     end
                     data=data(epoch_idx,:,:,:,:,:);
                     
@@ -545,7 +549,7 @@ classdef FLW_selection<CLW_generic
                 case 'index'
                     index_idx=[];
                     for k=1:length(option.items)
-                            index_idx=[index_idx,str2num(option.items{k})];
+                        index_idx=[index_idx,str2num(option.items{k})];
                     end
                     data=data(:,:,index_idx,:,:,:);
             end
