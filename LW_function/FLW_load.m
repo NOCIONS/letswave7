@@ -78,10 +78,16 @@ classdef FLW_load<CLW_generic
                 index_all=1:length(st);
                 index_selected=get(obj.h_file_list,'value');
                 index_remain=setdiff(index_all,index_selected);
+                set(obj.h_file_list,'value',1);
+                
+                if index_selected(1)<=length(index_remain)
+                    set(obj.h_file_list,'value',index_selected(1));
+                else
+                    set(obj.h_file_list,'value',max(1,length(index_remain)));
+                end
                 set(obj.h_file_list,'String',st(index_remain));
                 st_userdata=get(obj.h_file_list,'userdata');
                 set(obj.h_file_list,'userdata',st_userdata(index_remain));
-                set(obj.h_file_list,'value',1);
             end
         end
         

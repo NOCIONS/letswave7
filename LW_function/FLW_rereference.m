@@ -19,7 +19,7 @@ classdef FLW_rereference<CLW_generic
                 'position',[35,175,150,320],'parent',obj.h_panel);
             obj.h_reference_btn=uicontrol('style','pushbutton',...
                 'string','Select All','callback',@obj.reference_Callback,...
-                'position',[35,132,150,35],'parent',obj.h_panel);
+                'position',[35,141,150,35],'parent',obj.h_panel);
             
             
             uicontrol('style','text','position',[235,495,150,20],...
@@ -29,7 +29,7 @@ classdef FLW_rereference<CLW_generic
                 'position',[235,175,150,320],'parent',obj.h_panel);
             obj.h_apply_btn=uicontrol('style','pushbutton',...
                 'string','Select All','callback',@obj.apply_Callback,...
-                'position',[235,132,150,35],'parent',obj.h_panel);
+                'position',[235,141,150,35],'parent',obj.h_panel);
             obj.h_not_equal_txt=uicontrol('style','text','visible','off',...
                 'position',[0,125,400,20],'foregroundcolor',[1,0,0],...
                 'string','The datasets share different channel property.',...
@@ -44,8 +44,7 @@ classdef FLW_rereference<CLW_generic
         function apply_Callback(obj,varargin)
             st=get(obj.h_apply_list,'String');
             set(obj.h_apply_list,'Value',1:length(st));
-        end
-        
+        end       
         
         function option=get_option(obj)
             option=get_option@CLW_generic(obj);
@@ -110,8 +109,7 @@ classdef FLW_rereference<CLW_generic
              for dataset_pos=2:length(lwdataset)
                 channel_labels1={lwdataset(dataset_pos).header.chanlocs.labels};
                 channel_labels2= intersect(channel_labels,channel_labels1,'stable');
-                if length(channel_labels2)<length(channel_labels)||...
-                        length(channel_labels2)<length(channel_labels)
+                if length(channel_labels2)<length(channel_labels)
                     set(obj.h_not_equal_txt,'visible','on');
                 end
                 channel_labels=channel_labels2;

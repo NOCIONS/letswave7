@@ -1,15 +1,17 @@
-function h_fig=LW_Batch(varargin)
+function h_fig=test(varargin)
 %LW_Batch
 clc;
 batch={};
 handle=[];
-LW_Init();
 Batch_Init();
 h_fig=handle.fig;
 
+%% Batch_init
     function Batch_Init()
-        handle.fig = figure('position',[100,100,500,605],'Resize','off',...
+        handle.fig = figure('position',[100,100,520,605],'Resize','off',...
             'name','Letswave Batch','numbertitle','off');
+        
+        %% initialize the toolbar and menu
         set(handle.fig,'MenuBar','none');
         set(handle.fig,'DockControls','off');
         icon=load('icon.mat');
@@ -40,6 +42,9 @@ h_fig=handle.fig;
         set(handle.toolbar_run,'TooltipString','run script');
         set(handle.toolbar_run,'ClickedCallback',{@run_script});
         
+        handle.btn_run=uicontrol('style','pushbutton','string','Run',...
+            'TooltipString','run script','callback',{@run_script},...
+            'position',[2,5,518,40]);
         
         menu_name={'Edit','Process','Toolbox','Static',...
             'Plugins','Addition1','Addition2','Addition3'};
@@ -52,7 +57,7 @@ h_fig=handle.fig;
             end
             s= xml2struct(str);
             if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
-                continue;                
+                continue;
             end
             root = uimenu(handle.fig,'Label',s.LW_Manager.Attributes.Label,'BusyAction','cancel');
             s=s.LW_Manager.menu;
@@ -93,16 +98,16 @@ h_fig=handle.fig;
                 end
             end
         end
-        handle.path_edit=uicontrol('style','edit',...
-            'HorizontalAlignment','left','position',[2,578,470,25]);
-        handle.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,...
-            'position',[475,578,25,25]);
-        handle.tabgp = uitabgroup(handle.fig,'TabLocation','left',...
-            'selectionChangedFcn',@SelectionChg,'units','pixels',...
-            'position',[1,1,499,570]);
         
+        handle.path_edit=uicontrol('style','edit','String',pwd,'userdata',pwd,...
+            'HorizontalAlignment','left','position',[3,578,487,25],...
+            'Callback',{@(obj,events)path_edit_Callback()});
+        handle.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,...
+            'position',[493,578,25,25],'Callback',{@(obj,events)path_btn_Callback()});
+        
+        %% initialize run panel
         handle.run_panel=uipanel(handle.fig,'units','pixels',...
-            'position',[62,1,447,570],'BorderType','none','visible','off');%
+            'position',[99,1,421,570],'BorderType','etchedin','visible','off');
         handle.run_ax=axes('parent',handle.run_panel,'position',[0.02,0.93,0.94,0.03]);
         title(handle.run_ax,'check each step','Units','normalized',...
             'Position',[1 1.2],'HorizontalAlignment','right');
@@ -112,12 +117,24 @@ h_fig=handle.fig;
         set(handle.run_ax,'xlim',[0,1]);
         set(handle.run_ax,'ylim',[0,1]);
         handle.run_edit=uicontrol('parent',handle.run_panel,'min',0,'max',2,...
-            'style','listbox','value',[],'position',[10,60,420,430],...
+            'style','listbox','value',[],'position',[10,50,395,470],...
             'HorizontalAlignment','left','backgroundcolor',[1,1,1]);
         handle.run_close_btn=uicontrol('parent',handle.run_panel,...
-            'string','close','style','pushbutton','position',[10,10,420,40],...
+            'string','close','style','pushbutton','position',[5,5,405,40],...
             'callback',@close_script);
         
+        %% initialize tab panel
+        handle.tab_panel=uipanel(handle.fig,'BorderType','none',...
+            'units','pixels','position',[1,45,100,528]);
+        handle.tab_idx=0;
+        handle.tab_idx_show=1;
+        handle.tab_up=uicontrol(handle.tab_panel,'style','pushbutton',...
+            'position',[49,1,20,20],'callback',@scroll_up);
+        handle.tab_down=uicontrol(handle.tab_panel,'style','pushbutton',...
+            'position',[70,1,20,20],'callback',@scroll_down);
+        
+        set(handle.tab_up,'CData',icon.icon_dataset_up,'visible','off');
+        set(handle.tab_down,'CData',icon.icon_dataset_down,'visible','off');
         if ~isempty(varargin)
             option=varargin{1};
             set(handle.path_edit,'String',option.file_path);
@@ -131,31 +148,79 @@ h_fig=handle.fig;
         else
             handle.is_close=0;
         end
+        
+%         add_function('FLW_selection');
+%         batch{1}.add_file(fullfile(pwd,'data_1'));
+%         %batch{1}.add_file(fullfile(pwd,'chan-select data_1'));
+%         handle.tab_idx=2;
+%         tab_updated(2);
     end
 
+    function path_edit_Callback()
+        st=get(handle.path_edit,'String');
+        if exist(st,'dir')
+            set(handle.path_edit,'userdata',st);
+            cd(st);
+        else
+            st=get(handle.path_edit,'userdata');
+            set(handle.path_edit,'String',st);
+        end
+    end
+
+    function path_btn_Callback()
+        st=get(handle.path_edit,'String');
+        st=uigetdir(st);
+        if ~isequal(st,0) && exist(st,'dir')==7
+            set(handle.path_edit,'String',st);
+            set(handle.path_edit,'userdata',st);
+            cd(st);
+        end
+    end
+
+%% scroll_up
+    function scroll_up(varargin)
+        if handle.tab_idx_show==1
+            return;
+        end
+        if handle.tab_idx_show>5
+            handle.tab_idx_show=handle.tab_idx_show-5;
+        else
+            handle.tab_idx_show=1;
+        end
+        tab_updated(handle.tab_idx);
+    end
+
+%% scroll_down
+    function scroll_down(varargin)
+        if handle.tab_idx_show+15<length(batch)
+            handle.tab_idx_show=handle.tab_idx_show+5;
+        end
+        tab_updated();
+    end
+
+%% add_function
     function add_function(filename)
         handle.is_close=0;
-        temp=get(handle.tabgp,'SelectedTab');
-        eval(['batch{end+1}=',filename,'(handle.tabgp);']);
-        if ~isempty(temp)
-            index=get(temp,'userdata');
-            batch=batch([1:index,end,index+1:end-1]);
+        eval(['batch{end+1}=',filename,'(handle);']);
+        set(batch{end}.h_tab,'Callback',{@SelectionChg});
+        if handle.tab_idx~=0
+            batch=batch([1:handle.tab_idx,end,handle.tab_idx+1:end-1]);
         end
         tab_order_check();
-        if isempty(temp)%to prevent no file loaded.
-            set(handle.tabgp,'selectedTab',batch{1}.h_tab);
+        if length(batch)>25
+            set(handle.tab_up,'visible','on');
+            set(handle.tab_down,'visible','on');
         end
     end
 
+%% del_function
     function del_function(varargin)
         handle.is_close=0;
         batch_num=length(batch);
         if batch_num==0
             return;
         end
-        is_load_pre=0;
-        is_load_post=0;
-        idx=get(get(handle.tabgp,'SelectedTab'),'userdata');
+        idx=handle.tab_idx;
         cnt_type=batch{idx}.FLW_TYPE;
         if idx==1
             pre_type=2;
@@ -202,114 +267,115 @@ h_fig=handle.fig;
         end
         for k=setdiff(1:batch_num,seq)
             delete(batch{k}.h_tab);
+            delete(batch{k}.h_panel);
         end
         batch=batch(seq);
-        tab_order_check();
         if ~isempty(seq)
             if idx-1==0
-                set(handle.tabgp,'selectedTab',batch{1}.h_tab);
+                handle.tab_idx=1;
+                batch{handle.tab_idx}.is_selected=1;
+                %set(handle.tabgp,'selectedTab',batch{1}.h_tab);
             else
-                set(handle.tabgp,'selectedTab',batch{idx-1}.h_tab);
+                handle.tab_idx=idx-1;
+                batch{handle.tab_idx}.is_selected=1;
+                %set(handle.tabgp,'selectedTab',batch{idx-1}.h_tab);
             end
         end
+        tab_order_check();
     end
 
-    function show_script(varargin)
-        [~,~,script]=get_script();
-        CLW_show_script(script);
-    end
-
+%% run_script
     function run_script(varargin)
+        uistack(handle.run_panel,'top');
+        set(handle.btn_run,'visible','off');
         set(findobj(handle.fig),'busyaction','cancel');
         set(handle.run_slider,'FaceColor',[255,71,38]/255);
         title(handle.run_ax,'check each operation...');
         set(handle.run_panel,'visible','on');
-        [batch_idx,script_idx,script]=get_script();
-        n=length(batch_idx);
         option=[];
         lwdata=[];
         lwdataset=[];
         str={};
         try
-        for k=1:n
-            title(handle.run_ax,['step: ',num2str(k),'/',num2str(n)]);
-            set(handle.run_slider,'Position',[0 0 k/n 1]);
-            color=get(batch{batch_idx(k)}.h_tab,'foregroundcolor');
-            html_pre=['<html><font color=rgb(',num2str(ceil(color(1)*255)),',',num2str(ceil(color(2)*255)),',',num2str(ceil(color(3)*255)),')>'];
-            html_post=['</font></html>'];
-            str = [str,{[html_pre,'step: ',num2str(k),'/',num2str(n),html_post]},...
-                {[html_pre,script{script_idx(k)},html_post]},...
-                {[html_pre,script{script_idx(k)+1},html_post]}];
-            set(handle.run_edit,'string',str);
-            ListboxTop=get(handle.run_edit,'ListboxTop');
-            set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
-            drawnow;
-            set(handle.run_edit,'ListboxTop',min(ListboxTop+3,length(str)));
-            drawnow;
-            set(handle.tabgp,'selectedTab',batch{batch_idx(k)}.h_tab);
-            if strcmp( class(batch{batch_idx(k)}),'FLW_load')
-                option=[];
-                lwdata=[];
-                lwdataset=[];
-            end
-            T=evalc(script{script_idx(k)});
-            if ~isempty(T)
-                C = strsplit(T,sprintf('\n'));
-                for k=1:length(C)
-                    if ~isempty(C{k})
-                        str = [str,{[html_pre,C{k},html_post]}];
-                        set(handle.run_edit,'string',str);
-                        ListboxTop=get(handle.run_edit,'ListboxTop');
-                        set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-                        drawnow;
-                        set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
-                        drawnow;
+            
+            [batch_idx,script_idx,script]=get_script();
+            n=length(batch_idx);
+            for k=1:n
+                title(handle.run_ax,['step: ',num2str(k),'/',num2str(n)]);
+                set(handle.run_slider,'Position',[0 0 k/n 1]);
+                color=get(batch{batch_idx(k)}.h_tab,'foregroundcolor');
+                html_pre=['<html><font color=rgb(',num2str(ceil(color(1)*255)),',',num2str(ceil(color(2)*255)),',',num2str(ceil(color(3)*255)),')>'];
+                html_post=['</font></html>'];
+                str = [str,{[html_pre,'step: ',num2str(k),'/',num2str(n),html_post]},...
+                    {[html_pre,script{script_idx(k)},html_post]},...
+                    {[html_pre,script{script_idx(k)+1},html_post]}];
+                set(handle.run_edit,'string',str);
+                ListboxTop=get(handle.run_edit,'ListboxTop');
+                set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                drawnow;
+                set(handle.run_edit,'ListboxTop',min(ListboxTop+3,length(str)));
+                drawnow;
+                tab_updated(k);
+                if strcmp( class(batch{batch_idx(k)}),'FLW_load')
+                    option=[];
+                    lwdata=[];
+                    lwdataset=[];
+                end
+                T=evalc(script{script_idx(k)});
+                if ~isempty(T)
+                    C = strsplit(T,sprintf('\n'));
+                    for k=1:length(C)
+                        if ~isempty(C{k})
+                            str = [str,{[html_pre,C{k},html_post]}];
+                            set(handle.run_edit,'string',str);
+                            ListboxTop=get(handle.run_edit,'ListboxTop');
+                            set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
+                            drawnow;
+                            set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                            drawnow;
+                        end
                     end
                 end
-            end
-            T=evalc(script{script_idx(k)+1});
-            if ~isempty(T)
-                C = strsplit(T,sprintf('\n'));
-                for k=1:length(C)
-                    if ~isempty(C{k})
-                        str = [str,{[html_pre,C{k},html_post]}];
-                        set(handle.run_edit,'string',str);
-                        ListboxTop=get(handle.run_edit,'ListboxTop');
-                        set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-                        drawnow;
-                        set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
-                        drawnow;
+                T=evalc(script{script_idx(k)+1});
+                if ~isempty(T)
+                    C = strsplit(T,sprintf('\n'));
+                    for k=1:length(C)
+                        if ~isempty(C{k})
+                            str = [str,{[html_pre,C{k},html_post]}];
+                            set(handle.run_edit,'string',str);
+                            ListboxTop=get(handle.run_edit,'ListboxTop');
+                            set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
+                            drawnow;
+                            set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                            drawnow;
+                        end
                     end
                 end
+                str = [str,{''}];
+                set(handle.run_edit,'string',str);
+                ListboxTop=get(handle.run_edit,'ListboxTop');
+                set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
+                drawnow;
             end
-            str = [str,{''}];
-            set(handle.run_edit,'string',str);
-            ListboxTop=get(handle.run_edit,'ListboxTop');
-            set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-            drawnow;
-        end
+            set(handle.run_slider,'FaceColor',[0,1,0]);
+            title(handle.run_ax,'finished');
+            
+            pause(0.5);
+            if(handle.is_close)
+                closereq();
+            end
         catch exception
             msgString = getReport(exception);
             msgString = regexprep(msgString, '<.*?>', '');
             str=[str,cellstr(msgString)];
             set(handle.run_edit,'String',str,'ForegroundColor','red');
-            set(handle.run_slider,'FaceColor',[0,1,0]);
-            title(handle.run_ax,'Finished.');
+            set(handle.run_slider,'FaceColor',[1,0,0]);
+            title(handle.run_ax,'Error.');
             rethrow(exception);
         end
-        set(handle.run_slider,'FaceColor',[0,1,0]);
-        title(handle.run_ax,'finished');
-        
-        pause(0.5);
-        if(handle.is_close)
-            closereq();
-        end
     end
 
-    function close_script(varargin)
-        set(handle.run_panel,'visible','off');
-    end
-
+%% open_script
     function open_script(varargin)
         handle.is_close=0;
         [FileName,PathName] = uigetfile(...
@@ -328,24 +394,39 @@ h_fig=handle.fig;
             option={header.history.option};
         end
         
-        idx=get(get(handle.tabgp,'SelectedTab'),'userdata');
+        %idx=get(get(handle.tabgp,'SelectedTab'),'userdata');
+        idx=handle.tab_idx;
         batch_num=length(batch);
         for k=1:length(option)
-            eval(['batch{end+1}=',option{k}.function,'(handle.tabgp);']);
+            eval(['batch{end+1}=',option{k}.function,'(handle);']);
+            set(batch{end}.h_tab,'Callback',{@SelectionChg});
             batch{end}.set_option(option{k});
         end
         if ~isempty(idx)
             I=[1:idx,batch_num+1:length(batch),idx+1:batch_num];
             batch=batch(I);
-            t=get(handle.tabgp,'children');
-            set(handle.tabgp,'children',t(I));
         end
         tab_order_check();
         if isempty(idx)&& ~isempty(batch)
-            set(handle.tabgp,'SelectedTab',batch{1}.h_tab);
+            %set(handle.tabgp,'SelectedTab',batch{1}.h_tab);
+            handle.tab_idx=1;
         end
     end
- 
+
+%% show_script
+    function show_script(varargin)
+        [~,~,script]=get_script();
+        CLW_show_script(script);
+    end
+
+%% close_script
+    function close_script(varargin)
+        
+        set(handle.btn_run,'visible','on');
+        set(handle.run_panel,'visible','off');
+    end
+
+%% save_script
     function save_script(varargin)
         [FileName,PathName] = uiputfile('*.lw_script','Save script As');
         if PathName==0
@@ -358,28 +439,18 @@ h_fig=handle.fig;
         save(fullfile(PathName,FileName),'option');
     end
 
-    function SelectionChg(varargin)
-        handle.is_close=0;
-        try
-            old_index=get(varargin{2}.OldValue,'userdata');
-        catch
-            old_index=1;
-        end
-        new_index=get(varargin{2}.NewValue,'userdata');
-        CheckTab(old_index,new_index);
-    end
-
+%% CheckTab
     function CheckTab(old_index,new_index)
         try
             for k=old_index+1:new_index
                 set(batch{k-1}.h_txt_cmt,'String',{batch{k-1}.h_title_str,batch{k-1}.h_help_str},'ForegroundColor','black');
-                set(handle.tabgp,'selectedTab',batch{k-1}.h_tab);
+                tab_updated(k-1);
                 if(k==2)
                     batch{k-1}.header_update([]);
                 else
                     batch{k-1}.header_update(batch{k-2});
                 end
-                set(handle.tabgp,'selectedTab',batch{k}.h_tab);
+                tab_updated(k);
                 drawnow;
                 batch{k}.GUI_update(batch{k-1});
                 drawnow;
@@ -394,6 +465,7 @@ h_fig=handle.fig;
         end
     end
 
+%% get_script
     function [batch_idx,script_idx,script]=get_script()
         if ~isempty(batch)
             CheckTab(1,length(batch));
@@ -418,7 +490,7 @@ h_fig=handle.fig;
         script{end+1}='LW_Init();';
         for section_pos=1:length(section_num)
             if length(section_num)~=1
-            script{end+1}=['% section ',num2str(section_pos)];
+                script{end+1}=['% section ',num2str(section_pos)];
             end
             k=section_num(section_pos);
             switch(batch{k+1}.FLW_TYPE)
@@ -457,6 +529,19 @@ h_fig=handle.fig;
         end
     end
 
+%% SelectionChg
+    function SelectionChg(varargin)
+        old_idx=handle.tab_idx;
+        new_idx=get(varargin{1},'userdata');
+        for k=1:length(batch)
+            batch{k}.is_selected=0;
+        end
+        batch{new_idx}.is_selected=1;
+        tab_updated(new_idx);
+        CheckTab(old_idx,new_idx);
+    end
+
+%% tab_order_check
     function tab_order_check()
         if isempty(batch)
             return;
@@ -482,28 +567,36 @@ h_fig=handle.fig;
             index_num=index_num+1;
             set(batch{tab_pos}.h_tab,'userdata',index_num);
             if(is_load)
-                batch{end+1}=FLW_load(handle.tabgp);
+                batch{end+1}=FLW_load(handle);
+                set(batch{end}.h_tab,'Callback',{@SelectionChg});
                 set(batch{end}.h_tab,'userdata',index_num);
                 index_num=index_num+1;
                 set(batch{tab_pos}.h_tab,'userdata',index_num);
             end
         end
         seq=zeros(index_num,1);
-        t=get(handle.tabgp,'children');
-        for k=1:length(t)
+        for k=1:length(batch)
             seq(k)=get(batch{k}.h_tab,'userdata');
         end
         [~,I] = sort(seq);
         batch=batch(I);
         
-        seq=zeros(index_num,1);
-        t=get(handle.tabgp,'children');
-        for k=1:length(t)
-            seq(k)=get(t(k),'userdata');
+        handle.tab_idx=0;
+        for k=1:length(batch)
+            if handle.tab_idx==0
+                if batch{k}.is_selected==1
+                    handle.tab_idx=k;
+                end
+            else
+                batch{k}.is_selected=0;
+            end
         end
-        [~,I] = sort(seq);
-        set(handle.tabgp,'children',t(I));
-        
+        tab_updated(handle.tab_idx);
+    end
+
+%% tab_updated
+    function tab_updated(idx)
+        handle.tab_idx=idx;
         color=[     0    0.4470    0.7410
             0.8500    0.3250    0.0980
             0.9290    0.6940    0.1250
@@ -512,11 +605,44 @@ h_fig=handle.fig;
             0.3010    0.7450    0.9330
             0.6350    0.0780    0.1840];
         color_num=0;
-        for k=1:length(batch)
-            if(batch{k}.FLW_TYPE==0)
-                color_num=mod(color_num,7)+1;
+        if length(batch)<=24
+            for k=1:length(batch)
+                if(idx==k)
+                    set(batch{k}.h_tab,'position',[2,525-20*k,98,20]);
+                    set(batch{k}.h_tab,'FontWeight','bold');
+                    set(batch{k}.h_panel,'visible','on');
+                else
+                    set(batch{k}.h_tab,'position',[10,525-20*k,90,20]);
+                    set(batch{k}.h_tab,'FontWeight','normal');
+                    set(batch{k}.h_panel,'visible','off');
+                end
+                if(batch{k}.FLW_TYPE==0)
+                    color_num=mod(color_num,7)+1;
+                end
+                set(batch{k}.h_tab,'foregroundcolor',color(color_num,:));
             end
-            set(batch{k}.h_tab,'foregroundcolor',color(color_num,:));
+        else
+            for k=1:length(batch)
+                set(batch{k}.h_tab,'visible','off');
+            end
+            for k=handle.tab_idx_show:min(handle.tab_idx_show+24,length(batch))
+                set(batch{k}.h_tab,'visible','on');
+                if(idx==k)
+                    set(batch{k}.h_tab,'position',...
+                        [2,523-20*(k+1-handle.tab_idx_show),98,20]);
+                    set(batch{k}.h_tab,'FontWeight','bold');
+                    set(batch{k}.h_panel,'visible','on');
+                else
+                    set(batch{k}.h_tab,'position',...
+                        [10,523-20*(k+1-handle.tab_idx_show),90,20]);
+                    set(batch{k}.h_tab,'FontWeight','normal');
+                    set(batch{k}.h_panel,'visible','off');
+                end
+                if(batch{k}.FLW_TYPE==0)
+                    color_num=mod(color_num,7)+1;
+                end
+                set(batch{k}.h_tab,'foregroundcolor',color(color_num,:));
+            end
         end
     end
 end

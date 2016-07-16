@@ -16,9 +16,7 @@
         <submenu Label="Add or edit epochdata"/>
     </menu>
     <menu Label="Arrang signals">
-        <submenu Label="Rearrange/Delete channels"/>
-        <submenu Label="Rearrange/Delete epochs"/>
-        <submenu Label="Rearrange/Delete indexes"/>
+        <submenu Label="Rearrange/Delete datasets(epoch/channel/index)" callback="FLW_selection"/>
         <submenu Label="Merge datasets(channel/epoch/index)" callback="FLW_merge"/>
         <submenu Label="Select"/>
     </menu>

@@ -271,6 +271,8 @@ Manager_Init();
         switch events.Key
             case 'delete'
                 menu_callback('GLW_delete');
+            case 'backspace'
+                menu_callback('GLW_delete');
             case 'r'
                 menu_callback('GLW_rename');
             case 'v'

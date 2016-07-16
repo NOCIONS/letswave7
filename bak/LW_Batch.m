@@ -3,6 +3,7 @@ function h_fig=LW_Batch(varargin)
 clc;
 batch={};
 handle=[];
+LW_Init();
 Batch_Init();
 h_fig=handle.fig;
 
