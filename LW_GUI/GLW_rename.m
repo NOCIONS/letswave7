@@ -11,7 +11,7 @@ prompt = {'Rename the dataset:'};
 dlg_title = 'Rename';
 [~,n]=fileparts(option.file_str{1});
 filename_pre={n};
-filename_post = inputdlg(prompt,dlg_title,[1 length(n)+10],filename_pre);
+filename_post = inputdlg(prompt,dlg_title,[1 length(n)+30],filename_pre);
 if isempty(filename_post)
     return
 end

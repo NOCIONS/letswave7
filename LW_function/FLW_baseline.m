@@ -36,7 +36,6 @@ classdef FLW_baseline<CLW_generic
                 'parent',obj.h_panel);
         end
         
-        
         function reset_Callback(obj,varargin)
             xstart=obj.lwdataset(1).header.xstart;
             for data_pos=2:length(obj.lwdataset)
