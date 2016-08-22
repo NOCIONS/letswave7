@@ -543,7 +543,7 @@ classdef FLW_selection<CLW_generic
                     data=data(epoch_idx,:,:,:,:,:);
                     
                 case 'channel'
-                    channel_labels={header.chanlocs.labels};
+                    channel_labels={lwdata_in.header.chanlocs.labels};
                     [~,channel_idx]=intersect(channel_labels,option.items,'stable');
                     data=data(:,channel_idx,:,:,:,:);
                 case 'index'

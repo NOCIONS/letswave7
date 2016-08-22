@@ -67,7 +67,8 @@ classdef CLW_generic<handle
             lwdataset=batch_pre.lwdataset;
             option=get_option(obj);
             for data_pos=1:length(lwdataset)
-                obj.lwdataset(data_pos).header = obj.get_header(lwdataset(data_pos).header,option);
+                %obj.lwdataset(data_pos).header = obj.get_header(lwdataset(data_pos).header,option);
+                %evalc is used to block the information in Command Window 
                 evalc('obj.lwdataset(data_pos).header = obj.get_header(lwdataset(data_pos).header,option);');
                 if option.is_save
                     obj.virtual_filelist(end+1)=struct(...

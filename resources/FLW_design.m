@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_ttest_constant';
+FLW_name='FLW_ttest';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

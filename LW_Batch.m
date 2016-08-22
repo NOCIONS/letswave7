@@ -1,4 +1,4 @@
-function h_fig=test(varargin)
+function h_fig=LW_Batch(varargin)
 %LW_Batch
 clc;
 batch={};
@@ -297,7 +297,6 @@ h_fig=handle.fig;
         lwdataset=[];
         str={};
         try
-            
             [batch_idx,script_idx,script]=get_script();
             n=length(batch_idx);
             for k=1:n
@@ -421,7 +420,6 @@ h_fig=handle.fig;
 
 %% close_script
     function close_script(varargin)
-        
         set(handle.btn_run,'visible','on');
         set(handle.run_panel,'visible','off');
     end

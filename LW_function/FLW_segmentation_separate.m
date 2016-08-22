@@ -106,10 +106,13 @@ classdef FLW_segmentation_separate<CLW_generic
         end
         
         function header_update(obj,batch_pre)
+            obj.virtual_filelist=batch_pre.virtual_filelist;%??
             lwdataset=batch_pre.lwdataset;
             option=get_option(obj);
             obj.lwdataset=[];
             for data_pos=1:length(lwdataset)
+                %obj.lwdataset=[obj.lwdataset, obj.get_headerset(lwdataset(data_pos).header,option)];
+                %evalc is used to block the information in Command Window 
                 evalc('obj.lwdataset=[obj.lwdataset, obj.get_headerset(lwdataset(data_pos).header,option)];');
             end
             if option.is_save

@@ -61,6 +61,7 @@ classdef FLW_baseline_SNR<CLW_generic
                     set(obj.h_operation_pop,'value',4);
             end
         end
+        
         function str=get_Script(obj)
             option=get_option(obj);
             frag_code=[];

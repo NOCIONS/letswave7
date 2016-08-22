@@ -5,7 +5,7 @@ classdef FLW_Demo<CLW_generic
         % 1 for the function dealing with single dataset (1in-1out)
         % 2 for the function with Nin-1out, like merge
         % 3 for the function with 1in-Nout, like segmentation_separate
-        % 4 for the function with Nin-Nout, like math_multiple
+        % 4 for the function with Nin-Mout, like math_multiple, t-test
         FLW_TYPE=1;
     end
     
@@ -65,7 +65,6 @@ classdef FLW_Demo<CLW_generic
             option.is_save=0;
             option=CLW_check_input(option,{'affix','is_save'},varargin);
             header=FLW_Demo.get_header(lwdata_in.header,option);
-            
             data=lwdata_in.data;
             %to be edited...
             
