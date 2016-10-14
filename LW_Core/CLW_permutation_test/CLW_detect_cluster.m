@@ -11,5 +11,6 @@ for k=1:max(RLL)
     p=sum(cluster_distribute>v)/option.num_permutations;
     if(p<option.cluster_threshold)
         cluster_detect(ff)=p;
+        %disp(v);
     end
 end

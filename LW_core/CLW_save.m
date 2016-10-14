@@ -1,4 +1,4 @@
-function filename=LW_save(lwdata_in,varargin)
+function filename=CLW_save(lwdata_in,varargin)
 option.path='';
 option=CLW_check_input(option,{'path'},varargin);
 header=lwdata_in.header;

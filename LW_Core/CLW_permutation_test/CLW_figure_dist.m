@@ -23,8 +23,7 @@ uicontrol('Style', 'text','horizontalalignment','left',...
     'units','normal','Position', [0.05 0.11 0.5 0.05]);
 
 txt2 = uicontrol('Style', 'text','horizontalalignment','right',...
-    'string','',...
-    'units','normal','Position', [0.5 0.11 0.45 0.05]);
+    'string','','units','normal','Position', [0.5 0.11 0.45 0.05]);
 sld_value=str2num(get(obj.h_chan_dist_edit,'string'));
 if isempty(sld_value)
     sld_value=0;

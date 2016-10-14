@@ -7,3 +7,4 @@ RLL=reshape(CLW_bwlabel(tstat,dist),[],1);
 for k=1:max(RLL)
     max_value=max(max_value,sum(tstat(RLL==k)));
 end
+

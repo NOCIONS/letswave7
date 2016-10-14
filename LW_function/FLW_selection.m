@@ -279,7 +279,9 @@ classdef FLW_selection<CLW_generic
                         set(obj.h_not_equal_txt,'visible','on');
                     end
                     set(obj.h_old_list,'String',obj.labels_chan);
-                    temp= intersect(obj.labels_chan,new_list,'stable');
+                    [temp,~,temp_idx]= intersect(obj.labels_chan,new_list,'stable');
+                    [~,temp_idx]=sort(temp_idx);
+                    temp=temp(temp_idx);
                     set(obj.h_new_list,'String',temp);
                     [~,~,idx] = intersect(old_idx,obj.labels_chan,'stable');
                     set(obj.h_old_list,'value',idx);
@@ -497,7 +499,9 @@ classdef FLW_selection<CLW_generic
                         error('No corresponding channel is found');
                     end
                     option.items=items;
-                    [~,channel_idx]=intersect(channel_labels,option.items,'stable');
+                    [~,channel_idx,temp_idx]=intersect(channel_labels,option.items,'stable');
+                    [~,temp_idx]=sort(temp_idx);
+                    channel_idx=channel_idx(temp_idx);
                     header_out.datasize(2)=length(channel_idx);
                     header_out.chanlocs=header_out.chanlocs(channel_idx);
                 case 'index'
@@ -544,7 +548,9 @@ classdef FLW_selection<CLW_generic
                     
                 case 'channel'
                     channel_labels={lwdata_in.header.chanlocs.labels};
-                    [~,channel_idx]=intersect(channel_labels,option.items,'stable');
+                    [~,channel_idx,temp_idx]=intersect(channel_labels,option.items,'stable');
+                    [~,temp_idx]=sort(temp_idx);
+                    channel_idx=channel_idx(temp_idx);
                     data=data(:,channel_idx,:,:,:,:);
                 case 'index'
                     index_idx=[];

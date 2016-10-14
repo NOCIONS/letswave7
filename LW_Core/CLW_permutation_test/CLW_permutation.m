@@ -7,7 +7,6 @@ classdef CLW_permutation<CLW_generic
         h_threshold_edit;
         h_number_edit;
         h_show_progress_chk;
-        h_cluster_union_chk;
         
         h_multiple_sensor_panel;
         h_multiple_sensor_chk;
@@ -24,7 +23,6 @@ classdef CLW_permutation<CLW_generic
                 'string','Alpha level:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_alpha_edit=uicontrol('style','edit','String','0.05',...
-                'callback',@obj.alpha_level_Callback,...
                 'position',[35,357,200,25],'parent',obj.h_panel);
             
             
@@ -36,17 +34,10 @@ classdef CLW_permutation<CLW_generic
                 'position',[15,90,350,25],'callback',@obj.showpanel,...
                 'parent',obj.h_permutation_panel);
             
-            obj.h_cluster_union_chk=uicontrol('style','checkbox',...
-                'String','Apply Cluster Union Method','value',0,...
-                'callback',@obj.set_alpha_level,...
-                'position',[80,90,200,25],'tag','permute',...
-                'parent',obj.h_permutation_panel);
-            
             uicontrol('style','text','position',[15,70,200,20],...
                 'string','Cluster threshold:','tag','permute',...
                 'HorizontalAlignment','left','parent',obj.h_permutation_panel);
             obj.h_threshold_edit=uicontrol('style','edit','String','0.05',...
-                'callback',@obj.alpha_level_Callback,...
                 'position',[15,50,220,25],'tag','permute',...
                 'parent',obj.h_permutation_panel);
             
@@ -86,20 +77,7 @@ classdef CLW_permutation<CLW_generic
             set(h,'enable','off');
         end
         
-        function alpha_level_Callback(obj,varargin)
-            str=get(varargin{1},'String');
-            if get(obj.h_cluster_union_chk,'value')
-                set(obj.h_threshold_edit,'string',str);
-                set(obj.h_alpha_edit,'string',str);
-            end
-        end
         
-        function set_alpha_level(obj,varargin)
-            if get(obj.h_cluster_union_chk,'value')
-                set(obj.h_threshold_edit,...
-                    'string',get(obj.h_alpha_edit,'string'));
-            end
-        end
         
         function showpanel(obj,varargin)
             h=findobj(obj.h_permutation_panel,'tag','permute');
@@ -141,7 +119,6 @@ classdef CLW_permutation<CLW_generic
             option.num_permutations=str2num(get(obj.h_number_edit,'string'));
             option.show_progress=get(obj.h_show_progress_chk,'value');
             
-            option.cluster_union=get(obj.h_cluster_union_chk,'value');
             option.multiple_sensor=get(obj.h_multiple_sensor_chk,'value');
             option.chan_dist=str2num(get(obj.h_chan_dist_edit,'string'));
         end
@@ -155,7 +132,6 @@ classdef CLW_permutation<CLW_generic
             set(obj.h_threshold_edit,'string',num2str(option.cluster_threshold));
             set(obj.h_number_edit,'string',num2str(option.num_permutations));
             set(obj.h_show_progress_chk,'value',option.show_progress);
-            set(obj.h_cluster_union_chk,'value',option.cluster_union);
             set(obj.h_multiple_sensor_chk,'value',option.multiple_sensor);
             set(obj.h_chan_dist_edit,'string',num2str(option.chan_dist));
             
@@ -177,8 +153,6 @@ classdef CLW_permutation<CLW_generic
                     num2str(option.num_permutations),','];
                 frag_code=[frag_code,'''show_progress'',',...
                     num2str(option.show_progress),','];
-                frag_code=[frag_code,'''cluster_union'',',...
-                    num2str(option.cluster_union),','];
                 if option.multiple_sensor
                     frag_code=[frag_code,'''multiple_sensor'',',...
                         num2str(option.multiple_sensor),','];
