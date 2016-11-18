@@ -1,4 +1,5 @@
 function max_value=CLW_max_cluster(tstat,dist)
+%% CLW_max_cluster
 if nargin==1
     dist=[];
 end

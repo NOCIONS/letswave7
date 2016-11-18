@@ -152,12 +152,9 @@ classdef FLW_ttest<CLW_permutation
             header_out.index_labels{1}='p-value';
             header_out.index_labels{2}='t-value';
             if option.permutation==1
-                header_out.datasize(3)=3;
-                header_out.index_labels{3}='cluster t-value';
-                if ~option.cluster_union
-                    header_out.datasize(3)=4;
-                    header_out.index_labels{4}='cluster p-value';
-                end
+                header_out.datasize(3)=4;
+                header_out.index_labels{3}='cluster p-value';
+                header_out.index_labels{4}='cluster t-value';
             else
                 header_out.datasize(3)=2;
             end
@@ -232,21 +229,26 @@ classdef FLW_ttest<CLW_permutation
             end
             dist=squareform(pdist([x;y]'))<option.chan_dist;
             
+            
+            data_n=size(lwdataset_in(2).data,1);
+            data_m=size(lwdataset_in(1).data,1);
+            if strcmp(option.test_type,'paired sample')
+                df=data_n-1;
+            else
+                df=data_n+data_m-2;
+            end
+            
             data=zeros(header.datasize);
             for z_idx=1:header.datasize(4)
                 if option.multiple_sensor==0
                     for ch_idx=1:1:header.datasize(2)
-                        data_n=size(lwdataset_in(2).data,1);
-                        data_m=size(lwdataset_in(1).data,1);
                         if strcmp(option.test_type,'paired sample')
                             data_tmp=lwdataset_in(2).data(:,ch_idx,1,z_idx,:,:)-...
                                 lwdataset_in(1).data(:,ch_idx,1,z_idx,:,:);
-                            df=data_n+data_m-2;
                             [~,P,~,STATS]=ttest(data_tmp,0,option.alpha,option.tails);
                         else
                             data_tmp=[lwdataset_in(2).data(:,ch_idx,1,z_idx,:,:);...
                                 lwdataset_in(1).data(:,ch_idx,1,z_idx,:,:)];
-                            df=data_n-1;
                             [~,P,~,STATS]=ttest2(data_tmp(1:data_n,:,:,:,:,:),...
                                 data_tmp(data_n+1:end,:,:,:,:,:),option.alpha,option.tails);
                         end
@@ -256,63 +258,51 @@ classdef FLW_ttest<CLW_permutation
                         curve=[];
                         if option.permutation==1
                             if sum(P(:)<=option.alpha)==0
-                                data(:,ch_idx,3,z_idx,:,:)=0;
-                                if ~option.cluster_union
-                                    data(:,ch_idx,4,z_idx,:,:)=1;
-                                end
+                                data(:,:,3,z_idx,:,:)=1;
+                                data(:,:,4,z_idx,:,:)=0;
                                 continue;
                             end
                             
-                            if option.cluster_union
-                                t_threshold=STATS.tstat(P(:)>option.alpha/...
-                                    (header.datasize(5)*header.datasize(6))...
-                                    & P(:)<option.alpha);
-                                if isempty(t_threshold)
-                                    [~,idx]=max(P(:)<option.alpha);
-                                    t_threshold=STATS.tstat(idx);
-                                end
-                                t_threshold=sort(abs(reshape(t_threshold,[],1)));
+                            if strcmp(option.tails,'both')
+                                t_threshold = abs(tinv(option.alpha/2,df));
                             else
-                                if strcmp(option.tails,'both')
-                                    t_threshold = abs(tinv(option.alpha/2,df));
-                                else
-                                    t_threshold = abs(tinv(option.alpha,df));
-                                end
+                                t_threshold = abs(tinv(option.alpha,df));
                             end
                             
-                            cluster_distribute=zeros(length(t_threshold),option.num_permutations);
+                            cluster_distribute=zeros(1,option.num_permutations);
                             for iter=1:option.num_permutations
                                 if strcmp(option.test_type,'paired sample')
-                                    rnd_data=data_tmp.*sign(randn(size(data_tmp)));
+                                    if option.num_permutations==2^(size(data_tmp,1)-1)
+                                        A=dec2bin(iter-1)-'0';   A=[zeros(1,size(data_tmp,1)-length(A)),A];
+                                    else
+                                        A=sign(randn(size(data_tmp,1),1));
+                                    end
+                                    rnd_data=data_tmp;
+                                    rnd_data(A==1,:)=-rnd_data(A==1,:);
                                     tstat=mean(rnd_data)./(std(rnd_data)./sqrt(data_n));
                                 else
-                                    [~,idx]=sort(rand(data_n+data_m),1);
-                                    tstat=(mean(data_tmp(idx(1:data_n),:,:,:,:,:))...
-                                        -mean(data_tmp(idx(1+data_n:end),:,:,:,:,:)))...
-                                        ./sqrt(std(data_tmp(idx(1:data_n),:,:,:,:,:))...
-                                        .^2./data_n+...
-                                        std(data_tmp(idx(1+data_n:end),:,:,:,:,:))...
-                                        .^2./data_m);
+                                    idx = randperm(data_n+data_m);
+                                    x=data_tmp(idx(1:data_n),:,:,:,:,:);
+                                    y=data_tmp(idx(data_n+1:end),:,:,:,:,:);
+                                    tstat=(mean(x)-mean(y))./sqrt(((data_n-1).*nanvar(x)+(data_m-1).*nanvar(y))./df.*(1/data_n+1/data_m));
+                                    %tstat=(mean(x)-mean(y))./sqrt(nanvar(x)./data_n+nanvar(y)./data_m);
                                 end
                                 
                                 tstat=permute(tstat,[6,5,1,2,3,4]);
-                                max_tstat=zeros(length(t_threshold),1);
-                                for t_threshold_idx=1:length(t_threshold)
-                                    switch option.tails
-                                        case 'both'
-                                            max_tstat(t_threshold_idx)=max(...
-                                                CLW_max_cluster(tstat.*(tstat>=t_threshold(t_threshold_idx))),...
-                                                CLW_max_cluster(-tstat.*(tstat<=-t_threshold(t_threshold_idx))));
-                                        case 'left'
-                                            max_tstat(t_threshold_idx)=...
-                                                CLW_max_cluster(-tstat.*(tstat<=-t_threshold(t_threshold_idx)));
-                                        case 'right'
-                                            max_tstat(t_threshold_idx)=...
-                                                CLW_max_cluster(tstat.*(tstat>=t_threshold(t_threshold_idx)));
-                                    end
+                                max_tstat=0;
+                                switch option.tails
+                                    case 'both'
+                                        max_tstat=max(...
+                                            CLW_max_cluster(tstat.*(tstat>=t_threshold)),...
+                                            CLW_max_cluster(-tstat.*(tstat<=-t_threshold)));
+                                    case 'left'
+                                        max_tstat=...
+                                            CLW_max_cluster(-tstat.*(tstat<=-t_threshold));
+                                    case 'right'
+                                        max_tstat=...
+                                            CLW_max_cluster(tstat.*(tstat>=t_threshold));
                                 end
-                                cluster_distribute(:,iter)=max_tstat;
-                                
+                                cluster_distribute(iter)=max_tstat;
                                 
                                 if option.show_progress
                                     criticals=prctile(cluster_distribute(1,1:iter),(1-option.cluster_threshold)*100);
@@ -334,49 +324,60 @@ classdef FLW_ttest<CLW_permutation
                             end
                             
                             tstat=permute(STATS.tstat,[6,5,1,2,3,4]);
-                            
                             data_tmp=ones(size(tstat));
-                            for t_threshold_idx=1:length(t_threshold)
-                                threshold_tmp=t_threshold(t_threshold_idx);
-                                switch option.tails
-                                    case 'both'
-                                        data_tmp=data_tmp.*...
-                                            CLW_detect_cluster(tstat.*(tstat>threshold_tmp),...
-                                            option,cluster_distribute(t_threshold_idx,:));
-                                        data_tmp=data_tmp.*...
-                                            CLW_detect_cluster(-tstat.*(tstat<-threshold_tmp),...
-                                            option,cluster_distribute(t_threshold_idx,:));
-                                    case 'left'
-                                        data_tmp=data_tmp.*...
-                                            CLW_detect_cluster(-tstat.*(tstat<-threshold_tmp),...
-                                            option,cluster_distribute(t_threshold_idx,:));
-                                    case 'right'
-                                        data_tmp=data_tmp.*...
-                                            CLW_detect_cluster(tstat.*(tstat>threshold_tmp),...
-                                            option,cluster_distribute(t_threshold_idx,:));
-                                end
+                            switch option.tails
+                                case 'both'
+                                    data_tmp=data_tmp.*...
+                                        CLW_detect_cluster(tstat.*(tstat>=t_threshold),...
+                                        option,cluster_distribute);
+                                    data_tmp=data_tmp.*...
+                                        CLW_detect_cluster(-tstat.*(tstat<=-t_threshold),...
+                                        option,cluster_distribute);
+                                case 'left'
+                                    data_tmp=data_tmp.*...
+                                        CLW_detect_cluster(-tstat.*(tstat<=-t_threshold),...
+                                        option,cluster_distribute);
+                                case 'right'
+                                    data_tmp=data_tmp.*...
+                                        CLW_detect_cluster(tstat.*(tstat>=t_threshold),...
+                                        option,cluster_distribute);
                             end
                             data_tmp=ipermute(data_tmp,[6,5,1,2,3,4]);
-                            data(:,ch_idx,3,z_idx,:,:)=(data_tmp<1)...
+                            data(:,ch_idx,3,z_idx,:,:)=data_tmp;
+                            data(:,ch_idx,4,z_idx,:,:)=(data_tmp<1)...
                                 .*data(:,ch_idx,2,z_idx,:,:);
-                            if ~option.cluster_union
-                                data(:,ch_idx,4,z_idx,:,:)=data_tmp;
+                            
+                            
+                            tstat=permute(STATS.tstat,[6,5,1,2,3,4]);
+                            switch option.tails
+                                case 'both'
+                                    data_tmp=CLW_detect_cluster(tstat.*(tstat>t_threshold),...
+                                        option,cluster_distribute);
+                                    data_tmp=data_tmp.*...
+                                        CLW_detect_cluster(-tstat.*(tstat<-t_threshold),...
+                                        option,cluster_distribute);
+                                case 'left'
+                                    data_tmp=CLW_detect_cluster(-tstat.*(tstat<-t_threshold),...
+                                        option,cluster_distribute);
+                                case 'right'
+                                    data_tmp=CLW_detect_cluster(tstat.*(tstat>t_threshold),...
+                                        option,cluster_distribute);
                             end
+                            data_tmp=ipermute(data_tmp,[6,5,1,2,3,4]);
+                            data(:,ch_idx,3,z_idx,:,:)=data_tmp;
+                            data(:,ch_idx,4,z_idx,:,:)=(data_tmp<1)...
+                                .*data(:,ch_idx,2,z_idx,:,:);
                         end
                     end
                 else
                     for ch_idx=1:1:header.datasize(2)
-                        data_n=size(lwdataset_in(2).data,1);
-                        data_m=size(lwdataset_in(1).data,1);
                         if strcmp(option.test_type,'paired sample')
                             data_tmp=lwdataset_in(2).data(:,ch_idx,1,z_idx,:,:)-...
                                 lwdataset_in(1).data(:,ch_idx,1,z_idx,:,:);
-                            df=data_n+data_m-2;
                             [~,P,~,STATS]=ttest(data_tmp,0,option.alpha,option.tails);
                         else
                             data_tmp=[lwdataset_in(2).data(:,ch_idx,1,z_idx,:,:);...
                                 lwdataset_in(1).data(:,ch_idx,1,z_idx,:,:)];
-                            df=data_n-1;
                             [~,P,~,STATS]=ttest2(data_tmp(1:data_n,:,:,:,:,:),...
                                 data_tmp(data_n+1:end,:,:,:,:,:),option.alpha,option.tails);
                         end
@@ -384,30 +385,15 @@ classdef FLW_ttest<CLW_permutation
                         data(:,ch_idx,2,z_idx,:,:)=STATS.tstat;
                     end
                     if sum(reshape(data(:,:,1,z_idx,:,:),[],1)<=option.alpha)==0
-                        data(:,:,3,z_idx,:,:)=0;
-                        if ~option.cluster_union
-                            data(:,:,4,z_idx,:,:)=1;
-                        end
+                        data(:,:,3,z_idx,:,:)=1;
+                        data(:,:,4,z_idx,:,:)=0;
                         continue;
                     end
                     curve=[];
-                    if option.cluster_union
-                        t_threshold=data(:,:,1,z_idx,:,:);
-                        idx_temp= t_threshold>option.alpha/...
-                            (header.datasize(2)*header.datasize(5)*header.datasize(6))...
-                            & t_threshold<option.alpha;
-                        if isempty(idx_temp)
-                            [~,idx_temp]=max(t_threshold(:)<option.alpha);
-                        end
-                        t_threshold=data(:,:,2,z_idx,:,:);
-                        t_threshold=t_threshold(idx_temp);
-                        t_threshold=sort(abs(reshape(t_threshold,[],1)));
+                    if strcmp(option.tails,'both')
+                        t_threshold = abs(tinv(option.alpha/2,df));
                     else
-                        if strcmp(option.tails,'both')
-                            t_threshold = abs(tinv(option.alpha/2,df));
-                        else
-                            t_threshold = abs(tinv(option.alpha,df));
-                        end
+                        t_threshold = abs(tinv(option.alpha,df));
                     end
                     
                     if strcmp(option.test_type,'paired sample')
@@ -420,37 +406,39 @@ classdef FLW_ttest<CLW_permutation
                     cluster_distribute=zeros(length(t_threshold),option.num_permutations);
                     for iter=1:option.num_permutations
                         if strcmp(option.test_type,'paired sample')
-                            rnd_data=data_tmp.*sign(randn(size(data_tmp)));
+                            if option.num_permutations==2^(size(data_tmp,1)-1)
+                                A=dec2bin(iter-1)-'0';   A=[zeros(1,size(data_tmp,1)-length(A)),A];
+                            else
+                                A=sign(randn(size(data_tmp,1),1));
+                            end
+                            rnd_data=data_tmp;
+                            rnd_data(A==1,:)=-rnd_data(A==1,:);
                             tstat=mean(rnd_data)./(std(rnd_data)./sqrt(data_n));
                         else
-                            [~,idx]=sort(rand(data_n+data_m),1);
-                            tstat=(mean(data_tmp(idx(1:data_n),:,:,:,:,:))...
-                                -mean(data_tmp(idx(1+data_n:end),:,:,:,:,:)))...
-                                ./sqrt(std(data_tmp(idx(1:data_n),:,:,:,:,:))...
-                                .^2./data_n+...
-                                std(data_tmp(idx(1+data_n:end),:,:,:,:,:))...
-                                .^2./data_m);
+                            idx = randperm(data_n+data_m);
+                            x=data_tmp(idx(1:data_n),:,:,:,:,:);
+                            y=data_tmp(idx(data_n+1:end),:,:,:,:,:);
+                            tstat=(mean(x)-mean(y))./sqrt(((data_n-1).*nanvar(x)+(data_m-1).*nanvar(y))./df.*(1/data_n+1/data_m));
+                            %tstat=(mean(x)-mean(y))./sqrt(nanvar(x)./data_n+nanvar(y)./data_m);
                         end
                         tstat=permute(tstat,[6,5,1,2,3,4]);
-                        max_tstat=zeros(length(t_threshold),1);
-                        for t_threshold_idx=1:length(t_threshold)
-                            switch option.tails
-                                case 'both'
-                                    max_tstat(t_threshold_idx)=max(...
-                                        CLW_max_cluster(tstat.*(tstat>=t_threshold(t_threshold_idx)),dist),...
-                                        CLW_max_cluster(-tstat.*(tstat<=-t_threshold(t_threshold_idx)),dist));
-                                case 'left'
-                                    max_tstat(t_threshold_idx)=...
-                                        CLW_max_cluster(-tstat.*(tstat<=-t_threshold(t_threshold_idx)),dist);
-                                case 'right'
-                                    max_tstat(t_threshold_idx)=...
-                                        CLW_max_cluster(tstat.*(tstat>=t_threshold(t_threshold_idx)),dist);
-                            end
+                        max_tstat=0;
+                        switch option.tails
+                            case 'both'
+                                max_tstat=max(...
+                                    CLW_max_cluster(tstat.*(tstat>=t_threshold),dist),...
+                                    CLW_max_cluster(-tstat.*(tstat<=-t_threshold),dist));
+                            case 'left'
+                                max_tstat=...
+                                    CLW_max_cluster(-tstat.*(tstat<=-t_threshold),dist);
+                            case 'right'
+                                max_tstat=...
+                                    CLW_max_cluster(tstat.*(tstat>=t_threshold),dist);
                         end
-                        cluster_distribute(:,iter)=max_tstat;
+                        cluster_distribute(iter)=max_tstat;
                         
                         if option.show_progress
-                            criticals=prctile(cluster_distribute(1,1:iter),(1-option.cluster_threshold)*100);
+                            criticals=prctile(cluster_distribute(1:iter),(1-option.cluster_threshold)*100);
                             curve=[curve,reshape(criticals,[],1)];
                             if ~ishandle(h_line)
                                 figure();
@@ -468,33 +456,23 @@ classdef FLW_ttest<CLW_permutation
                     end
                     
                     tstat=permute(data(:,:,2,z_idx,:,:),[6,5,1,2,3,4]);
-                    data_tmp=ones(size(tstat));
-                    for t_threshold_idx=1:length(t_threshold)
-                        threshold_tmp=t_threshold(t_threshold_idx);
-                        switch option.tails
-                            case 'both'
-                                data_tmp=data_tmp.*...
-                                    CLW_detect_cluster(tstat.*(tstat>threshold_tmp),...
-                                    option,cluster_distribute(t_threshold_idx,:),dist);
-                                data_tmp=data_tmp.*...
-                                    CLW_detect_cluster(-tstat.*(tstat<-threshold_tmp),...
-                                    option,cluster_distribute(t_threshold_idx,:),dist);
-                            case 'left'
-                                data_tmp=data_tmp.*...
-                                    CLW_detect_cluster(-tstat.*(tstat<-threshold_tmp),...
-                                    option,cluster_distribute(t_threshold_idx,:),dist);
-                            case 'right'
-                                data_tmp=data_tmp.*...
-                                    CLW_detect_cluster(tstat.*(tstat>threshold_tmp),...
-                                    option,cluster_distribute(t_threshold_idx,:),dist);
-                        end
+                    switch option.tails
+                        case 'both'
+                            data_tmp=CLW_detect_cluster(tstat.*(tstat>t_threshold),...
+                                option,cluster_distribute,dist);
+                            data_tmp=data_tmp.*...
+                                CLW_detect_cluster(-tstat.*(tstat<-t_threshold),...
+                                option,cluster_distribute,dist);
+                        case 'left'
+                            data_tmp=CLW_detect_cluster(-tstat.*(tstat<-t_threshold),...
+                                option,cluster_distribute,dist);
+                        case 'right'
+                            data_tmp=CLW_detect_cluster(tstat.*(tstat>threshold_tmp),...
+                                option,cluster_distribute(t_threshold_idx,:),dist);
                     end
-                    
                     data_tmp=ipermute(data_tmp,[6,5,1,2,3,4]);
-                    data(:,:,3,z_idx,:,:)=(data_tmp<1).*data(:,:,2,z_idx,:,:);
-                    if ~option.cluster_union
-                        data(:,:,4,z_idx,:,:)=data_tmp;
-                    end
+                    data(:,:,3,z_idx,:,:)=data_tmp;
+                    data(:,:,4,z_idx,:,:)=(data_tmp<1).*data(:,:,2,z_idx,:,:);
                 end
             end
             

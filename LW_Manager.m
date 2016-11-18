@@ -254,8 +254,13 @@ Manager_Init();
     end
 
     function menu_callback(fun_name)
-        option=get_selectfile();
-        if isempty(option)
+        if isempty(strfind(fun_name,'FLW_import_'))
+            option=get_selectfile();
+            if isempty(option)
+                return;
+            end
+        else
+            eval([fun_name,'();']);
             return;
         end
         if(fun_name(1)=='F')

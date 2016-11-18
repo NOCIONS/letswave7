@@ -148,6 +148,8 @@ classdef FLW_butterworth_filter<CLW_generic
             header=FLW_butterworth_filter.get_header(lwdata_in.header,option);
             data=lwdata_in.data;
             data=permute(data,[6,1,2,3,4,5]);
+            data=reshape(data,size(data,1),[]);
+            data=[ones(option.filter_order*3,1)*data(1,:);data;ones(option.filter_order*3,1)*data(end,:);];
             Fs=1/header.xstep;
             fnyquist=Fs/2;
             switch option.filter_type
@@ -172,6 +174,9 @@ classdef FLW_butterworth_filter<CLW_generic
                         option.high_cutoff]/fnyquist,'stop');
                     data=filtfilt(b,a,data);
             end
+            
+            data=data(option.filter_order*3+1:end-option.filter_order*3,:);
+            data=reshape(data,lwdata_in.header.datasize([6,1,2,3,4,5]));
             data=ipermute(data,[6,1,2,3,4,5]);
             
             lwdata_out.header=header;

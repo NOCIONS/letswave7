@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="File">
-    <menu Label="import"/>
+    <menu Label="import">
+        <submenu Label="mat-file" callback="FLW_import_mat"/>
+    </menu>
     <menu Label="export"/>
     <menu Label="Delete" callback="GLW_delete"/>
     <menu Label="Rename" callback="GLW_rename"/>

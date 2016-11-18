@@ -89,7 +89,7 @@ classdef FLW_rereference_advanced<CLW_generic
            userdata.active_list=active_list;
            userdata.ref_list=ref_list;
            set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
-           set(obj.h_new_list,'userdata',userdata);               
+           set(obj.h_new_list,'userdata',userdata);
        end
        
        function channel_del(obj,varargin)
@@ -110,13 +110,13 @@ classdef FLW_rereference_advanced<CLW_generic
            if isempty(active_list)
                set(obj.h_new_list,'string',[]);
            else
-           set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+               set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
            end
            set(obj.h_new_list,'userdata',userdata);
            idx=idx(1)-1;
            if(idx==0)
                idx=1;
-           end               
+           end
            set(obj.h_new_list,'value',idx);
        end
        
@@ -148,7 +148,7 @@ classdef FLW_rereference_advanced<CLW_generic
            userdata.active_list=active_list;
            userdata.ref_list=ref_list;
            set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
-           set(obj.h_new_list,'userdata',userdata); 
+           set(obj.h_new_list,'userdata',userdata);
            set(obj.h_new_list,'value',idx-1);
        end
        
@@ -179,62 +179,62 @@ classdef FLW_rereference_advanced<CLW_generic
            userdata.active_list=active_list;
            userdata.ref_list=ref_list;
            set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
-           set(obj.h_new_list,'userdata',userdata); 
+           set(obj.h_new_list,'userdata',userdata);
            set(obj.h_new_list,'value',idx+1);
        end
-        
-        function option=get_option(obj)
-            option=get_option@CLW_generic(obj);
-            userdata=get(obj.h_new_list,'userdata');
-            option.active_list=userdata.active_list;
-            option.ref_list=userdata.ref_list;
-        end
-        
-        function set_option(obj,option)
-            set_option@CLW_generic(obj,option);
-            str=get(obj.h_active_list,'String');
-            active_list=[];
-            ref_list=[];
-            for k=1:length(option.active_list)
-                if sum(strcmp(option.active_list{k},str))>0 &&...
-                        sum(strcmp(option.ref_list{k},str))>0
-                    active_list{end+1}=option.active_list{k};
-                    ref_list{end+1}=option.ref_list{k};
-                end
-            end
-            userdata.active_list=active_list;
-            userdata.ref_list=ref_list;
-            if isempty(active_list)
-                set(obj.h_new_list,'string',[]);
-            else
-            set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+       
+       function option=get_option(obj)
+           option=get_option@CLW_generic(obj);
+           userdata=get(obj.h_new_list,'userdata');
+           option.active_list=userdata.active_list;
+           option.ref_list=userdata.ref_list;
+       end
+       
+       function set_option(obj,option)
+           set_option@CLW_generic(obj,option);
+           str=get(obj.h_active_list,'String');
+           active_list=[];
+           ref_list=[];
+           for k=1:length(option.active_list)
+               if sum(strcmp(option.active_list{k},str))>0 &&...
+                       sum(strcmp(option.ref_list{k},str))>0
+                   active_list{end+1}=option.active_list{k};
+                   ref_list{end+1}=option.ref_list{k};
+               end
            end
-            set(obj.h_new_list,'userdata',userdata);
-        end
-        
-        function str=get_Script(obj)
-            option=get_option(obj);
-            frag_code=[];
-            frag_code=[frag_code,'''active_list'',{{'];
-            for k=1:length(option.active_list)
-                frag_code=[frag_code,'''',option.active_list{k},''''];
-                if k~=length(option.active_list)
-                    frag_code=[frag_code,','];
-                end
-            end
-            frag_code=[frag_code,'}},'];
-            frag_code=[frag_code,'''ref_list'',{{'];
-            for k=1:length(option.ref_list)
-                frag_code=[frag_code,'''',option.ref_list{k},''''];
-                if k~=length(option.ref_list)
-                    frag_code=[frag_code,','];
-                end
-            end
-            frag_code=[frag_code,'}},'];
-            str=get_Script@CLW_generic(obj,frag_code,option);
-        end
-        
-        function GUI_update(obj,batch_pre)
+           userdata.active_list=active_list;
+           userdata.ref_list=ref_list;
+           if isempty(active_list)
+               set(obj.h_new_list,'string',[]);
+           else
+               set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+           end
+           set(obj.h_new_list,'userdata',userdata);
+       end
+       
+       function str=get_Script(obj)
+           option=get_option(obj);
+           frag_code=[];
+           frag_code=[frag_code,'''active_list'',{{'];
+           for k=1:length(option.active_list)
+               frag_code=[frag_code,'''',option.active_list{k},''''];
+               if k~=length(option.active_list)
+                   frag_code=[frag_code,','];
+               end
+           end
+           frag_code=[frag_code,'}},'];
+           frag_code=[frag_code,'''ref_list'',{{'];
+           for k=1:length(option.ref_list)
+               frag_code=[frag_code,'''',option.ref_list{k},''''];
+               if k~=length(option.ref_list)
+                   frag_code=[frag_code,','];
+               end
+           end
+           frag_code=[frag_code,'}},'];
+           str=get_Script@CLW_generic(obj,frag_code,option);
+       end
+       
+       function GUI_update(obj,batch_pre)
             lwdataset=batch_pre.lwdataset;
             channel_labels={lwdataset(1).header.chanlocs.labels};
             set(obj.h_not_equal_txt,'visible','off');
