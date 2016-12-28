@@ -33,11 +33,14 @@ classdef FLW_import_mat
             set(obj.h_load_btn,'Callback',@obj.load);
             set(obj.h_process_btn,'Callback',@obj.process);
             set(obj.h_script_btn,'Callback',@obj.get_script);
+            uiwait(obj.h_fig);
         end
         
         function obj=init_handles(obj)
-            obj.h_fig=figure('Position',[100 50 600 510],...
-                'name','Import mat variable','NumberTitle','off');
+            obj.h_fig=figure('name','Import mat variable','NumberTitle','off');
+            pos=get(obj.h_fig,'Position');
+            pos(3:4)=[600 510];
+            set(obj.h_fig,'Position',pos);
             set(obj.h_fig,'MenuBar','none');
             set(obj.h_fig,'DockControls','off');
             uicontrol('style','text','string',...
@@ -176,8 +179,8 @@ classdef FLW_import_mat
                 matdata=evalin('base',option.filename);
                 obj.get_lwdata(matdata,option);
             end
-            set(obj.h_process_btn,'String','Import');
-            set(obj.h_process_btn,'Enable','on');
+            set(obj.h_process_btn,'String','Done');
+            set(obj.h_process_btn,'Enable','off');
         end
         
         function obj=update_handles(obj,varargin)
@@ -206,6 +209,9 @@ classdef FLW_import_mat
                 set(obj.h_var_list,'Value',reference_idx);
             end
             obj.var_list_chg();
+            
+            set(obj.h_process_btn,'String','Import');
+            set(obj.h_process_btn,'Enable','on');
         end
         
         function var_list_chg(obj,varargin)
@@ -253,6 +259,8 @@ classdef FLW_import_mat
                 set(obj.h_ystep_edit,'enable','on');
                 set(obj.h_yunit_pop,'enable','on');
             end
+            set(obj.h_process_btn,'String','Import');
+            set(obj.h_process_btn,'Enable','on');
         end
         
         function update_dimesion(obj,varargin)
@@ -299,6 +307,8 @@ classdef FLW_import_mat
                     set(obj.h_yunit_pop,'enable','off');
                 end
             end
+            set(obj.h_process_btn,'String','Import');
+            set(obj.h_process_btn,'Enable','on');
         end
         
         function option=get_option(obj)
@@ -426,8 +436,7 @@ classdef FLW_import_mat
                     dim_order(tp(i))=length(a)+i;
                 end
             end
-            data=matdata;
-            data=permute(data,dim_order);
+            data=permute(single(matdata),dim_order);
             header.datasize=size(data);
             
             
