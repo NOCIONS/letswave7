@@ -7,7 +7,7 @@ Manager_Init();
     function Manager_Init()
         handles.fig=figure('Position',[100 50 500 670],...
             'name','Letswave7','NumberTitle','off');
-       %% init menu
+        %% init menu
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
         menu_name={'File','Edit','Process','Toolbox','Static','View',...
@@ -66,26 +66,44 @@ Manager_Init();
         uimenu(hcmenu,'Label','delete','Callback',{@(obj,events)menu_callback('GLW_delete')});
         uimenu(hcmenu,'Label','send to workspace','Callback',{@(obj,events)sendworkspace_btn_Callback});
         uimenu(hcmenu,'Label','read from workspace','Callback',{@(obj,events)readworkspace_btn_Callback});
-        
         %% init the controler
         icon=load('icon.mat');
-        handles.refresh_btn=uicontrol('style','pushbutton','CData',icon.icon_refresh,'position',[3,635,32,32],'TooltipString','refresh the folder');
-        handles.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,'position',[38,635,32,32],'TooltipString','browse for folder');
-        handles.path_edit=uicontrol('style','edit','string',pwd,'HorizontalAlignment','left','position',[73,637,420,28]);
-        uicontrol('style','text','string','Selected:','HorizontalAlignment','left','position',[5,600,80,28]);
-        handles.isfilter_checkbox=uicontrol('style','checkbox','string','Filter','position',[80,608,100,28]);
-        handles.affix_selected_listbox=uicontrol('style','listbox','string','Filter','position',[5,292,120,320]);
-        uicontrol('style','text','string','Banned:','HorizontalAlignment','left','position',[5,255,80,28]);
-        handles.affix_baned_listbox=uicontrol('style','listbox','string','Filter','position',[5,20,120,247]);
-        uicontrol('style','text','string','Datasets:','HorizontalAlignment','left','position',[140,600,80,28]);
-        handles.file_listbox=uicontrol('style','listbox','string','Filter','position',[140,40,355,572]);
-        handles.info_text_epoch=uicontrol('style','text','string','Epoch:','position',[140,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_channel=uicontrol('style','text','string','Channel:','position',[200,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_X=uicontrol('style','text','string','X:','position',[280,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_Y=uicontrol('style','text','string','Y:','position',[350,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_Z=uicontrol('style','text','string','Z:','position',[400,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_Index=uicontrol('style','text','string','Index:','position',[440,15,100,19],'HorizontalAlignment','left');
-        handles.tip_text=uicontrol('style','text','string','tips:','position',[2,-1,490,19],'HorizontalAlignment','left');
+        handles.refresh_btn=uicontrol('style','pushbutton',...
+            'CData',icon.icon_refresh,'position',[3,635,32,32],...
+            'TooltipString','refresh the folder');
+        handles.path_btn=uicontrol('style','pushbutton',...
+            'CData',icon.icon_open_path,'position',[38,635,32,32],...
+            'TooltipString','browse for folder');
+        handles.path_edit=uicontrol('style','edit','string',pwd,...
+            'HorizontalAlignment','left','position',[73,637,420,28]);
+        uicontrol('style','text','string','Selected:',...
+            'HorizontalAlignment','left','position',[5,600,80,28]);
+        handles.isfilter_checkbox=uicontrol('style','checkbox',...
+            'string','Filter','position',[80,608,100,28]);
+        handles.affix_selected_listbox=uicontrol('style','listbox',...
+            'string','Filter','position',[5,292,120,320]);
+        uicontrol('style','text','string','Banned:',...
+            'HorizontalAlignment','left','position',[5,255,80,28]);
+        handles.affix_baned_listbox=uicontrol('style','listbox',...
+            'string','Filter','position',[5,20,120,247]);
+        uicontrol('style','text','string','Datasets:',...
+            'HorizontalAlignment','left','position',[140,600,80,28]);
+        handles.file_listbox=uicontrol('style','listbox','string',...
+            'Filter','position',[140,40,355,572]);
+        handles.info_text_epoch=uicontrol('style','text','string','Epoch:',...
+            'position',[140,15,100,19],'HorizontalAlignment','left');
+        handles.info_text_channel=uicontrol('style','text',...
+            'string','Channel:','position',[200,15,100,19],'HorizontalAlignment','left');
+        handles.info_text_X=uicontrol('style','text','string','X:',...
+            'position',[280,15,100,19],'HorizontalAlignment','left');
+        handles.info_text_Y=uicontrol('style','text','string','Y:',...
+            'position',[350,15,100,19],'HorizontalAlignment','left');
+        handles.info_text_Z=uicontrol('style','text','string','Z:',...
+            'position',[400,15,100,19],'HorizontalAlignment','left');
+        handles.info_text_Index=uicontrol('style','text','string','Index:',...
+            'position',[440,15,100,19],'HorizontalAlignment','left');
+        handles.tip_text=uicontrol('style','text','string','tips:',...
+            'position',[2,-1,490,19],'HorizontalAlignment','left');
         set(handles.affix_selected_listbox,'max',2,'min',0);
         set(handles.affix_baned_listbox,'max',2,'min',0);
         set(handles.file_listbox,'max',2,'min',0);
@@ -116,24 +134,30 @@ Manager_Init();
     end
 
     function file_listbox_Callback()
-        persistent t;
-        persistent file_selected;
-        if isempty(t)
-            t=clock;
-            t(1)=t(1)-1;
-        end
-        if  ~isequal(file_selected,get(handles.file_listbox,'value'))
-            t(1)=t(1)-1;
-        end
-        file_selected=get(handles.file_listbox,'value');
+%         persistent t;
+%         persistent file_selected;
+%         if isempty(t)
+%             t=clock;
+%             t(1)=t(1)-1;
+%         end
+%         if  ~isequal(file_selected,get(handles.file_listbox,'value'))
+%             t(1)=t(1)-1;
+%         end
+%         file_selected=get(handles.file_listbox,'value');
+%         if strcmp(get(gcf,'SelectionType'),'normal')
+%             e=etime(clock,t);
+%             t=clock;
+%             if e<1.5
+%                 menu_callback('GLW_rename');
+%             else
+%                 file_listbox_select_changed();
+%             end
+%         end
+%         if strcmp(get(gcf,'SelectionType'),'open')
+%             dataset_view();
+%         end
         if strcmp(get(gcf,'SelectionType'),'normal')
-            e=etime(clock,t);
-            t=clock;
-            if e<1.5
-                menu_callback('GLW_rename');
-            else
-                file_listbox_select_changed();
-            end
+            file_listbox_select_changed();
         end
         if strcmp(get(gcf,'SelectionType'),'open')
             dataset_view();
@@ -254,14 +278,15 @@ Manager_Init();
     end
 
     function menu_callback(fun_name)
-        if isempty(strfind(fun_name,'FLW_import_'))
+        if ~isempty(strfind(fun_name,'FLW_import_'))
+            eval([fun_name,'();']);
+            update_handles();
+            return;
+        else
             option=get_selectfile();
             if isempty(option)
                 return;
             end
-        else
-            eval([fun_name,'();']);
-            return;
         end
         if(fun_name(1)=='F')
             option.fun_name = fun_name;

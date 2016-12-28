@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="File">
-    <menu Label="import">
+    <menu Label="Import">
+        <submenu Label="EEG/MEG file" callback="FLW_import_data"/>
         <submenu Label="mat-file" callback="FLW_import_mat"/>
     </menu>
     <menu Label="export"/>
