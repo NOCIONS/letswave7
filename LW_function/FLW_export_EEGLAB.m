@@ -10,20 +10,18 @@ classdef FLW_export_EEGLAB
     methods
         function obj = FLW_export_EEGLAB()
             obj=obj.init_handles();
-            userdata.file_path={};
-            userdata.file_name={};
-            set(obj.h_file_list,'userdata',userdata);
             set(obj.h_export_btn,'enable','off');
             set(obj.h_script_btn,'enable','off');
             
             set(obj.h_script_btn,'Callback',@obj.get_script);
             set(obj.h_export_btn,'Callback',@obj.export_file);
+            set(obj.h_file_list,'Callback',@obj.on_select_chg);
             uiwait(obj.h_fig);
         end
         
         
         function obj=init_handles(obj)
-            obj.h_fig=figure('name','Import Data','NumberTitle','off');
+            obj.h_fig=figure('name','Export Data to EEGLab','NumberTitle','off');
             pos=get(obj.h_fig,'Position');
             pos(3:4)=[300 510];
             set(obj.h_fig,'Position',pos);
@@ -41,12 +39,15 @@ classdef FLW_export_EEGLAB
             end
             idx=setdiff(1:length(filename),idx);
             filename=filename(idx);
+            for k=1:length(filename)
+                filename{k}=filename{k}(1:end-4);
+            end
             
             icon=load('icon.mat');
             obj.h_file_list=uicontrol('style','listbox','string','',...
-                'HorizontalAlignment','left',...
-                'Fontsize',14,'value',[],'max',10,'units','normalized',...
-                'position',[0,0.08,1,0.92],'string',filename);
+                'HorizontalAlignment','left','Fontsize',14,'value',[],...
+                'max',10,'units','normalized','position',[0,0.08,1,0.92],...
+                'string',filename,'userdata',filename);
             
             
             obj.h_export_btn=uicontrol('style','pushbutton','string','Export',...
@@ -59,40 +60,52 @@ classdef FLW_export_EEGLAB
             
         end
         
+        function obj=on_select_chg(obj,varargin)
+            v=get(obj.h_file_list,'value');
+            userdata=get(obj.h_file_list,'userdata');
+            set(obj.h_file_list,'string',userdata);
+            if isempty(v)
+                set(obj.h_export_btn,'enable','off');
+                set(obj.h_script_btn,'enable','off');
+            else
+                set(obj.h_export_btn,'enable','on');
+                set(obj.h_script_btn,'enable','on');
+            end
+            
+        end
+        
         function get_script(obj,varargin)
             userdata=get(obj.h_file_list, 'userdata');
+            value=get(obj.h_file_list, 'value');
             script={};
             script{end+1}='LW_Init();';
-            if ~isempty(userdata.file_path)
-                for k=1:length(userdata.file_path)
-                    script{end+1}=['FLW_import_data.get_lwdata(',...
-                        '''filename'',''',userdata.file_name{k},''','...
-                        '''pathname'',''',userdata.file_path{k},''','...
-                        '''is_save'',''','1'');'];
-                    script{end+1}='';
-                end
+            for k=value
+                script{end+1}=['FLW_export_EEGLAB.get_lwdata(',...
+                    '''filename'',''',userdata{k},'.lw6',''','...
+                    '''pathname'',''',cd,''');'];
             end
             CLW_show_script(script);
         end
         
         function obj=export_file(obj,varargin)
             userdata=get(obj.h_file_list, 'userdata');
-            if ~isempty(userdata.file_path)
-                str=get( obj.h_file_list, 'String' );
-                for k=1:length(userdata.file_path)
-                    str{k}=['<html><b>',userdata.file_name{k},'&nbsp;&nbsp;(processing...)</b></html>'];
-                    set( obj.h_file_list,'String',str);
-                    pause(0.01);
-                    option.filename=userdata.file_name{k};
-                    option.pathname=userdata.file_path{k};
-                    option.is_save=1;
-                    FLW_import_data.get_lwdata(option);
-                    
-                    str{k}=['<html><p style="color:red">',userdata.file_name{k},'&nbsp;&nbsp;(Done)</p></html>'];
-                    set( obj.h_file_list,'String',str);
-                    pause(0.01);
-                end
+            value=get(obj.h_file_list, 'value');
+            str=userdata;
+            for k=value
+                str{k}=['<html><b>',userdata{k},'&nbsp;&nbsp;(processing...)</b></html>'];
+                set( obj.h_file_list,'String',str);
+                pause(0.01);
+                option.filename=[userdata{k},'.lw6'];
+                option.pathname=cd;
+                FLW_export_EEGLAB.get_lwdata(option);
+                
+                str{k}=['<html><p style="color:red">',userdata{k},'&nbsp;&nbsp;(Done)</p></html>'];
+                set( obj.h_file_list,'String',str);
+                pause(0.01);
             end
+            set(obj.h_file_list, 'value',[]);
+            set(obj.h_export_btn,'enable','off');
+            set(obj.h_script_btn,'enable','off');
         end
         
         
@@ -108,63 +121,37 @@ classdef FLW_export_EEGLAB
             end
             
             str=fullfile(option.pathname,option.filename);
-            [~,name,~] = fileparts(str);
+            [p,n]=fileparts(str);
+            EEG.setname=n;
+            EEG.filename=[];
+            EEG.filepath=[];
+            header = CLW_load_header(str);
+            EEG.nbchan=header.datasize(2);
+            EEG.trials=header.datasize(1);
+            EEG.pnts=header.datasize(6);
+            EEG.srate=1/header.xstep;
+            EEG.times=header.xstart+(0:EEG.pnts-1)*header.xstep;
+            EEG.xmin=EEG.times(1);
+            EEG.xmax=EEG.times(end);
+            load(fullfile(p,[n,'.mat']),'data','-MAT');
+            data=permute(single(data),[2,6,1,3,4,5]);
+            EEG.data=data;clear data;
+            EEG.chanlocs=rmfield(header.chanlocs,'SEEG_enabled');
+            EEG.chanlocs=rmfield(header.chanlocs,'topo_enabled');
+            EEG.event=header.events;
+            [EEG.event.type] = EEG.event.code;
+            EEG.event = rmfield(EEG.event,'code');
+            EEG.icawinv=[];
+            EEG.icaweights=[];
+            EEG.icasphere=[];
+            EEG.icaweights=[];
+            EEG.icaweights=[];
+            EEG.icaweights=[];
+            EEG.icaweights=[];
             
             
-            
-            lwdata_out.data=permute(single(ft_read_data(str)),[3,1,4,5,6,2]);
-            %epoch,channel,index,Z,Y,X
-            %channel,X,epoch,1,1,1
-            
-            hdr=ft_read_header(str);
-            trg=ft_read_event(str);
-            lwdata_out.header=[];
-            lwdata_out.header.filetype='time_amplitude';
-            lwdata_out.header.name= name;
-            lwdata_out.header.tags='';
-            lwdata_out.header.datasize=[hdr.nTrials hdr.nChans 1 1 1 hdr.nSamples];
-            lwdata_out.header.xstart=(hdr.nSamplesPre/hdr.Fs)*-1;
-            lwdata_out.header.ystart=0;
-            lwdata_out.header.zstart=0;
-            lwdata_out.header.xstep=1/hdr.Fs;
-            lwdata_out.header.ystep=1;
-            lwdata_out.header.zstep=1;
-            lwdata_out.header.history=[];
-            lwdata_out.header.source=str;
-            
-            chanloc.labels='';
-            chanloc.topo_enabled=0;
-            chanloc.SEEG_enabled=0;
-            for chanpos=1:hdr.nChans;
-                chanloc.labels=hdr.label{chanpos};
-                lwdata_out.header.chanlocs(chanpos)=chanloc;
-            end
-            
-            
-            numevents=size(trg,2);
-            if numevents==0;
-                lwdata_out.header.events=[];
-            else
-                for eventpos=1:numevents
-                    event.code='unknown';
-                    if isempty(trg(eventpos).value);
-                        event.code=trg(eventpos).type;
-                    else
-                        event.code=trg(eventpos).value;
-                    end
-                    if isnumeric(event.code);
-                        event.code=num2str(event.code);
-                    end
-                    event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
-                    event.epoch=1;
-                    lwdata_out.header.events(eventpos)=event;
-                end
-            end
-            
-            if option.is_save
-                lwdata_out.header=CLW_check_header(lwdata_out.header);
-                CLW_save(lwdata_out);
-            end
+            save([n,'.set'],'EEG');
+            %EEG.epoch=[];
         end
     end
 end
