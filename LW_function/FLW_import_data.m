@@ -53,7 +53,7 @@ classdef FLW_import_data
             
             obj.h_import_btn = uipushtool(obj.h_toolbar);
             set(obj.h_import_btn,'TooltipString','import files');
-            set(obj.h_import_btn,'CData',icon.icon_import);
+            set(obj.h_import_btn,'CData',icon.icon_run);
             
             
             obj.h_file_list=uicontrol('style','listbox','string','',...
@@ -76,9 +76,14 @@ classdef FLW_import_data
             %                 '*.eeg;*.seg;*.dat;*.vhdr;*.vmrk','BrainVision (*.eeg, *.seg, *.dat, *.vhdr, *.vmrk)';
             %                 '*.Poly5','TMSi (*.Poly5)';
             %                 '*.edf;*.gdf','generic standard formats (*.edf, *.gdf)'};
-            filterspec={'*.avr;*.cnt','ANT Neuro, eeprobe/cnt-riff (*.avr, *.cnt)';
-                        '*.eeg;*.cnt;*.avg','NeuroScan (*.eeg, *.cnt, *.avg)';
-                        '*.egis;*.ave;*.gave;*.ses;*.raw;*.mff','Electrical Geodesics, Inc. (EGI) (*.egis, *.ave, *.gave, *.ses, *.raw, *.mff)'};
+            filterspec={'*.set;*.avr;*.cnt;*.eeg;*.bdf;*.vhdr;*.raw;*.edf;*.gdf','All support files';
+                        '*.set','EEGLAB (*.set)';
+                        '*.avr;*.cnt','ANT Neuro, eeprobe/cnt-riff (*.avr, *.cnt)';
+                        '*.eeg;*.cnt;','NeuroScan (*.eeg, *.cnt)';
+                        '*.bdf','Biosemi BDF (*.bdf)';
+                        '*.vhdr','BrainVision ( *.vhdr)';
+                        '*.raw','Electrical Geodesics, Inc. (EGI) (*.raw)';
+                        '*.edf;*.gdf','generic standard formats (*.edf, *.gdf)'};
             [filename,pathname] = uigetfile(filterspec,'File Selector','MultiSelect','on');
             userdata=get(obj.h_file_list, 'userdata');
             if pathname~=0
@@ -187,6 +192,7 @@ classdef FLW_import_data
             lwdata_out.header.ystep=1;
             lwdata_out.header.zstep=1;
             lwdata_out.header.history=[];
+            lwdata_out.header.source=str;
             
             chanloc.labels='';
             chanloc.topo_enabled=0;
@@ -218,6 +224,7 @@ classdef FLW_import_data
             end
             
             if option.is_save
+                lwdata_out.header=CLW_check_header(lwdata_out.header);
                 CLW_save(lwdata_out);
             end
         end
