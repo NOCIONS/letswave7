@@ -278,7 +278,7 @@ Manager_Init();
     end
 
     function menu_callback(fun_name)
-        if ~isempty(strfind(fun_name,'FLW_import_'))
+        if ~isempty([strfind(fun_name,'FLW_export_'),strfind(fun_name,'FLW_import_')])
             eval([fun_name,'();']);
             update_handles();
             return;

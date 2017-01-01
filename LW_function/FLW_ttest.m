@@ -220,9 +220,7 @@ classdef FLW_ttest<CLW_permutation
             h_line=-1;
             chan_used=find([header.chanlocs.topo_enabled]==1, 1);
             if isempty(chan_used)
-                S=load('init_parameter.mat');
-                temp=CLW_edit_electrodes(header,S.userdata.chanlocs);
-                clear S;
+                temp=CLW_elec_autoload(header);
                 [y,x]= pol2cart(pi/180.*[temp.chanlocs.theta],[temp.chanlocs.radius]);
             else
                 [y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);

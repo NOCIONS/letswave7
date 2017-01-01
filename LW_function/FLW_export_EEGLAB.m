@@ -19,7 +19,6 @@ classdef FLW_export_EEGLAB
             uiwait(obj.h_fig);
         end
         
-        
         function obj=init_handles(obj)
             obj.h_fig=figure('name','Export Data to EEGLab','NumberTitle','off');
             pos=get(obj.h_fig,'Position');
@@ -107,7 +106,6 @@ classdef FLW_export_EEGLAB
             set(obj.h_export_btn,'enable','off');
             set(obj.h_script_btn,'enable','off');
         end
-        
         
     end
     
