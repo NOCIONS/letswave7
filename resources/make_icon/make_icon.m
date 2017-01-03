@@ -100,10 +100,18 @@ icon = fullfile('icon_refresh.png');
 icon_refresh= double(imread(icon))/255;
 icon_refresh(icon_refresh==1)=NaN;
 
+icon = fullfile('icon_undo.png');
+icon_undo= double(imread(icon))/255;
+icon_undo(icon_undo==1)=NaN;
+
+icon = fullfile('icon_redo.png');
+icon_redo= double(imread(icon))/255;
+icon_redo(icon_redo==1)=NaN;
+
 save('../icon.mat','icon_split','icon_polarity','icon_shade','icon_line',...
     'icon_stem','icon_stairs','icon_cursor','icon_legend','icon_title',...
     'icon_topo','icon_head','icon_dataset_add','icon_dataset_del',...
     'icon_dataset_down','icon_dataset_up','icon_run','icon_open',...
     'icon_script','icon_save','icon_delete','icon_import','icon_close',...
-    'icon_stop','icon_open_path','icon_refresh');
+    'icon_stop','icon_open_path','icon_refresh','icon_undo','icon_redo');
 

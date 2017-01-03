@@ -317,11 +317,7 @@ Manager_Init();
         if isempty(option)
             return;
         end
-        inputfiles=[];
-        for k=1:length(option.file_str)
-            inputfiles{k}=fullfile(option.file_path,option.file_str{k});
-        end
-        GLW_multi_viewer(inputfiles);
+        GLW_multi_viewer_continuous(option);
     end
 
     function on_Timer()

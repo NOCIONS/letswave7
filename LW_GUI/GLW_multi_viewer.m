@@ -10,11 +10,11 @@ GLW_my_view_OpeningFcn;
         S=load('mat_multiviewer.mat');
         userdata=S.userdata;
         handles=S.handles;
-        for k=1:length(inputfiles);
-            [p, n, ~]=fileparts(inputfiles{k});
+        for k=1:length(inputfiles)
+            [p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{k}));
             userdata.datasets_path=p;
             userdata.datasets_filename{k}=n;
-            [datasets_header(k).header, datasets_data(k).data]=CLW_load(inputfiles{k});
+            [datasets_header(k).header, datasets_data(k).data]=CLW_load(fullfile(p,n));
             chan_used=find([datasets_header(k).header.chanlocs.topo_enabled]==1, 1);
             if isempty(chan_used)
                 datasets_header(k).header=CLW_elec_autoload(datasets_header(k).header);

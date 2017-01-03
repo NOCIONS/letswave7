@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="View">
-        <menu Label="viewer"/>
+        <menu Label="waveform multiviewer" callback="GLW_multi_viewer"/>
+        <menu Label="coutinous data viewer" callback="GLW_multi_viewer_continuous"/>
         <menu Label="map viewer"/>
 </LW_Manager>
