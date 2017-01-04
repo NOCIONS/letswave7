@@ -1,12 +1,9 @@
-function GLW_multi_viewer_continuous(inputfiles)
+function GLW_multi_viewer_continuous(inputfiles)%
 handles=[];
 userdata=[];
 header=[];
 data=[];
-events.stack=[];
-events.code=[];
-events.code_sel=[];
-events.table=[];
+events=[];
 GLW_view_OpeningFcn;
 
 %% GLW_view_OpeningFcn
@@ -39,7 +36,7 @@ GLW_view_OpeningFcn;
         userdata.is_category_selected=1;
         userdata.is_mouse_down=0;
         userdata.slide_dist=0;
-        userdata.is_overwrited=1;
+        userdata.is_overwrited=0;
         userdata.prefix='ep_edit';
         userdata.N=0;
         userdata.t=0;
@@ -55,11 +52,13 @@ GLW_view_OpeningFcn;
             0.466,0.674,0.188;
             0.301,0.745,0.933;
             0.635,0.078,0.1840];
-        userdata.color_event=[];
+        events.color=[];
         userdata.y=[];
         userdata.is_event_locked=1;
         
-        [p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{1}));
+        %[p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{1}));
+        [p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/EEGlab/ep eeglab_data.lw6');
+        %[p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/BrainVision/SubjectEEG/subj2.lw6');
         userdata.filename=n;
         [header, data]=CLW_load(fullfile(p,n));
         
@@ -72,23 +71,30 @@ GLW_view_OpeningFcn;
         userdata.x2=userdata.t(1)+userdata.x_range;
         data=permute(data(:,:,:,1,1,:),[6,2,1,3,4,5]);%X*ch*ep*index
         
-        events.stack=[];
-        events.stack_idx=[];
-        events.code_all=unique({header.events.code});
-        events.code=unique({header.events([header.events.epoch]==1).code});
-        events.code_sel=1:length(events.code);
+        events.stack=cell(21,1);
+        events.stack_idx=1;
         events.table=header.events;
+        events.stack{events.stack_idx}=events.table;
+        events.code_all=unique({events.table.code});
+        events.code=unique({events.table([events.table.epoch]==1).code});
+        events.code_sel=1:length(events.code);
+        events.selected_code={};
         if length(events.code_all)<=64
-            userdata.color_event=jet((length(events.code_all)-1)*10+1);
-            userdata.color_event=userdata.color_event(1:10:end,:);
+            events.color=jet((length(events.code_all)-1)*10+1);
+            events.color=events.color(1:10:end,:);
+            if length(events.code_all)==1
+                events.color=[0,0,1];
+            end
         else
-            userdata.color_event=jet(length(events.code_all));
+            events.color=jet(length(events.code_all));
         end
+        events.table_idx=[];
         
         handles.fig=[];
         handles.panel_left=[];
         handles.panel_mid=[];
-        handles.panel_right=[];
+        handles.panel_right_up=[];
+        handles.panel_right_down=[];
         handles.line_event=[];
         handles.line_event_slide=[];
         handles.line_marker=[];
@@ -106,8 +112,10 @@ GLW_view_OpeningFcn;
         handles.panel_mid=uipanel(handles.fig);
         Set_position(handles.panel_mid,[165,5,930,35]);
         
-        handles.panel_right=uipanel(handles.fig,'Title','Events:');
-        Set_position(handles.panel_right,[1100,3,250,675]);
+        handles.panel_right_up=uipanel(handles.fig,'Title','Events:');
+        Set_position(handles.panel_right_up,[1100,185,250,490]);
+        handles.panel_right_down=uipanel(handles.fig,'Title','Events type:');
+        Set_position(handles.panel_right_down,[1100,3,250,180]);
         
     end
     function Init_epoch()
@@ -303,80 +311,92 @@ GLW_view_OpeningFcn;
     end
     function Init_event_table()
         columnname = {'Code','latency','Epoch'};
-        columnformat = {events.code,'numeric','numeric'};
-        handles.event_table = uitable(handles.panel_right,...
+        columnformat = {'char','numeric','numeric'};
+        handles.event_table = uitable(handles.panel_right_up,...
             'ColumnName', columnname,'ColumnFormat', columnformat,...
             'ColumnWidth',{80,60,40});
         set(handles.event_table,'ColumnEditable', [false false false]);
-        %set(handles.event_table,'ColumnEditable', [true true true]);
-        Set_position(handles.event_table,[1,270,248,390]);
+        Set_position(handles.event_table,[0,80,250,397]);
         GLW_event_table_UpdataFcn();
     end
     function Init_event_code()
-        handles.category_checkbox=uicontrol(handles.panel_right,...
-            'style','checkbox','String','Select all:',...
-            'Value',userdata.is_category_selected);
-        Set_position(handles.category_checkbox,[5,210,80,20]);
-        
-        handles.category_listbox=uicontrol(handles.panel_right,...
+        handles.category_listbox=uicontrol(handles.panel_right_down,...
             'style','listbox','Min',1,'Max',3,...
             'string',events.code,'value',events.code_sel);
-        Set_position(handles.category_listbox,[5,40,120,170]);
+        Set_position(handles.category_listbox,[0,0,200,170]);
+        
+        handles.category_checkbox=uicontrol(handles.panel_right_down,...
+            'style','checkbox','String','All',...
+            'Value',userdata.is_category_selected);
+        Set_position(handles.category_checkbox,[200,150,50,20]);
         icon=load('icon.mat');
-        handles.category_add_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','CData',icon.icon_dataset_add);
-        Set_position(handles.category_add_btn,[5,5,32,32]);
-        handles.category_del_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','CData',icon.icon_dataset_del);
-        Set_position(handles.category_del_btn,[42,5,32,32]);
-        handles.category_rename_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','string','rename');
-        Set_position(handles.category_rename_btn,[77,5,50,32]);
+        handles.category_del_btn=uicontrol(handles.panel_right_down,...
+            'style','pushbutton','CData',icon.icon_dataset_del,...
+            'tooltipstring','remove event type');
+        Set_position(handles.category_del_btn,[208,50,32,32]);
+        handles.category_rename_btn=uicontrol(handles.panel_right_down,...
+            'style','pushbutton','CData',icon.icon_rename,...
+            'tooltipstring','rename event type');
+        Set_position(handles.category_rename_btn,[208,5,32,32]);
     end
     function Init_event_btn()
         icon=load('icon.mat');
-        handles.events_add_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','CData',icon.icon_dataset_add);
-        Set_position(handles.events_add_btn,[25,235,32,32]);
-        handles.events_del_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','CData',icon.icon_dataset_del);
-        Set_position(handles.events_del_btn,[82,235,32,32]);
-        handles.events_undo_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','CData',icon.icon_undo);
-        Set_position(handles.events_undo_btn,[139,235,32,32]);
-        handles.events_redo_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','CData',icon.icon_redo);
-        Set_position(handles.events_redo_btn,[196,235,32,32]);
-        handles.GUI2workspace_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','String','Send to workspace');
-        Set_position(handles.GUI2workspace_btn,[130,165,115,40]);
-        handles.workspace2GUI_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','String','Read from workspace');
-        Set_position(handles.workspace2GUI_btn,[130,120,115,40]);
+        handles.events_lock_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_lock,...
+            'tooltipstring','event editable');
+        handles.events_add_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_dataset_add,...
+            'tooltipstring','add event');
+        handles.events_del_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_dataset_del,...
+            'tooltipstring','delete event');
         
+        handles.events_undo_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_undo,...
+            'tooltipstring','undo','enable','off');
+        handles.events_redo_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_redo,...
+            'tooltipstring','redo','enable','off');
+        handles.events_GUI2workspace_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_sendtoworkspace,...
+            'tooltipstring','send events to workspace');
+        handles.events_workspace2GUI_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_loadfromworkspace,...
+            'tooltipstring','load events from workspace');
         
-        handles.save_checkbox=uicontrol(handles.panel_right,...
+        handles.events_save_checkbox=uicontrol(handles.panel_right_up,...
             'style','checkbox','Value',userdata.is_overwrited,...
-            'String','overwrite the dataset:');
-        Set_position(handles.save_checkbox,[130,100,100,20]);
+            'String','overwrite dataset');
+        handles.events_prefix_text=uicontrol(handles.panel_right_up,'style','text',...
+            'HorizontalAlignment','left','String','Prefix:','enable','off');
+        handles.events_prefix_edt=uicontrol(handles.panel_right_up,'style','edit',...
+            'String',userdata.prefix,'HorizontalAlignment','left','enable','off');
+        handles.events_recovery_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_open_path,...
+            'tooltipstring','recovery the events');
+        handles.events_save_btn=uicontrol(handles.panel_right_up,...
+            'style','pushbutton','CData',icon.icon_save,...
+            'tooltipstring','save the events');
         
         
-        handles.prefix_text=uicontrol(handles.panel_right,'style','text',...
-            'HorizontalAlignment','left','String','Prefix:');
-        Set_position(handles.prefix_text,[130,80,80,20]);
+        Set_position(handles.events_lock_btn,[2,45,32,32]);
+        Set_position(handles.events_add_btn,[37,45,32,32]);
+        Set_position(handles.events_del_btn,[72,45,32,32]);
+        Set_position(handles.events_undo_btn,[107,45,32,32]);
+        Set_position(handles.events_redo_btn,[142,45,32,32]);
+        Set_position(handles.events_GUI2workspace_btn,[177,45,32,32]);
+        Set_position(handles.events_workspace2GUI_btn,[212,45,32,32]);
         
-        handles.prefix_edt=uicontrol(handles.panel_right,'style','edit',...
-            'String',userdata.prefix,'HorizontalAlignment','left');
-        Set_position(handles.prefix_edt,[130,60,115,25]);
-        
-        handles.save_btn=uicontrol(handles.panel_right,...
-            'style','pushbutton','String','Save');
-        Set_position(handles.save_btn,[130,5,115,50]);
+        Set_position(handles.events_save_checkbox,[2,24,140,20]);
+        Set_position(handles.events_prefix_text,[2,2,80,20]);
+        Set_position(handles.events_prefix_edt,[42,3,80,25]);
+        Set_position(handles.events_save_btn,[125,1,80,40]);
+        Set_position(handles.events_recovery_btn,[205,1,40,40]);
     end
 
     function Init_function()
         %% left panel
-        set(handles.epoch_listbox,          'Callback',@Epoch_listbox_changed);
+        set(handles.epoch_listbox,          'Callback',@Event_Update);
         set(handles.channel_listbox,        'Callback',@GLW_view_UpdataFcn);
         set(handles.filter_checkbox,        'Callback',@Filter_changed);
         set(handles.filter_lowpass_checkbox,'Callback',@Filter_changed);
@@ -408,42 +428,22 @@ GLW_view_OpeningFcn;
         set(handles.fig,'WindowButtonUpFcn',@Slider_BtnUp);
         
         %% right panel
-        set(handles.panel_right,            'SizeChangedFcn',@Panel_right_SizeChangedFcn);
+        set(handles.panel_right_up,         'SizeChangedFcn',@Panel_right_SizeChangedFcn);
+        set(handles.event_table,            'CellSelectionCallback',@Event_table_Selected);
+        set(handles.event_table,            'CellEditCallback',@Event_table_Edited);
+        set(handles.events_lock_btn,        'Callback',@Events_lock_btn_callback);
+        set(handles.events_GUI2workspace_btn,'Callback',@Events_GUI2workspace_btn_callback);
+        set(handles.events_workspace2GUI_btn,'Callback',@Events_workspace2GUI_btn_callback);
         set(handles.category_listbox,       'Callback',@Category_listbox_Changed);
         set(handles.category_checkbox,      'Callback',@Category_checkbox_Changed);
-        set(handles.prefix_edt,             'Callback',@Prefix_edt);
-        set(handles.event_table,            'CellSelectionCallback',@Event_table_Selected);
- 
+        set(handles.category_del_btn,       'Callback',@category_del_btn_callback);
+        set(handles.category_rename_btn,    'Callback',@category_rename_btn_callback);
+        set(handles.events_undo_btn,        'Callback',@Events_undo_btn_callback);
+        set(handles.events_redo_btn,        'Callback',@Events_redo_btn_callback);
+        set(handles.events_recovery_btn,    'Callback',@Events_recovery_btn_callback);
+        
     end
-    function Event_table_Selected(~,callbackdata)
-        d=get(handles.event_table,'data');
-        if isempty(callbackdata.Indices)
-            set(handles.line_marker,'Visible','off');
-            return;
-        end
-        clc;
-        d=d{min(callbackdata.Indices(:,1)),2};
-        set(handles.line_marker,'xdata',[d,d]);
-        set(handles.line_marker,'ydata',[-userdata.y_range*5,userdata.y_range*5]);
-        set(handles.line_marker,'Visible','on');
-        if d>=userdata.x1 && d<=userdata.x2
-            return;
-        end
-        temp2 = get(handles.rect_slide,'position');
-        temp2(1)=d-temp2(3)/2;
-        if temp2(1)<userdata.t(1)
-            temp2(1)=userdata.t(1);
-        end
-        if (temp2(1)+temp2(3))>userdata.t(end)
-            temp2(1)=userdata.t(end)-temp2(3);
-        end
-        userdata.x1=temp2(1);
-        userdata.x2=temp2(1)+temp2(3);
-        set(handles.x1_edit,'string',num2str(temp2(1)));
-        set(handles.x2_edit,'string',num2str(temp2(1)+temp2(3)));
-        set(handles.rect_slide,'position',temp2);
-        GLW_view_UpdataFcn();
-    end
+   
 %% GLW_view_UpdataFcn
     function GLW_view_UpdataFcn(~,~)
         ch_num=get(handles.channel_listbox,'value');
@@ -451,6 +451,7 @@ GLW_view_OpeningFcn;
         idx_num=get(handles.index_popup,'value');
         
         x_idx=find(userdata.t>=userdata.x1 &userdata.t<=userdata.x2);
+        [b,a]=butter(userdata.filter_order,userdata.filter_low/(userdata.Fs/2),'low');
         if userdata.is_filter
             x_idx=[(-100:-1)+x_idx(1),x_idx,(1:100)+x_idx(end)];
             x_idx(x_idx<1)=1;
@@ -490,7 +491,8 @@ GLW_view_OpeningFcn;
         GLW_event_fig_UpdataFcn();
         set(handles.line(1:length(ch_num)),'Visible','on');
         set(handles.line(length(ch_num)+1:end),'Visible','off');
-        set(handles.line(1:length(ch_num)),'XData',userdata.t);
+        set(handles.line(length(ch_num)+1:end),'XData',1);
+        set(handles.line(length(ch_num)+1:end),'YData',1);
         temp_range=linspace(-userdata.y_range*5,userdata.y_range*5,length(ch_num)*2+1);
         temp_range=temp_range(2:2:end);
         
@@ -521,15 +523,25 @@ GLW_view_OpeningFcn;
         end
         idx_temp=sort(idx_temp);
         idx_temp=idx_temp([events.table(idx_temp).epoch]==ep_num);
-        
+        [~,b]=sort([events.table(idx_temp).latency]);
+        idx_temp=idx_temp(b);
         d=cell(length(idx_temp),3);
         d(:,1)={events.table(idx_temp).code};
         d(:,2)={events.table(idx_temp).latency};
         d(:,3)={events.table(idx_temp).epoch};
         set(handles.event_table,'data',d);
-
+        events.table_idx=idx_temp;
     end
     function GLW_event_category_UpdataFcn(~,~)
+        if  userdata.is_category_selected
+            events.code_sel=1:length(events.code);
+        else
+            events.code_sel=[];
+            for k=1:length(events.selected_code)
+                events.code_sel=[events.code_sel,find(strcmp(events.code,events.selected_code(k)))];
+            end
+        end
+        set(handles.category_listbox,'string',events.code,'value',events.code_sel);
     end
     function GLW_event_fig_UpdataFcn(~,~)
         for k=length(handles.line_event)+1:length(events.code_sel)
@@ -551,11 +563,16 @@ GLW_view_OpeningFcn;
             set(handles.line_event(k),'XData',[events.table(idx_temp).latency]);
             set(handles.line_event(k),'YData',userdata.y_range*5*ones(1,length(idx_temp)));
             color_idx=find(strcmp(events.code_all,events.code{events.code_sel(k)}));
-            set(handles.line_event(k),'MarkerEdgecolor',userdata.color_event(color_idx,:));
-            set(handles.line_event(k),'Markerfacecolor',userdata.color_event(color_idx,:));
+            set(handles.line_event(k),'MarkerEdgecolor',events.color(color_idx,:));
+            set(handles.line_event(k),'Markerfacecolor',events.color(color_idx,:));
         end
-        legend(handles.line_event(1:length(events.code_sel)),...
-            events.code(events.code_sel),'location','northeast');
+        if isempty(events.code_sel)
+            legend off;
+        else
+        legend(handles.ax_fig,handles.line_event(1:length(events.code_sel)),...
+            events.code(events.code_sel),'location','northeast',...
+            'ButtonDownFcn',{});
+        end
         
     end
     function GLW_event_slider_UpdataFcn(~,~)
@@ -577,37 +594,178 @@ GLW_view_OpeningFcn;
             set(handles.line_event_slide(k),'XData',[events.table(idx_temp).latency]);
             set(handles.line_event_slide(k),'YData',zeros(size(idx_temp)));
             color_idx= strcmp(events.code_all,events.code{events.code_sel(k)});
-            set(handles.line_event_slide(k),'MarkerEdgecolor',userdata.color_event(color_idx,:));
+            set(handles.line_event_slide(k),'MarkerEdgecolor',events.color(color_idx,:));
         end
         order=get(handles.ax_slide,'Children');
         temp=find(order==handles.rect_slide);
         set(handles.ax_slide,'Children',order([temp,setdiff(1:length(order),temp)]));
     end
-    function Epoch_listbox_changed(~,~)
+
+%% function right panel
+    function Event_Update(~,~)
         ep_num=get(handles.epoch_listbox,'value');
-        events.code=unique({header.events([header.events.epoch]==ep_num).code});
-        if userdata.is_category_selected
-        events.code_sel=1:length(events.code);
-        else
-            code=get(handles.category_listbox,'string');
-            code_sel=get(handles.category_listbox,'value');
-            events.code_sel=[];
-            for k=1:length(code_sel)
-                events.code_sel=[events.code_sel,find(strcmp(events.code,code(code_sel(k))))];
+        events.code_all=unique({events.table.code});
+        events.code=unique({events.table([events.table.epoch]==ep_num).code});
+        if length(events.code_all)<=64
+            events.color=jet((length(events.code_all)-1)*10+1);
+            events.color=events.color(1:10:end,:);
+            if length(events.code_all)==1
+                events.color=[0,0,1];
             end
+        else
+            events.color=jet(length(events.code_all));
         end
-        
-        set(handles.category_listbox,'string',events.code);
-        set(handles.category_listbox,'value',events.code_sel);
-        GLW_view_UpdataFcn();
-        GLW_event_table_UpdataFcn();
         GLW_event_category_UpdataFcn();
+        GLW_event_table_UpdataFcn();
+        GLW_event_fig_UpdataFcn();
         GLW_event_slider_UpdataFcn();
+    end
+    function Event_table_Selected(~,callbackdata)
+        if  userdata.is_event_locked
+            d=get(handles.event_table,'data');
+            if isempty(callbackdata.Indices)
+                set(handles.line_marker,'Visible','off');
+                return;
+            end
+            d=d{min(callbackdata.Indices(:,1)),2};
+            set(handles.line_marker,'xdata',[d,d]);
+            set(handles.line_marker,'ydata',[-userdata.y_range*5,userdata.y_range*5]);
+            set(handles.line_marker,'Visible','on');
+            if d>=userdata.x1 && d<=userdata.x2
+                return;
+            end
+            temp2 = get(handles.rect_slide,'position');
+            temp2(1)=d-temp2(3)/2;
+            if temp2(1)<userdata.t(1)
+                temp2(1)=userdata.t(1);
+            end
+            if (temp2(1)+temp2(3))>userdata.t(end)
+                temp2(1)=userdata.t(end)-temp2(3);
+            end
+            userdata.x1=temp2(1);
+            userdata.x2=temp2(1)+temp2(3);
+            set(handles.x1_edit,'string',num2str(temp2(1)));
+            set(handles.x2_edit,'string',num2str(temp2(1)+temp2(3)));
+            set(handles.rect_slide,'position',temp2);
+            GLW_view_UpdataFcn();
+        else
+            set(handles.line_marker,'Visible','off');
+        end
+    end
+
+    function Event_table_Edited(~,callbackdata)
+        idx=events.table_idx(callbackdata.Indices(1));
+        switch(callbackdata.Indices(2))
+            case 1
+                if isempty(callbackdata.NewData)
+                    d=get(handles.event_table,'data');
+                    d{callbackdata.Indices(1),callbackdata.Indices(2)}=callbackdata.PreviousData;
+                    set(handles.event_table,'Data',d);
+                    return;
+                else
+                    events.table(idx).code=callbackdata.NewData;
+                end
+            case 2
+                if callbackdata.NewData<userdata.t(1) || callbackdata.NewData>userdata.t(end)
+                    d=get(handles.event_table,'data');
+                    d{callbackdata.Indices(1),callbackdata.Indices(2)}=callbackdata.PreviousData;
+                    set(handles.event_table,'Data',d);
+                    return;
+                else
+                    events.table(idx).latency=callbackdata.NewData;
+                end
+            case 3
+                temp=fix(callbackdata.NewData);
+                if temp<1 ||temp>header.datasize(1)
+                    d=get(handles.event_table,'data');
+                    d{callbackdata.Indices(1),callbackdata.Indices(2)}=callbackdata.PreviousData;
+                    set(handles.event_table,'Data',d);
+                    return;
+                else
+                    events.table(idx).epoch=temp;
+                end
+        end
+            events.stack_idx=mod(events.stack_idx,21)+1;
+            events.stack{events.stack_idx}=events.table;
+            events.stack{mod(events.stack_idx,21)+1}=[];
+            Event_Update();
+            set(handles.events_undo_btn,'enable','on');
+            set(handles.events_redo_btn,'enable','off');
+    end
+    function Events_lock_btn_callback(~,~)
+        icon=load('icon.mat');
+        userdata.is_event_locked=~userdata.is_event_locked;
+        temp=get(handles.events_lock_btn,'position');
+        temp(3:4)=temp(3:4)+0.00001;
+        set(handles.events_lock_btn,'position',temp);
+        if userdata.is_event_locked
+            set(handles.events_lock_btn,'CData',icon.icon_lock);
+            set(handles.event_table,'ColumnEditable', [false false false]);
+        else
+            set(handles.events_lock_btn,'CData',icon.icon_unlock);
+            set(handles.event_table,'ColumnEditable', [true true true]);
+        end
+        temp(3:4)=temp(3:4)-0.00001;
+        set(handles.events_lock_btn,'position',temp);
+    end
+    function Events_undo_btn_callback(~,~)
+        events.stack_idx=mod(events.stack_idx+19,21)+1;
+        events.table=events.stack{events.stack_idx};
+        Event_Update();
+        set(handles.events_redo_btn,'enable','on');
+        if isempty(events.stack{mod(events.stack_idx+19,21)+1})
+            set(handles.events_undo_btn,'enable','off');
+        end
+    end
+    function Events_redo_btn_callback(~,~)
+        events.stack_idx=mod(events.stack_idx,21)+1;
+        events.table=events.stack{events.stack_idx};
+        Event_Update();
+        set(handles.events_undo_btn,'enable','on');
+        if isempty(events.stack{mod(events.stack_idx,21)+1})
+            set(handles.events_redo_btn,'enable','off');
+        end
+    end
+    function Events_GUI2workspace_btn_callback(~,~)
+        assignin('base','events',events.table);
+    end
+    function Events_workspace2GUI_btn_callback(~,~)
+        try
+            temp=evalin('base','events');
+        catch
+            msgbox('there is no variable ''events'' in the workspace.');
+            return
+        end
+        if all(isfield(temp,{'code','latency','epoch'}))
+            names = fieldnames(temp);
+            names=names(~strcmp(names,'code'));
+            names=names(~strcmp(names,'latency'));
+            names=names(~strcmp(names,'epoch'));
+            events.table=rmfield(temp,names);
+            
+            events.stack_idx=mod(events.stack_idx,21)+1;
+            events.stack{events.stack_idx}=events.table;
+            events.stack{mod(events.stack_idx,21)+1}=[];
+            Event_Update();
+            set(handles.events_undo_btn,'enable','on');
+            set(handles.events_redo_btn,'enable','off');
+        end
+    end
+    function Events_recovery_btn_callback(~,~)
+        events.table=header.events;
+        events.stack_idx=1;
+        events.stack{events.stack_idx}=events.table;
+        events.stack{2}=[];
+        events.stack{21}=[];
+        Event_Update();
+        set(handles.events_undo_btn,'enable','off');
+        set(handles.events_redo_btn,'enable','off');
     end
     function Category_listbox_Changed(~,~)
         value=get(handles.category_listbox,'value');
         if ~isempty(setxor(events.code_sel,value))
             events.code_sel=value;
+            events.selected_code=events.code(events.code_sel);
             if length(value)<length(events.code)
                 userdata.is_category_selected=0;
                 set(handles.category_checkbox,'Value',0);
@@ -626,9 +784,61 @@ GLW_view_OpeningFcn;
             GLW_event_slider_UpdataFcn();
             GLW_event_fig_UpdataFcn();
         end
+    end 
+    function category_del_btn_callback(~,~)
+        value=get(handles.category_listbox,'value');
+        if isempty(value)
+            msgbox('Please select some event types.');
+            return;
+        end
+        
+        choice=questdlg({'Are you sure to delete these event types?','It will delete all the events of these type.'},...
+                'Delete a event type','OK','Cancle','OK');
+        if strcmp(choice,'OK')
+            str=events.code(events.code_sel);
+            events.selected_code={};
+            for k=1:length(str)
+                events.table=events.table(~strcmp({events.table.code},str{k}));
+            end
+            events.stack_idx=mod(events.stack_idx,21)+1;
+            events.stack{events.stack_idx}=events.table;
+            events.stack{mod(events.stack_idx,21)+1}=[];
+            userdata.is_category_selected=1;
+            Event_Update();
+            set(handles.events_undo_btn,'enable','on');
+            set(handles.events_redo_btn,'enable','off');
+        end
     end
+    function category_rename_btn_callback(~,~)
+        value=get(handles.category_listbox,'value');
+        if isempty(value)
+            msgbox('Please select one event type.');
+            return;
+        end
+        str_pre=events.code(value(1));
+        answer = inputdlg('input the type name','change name of event type',1,str_pre);
+        if isempty(answer) || isempty(answer{1})||strcmp(answer{1},str_pre)
+            return;
+        end
+        str_now=answer{1};
+        idx=find(strcmp({events.table.code},str_pre));
+        for k=idx
+        events.table(k).code=str_now;
+        end
+        idx=find(strcmp({events.selected_code},str_pre));
+        for k=idx
+            events.selected_code(k)=str_now;
+        end
         
-        
+        events.stack_idx=mod(events.stack_idx,21)+1;
+        events.stack{events.stack_idx}=events.table;
+        events.stack{mod(events.stack_idx,21)+1}=[];
+        Event_Update();
+        set(handles.events_undo_btn,'enable','on');
+        set(handles.events_redo_btn,'enable','off');
+    end
+
+%% function left panel
     function X_range_changed(~,~)
         x(1) = str2double(get(handles.x1_edit, 'String'));
         x(2) = str2double(get(handles.x2_edit, 'String'));
@@ -879,11 +1089,11 @@ GLW_view_OpeningFcn;
         GLW_view_UpdataFcn();
     end
     function Panel_right_SizeChangedFcn(~,~)
-        set(handles.panel_right,'Units','pixels');
-        temp=get(handles.panel_right,'position');
-        temp=(temp(3)-76)/18;
+        set(handles.panel_right_up,'Units','pixels');
+        temp=get(handles.panel_right_up,'position');
+        temp=(temp(3)-60)/18;
         set(handles.event_table,'ColumnWidth',{temp*8,temp*6,temp*4});
-        set(handles.panel_right,'Units','normalized');
+        set(handles.panel_right_up,'Units','normalized');
     end
     function Set_position(obj,position)
         set(obj,'Units','pixels');
@@ -913,4 +1123,5 @@ GLW_view_OpeningFcn;
             userdata.is_mouse_down=0;
         end
     end
+    
 end
