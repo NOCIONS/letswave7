@@ -27,17 +27,17 @@
 % events.stack{mod(events.stack_idx,21)+1}=[];
 
 
-function test
+%function test
 figure()
 D={'12','32','12';4,5,6;7,8,9};
 h_table=uitable('data',D,'CellEditCallback',@Event_table_Edited,...
     'ColumnEditable', [true true true]);
-end
+%end
 
-function Event_table_Edited(obj,callbackdata)
-    clc;
-    disp(callbackdata)
-    d=get(obj,'data');
-    d{callbackdata.Indices(1),callbackdata.Indices(2)}=callbackdata.PreviousData;
-    set(obj,'Data',d);
-end
+% function Event_table_Edited(obj,callbackdata)
+%     clc;
+%     disp(callbackdata)
+%     d=get(obj,'data');
+%     d{callbackdata.Indices(1),callbackdata.Indices(2)}=callbackdata.PreviousData;
+%     set(obj,'Data',d);
+% end

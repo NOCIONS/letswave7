@@ -42,6 +42,19 @@ end
 
 if ~isfield(header,'events')|| isempty(header.events)
     header.events=struct('code',{},'latency',{},'epoch',{});
+else
+    field_str={'code','latency','epoch'};
+    C = setdiff(fieldnames(header.events),field_str);
+    header.events = rmfield(header.events,C);
+    if ~isfield(header.chanlocs,'code')
+        [header.chanlocs.code]=deal('s');
+    end
+    if ~isfield(header.chanlocs,'latency')
+        [header.chanlocs.latency]=deal(header.xstart);
+    end
+    if ~isfield(header.chanlocs,'epoch')
+        [header.chanlocs.epoch]=deal(1);
+    end
 end
 
 if ~isfield(header,'chanlocs')

@@ -8,6 +8,7 @@ GLW_view_OpeningFcn;
 
 %% GLW_view_OpeningFcn
     function GLW_view_OpeningFcn()
+        tic;
         Init_parameter();
         Init_fig();
         Init_epoch();
@@ -20,6 +21,7 @@ GLW_view_OpeningFcn;
         Init_event_table();
         Init_event_btn();
         Init_function();
+        toc;
     end
     function Init_parameter()
         temp=get(0,'Screensize');
@@ -36,8 +38,6 @@ GLW_view_OpeningFcn;
         userdata.is_category_selected=1;
         userdata.is_mouse_down=0;
         userdata.slide_dist=0;
-        userdata.is_overwrited=0;
-        userdata.prefix='ep_edit';
         userdata.N=0;
         userdata.t=0;
         userdata.Fs=0;
@@ -56,10 +56,11 @@ GLW_view_OpeningFcn;
         userdata.y=[];
         userdata.is_event_locked=1;
         
-        %[p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{1}));
-        [p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/EEGlab/ep eeglab_data.lw6');
+        [p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{1}));
+        %[p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/EEGlab/ep eeglab_data.lw6');
         %[p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/BrainVision/SubjectEEG/subj2.lw6');
         userdata.filename=n;
+        userdata.filepath=p;
         [header, data]=CLW_load(fullfile(p,n));
         
         userdata.N=header.datasize(6);
@@ -89,6 +90,7 @@ GLW_view_OpeningFcn;
             events.color=jet(length(events.code_all));
         end
         events.table_idx=[];
+        events.table_sel_idx=[];
         
         handles.fig=[];
         handles.panel_left=[];
@@ -331,7 +333,7 @@ GLW_view_OpeningFcn;
         Set_position(handles.category_checkbox,[200,150,50,20]);
         icon=load('icon.mat');
         handles.category_del_btn=uicontrol(handles.panel_right_down,...
-            'style','pushbutton','CData',icon.icon_dataset_del,...
+            'style','pushbutton','CData',icon.icon_delete,...
             'tooltipstring','remove event type');
         Set_position(handles.category_del_btn,[208,50,32,32]);
         handles.category_rename_btn=uicontrol(handles.panel_right_down,...
@@ -365,12 +367,11 @@ GLW_view_OpeningFcn;
             'tooltipstring','load events from workspace');
         
         handles.events_save_checkbox=uicontrol(handles.panel_right_up,...
-            'style','checkbox','Value',userdata.is_overwrited,...
-            'String','overwrite dataset');
+            'style','checkbox','Value',0,'String','overwrite dataset');
         handles.events_prefix_text=uicontrol(handles.panel_right_up,'style','text',...
-            'HorizontalAlignment','left','String','Prefix:','enable','off');
+            'HorizontalAlignment','left','String','Prefix:');
         handles.events_prefix_edt=uicontrol(handles.panel_right_up,'style','edit',...
-            'String',userdata.prefix,'HorizontalAlignment','left','enable','off');
+            'String','ep_edit','HorizontalAlignment','left');
         handles.events_recovery_btn=uicontrol(handles.panel_right_up,...
             'style','pushbutton','CData',icon.icon_open_path,...
             'tooltipstring','recovery the events');
@@ -441,7 +442,11 @@ GLW_view_OpeningFcn;
         set(handles.events_undo_btn,        'Callback',@Events_undo_btn_callback);
         set(handles.events_redo_btn,        'Callback',@Events_redo_btn_callback);
         set(handles.events_recovery_btn,    'Callback',@Events_recovery_btn_callback);
+        set(handles.events_add_btn,         'Callback',@Events_add_btn_callback);
+        set(handles.events_del_btn,         'Callback',@Events_del_btn_callback);
         
+        set(handles.events_save_checkbox,   'Callback',@Events_save_checkbox_callback);
+        set(handles.events_save_btn,         'Callback',@Events_save_btn_callback);
     end
    
 %% GLW_view_UpdataFcn
@@ -621,6 +626,7 @@ GLW_view_OpeningFcn;
         GLW_event_slider_UpdataFcn();
     end
     function Event_table_Selected(~,callbackdata)
+        events.table_sel_idx=events.table_idx(callbackdata.Indices(:,1));
         if  userdata.is_event_locked
             d=get(handles.event_table,'data');
             if isempty(callbackdata.Indices)
@@ -652,7 +658,6 @@ GLW_view_OpeningFcn;
             set(handles.line_marker,'Visible','off');
         end
     end
-
     function Event_table_Edited(~,callbackdata)
         idx=events.table_idx(callbackdata.Indices(1));
         switch(callbackdata.Indices(2))
@@ -708,6 +713,45 @@ GLW_view_OpeningFcn;
         temp(3:4)=temp(3:4)-0.00001;
         set(handles.events_lock_btn,'position',temp);
     end
+    function Events_add_btn_callback(~,~)
+        if ~isempty(events.selected_code)
+            code=events.selected_code{1};
+        else
+            if ~isempty(events.code)
+                code=events.code{1};
+            else
+                if ~isempty(events.code_all)
+                    code=events.code{1};
+                else
+                    code='S1';
+                end
+            end
+        end
+        events.table(end+1).code=code;
+        if userdata.t(1)<=0 && userdata.t(end)>=0
+            events.table(end).latency=0;
+        else
+            events.table(end).latency=userdata.t(1);
+        end
+        events.table(end).epoch=get(handles.epoch_listbox,'value');
+        
+        events.stack_idx=mod(events.stack_idx,21)+1;
+        events.stack{events.stack_idx}=events.table;
+        events.stack{mod(events.stack_idx,21)+1}=[];
+        Event_Update();
+        set(handles.events_undo_btn,'enable','on');
+        set(handles.events_redo_btn,'enable','off');
+    end
+    function Events_del_btn_callback(~,~)
+        idx=setdiff(1:length(events.table),events.table_sel_idx);
+        events.table=events.table(idx);
+        events.stack_idx=mod(events.stack_idx,21)+1;
+        events.stack{events.stack_idx}=events.table;
+        events.stack{mod(events.stack_idx,21)+1}=[];
+        Event_Update();
+        set(handles.events_undo_btn,'enable','on');
+        set(handles.events_redo_btn,'enable','off');
+    end
     function Events_undo_btn_callback(~,~)
         events.stack_idx=mod(events.stack_idx+19,21)+1;
         events.table=events.stack{events.stack_idx};
@@ -760,6 +804,30 @@ GLW_view_OpeningFcn;
         Event_Update();
         set(handles.events_undo_btn,'enable','off');
         set(handles.events_redo_btn,'enable','off');
+    end
+    function Events_save_checkbox_callback(~,~)
+        value=get(handles.events_save_checkbox,'value');
+        if value
+            set(handles.events_prefix_text,'enable','off');
+            set(handles.events_prefix_edt,'enable','off');
+        else
+            set(handles.events_prefix_text,'enable','on');
+            set(handles.events_prefix_edt,'enable','on');
+        end
+    end
+    function Events_save_btn_callback(~,~)
+        set(handles.events_save_btn,'enable','off');
+        lwdata.header=header;
+        lwdata.header.events=events.table;
+        if ~get(handles.events_save_checkbox,'value')
+            str=get(handles.events_prefix_edt,'String');
+            lwdata.header.name=[str,' ',header.name];
+            copyfile(fullfile(userdata.filepath,[header.name,'.mat']),...
+                fullfile(userdata.filepath,[lwdata.header.name,'.mat']));
+        end
+        option.path=userdata.filepath;
+        CLW_save_header(lwdata,option);
+        set(handles.events_save_btn,'enable','on');
     end
     function Category_listbox_Changed(~,~)
         value=get(handles.category_listbox,'value');
