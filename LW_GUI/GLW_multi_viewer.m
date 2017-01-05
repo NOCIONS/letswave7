@@ -1193,7 +1193,7 @@ GLW_my_view_OpeningFcn;
                         end
                         set(handles.text_y(wave_idx),'String',num2str(cursor_point_y,'%0.3g'));
                         c1=get(handles.text_y(wave_idx),'extent');
-                        c3=[fig_pos(1)+5,point_pos(2)-c1(4)/2,c1(3),c1(4)-5];
+                        c3=[fig_pos(1)+5,point_pos(2)-c1(4)/2,c1(3),c1(4)-2];
                         set(handles.text_y(wave_idx),'BackgroundColor',get(handles.line(wave_idx),'Color'));
                         set(handles.text_y(wave_idx),'Position',c3);
                         set(handles.text_y(wave_idx),'visible','on');

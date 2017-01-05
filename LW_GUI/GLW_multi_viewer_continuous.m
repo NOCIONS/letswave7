@@ -292,8 +292,11 @@ GLW_view_OpeningFcn;
         box on;grid on;
         for k=1:header.datasize(2)
             handles.line(k)=line(1,1,'Parent',handles.ax_fig);
+            handles.linetext(k)=uicontrol('Parent',handles.fig,'Style','text','String','32',...
+                                'FontSize',10,'ForegroundColor',[1,1,1],'BackgroundColor',[0,0,0]);
         end
         set(handles.line,'LineWidth',1,'Visible','off');
+        set(handles.linetext,'Visible','off');
         handles.line_marker=line(1,1,'linestyle','--','linewidth',2,...
             'color',[0.8,0.8,0.8],'Parent',handles.ax_fig,'Visible','off');
         GLW_view_UpdataFcn();
@@ -305,11 +308,20 @@ GLW_view_OpeningFcn;
             'color',[0.7,0.7,0.7],'Parent',handles.ax_slide);
         handles.rect_slide=rectangle('position',[userdata.t(1),-1,userdata.x_range,2],...
             'facecolor',[0.3,0.3,0.3],'Parent',handles.ax_slide);
+        
         set(handles.ax_slide,'xlim',userdata.t([1,end]),'ylim',[-5,5]);
-        
-        
-        GLW_event_slider_UpdataFcn();
+        x_tick=get(handles.ax_slide,'xtick');
+        text(userdata.t(1),-3,num2str(userdata.t(1)));
+        text(userdata.t(end),-3,num2str(userdata.t(end)),'HorizontalAlignment','right');
+        for k=1:length(x_tick)
+            if min(abs(x_tick(k)-userdata.t(1)),abs(x_tick(k)-userdata.t(end)))>=(x_tick(2)-x_tick(1))/2
+                line([x_tick(k),x_tick(k)],[-0.5,0.5],'color',[0,0,0],'Parent',handles.ax_slide);
+                text(x_tick(k),-3,num2str(x_tick(k)),'HorizontalAlignment','center');
+            end
+        end
         axis off;
+        
+        %GLW_event_slider_UpdataFcn();
     end
     function Init_event_table()
         columnname = {'Code','latency','Epoch'};
@@ -417,8 +429,8 @@ GLW_view_OpeningFcn;
         set(handles.x_scale_small_btn,      'callback',@X_scale_small_callback);
         set(handles.x_scale_large_btn,      'callback',@X_scale_large_callback);
         set(handles.x_scale_edit,           'callback',@X_scale_callback);
-        set(handles.y_scale_small_btn,      'callback',@Y_scale_small_callback); 
-        set(handles.y_scale_large_btn,      'callback',@Y_scale_large_callback); 
+        set(handles.y_scale_small_btn,      'callback',@Y_scale_small_callback);
+        set(handles.y_scale_large_btn,      'callback',@Y_scale_large_callback);
         set(handles.y_scale_edit,           'callback',@Y_scale_callback);
         set(handles.y_auto_checkbox,        'callback',@Y_auto_callback);
         set(handles.index_popup,            'Callback',@GLW_view_UpdataFcn);
@@ -448,7 +460,7 @@ GLW_view_OpeningFcn;
         set(handles.events_save_checkbox,   'Callback',@Events_save_checkbox_callback);
         set(handles.events_save_btn,         'Callback',@Events_save_btn_callback);
     end
-   
+
 %% GLW_view_UpdataFcn
     function GLW_view_UpdataFcn(~,~)
         ch_num=get(handles.channel_listbox,'value');
@@ -494,16 +506,27 @@ GLW_view_OpeningFcn;
         set(handles.ax_fig,'ylim',[-userdata.y_range*5,userdata.y_range*5]);
         set(handles.ax_fig,'ytick',linspace(-userdata.y_range*5,userdata.y_range*5,11));
         GLW_event_fig_UpdataFcn();
+        set(handles.linetext(1:length(ch_num)),'Visible','on');
+        set(handles.linetext(length(ch_num)+1:end),'Visible','off');
         set(handles.line(1:length(ch_num)),'Visible','on');
         set(handles.line(length(ch_num)+1:end),'Visible','off');
         set(handles.line(length(ch_num)+1:end),'XData',1);
         set(handles.line(length(ch_num)+1:end),'YData',1);
         temp_range=linspace(-userdata.y_range*5,userdata.y_range*5,length(ch_num)*2+1);
-        temp_range=temp_range(2:2:end);
+        temp_range=temp_range(end-1:-2:2);
         
         set(handles.ax_fig,'units','pixel');
         temp=get(handles.ax_fig,'position');
         set(handles.ax_fig,'units','normalized');
+        
+        for k=1:length(ch_num)
+            set(handles.linetext(k),'String',header.chanlocs(ch_num(k)).labels);
+            c1=get(handles.linetext(k),'extent');
+            c3=[temp(1)+5,temp(2)-c1(4)/2+(temp_range(k)/userdata.y_range/10+0.5)*temp(4),c1(3),c1(4)-2];
+            set(handles.linetext(k),'Position',c3);
+            set(handles.linetext(k),'BackgroundColor',userdata.color(mod(k-1,7)+1,:));
+        end
+        
         if length(x_idx)>temp(3)
             x=linspace(userdata.t(x_idx(1)),userdata.t(x_idx(end)),temp(3)*2)';
             for k=1:length(ch_num)
@@ -558,7 +581,6 @@ GLW_view_OpeningFcn;
         end
         ep_num=get(handles.epoch_listbox,'value');
         
-        
         for k=1:length(events.code_sel)
             idx_temp=find(strcmp({events.table.code},events.code{events.code_sel(k)}) ...
                 & [events.table.epoch]==ep_num...
@@ -574,17 +596,16 @@ GLW_view_OpeningFcn;
         if isempty(events.code_sel)
             legend off;
         else
-        legend(handles.ax_fig,handles.line_event(1:length(events.code_sel)),...
-            events.code(events.code_sel),'location','northeast',...
-            'ButtonDownFcn',{});
+            legend(handles.ax_fig,handles.line_event(1:length(events.code_sel)),...
+                events.code(events.code_sel),'location','northeast',...
+                'ButtonDownFcn',{});
         end
-        
     end
     function GLW_event_slider_UpdataFcn(~,~)
         for k=length(handles.line_event_slide)+1:length(events.code_sel)
             handles.line_event_slide(k)=line(1,-6,'markersize',14,...
-            'marker','.','linestyle','none',...
-            'color',[0.4,0.4,0.4],'Parent',handles.ax_slide);
+                'marker','.','linestyle','none',...
+                'color',[0.4,0.4,0.4],'Parent',handles.ax_slide);
         end
         for k=length(events.code_sel)+1:length(handles.line_event_slide)
             set(handles.line_event_slide(k),'visible','off');
@@ -690,12 +711,12 @@ GLW_view_OpeningFcn;
                     events.table(idx).epoch=temp;
                 end
         end
-            events.stack_idx=mod(events.stack_idx,21)+1;
-            events.stack{events.stack_idx}=events.table;
-            events.stack{mod(events.stack_idx,21)+1}=[];
-            Event_Update();
-            set(handles.events_undo_btn,'enable','on');
-            set(handles.events_redo_btn,'enable','off');
+        events.stack_idx=mod(events.stack_idx,21)+1;
+        events.stack{events.stack_idx}=events.table;
+        events.stack{mod(events.stack_idx,21)+1}=[];
+        Event_Update();
+        set(handles.events_undo_btn,'enable','on');
+        set(handles.events_redo_btn,'enable','off');
     end
     function Events_lock_btn_callback(~,~)
         icon=load('icon.mat');
@@ -852,7 +873,7 @@ GLW_view_OpeningFcn;
             GLW_event_slider_UpdataFcn();
             GLW_event_fig_UpdataFcn();
         end
-    end 
+    end
     function category_del_btn_callback(~,~)
         value=get(handles.category_listbox,'value');
         if isempty(value)
@@ -861,7 +882,7 @@ GLW_view_OpeningFcn;
         end
         
         choice=questdlg({'Are you sure to delete these event types?','It will delete all the events of these type.'},...
-                'Delete a event type','OK','Cancle','OK');
+            'Delete a event type','OK','Cancle','OK');
         if strcmp(choice,'OK')
             str=events.code(events.code_sel);
             events.selected_code={};
@@ -891,7 +912,7 @@ GLW_view_OpeningFcn;
         str_now=answer{1};
         idx=find(strcmp({events.table.code},str_pre));
         for k=idx
-        events.table(k).code=str_now;
+            events.table(k).code=str_now;
         end
         idx=find(strcmp({events.selected_code},str_pre));
         for k=idx
@@ -910,7 +931,7 @@ GLW_view_OpeningFcn;
     function X_range_changed(~,~)
         x(1) = str2double(get(handles.x1_edit, 'String'));
         x(2) = str2double(get(handles.x2_edit, 'String'));
-        if isnan(x(1))||isnan(x(2)) 
+        if isnan(x(1))||isnan(x(2))
             temp=get(handles.rect_slide,'position');
             set(handles.x1_edit, 'String',num2str(temp(1)));
             set(handles.x2_edit, 'String',num2str(temp(1)+temp(3)));
@@ -929,7 +950,13 @@ GLW_view_OpeningFcn;
             set(handles.x1_edit,'String',x(1));
             set(handles.x2_edit,'String',x(2));
         end
-        userdata.x_range=x(2)-x(1);
+        x_scale=x(2)-x(1);
+        if x_scale>2*10^4/userdata.Fs
+            set(handles.x1_edit, 'String',num2str(userdata.x1));
+            set(handles.x2_edit, 'String',num2str(userdata.x2));
+            return;
+        end
+        userdata.x_range=x_scale;
         userdata.x1=x(1);
         userdata.x2=x(2);
         set(handles.x1_edit, 'String',num2str(x(1)));
@@ -1157,6 +1184,19 @@ GLW_view_OpeningFcn;
         GLW_view_UpdataFcn();
     end
     function Panel_right_SizeChangedFcn(~,~)
+        ch_num=get(handles.channel_listbox,'value');
+        temp_range=linspace(-userdata.y_range*5,userdata.y_range*5,length(ch_num)*2+1);
+        temp_range=temp_range(end-1:-2:2);
+        set(handles.ax_fig,'units','pixel');
+        temp=get(handles.ax_fig,'position');
+        set(handles.ax_fig,'units','normalized');
+        for k=1:length(ch_num)
+            c1=get(handles.linetext(k),'extent');
+            c3=[temp(1)+5,temp(2)-c1(4)/2+(temp_range(k)/userdata.y_range/10+0.5)*temp(4),c1(3),c1(4)-2];
+            set(handles.linetext(k),'Position',c3);
+        end
+        
+        
         set(handles.panel_right_up,'Units','pixels');
         temp=get(handles.panel_right_up,'position');
         temp=(temp(3)-60)/18;
@@ -1191,5 +1231,5 @@ GLW_view_OpeningFcn;
             userdata.is_mouse_down=0;
         end
     end
-    
+
 end
