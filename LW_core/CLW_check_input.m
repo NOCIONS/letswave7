@@ -18,6 +18,6 @@ if ~isempty(arg)
         end
     end
 end
-if isfield(option,'affix')
-    option.affix=strtrim(option.affix);
+if isfield(option,'suffix')
+    option.suffix=strtrim(option.suffix);
 end

@@ -19,15 +19,15 @@ classdef FLW_merge<CLW_generic
         
         function item_Changed(obj,varargin)
             st_value=get(obj.h_merge_items_pop,'value');
-            str=get(obj.h_affix_edit,'string');
+            str=get(obj.h_suffix_edit,'string');
             if sum(strcmp(str,{'merge_epoch','merge_channel','merge_index'}))
                 switch(st_value)
                     case 1
-                        set(obj.h_affix_edit,'string','merge_epoch');
+                        set(obj.h_suffix_edit,'string','merge_epoch');
                     case 2
-                        set(obj.h_affix_edit,'string','merge_channel');
+                        set(obj.h_suffix_edit,'string','merge_channel');
                     case 3
-                        set(obj.h_affix_edit,'string','merge_index');
+                        set(obj.h_suffix_edit,'string','merge_index');
                 end
             end
         end
@@ -57,7 +57,7 @@ classdef FLW_merge<CLW_generic
             frag_code=[frag_code,'''type'',''',option.type,''','];
             temp='option=struct(';
             temp=[temp,frag_code];
-            temp=[temp,'''affix'',''',option.affix,''','];
+            temp=[temp,'''suffix'',''',option.suffix,''','];
             temp=[temp,'''is_save'',',num2str(option.is_save)];
             temp=[temp,');'];
             str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdataset,option);']}];
@@ -88,8 +88,8 @@ classdef FLW_merge<CLW_generic
                 case 'index'
                     header_out = FLW_merge.get_header_index(lwdataset_in);
             end
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -158,10 +158,10 @@ classdef FLW_merge<CLW_generic
         end
         
         function lwdata_out=get_lwdata(lwdataset_in,varargin)
-            option.affix='merge_epoch';
+            option.suffix='merge_epoch';
             option.type='epoch';
             option.is_save=0;
-            option=CLW_check_input(option,{'type','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'type','suffix','is_save'},varargin);
             
             header= FLW_merge.get_header(lwdataset_in,option);
             data=lwdataset_in(1).data;

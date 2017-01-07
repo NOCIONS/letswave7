@@ -178,8 +178,8 @@ classdef FLW_segmentation<CLW_generic
             header_out.datasize(6)=dxsize;
             header_out.xstart=option.x_start;
             header_out.events=events_out;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function='FLW_segmentation';
             header_out.history(end+1).option=option;            
@@ -189,9 +189,9 @@ classdef FLW_segmentation<CLW_generic
             option.event_labels=[];
             option.x_start=0;
             option.x_duration=1;
-            option.affix='ep';
+            option.suffix='ep';
             option.is_save=0;
-            option=CLW_check_input(option,{'event_labels','x_start','x_duration','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'event_labels','x_start','x_duration','suffix','is_save'},varargin);
             
             if isempty(option.event_labels)
                 error('***No event codes selected!***');

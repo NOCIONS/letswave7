@@ -13,7 +13,7 @@ classdef FLW_Demo<CLW_generic
         % the constructor of this class
         function obj = FLW_Demo(batch_handle)
             %call the constructor of the superclass
-            %CLW_generic(tabgp,fun_name,affix_name,help_str)
+            %CLW_generic(tabgp,fun_name,suffix_name,help_str)
             obj@CLW_generic(batch_handle,'Demo','demo',...
                 'Just make a demo for how to the FLW file.');
             %to be edited...
@@ -37,7 +37,7 @@ classdef FLW_Demo<CLW_generic
         %get the script for this operation
         %run this function, normally we will get a script 
         %with two lines as following 
-        %      option=struct('affix','demo','is_save',1);
+        %      option=struct('suffix','demo','is_save',1);
         %      lwdata= FLW_Demo.get_lwdata(lwdata,option);
         function str=get_Script(obj)
             option=get_option(obj);
@@ -53,17 +53,17 @@ classdef FLW_Demo<CLW_generic
             header_out=header_in;
             %to be edited...
             
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
         end
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
-            option.affix='demo';
+            option.suffix='demo';
             option.is_save=0;
-            option=CLW_check_input(option,{'affix','is_save'},varargin);
+            option=CLW_check_input(option,{'suffix','is_save'},varargin);
             header=FLW_Demo.get_header(lwdata_in.header,option);
             data=lwdata_in.data;
             %to be edited...

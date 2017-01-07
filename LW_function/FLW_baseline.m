@@ -107,8 +107,8 @@ classdef FLW_baseline<CLW_generic
     methods (Static = true)
         function header_out= get_header(header_in,option)
             header_out=header_in;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -118,10 +118,10 @@ classdef FLW_baseline<CLW_generic
             option.xstart=lwdata_in.header.xstart;
             option.xend=max(0,lwdata_in.header.xstart);
             option.operation='subtract';
-            option.affix='bl';
+            option.suffix='bl';
             option.is_save=0;
             option=CLW_check_input(option,{'xstart','xend','operation',...
-                'affix','is_save'},varargin);
+                'suffix','is_save'},varargin);
             header=FLW_baseline.get_header(lwdata_in.header,option);
             
             data=lwdata_in.data;

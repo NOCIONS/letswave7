@@ -1,26 +1,32 @@
-function LW_Manager()
-clc;
-LW_Init();
+function LW_manager()
+% LW_init : set paths
+LW_init();
+% Manager_Init
 handles=[];
 Manager_Init();
 
     function Manager_Init()
+        % create figure
         handles.fig=figure('Position',[100 50 500 670],...
             'name','Letswave7','NumberTitle','off');
         %% init menu
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
-        menu_name={'File','Edit','Process','Toolbox','Static','View',...
+        % menu labels
+        menu_name={'File','Edit','Process','Toolbox','Statistics','View',...
             'Plugins','Addition1','Addition2','Addition3'};
         for k=1:length(menu_name)
+            % find related xml file
             str=['menu_',menu_name{k},'.xml'];
             if ~exist(str,'file')
                 continue;
             end
+            %convert xml to struct
             s= xml2struct(str);
             if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
                 continue;                
             end
+            %build titlebar menu (labels and callback)
             root = uimenu(handles.fig,'Label',s.LW_Manager.Attributes.Label);
             s=s.LW_Manager.menu;
             if ~iscell(s); s={s};end
@@ -60,72 +66,91 @@ Manager_Init();
                 end
             end
         end
+        %build context menu (labels and callbacks)
         hcmenu = uicontextmenu;
         uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
         uimenu(hcmenu,'Label','rename','Callback',{@(obj,events)menu_callback('GLW_rename')});
         uimenu(hcmenu,'Label','delete','Callback',{@(obj,events)menu_callback('GLW_delete')});
         uimenu(hcmenu,'Label','send to workspace','Callback',{@(obj,events)sendworkspace_btn_Callback});
         uimenu(hcmenu,'Label','read from workspace','Callback',{@(obj,events)readworkspace_btn_Callback});
-        %% init the controler
+        %% init the controller
+        
         icon=load('icon.mat');
+        %refresh button
         handles.refresh_btn=uicontrol('style','pushbutton',...
             'CData',icon.icon_refresh,'position',[3,635,32,32],...
             'TooltipString','refresh the folder');
+        %browse button
         handles.path_btn=uicontrol('style','pushbutton',...
             'CData',icon.icon_open_path,'position',[38,635,32,32],...
             'TooltipString','browse for folder');
+        %filter path edit
         handles.path_edit=uicontrol('style','edit','string',pwd,...
             'HorizontalAlignment','left','position',[73,637,420,28]);
-        uicontrol('style','text','string','Selected:',...
+        %label 'Include'
+        uicontrol('style','text','string','Include:',...
             'HorizontalAlignment','left','position',[5,600,80,28]);
+        %filter checkbox
         handles.isfilter_checkbox=uicontrol('style','checkbox',...
             'string','Filter','position',[80,608,100,28]);
-        handles.affix_selected_listbox=uicontrol('style','listbox',...
+        %filter include listbox
+        handles.suffix_include_listbox=uicontrol('style','listbox',...
             'string','Filter','position',[5,292,120,320]);
-        uicontrol('style','text','string','Banned:',...
+        set(handles.suffix_include_listbox,'max',2,'min',0);
+        %label 'Exclude'
+        uicontrol('style','text','string','Exclude:',...
             'HorizontalAlignment','left','position',[5,255,80,28]);
-        handles.affix_baned_listbox=uicontrol('style','listbox',...
+        %filter exclude listbox
+        handles.suffix_exclude_listbox=uicontrol('style','listbox',...
             'string','Filter','position',[5,20,120,247]);
+        set(handles.suffix_exclude_listbox,'max',2,'min',0);
+        %label 'Datasets'
         uicontrol('style','text','string','Datasets:',...
             'HorizontalAlignment','left','position',[140,600,80,28]);
+        %file listbox
         handles.file_listbox=uicontrol('style','listbox','string',...
             'Filter','position',[140,40,355,572]);
-        handles.info_text_epoch=uicontrol('style','text','string','Epoch:',...
-            'position',[140,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_channel=uicontrol('style','text',...
-            'string','Channel:','position',[200,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_X=uicontrol('style','text','string','X:',...
-            'position',[280,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_Y=uicontrol('style','text','string','Y:',...
-            'position',[350,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_Z=uicontrol('style','text','string','Z:',...
-            'position',[400,15,100,19],'HorizontalAlignment','left');
-        handles.info_text_Index=uicontrol('style','text','string','Index:',...
-            'position',[440,15,100,19],'HorizontalAlignment','left');
-        handles.tip_text=uicontrol('style','text','string','tips:',...
-            'position',[2,-1,490,19],'HorizontalAlignment','left');
-        set(handles.affix_selected_listbox,'max',2,'min',0);
-        set(handles.affix_baned_listbox,'max',2,'min',0);
         set(handles.file_listbox,'max',2,'min',0);
         set(handles.file_listbox,'uicontextmenu',hcmenu);
-        
+        %label epochs
+        handles.info_text_epoch=uicontrol('style','text','string','Epochs:',...
+            'position',[140,15,100,19],'HorizontalAlignment','left');
+        %label channels
+        handles.info_text_channel=uicontrol('style','text',...
+            'string','Channels:','position',[200,15,100,19],'HorizontalAlignment','left');
+        %label Xsize
+        handles.info_text_X=uicontrol('style','text','string','X:',...
+            'position',[280,15,100,19],'HorizontalAlignment','left');
+        %label Ysize
+        handles.info_text_Y=uicontrol('style','text','string','Y:',...
+            'position',[350,15,100,19],'HorizontalAlignment','left');
+        %label Zsize
+        handles.info_text_Z=uicontrol('style','text','string','Z:',...
+            'position',[400,15,100,19],'HorizontalAlignment','left');
+        %label index
+        handles.info_text_Index=uicontrol('style','text','string','I:',...
+            'position',[440,15,100,19],'HorizontalAlignment','left');
+        %label tips
+        handles.tip_text=uicontrol('style','text','string','tips:',...
+            'position',[2,-1,490,19],'HorizontalAlignment','left');
+        %change units to 'normalized'
         try
             set(get(handles.fig,'children'),'units','normalized');
         end
-        
+        %set path to pwd
         set(handles.path_edit,'String',pwd);
         set(handles.path_edit,'Userdata',pwd);
-        
+        %set callbacks
         set(handles.fig,'CloseRequestFcn',{@(obj,events)fig_Close()});
         set(handles.refresh_btn,'Callback',{@(obj,events)update_handles()});
         set(handles.path_btn,'Callback',{@(obj,events)path_btn_Callback()});
         set(handles.path_edit,'Callback',{@(obj,events)path_edit_Callback()});
         set(handles.isfilter_checkbox,'Callback',{@(obj,events)update_handles()});
-        set(handles.affix_selected_listbox,'Callback',{@(obj,events)affix_listbox_Callback()});
-        set(handles.affix_baned_listbox,'Callback',{@(obj,events)affix_listbox_Callback()});
+        set(handles.suffix_include_listbox,'Callback',{@(obj,events)suffix_listbox_Callback()});
+        set(handles.suffix_exclude_listbox,'Callback',{@(obj,events)suffix_listbox_Callback()});
         set(handles.file_listbox,'Callback',{@(obj,events)file_listbox_Callback()});
         set(handles.file_listbox,'KeyPressFcn',@key_Press)
-        
+        %update_handles
         update_handles();
         handles.batch={};
         %% init timer
@@ -134,74 +159,64 @@ Manager_Init();
     end
 
     function file_listbox_Callback()
-%         persistent t;
-%         persistent file_selected;
-%         if isempty(t)
-%             t=clock;
-%             t(1)=t(1)-1;
-%         end
-%         if  ~isequal(file_selected,get(handles.file_listbox,'value'))
-%             t(1)=t(1)-1;
-%         end
-%         file_selected=get(handles.file_listbox,'value');
-%         if strcmp(get(gcf,'SelectionType'),'normal')
-%             e=etime(clock,t);
-%             t=clock;
-%             if e<1.5
-%                 menu_callback('GLW_rename');
-%             else
-%                 file_listbox_select_changed();
-%             end
-%         end
-%         if strcmp(get(gcf,'SelectionType'),'open')
-%             dataset_view();
-%         end
+        %on change in selection
         if strcmp(get(gcf,'SelectionType'),'normal')
             file_listbox_select_changed();
         end
+        %on open
         if strcmp(get(gcf,'SelectionType'),'open')
             dataset_view();
         end
     end
 
+
     function file_listbox_select_changed()
+        %execute on change in selection
+        %file_listbox.userdata stores all filenames in the listbox
         str=get(handles.file_listbox,'userdata');
+        %get selection
         idx=get(handles.file_listbox,'value');
         if isempty(str)|| isempty(idx)
+            %listbox is empty
             filename='<empty>';
-            set(handles.info_text_epoch,'string','epoch:');
-            set(handles.info_text_channel,'string','channel:');
+            set(handles.info_text_epoch,'string','Epochs:');
+            set(handles.info_text_channel,'string','Channels:');
             set(handles.info_text_X,'string','X:');
             set(handles.info_text_Y,'string','Y:');
             set(handles.info_text_Z,'string','Z:');
-            set(handles.info_text_Index,'string','Index:');
+            set(handles.info_text_Index,'string','I:');
         else
+            %listbox is not empty
+            %will report the size of the first selected dataset
             filename=str{idx(1)};
             try
             header = CLW_load_header(filename);
-            set(handles.info_text_epoch,'string',['Epoch:',num2str(header.datasize(1))]);
-            set(handles.info_text_channel,'string',['Channel:',num2str(header.datasize(2))]);
+            set(handles.info_text_epoch,'string',['Epochs:',num2str(header.datasize(1))]);
+            set(handles.info_text_channel,'string',['Channels:',num2str(header.datasize(2))]);
             set(handles.info_text_X,'string',['X:',num2str(header.datasize(6))]);
             set(handles.info_text_Y,'string',['Y:',num2str(header.datasize(5))]);
             set(handles.info_text_Z,'string',['Z:',num2str(header.datasize(4))]);
-            set(handles.info_text_Index,'string',['Index:',num2str(header.datasize(3))]);
+            set(handles.info_text_Index,'string',['I:',num2str(header.datasize(3))]);
             catch
-            set(handles.info_text_epoch,'string',['Epoch:Error']);
-            set(handles.info_text_channel,'string',['Channel:Error']);
+            set(handles.info_text_epoch,'string',['Epochs:Error']);
+            set(handles.info_text_channel,'string',['Channels:Error']);
             set(handles.info_text_X,'string',['X:Error']);
             set(handles.info_text_Y,'string',['Y:Error']);
             set(handles.info_text_Z,'string',['Z:Error']);
-            set(handles.info_text_Index,'string',['Index:Error']);
+            set(handles.info_text_Index,'string',['I:Error']);
             end
         end
     end
 
-    function affix_listbox_Callback()
+
+    function suffix_listbox_Callback()
+        %executes when selecting items in the suffix listbox
         set(handles.isfilter_checkbox,'value',1);
         update_handles;
     end
 
     function path_edit_Callback()
+        %executes when changing content of path_edit
         st=get(handles.path_edit,'String');
         if exist(st,'dir')
             update_handles;
@@ -212,6 +227,7 @@ Manager_Init();
     end
 
     function path_btn_Callback()
+        %executes when clicking path_btn
         st=get(handles.path_edit,'String');
         st=uigetdir(st);
         if ~isequal(st,0) && exist(st,'dir')==7
@@ -221,11 +237,12 @@ Manager_Init();
     end
 
     function option=get_selectfile()
+        %returns a structure with the selected files
         option=[];
         str=get(handles.file_listbox,'userdata');
         idx=get(handles.file_listbox,'value');
         if isempty(idx) || isempty(str)
-            warndlg('Please select some files!','Warning','modal');
+            warndlg('No datasets selected!','Warning','modal');
             return;
         end
         option.file_str  = [str(idx)];
@@ -233,6 +250,7 @@ Manager_Init();
     end
 
     function sendworkspace_btn_Callback()
+        %executes when clicking sendworkspace_btn
         option=get_selectfile();
         if isempty(option)
             return;
@@ -245,15 +263,15 @@ Manager_Init();
     end
 
     function readworkspace_btn_Callback()
+        %executes when clicking readworspace_btn
         option=get_selectfile();
         if isempty(option)
             return;
         end
         if isempty(option)|| length(option.file_str)>1
-            disp('Please select one file');
+            disp('Please select the file to update from workspace');
             return;
-        end
-        
+        end      
         try
             lwdata=evalin('base','lwdata');
         catch
@@ -278,19 +296,28 @@ Manager_Init();
     end
 
     function menu_callback(fun_name)
+        %executes on menu_callback
+        %fun_name = name of function associated with menu callback
         if ~isempty([strfind(fun_name,'FLW_export_'),strfind(fun_name,'FLW_import_')])
+            %if fun_name is FLW_export or FLW_import
+            %execute the function without any arguments
             eval([fun_name,'();']);
             update_handles();
             return;
         else
+            %if fun_name is any other function
+            %get the selection of files > option
             option=get_selectfile();
             if isempty(option)
                 return;
             end
         end
+        %if first letter of function name is 'F'
         if(fun_name(1)=='F')
+            %add option.fun_name to option
             option.fun_name = fun_name;
-            handles.batch{end+1}=LW_Batch(option);
+            %LW_batch(option)
+            handles.batch{end+1}=LW_batch(option);
         else
             eval([fun_name,'(option);']);
             update_handles();
@@ -298,6 +325,7 @@ Manager_Init();
     end
 
     function key_Press(~,events)
+        %keyboard shortcuts
         switch events.Key
             case 'delete'
                 menu_callback('GLW_delete');
@@ -312,15 +340,20 @@ Manager_Init();
         end
     end
 
+
     function dataset_view()
+        %view dataset
         option=get_selectfile();
         if isempty(option)
             return;
         end
-        GLW_multi_viewer_continuous(option);
+        GLW_multi_viewer(option);
     end
 
+
+
     function on_Timer()
+        %executes on timer event
         if ~isempty(handles.batch)
             index=[];
             for k=1:length(handles.batch)
@@ -335,13 +368,18 @@ Manager_Init();
         end
     end
 
+
+
     function fig_Close()
+        %executes on figure close
         try
             stop(handles.timer);
             delete(handles.timer);
         end
         closereq;
     end
+
+
 
     function update_handles()
         st=get(handles.path_edit,'String');
@@ -354,10 +392,10 @@ Manager_Init();
         filename2=dir([st,filesep,'*.lw5']);
         filename={filename1.name,filename2.name};
         filelist=cell(1,length(filename));
-        filelist_affix=cell(1,length(filename));
+        filelist_suffix=cell(1,length(filename));
         for k=1:length(filename)
-            filelist_affix{k}=textscan(filename{k}(1:end-4),'%s');
-            filelist_affix{k}=filelist_affix{k}{1}';
+            filelist_suffix{k}=textscan(filename{k}(1:end-4),'%s');
+            filelist_suffix{k}=filelist_suffix{k}{1}';
             switch(filename{k}(end))
                 case '6'
                     filelist{k}=filename{k}(1:end-4);
@@ -365,23 +403,23 @@ Manager_Init();
                     filelist{k}=['<HTML><BODY color="blue">',filename{k}];
             end
         end
-        affix=sort(unique([filelist_affix{:}]));
-        str=get(handles.affix_selected_listbox,'String');
-        idx=get(handles.affix_selected_listbox,'value');
+        suffix=sort(unique([filelist_suffix{:}]));
+        str=get(handles.suffix_include_listbox,'String');
+        idx=get(handles.suffix_include_listbox,'value');
         if isempty(str)
             selected_str=[];
         else
             selected_str=str(idx);
         end
-        
-        str=get(handles.affix_baned_listbox,'String');
-        idx=get(handles.affix_baned_listbox,'value');
+        %
+        str=get(handles.suffix_exclude_listbox,'String');
+        idx=get(handles.suffix_exclude_listbox,'value');
         if isempty(str)
             baned_str=[];
         else
             baned_str=str(idx);
         end
-        
+        %
         str=get(handles.file_listbox,'String');
         idx=get(handles.file_listbox,'value');
         if isempty(str)
@@ -389,40 +427,39 @@ Manager_Init();
         else
             file_str=str(idx);
         end
-        
+        %
         is_filter=get(handles.isfilter_checkbox,'value');
         if is_filter==1
-            set(handles.affix_selected_listbox,'string',affix);
-            [~,selected_idx]=intersect(affix,selected_str,'stable');
-            set(handles.affix_selected_listbox,'value',selected_idx);
+            set(handles.suffix_include_listbox,'string',suffix);
+            [~,selected_idx]=intersect(suffix,selected_str,'stable');
+            set(handles.suffix_include_listbox,'value',selected_idx);
             
             if isempty(selected_idx)
                 selected_file_index=1:length(filelist);
             else
                 selected_file_index=[];
                 for k=1:length(filelist)
-                    if isempty(setdiff(affix(selected_idx),filelist_affix{k}))
+                    if isempty(setdiff(suffix(selected_idx),filelist_suffix{k}))
                         selected_file_index=[selected_file_index,k];
                     end
                 end
             end
-            
+            %
             if isempty(selected_file_index)
                 set(handles.file_listbox,'String',{});
                 set(handles.file_listbox,'userdata',{});
                 set(handles.file_listbox,'value',[]);
-                set(handles.affix_baned_listbox,'String',{});
-                set(handles.affix_baned_listbox,'value',[]);
+                set(handles.suffix_exclude_listbox,'String',{});
+                set(handles.suffix_exclude_listbox,'value',[]);
             else
-                affix_baned=sort(unique([filelist_affix{selected_file_index}]));
-                affix_baned=setdiff(affix_baned,affix(selected_idx));
-                [~,baned_idx]=intersect(affix_baned,baned_str,'stable');
-                set(handles.affix_baned_listbox,'String',affix_baned);
-                set(handles.affix_baned_listbox,'value',baned_idx);
-                
+                suffix_baned=sort(unique([filelist_suffix{selected_file_index}]));
+                suffix_baned=setdiff(suffix_baned,suffix(selected_idx));
+                [~,baned_idx]=intersect(suffix_baned,baned_str,'stable');
+                set(handles.suffix_exclude_listbox,'String',suffix_baned);
+                set(handles.suffix_exclude_listbox,'value',baned_idx);
                 band_file_index=[];
                 for j=selected_file_index
-                    if isempty(intersect(affix_baned(baned_idx),filelist_affix{j}))
+                    if isempty(intersect(suffix_baned(baned_idx),filelist_suffix{j}))
                         band_file_index=[band_file_index,j];
                     end
                 end
@@ -432,10 +469,10 @@ Manager_Init();
                 set(handles.file_listbox,'value',idx);
             end
         else
-            set(handles.affix_selected_listbox,'string',affix);
-            set(handles.affix_selected_listbox,'value',[]);
-            set(handles.affix_baned_listbox,'string',affix);
-            set(handles.affix_baned_listbox,'value',[]);
+            set(handles.suffix_include_listbox,'string',suffix);
+            set(handles.suffix_include_listbox,'value',[]);
+            set(handles.suffix_exclude_listbox,'string',suffix);
+            set(handles.suffix_exclude_listbox,'value',[]);
             set(handles.file_listbox,'string',filelist);
             set(handles.file_listbox,'userdata',filename);
             [~,idx]=intersect(filelist,file_str,'stable');

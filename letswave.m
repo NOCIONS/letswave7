@@ -1,3 +1,3 @@
 function letswave
-LW_Manager;
+LW_manager;
 end

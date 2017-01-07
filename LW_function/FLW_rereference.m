@@ -141,8 +141,8 @@ classdef FLW_rereference<CLW_generic
             end
             option.reference_idx=reference_idx;
             option.apply_idx=apply_idx;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -151,10 +151,10 @@ classdef FLW_rereference<CLW_generic
         function lwdata_out=get_lwdata(lwdata_in,varargin)
             option.reference_list=[];
             option.apply_list=[];
-            option.affix='reref';
+            option.suffix='reref';
             option.is_save=0;
             option=CLW_check_input(option,{'reference_list','apply_list',...
-                'affix','is_save'},varargin);
+                'suffix','is_save'},varargin);
             header=FLW_rereference.get_header(lwdata_in.header,option);
             data=lwdata_in.data;
             reference_idx=header.history(end).option.reference_idx;

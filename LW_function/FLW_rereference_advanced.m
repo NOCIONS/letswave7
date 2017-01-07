@@ -296,17 +296,17 @@ classdef FLW_rereference_advanced<CLW_generic
                 header_out.chanlocs(i).SEEG_enabled=0;
             end
             
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
         end
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
-            option.affix='reref_adv';
+            option.suffix='reref_adv';
             option.is_save=0;
-            option=CLW_check_input(option,{'active_list','ref_list','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'active_list','ref_list','suffix','is_save'},varargin);
             header=FLW_rereference_advanced.get_header(lwdata_in.header,option);
             ref_idx=header.history(end).option.ref_idx;
             active_idx=header.history(end).option.active_idx;

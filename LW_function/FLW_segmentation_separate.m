@@ -77,7 +77,7 @@ classdef FLW_segmentation_separate<CLW_generic
             
             temp='option=struct(';
             temp=[temp,frag_code];
-            temp=[temp,'''affix'',''',option.affix,''','];
+            temp=[temp,'''suffix'',''',option.suffix,''','];
             temp=[temp,'''is_save'',',num2str(option.is_save)];
             temp=[temp,');'];
             str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdata,option);']}];
@@ -132,10 +132,10 @@ classdef FLW_segmentation_separate<CLW_generic
             for event_labels=option.event_labels
                 option1=option;
                 option1.event_labels=event_labels;
-                if isempty(option1.affix)
-                    option1.affix=char(option1.event_labels);
+                if isempty(option1.suffix)
+                    option1.suffix=char(option1.event_labels);
                 else
-                    option1.affix=[option1.affix,'_',char(option1.event_labels)];
+                    option1.suffix=[option1.suffix,'_',char(option1.event_labels)];
                 end
                 lwdataset_out(end+1).header=FLW_segmentation.get_header(header_in,option1);
             end
@@ -145,9 +145,9 @@ classdef FLW_segmentation_separate<CLW_generic
             option.event_labels=[];
             option.x_start=0;
             option.x_duration=1;
-            option.affix='ep';
+            option.suffix='ep';
             option.is_save=0;
-            option=CLW_check_input(option,{'event_labels','x_start','x_duration','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'event_labels','x_start','x_duration','suffix','is_save'},varargin);
             
             if isempty(option.event_labels)
                 error('***No event codes selected!***');
@@ -158,10 +158,10 @@ classdef FLW_segmentation_separate<CLW_generic
             for event_labels=option.event_labels
                 option1=option;
                 option1.event_labels=event_labels;
-                if isempty(option1.affix)
-                    option1.affix=char(option1.event_labels);
+                if isempty(option1.suffix)
+                    option1.suffix=char(option1.event_labels);
                 else
-                    option1.affix=[option1.affix,'_',char(option1.event_labels)];
+                    option1.suffix=[option1.suffix,'_',char(option1.event_labels)];
                 end
                 lwdataset_out(end+1)=FLW_segmentation.get_lwdata(lwdata_in,option1);
             end

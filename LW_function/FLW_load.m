@@ -13,8 +13,8 @@ classdef FLW_load<CLW_generic
     methods
         function obj = FLW_load(batch_handle)
             obj@CLW_generic(batch_handle,'load',' ','Load the letswave data files.');
-            set(obj.h_affix_txt,'visible','off');
-            set(obj.h_affix_edit,'visible','off');
+            set(obj.h_suffix_txt,'visible','off');
+            set(obj.h_suffix_edit,'visible','off');
             set(obj.h_is_save_chx,'visible','off');
             
             

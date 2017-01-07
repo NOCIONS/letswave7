@@ -58,8 +58,8 @@ classdef FLW_iFFT<CLW_generic
             end
             header_out.filetype='time_amplitude';
             
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -67,9 +67,9 @@ classdef FLW_iFFT<CLW_generic
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
             option.force_real=1;
-            option.affix='iFFT';
+            option.suffix='iFFT';
             option.is_save=0;
-            option=CLW_check_input(option,{'force_real','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'force_real','suffix','is_save'},varargin);
             header=FLW_iFFT.get_header(lwdata_in.header,option);
             
             time_header=[];

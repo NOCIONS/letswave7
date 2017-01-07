@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LW_Manager Label="Statics">
+<LW_Manager Label="Statistics">
     <menu Label="ANOVA" />
     <menu Label="T-test（One sample）" callback="FLW_ttest_constant"/>
     <menu Label="T-test（paired sample/two sample）" callback="FLW_ttest"/>

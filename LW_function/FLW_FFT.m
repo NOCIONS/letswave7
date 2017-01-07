@@ -105,8 +105,8 @@ classdef FLW_FFT<CLW_generic
                 header_out.datasize(6)=ceil((header_out.datasize(6)+1)/2);
             end
             
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -117,10 +117,10 @@ classdef FLW_FFT<CLW_generic
             option.half_spectrum=1;
             option.normalize=1;
             
-            option.affix='fft';
+            option.suffix='fft';
             option.is_save=0;
             option=CLW_check_input(option,{'output','half_spectrum',...
-                'normalize','affix','is_save'},varargin);
+                'normalize','suffix','is_save'},varargin);
             header=FLW_FFT.get_header(lwdata_in.header,option);
             option=header.history(end).option;
             data=fft(lwdata_in.data,[],6);

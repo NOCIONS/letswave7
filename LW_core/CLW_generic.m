@@ -8,8 +8,8 @@ classdef CLW_generic<handle
         
         h_txt_cmt;
         h_btn_script;
-        h_affix_txt;
-        h_affix_edit;
+        h_suffix_txt;
+        h_suffix_edit;
         h_is_save_chx;
         h_title_str;
         h_help_str;
@@ -18,7 +18,7 @@ classdef CLW_generic<handle
     end
     
     methods
-        function obj = CLW_generic(batch_handle,fun_name,affix_name,help_str)
+        function obj = CLW_generic(batch_handle,fun_name,suffix_name,help_str)
             obj.h_title_str=['==========',class(obj),'=========='];
             obj.h_help_str=help_str;
             
@@ -30,13 +30,12 @@ classdef CLW_generic<handle
             obj.h_txt_cmt = uicontrol('parent',obj.h_panel,'style','edit','max',2,'Enable','inactive',...
                 'position',[5,5,305,120],'HorizontalAlignment','left',...
                 'backgroundcolor',[1,1,1]);
-            set(obj.h_txt_cmt,'string',{obj.h_title_str,obj.h_help_str});
-            
-            obj.h_affix_txt=uicontrol('style','text','position',[315,100,40,20],...
+            set(obj.h_txt_cmt,'string',{obj.h_title_str,obj.h_help_str});           
+            obj.h_suffix_txt=uicontrol('style','text','position',[315,100,40,20],...
                 'string','prefix:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_affix_edit=uicontrol('style','edit','position',[315,80,100,25],...
-                'HorizontalAlignment','left','string',affix_name,'parent',obj.h_panel);
+            obj.h_suffix_edit=uicontrol('style','edit','position',[315,80,100,25],...
+                'HorizontalAlignment','left','string',suffix_name,'parent',obj.h_panel);
             obj.h_is_save_chx=uicontrol('style','checkbox','value',1,...
                 'position',[315,50,200,30],'string','save','parent',obj.h_panel);
             obj.h_btn_script = uicontrol('style','pushbutton',...
@@ -47,13 +46,13 @@ classdef CLW_generic<handle
                 
         function option=get_option(obj)
             option=[];
-            option.affix=get(obj.h_affix_edit,'string');
+            option.suffix=get(obj.h_suffix_edit,'string');
             option.is_save=get(obj.h_is_save_chx,'value');
             option.function=class(obj);
         end
         
         function set_option(obj,option)
-            set(obj.h_affix_edit,'string',option.affix);
+            set(obj.h_suffix_edit,'string',option.suffix);
             set(obj.h_is_save_chx,'value',option.is_save);
         end
         
@@ -81,7 +80,7 @@ classdef CLW_generic<handle
         function str=get_Script(obj,frag_code,option)
             temp='option=struct(';
             temp=[temp,frag_code];
-            temp=[temp,'''affix'',''',option.affix,''','];
+            temp=[temp,'''suffix'',''',option.suffix,''','];
             temp=[temp,'''is_save'',',num2str(option.is_save)];
             temp=[temp,');'];
             str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdata,option);']}];

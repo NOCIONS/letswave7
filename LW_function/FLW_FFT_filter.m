@@ -228,8 +228,8 @@ classdef FLW_FFT_filter<CLW_generic
     methods (Static = true)
         function header_out= get_header(header_in,option)
             header_out=header_in;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -245,11 +245,11 @@ classdef FLW_FFT_filter<CLW_generic
             option.notch_width=2;
             option.slope_width=2;
             option.harmonic_num=2;
-            option.affix='filt_fft';
+            option.suffix='filt_fft';
             option.is_save=0;
             option=CLW_check_input(option,{'filter_type','high_cutoff',...
                 'high_width','low_cutoff','low_width','notch_fre',...
-                'notch_width','slope_width','harmonic_num','affix',...
+                'notch_width','slope_width','harmonic_num','suffix',...
                 'is_save'},varargin);
             switch option.filter_type
                 case 'lowpass'

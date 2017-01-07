@@ -111,7 +111,7 @@ classdef FLW_ttest<CLW_permutation
             
             temp='option=struct(';
             temp=[temp,frag_code];
-            temp=[temp,'''affix'',''',option.affix,''','];
+            temp=[temp,'''suffix'',''',option.suffix,''','];
             temp=[temp,'''is_save'',',num2str(option.is_save)];
             temp=[temp,');'];
             str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdataset,option);']}];
@@ -158,8 +158,8 @@ classdef FLW_ttest<CLW_permutation
             else
                 header_out.datasize(3)=2;
             end
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             option.ref_dataset=1;
@@ -179,12 +179,12 @@ classdef FLW_ttest<CLW_permutation
             option.multiple_sensor=0;
             option.chan_dist=0;
             
-            option.affix='ttest';
+            option.suffix='ttest';
             option.is_save=0;
             option=CLW_check_input(option,{'test_type','tails','ref_dataset','alpha',...
                 'permutation','num_permutations','cluster_statistic',...
                 'cluster_threshold','show_progress','cluster_union',...
-                'multiple_sensor','chan_dist','affix','is_save'},...
+                'multiple_sensor','chan_dist','suffix','is_save'},...
                 varargin);
             %lwdataset_out = FLW_ttest.get_headerset(lwdataset_in,option);
             
@@ -208,12 +208,12 @@ classdef FLW_ttest<CLW_permutation
             option.multiple_sensor=0;
             option.chan_dist=0;
             
-            option.affix='ttest';
+            option.suffix='ttest';
             option.is_save=0;
             option=CLW_check_input(option,{'test_type','tails','alpha',...
                 'permutation','num_permutations','cluster_statistic',...
                 'cluster_threshold','show_progress','cluster_union',...
-                'multiple_sensor','chan_dist','affix','is_save'},...
+                'multiple_sensor','chan_dist','suffix','is_save'},...
                 varargin);
             option.ref_dataset=1;
             header=FLW_ttest.get_header(lwdataset_in(2).header,option);

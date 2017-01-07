@@ -79,8 +79,8 @@ classdef FLW_ttest_constant<CLW_permutation
             else
                 header_out.datasize(3)=2;
             end
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -97,12 +97,12 @@ classdef FLW_ttest_constant<CLW_permutation
             option.multiple_sensor=0;
             option.chan_dist=0;
             
-            option.affix='ttest';
+            option.suffix='ttest';
             option.is_save=0;
             option=CLW_check_input(option,{'constant','tails','alpha',...
                 'permutation','num_permutations','cluster_statistic',...
                 'cluster_threshold','show_progress',...
-                'multiple_sensor','chan_dist','affix','is_save'},...
+                'multiple_sensor','chan_dist','suffix','is_save'},...
                 varargin);
             header=FLW_ttest_constant.get_header(lwdata_in.header,option);
             

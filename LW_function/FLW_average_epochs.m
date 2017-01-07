@@ -20,15 +20,15 @@ classdef FLW_average_epochs<CLW_generic
         
         function item_Changed(obj,varargin)
             st_value=get(obj.h_method_pop,'value');
-            str=get(obj.h_affix_edit,'string');
+            str=get(obj.h_suffix_edit,'string');
             if sum(strcmp(str,{'avg','std','median'}))
                 switch(st_value)
                     case 1
-                        set(obj.h_affix_edit,'string','avg');
+                        set(obj.h_suffix_edit,'string','avg');
                     case 2
-                        set(obj.h_affix_edit,'string','std');
+                        set(obj.h_suffix_edit,'string','std');
                     case 3
-                        set(obj.h_affix_edit,'string','median');
+                        set(obj.h_suffix_edit,'string','median');
                 end
             end
         end
@@ -72,8 +72,8 @@ classdef FLW_average_epochs<CLW_generic
                 header_out=rmfield(header_out,'epochdata');
             end
             
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -81,9 +81,9 @@ classdef FLW_average_epochs<CLW_generic
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
             option.operation='average';
-            option.affix='avg';
+            option.suffix='avg';
             option.is_save=0;
-            option=CLW_check_input(option,{'operation','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'operation','suffix','is_save'},varargin);
             header=FLW_average_epochs.get_header(lwdata_in.header,option);
             data=zeros(header.datasize);
             switch option.operation

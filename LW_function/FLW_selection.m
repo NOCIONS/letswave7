@@ -107,12 +107,12 @@ classdef FLW_selection<CLW_generic
         
         function item_Changed(obj,varargin)
             st_value=get(obj.h_selection_items_pop,'value');
-            str=get(obj.h_affix_edit,'string');
+            str=get(obj.h_suffix_edit,'string');
             if sum(strcmp(str,{'sel_epoch','sel_chan','sel_idx'}))
                 switch(st_value)
                     case 1
                         if ~strcmp(str,'sel_epoch')
-                            set(obj.h_affix_edit,'string','sel_epoch');
+                            set(obj.h_suffix_edit,'string','sel_epoch');
                             set(obj.h_old_list,'value',[],'string',obj.labels_epoch);
                             set(obj.h_new_list,'value',[],'string',[]);
                             if obj.isequal_epoch==0
@@ -126,7 +126,7 @@ classdef FLW_selection<CLW_generic
                         end
                     case 2
                         if ~strcmp(str,'sel_chan')
-                            set(obj.h_affix_edit,'string','sel_chan');
+                            set(obj.h_suffix_edit,'string','sel_chan');
                             set(obj.h_new_list,'value',[],'string',[]);
                             set(obj.h_old_list,'value',[],'string',obj.labels_chan);
                             if obj.isequal_chan==0
@@ -140,7 +140,7 @@ classdef FLW_selection<CLW_generic
                         end
                     case 3
                         if ~strcmp(str,'sel_idx')
-                            set(obj.h_affix_edit,'string','sel_idx');
+                            set(obj.h_suffix_edit,'string','sel_idx');
                             set(obj.h_new_list,'value',[],'string',[]);
                             set(obj.h_old_list,'value',[],'string',obj.labels_idx);
                             if obj.isequal_idx==0
@@ -523,18 +523,18 @@ classdef FLW_selection<CLW_generic
             end
             
             
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
         end
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
-            option.affix='sel_chan';
+            option.suffix='sel_chan';
             option.is_save=0;
             option.items=[];
-            option=CLW_check_input(option,{'type','items','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'type','items','suffix','is_save'},varargin);
             header=FLW_selection.get_header(lwdata_in.header,option);
             
             data=lwdata_in.data;

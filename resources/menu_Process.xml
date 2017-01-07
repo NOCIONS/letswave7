@@ -22,7 +22,7 @@
     </menu>
     <menu Label="Artifact">
         <submenu Label="Remove ocular artifact"/>
-        <submenu Label="Reject epochs (amplitude criterion)"/>
+        <submenu Label="Reject epochs (amplitude criterion)" callback="FLW_reject_epochs_amplitude"/>
         <submenu Label="Reject epochs (visiual inspection)"/>
         <submenu Label="Suppress artifact (latency-defined)"/>
         <submenu Label="Suppress artifact (event-defined)"/>

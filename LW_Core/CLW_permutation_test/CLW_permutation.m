@@ -16,8 +16,8 @@ classdef CLW_permutation<CLW_generic
     end
     
     methods
-        function obj = CLW_permutation(batch_handle,fun_name,affix_name,help_str)
-            obj@CLW_generic(batch_handle,fun_name,affix_name,help_str);
+        function obj = CLW_permutation(batch_handle,fun_name,suffix_name,help_str)
+            obj@CLW_generic(batch_handle,fun_name,suffix_name,help_str);
             
             obj.h_alpha_txt=uicontrol('style','text','position',[35,380,200,20],...
                 'string','Alpha level:','HorizontalAlignment','left',...

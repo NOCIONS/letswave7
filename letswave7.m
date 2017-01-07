@@ -1,3 +1,3 @@
 function letswave7
-LW_Manager;
+LW_manager;
 end

@@ -35,8 +35,8 @@ classdef FLW_dc_removal<CLW_generic
     methods (Static = true)
         function header_out= get_header(header_in,option)
             header_out=header_in;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -44,9 +44,9 @@ classdef FLW_dc_removal<CLW_generic
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
             option.linear_detrend=0;
-            option.affix='dc';
+            option.suffix='dc';
             option.is_save=0;
-            option=CLW_check_input(option,{'linear_detrend','affix','is_save'},varargin);
+            option=CLW_check_input(option,{'linear_detrend','suffix','is_save'},varargin);
             header=FLW_dc_removal.get_header(lwdata_in.header,option);
             
             data=lwdata_in.data;

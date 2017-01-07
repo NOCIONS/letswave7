@@ -1,52 +1,51 @@
-function h_fig=LW_Batch(varargin)
-%LW_Batch
-clc;
+function h_fig=LW_batch(varargin)
+%LW_batch
 batch={};
 handle=[];
 Batch_Init();
 h_fig=handle.fig;
 
-%% Batch_init
+%%  Batch_init
     function Batch_Init()
+        %create figure
         handle.fig = figure('position',[100,100,520,605],'Resize','off',...
             'name','Letswave Batch','numbertitle','off');
-        
         %% initialize the toolbar and menu
         set(handle.fig,'MenuBar','none');
         set(handle.fig,'DockControls','off');
         icon=load('icon.mat');
         handle.toolbar = uitoolbar(handle.fig);
-        
+        %open toolbar
         handle.toolbar_open = uipushtool(handle.toolbar);
         set(handle.toolbar_open,'CData',icon.icon_open);
         set(handle.toolbar_open,'TooltipString','open the script');
         set(handle.toolbar_open,'ClickedCallback',{@open_script});
-        
+        %save toolbar
         handle.toolbar_save = uipushtool(handle.toolbar);
         set(handle.toolbar_save,'CData',icon.icon_save);
         set(handle.toolbar_save,'TooltipString','save script');
         set(handle.toolbar_save,'ClickedCallback',{@save_script});
-        
+        %delete toolbar
         handle.toolbar_del = uipushtool(handle.toolbar);
         set(handle.toolbar_del,'CData',icon.icon_delete);
         set(handle.toolbar_del,'TooltipString','delete function');
         set(handle.toolbar_del,'ClickedCallback',{@del_function});
-        
+        %show toolbar
         handle.toolbar_show = uipushtool(handle.toolbar,'separator','on');
         set(handle.toolbar_show,'CData',icon.icon_script);
         set(handle.toolbar_show,'TooltipString','show script');
         set(handle.toolbar_show,'ClickedCallback',{@show_script});
-        
+        %run toolbar
         handle.toolbar_run = uipushtool(handle.toolbar,'Interruptible','off');
         set(handle.toolbar_run,'CData',icon.icon_run);
         set(handle.toolbar_run,'TooltipString','run script');
         set(handle.toolbar_run,'ClickedCallback',{@run_script});
-        
+        %btn_run
         handle.btn_run=uicontrol('style','pushbutton','string','Run',...
             'TooltipString','run script','callback',{@run_script},...
             'position',[2,5,518,40]);
-        
-        menu_name={'Edit','Process','Toolbox','Static',...
+        %menu
+        menu_name={'Edit','Process','Toolbox','Statistics',...
             'Plugins','Addition1','Addition2','Addition3'};
         root = uimenu(handle.fig,'Label','File','BusyAction','cancel');
         mh = uimenu(root,'Label','load', 'callback',@(obj,event)add_function('FLW_load'));
@@ -98,13 +97,13 @@ h_fig=handle.fig;
                 end
             end
         end
-        
+        %path_edit
         handle.path_edit=uicontrol('style','edit','String',pwd,'userdata',pwd,...
             'HorizontalAlignment','left','position',[3,578,487,25],...
             'Callback',{@(obj,events)path_edit_Callback()});
+        %path_btn
         handle.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,...
             'position',[493,578,25,25],'Callback',{@(obj,events)path_btn_Callback()});
-        
         %% initialize run panel
         handle.run_panel=uipanel(handle.fig,'units','pixels',...
             'position',[99,1,421,570],'BorderType','etchedin','visible','off');
@@ -122,7 +121,6 @@ h_fig=handle.fig;
         handle.run_close_btn=uicontrol('parent',handle.run_panel,...
             'string','close','style','pushbutton','position',[5,5,405,40],...
             'callback',@close_script);
-        
         %% initialize tab panel
         handle.tab_panel=uipanel(handle.fig,'BorderType','none',...
             'units','pixels','position',[1,45,100,528]);
@@ -132,7 +130,6 @@ h_fig=handle.fig;
             'position',[49,1,20,20],'callback',@scroll_up);
         handle.tab_down=uicontrol(handle.tab_panel,'style','pushbutton',...
             'position',[70,1,20,20],'callback',@scroll_down);
-        
         set(handle.tab_up,'CData',icon.icon_dataset_up,'visible','off');
         set(handle.tab_down,'CData',icon.icon_dataset_down,'visible','off');
         if ~isempty(varargin)
@@ -148,7 +145,6 @@ h_fig=handle.fig;
         else
             handle.is_close=0;
         end
-        
 %         add_function('FLW_selection');
 %         batch{1}.add_file(fullfile(pwd,'data_1'));
 %         %batch{1}.add_file(fullfile(pwd,'chan-select data_1'));
@@ -426,7 +422,7 @@ h_fig=handle.fig;
 
 %% save_script
     function save_script(varargin)
-        [FileName,PathName] = uiputfile('*.lw_script','Save script As');
+        [FileName,PathName] = uiputfile('*.lw_script','Save script as');
         if PathName==0
             return;
         end

@@ -80,8 +80,8 @@ classdef FLW_baseline_SNR<CLW_generic
     methods (Static = true)
         function header_out= get_header(header_in,option)
             header_out=header_in;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -92,10 +92,10 @@ classdef FLW_baseline_SNR<CLW_generic
             option.xend=5;
             option.num_extreme=0;
             option.operation='subtract';
-            option.affix='bl_snr';
+            option.suffix='bl_snr';
             option.is_save=0;
             option=CLW_check_input(option,{'xstart','xend','num_extreme',...
-                'operation','affix','is_save'},varargin);
+                'operation','suffix','is_save'},varargin);
             header=FLW_baseline_SNR.get_header(lwdata_in.header,option);
             
             data=lwdata_in.data;

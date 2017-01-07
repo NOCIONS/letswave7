@@ -123,8 +123,8 @@ classdef FLW_butterworth_filter<CLW_generic
     methods (Static = true)
         function header_out= get_header(header_in,option)
             header_out=header_in;
-            if ~isempty(option.affix)
-                header_out.name=[option.affix,' ',header_out.name];
+            if ~isempty(option.suffix)
+                header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -135,10 +135,10 @@ classdef FLW_butterworth_filter<CLW_generic
             option.high_cutoff=30;
             option.low_cutoff=0.5;
             option.filter_order=0.5;
-            option.affix='butt';
+            option.suffix='butt';
             option.is_save=0;
             option=CLW_check_input(option,{'filter_type','high_cutoff',...
-                'low_cutoff','filter_order','affix','is_save'},varargin);
+                'low_cutoff','filter_order','suffix','is_save'},varargin);
             switch option.filter_type
                 case 'lowpass'
                     option=rmfield(option,'low_cutoff');

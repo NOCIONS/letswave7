@@ -32,11 +32,11 @@ PathName=handles.file_path;
         handles.isfilter_checkbox=uicontrol('style','checkbox',...
             'BackgroundColor',[0.7,0.7,0.7],...
             'string','Filter','position',[80,608,100,28]);
-        handles.affix_selected_listbox=uicontrol('style','listbox',...
+        handles.suffix_selected_listbox=uicontrol('style','listbox',...
             'string','Filter','position',[5,292,120,320]);
         uicontrol('style','text','BackgroundColor',[0.7,0.7,0.7],...
             'string','Banned:','HorizontalAlignment','left','position',[5,255,80,28]);
-        handles.affix_baned_listbox=uicontrol('style','listbox',...
+        handles.suffix_baned_listbox=uicontrol('style','listbox',...
             'string','Filter','position',[5,5,120,262]);
         uicontrol('style','text','BackgroundColor',[0.7,0.7,0.7],...
             'string','Datasets:','HorizontalAlignment','left',...
@@ -65,8 +65,8 @@ PathName=handles.file_path;
             'string','OK','position',[140,5,170,35]);
         handles.Cancle_btn=uicontrol('style','pushbutton',...
             'string','Cancel','position',[325,5,170,35]);
-        set(handles.affix_selected_listbox,'max',2,'min',0);
-        set(handles.affix_baned_listbox,'max',2,'min',0);
+        set(handles.suffix_selected_listbox,'max',2,'min',0);
+        set(handles.suffix_baned_listbox,'max',2,'min',0);
         set(handles.file_listbox,'max',2,'min',0);
         
         try
@@ -79,8 +79,8 @@ PathName=handles.file_path;
         set(handles.path_btn,'Callback',{@(obj,events)path_btn_Callback()});
         set(handles.path_edit,'Callback',{@(obj,events)path_edit_Callback()});
         set(handles.isfilter_checkbox,'Callback',{@(obj,events)update_handles()});
-        set(handles.affix_selected_listbox,'Callback',{@(obj,events)affix_listbox_Callback()});
-        set(handles.affix_baned_listbox,'Callback',{@(obj,events)affix_listbox_Callback()});
+        set(handles.suffix_selected_listbox,'Callback',{@(obj,events)suffix_listbox_Callback()});
+        set(handles.suffix_baned_listbox,'Callback',{@(obj,events)suffix_listbox_Callback()});
         set(handles.file_listbox,'Callback',{@(obj,events)file_listbox_Callback()});
         set(handles.OK_btn,'Callback',{@(obj,events)OK_btn_Callback()});
         set(handles.Cancle_btn,'Callback',{@(obj,events)fig_Close()});
@@ -131,7 +131,7 @@ PathName=handles.file_path;
         end
     end
 
-    function affix_listbox_Callback()
+    function suffix_listbox_Callback()
         set(handles.isfilter_checkbox,'value',1);
         update_handles;
     end
@@ -190,10 +190,10 @@ PathName=handles.file_path;
         filename2=dir([st,filesep,'*.lw5']);
         filename={filename1.name,filename2.name};
         filelist=cell(1,length(filename));
-        filelist_affix=cell(1,length(filename));
+        filelist_suffix=cell(1,length(filename));
         for k=1:length(filename)
-            filelist_affix{k}=textscan(filename{k}(1:end-4),'%s');
-            filelist_affix{k}=filelist_affix{k}{1}';
+            filelist_suffix{k}=textscan(filename{k}(1:end-4),'%s');
+            filelist_suffix{k}=filelist_suffix{k}{1}';
             switch(filename{k}(end))
                 case '6'
                     filelist{k}=filename{k}(1:end-4);
@@ -206,23 +206,23 @@ PathName=handles.file_path;
                 if ~strcmp(handles.virtual_filelist{k},filelist)
                     filelist{end+1}=handles.virtual_filelist{k};
                     filename{end+1}=handles.virtual_filelist{k};
-                    filelist_affix{end+1}=textscan(filename{end}(1:end-4),'%s');
-                    filelist_affix{end}=filelist_affix{end}{1}';
+                    filelist_suffix{end+1}=textscan(filename{end}(1:end-4),'%s');
+                    filelist_suffix{end}=filelist_suffix{end}{1}';
                 end
             end
         end
         
-        affix=sort(unique([filelist_affix{:}]));
-        str=get(handles.affix_selected_listbox,'String');
-        idx=get(handles.affix_selected_listbox,'value');
+        suffix=sort(unique([filelist_suffix{:}]));
+        str=get(handles.suffix_selected_listbox,'String');
+        idx=get(handles.suffix_selected_listbox,'value');
         if isempty(str)
             selected_str=[];
         else
             selected_str=str(idx);
         end
         
-        str=get(handles.affix_baned_listbox,'String');
-        idx=get(handles.affix_baned_listbox,'value');
+        str=get(handles.suffix_baned_listbox,'String');
+        idx=get(handles.suffix_baned_listbox,'value');
         if isempty(str)
             baned_str=[];
         else
@@ -239,16 +239,16 @@ PathName=handles.file_path;
         
         is_filter=get(handles.isfilter_checkbox,'value');
         if is_filter==1
-            set(handles.affix_selected_listbox,'string',affix);
-            [~,selected_idx]=intersect(affix,selected_str,'stable');
-            set(handles.affix_selected_listbox,'value',selected_idx);
+            set(handles.suffix_selected_listbox,'string',suffix);
+            [~,selected_idx]=intersect(suffix,selected_str,'stable');
+            set(handles.suffix_selected_listbox,'value',selected_idx);
             
             if isempty(selected_idx)
                 selected_file_index=1:length(filelist);
             else
                 selected_file_index=[];
                 for k=1:length(filelist)
-                    if isempty(setdiff(affix(selected_idx),filelist_affix{k}))
+                    if isempty(setdiff(suffix(selected_idx),filelist_suffix{k}))
                         selected_file_index=[selected_file_index,k];
                     end
                 end
@@ -258,18 +258,18 @@ PathName=handles.file_path;
                 set(handles.file_listbox,'String',{});
                 set(handles.file_listbox,'userdata',{});
                 set(handles.file_listbox,'value',[]);
-                set(handles.affix_baned_listbox,'String',{});
-                set(handles.affix_baned_listbox,'value',[]);
+                set(handles.suffix_baned_listbox,'String',{});
+                set(handles.suffix_baned_listbox,'value',[]);
             else
-                affix_baned=sort(unique([filelist_affix{selected_file_index}]));
-                affix_baned=setdiff(affix_baned,affix(selected_idx));
-                [~,baned_idx]=intersect(affix_baned,baned_str,'stable');
-                set(handles.affix_baned_listbox,'String',affix_baned);
-                set(handles.affix_baned_listbox,'value',baned_idx);
+                suffix_baned=sort(unique([filelist_suffix{selected_file_index}]));
+                suffix_baned=setdiff(suffix_baned,suffix(selected_idx));
+                [~,baned_idx]=intersect(suffix_baned,baned_str,'stable');
+                set(handles.suffix_baned_listbox,'String',suffix_baned);
+                set(handles.suffix_baned_listbox,'value',baned_idx);
                 
                 band_file_index=[];
                 for j=selected_file_index
-                    if isempty(intersect(affix_baned(baned_idx),filelist_affix{j}))
+                    if isempty(intersect(suffix_baned(baned_idx),filelist_suffix{j}))
                         band_file_index=[band_file_index,j];
                     end
                 end
@@ -279,10 +279,10 @@ PathName=handles.file_path;
                 set(handles.file_listbox,'value',idx);
             end
         else
-            set(handles.affix_selected_listbox,'string',affix);
-            set(handles.affix_selected_listbox,'value',[]);
-            set(handles.affix_baned_listbox,'string',affix);
-            set(handles.affix_baned_listbox,'value',[]);
+            set(handles.suffix_selected_listbox,'string',suffix);
+            set(handles.suffix_selected_listbox,'value',[]);
+            set(handles.suffix_baned_listbox,'string',suffix);
+            set(handles.suffix_baned_listbox,'value',[]);
             set(handles.file_listbox,'string',filelist);
             set(handles.file_listbox,'userdata',filename);
             [~,idx]=intersect(filelist,file_str,'stable');

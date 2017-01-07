@@ -19,7 +19,7 @@ GLW_my_view_OpeningFcn;
             if isempty(chan_used)
                 datasets_header(k).header=CLW_elec_autoload(datasets_header(k).header);
             end
-            %datasets_header(k).header=CLW_make_spl(datasets_header(k).header);
+            datasets_header(k).header=CLW_make_spl(datasets_header(k).header);
         end
         set_header_filter();
     end
@@ -1557,7 +1557,7 @@ GLW_my_view_OpeningFcn;
                         if(ax_idx>ax_num)
                             break;
                         end
-                        set( handles.surface_headplot(ax_idx),'FaceVertexCdata',P);
+                        set(handles.surface_headplot(ax_idx),'FaceVertexCdata',P);
                     end
                 else
                     [index_pos,y_pos,z_pos]=get_iyz_pos(header);
