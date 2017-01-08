@@ -21,7 +21,7 @@
     <menu Label="Arrange signals">
         <submenu Label="Rearrange or delete epochs, channels, indexes" callback="FLW_selection"/>
         <submenu Label="Merge dataset epochs, channels, indexes" callback="FLW_merge"/>
-        <submenu Label="Equalize number of epochs across datasets"/>
+        <submenu Label="Equalize number of epochs across datasets" callback="FLW_equalize_epochs"/>
     </menu>
     <menu Label="Resample Signals">
         <submenu Label="Crop signals" callback="FLW_crop_epochs"/>
