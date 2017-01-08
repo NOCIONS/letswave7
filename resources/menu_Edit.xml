@@ -26,7 +26,7 @@
     <menu Label="Resample Signals">
         <submenu Label="Crop signals" callback="FLW_crop_epochs"/>
         <submenu Label="Downsample signals (integer ratio)" callback="FLW_downsample"/>
-        <submenu Label="Resample signals (user defined sampling rate)"/>
+        <submenu Label="Resample signals (user defined sampling rate)" callback="FLW_resample"/>
         <submenu Label="New channel: linear mix"/>
     </menu>
     <menu Label="Dataset properties"/>
