@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="View">
-        <menu Label="waveform multiviewer" callback="GLW_multi_viewer"/>
-        <menu Label="coutinous data viewer" callback="GLW_multi_viewer_continuous"/>
-        <menu Label="map viewer"/>
+        <menu Label="Continuous data viewer" callback="GLW_multi_viewer_continuous"/>
+        <menu Label="Waveform multiviewer" callback="GLW_multi_viewer"/>
+        <menu Label="Map multiviewer"/>
+        <menu Label="Generate figures">
+            <submenu Label="Waveforms figure creator" />
+            <submenu Label="Waveforms average figure creator" />
+            <submenu Label="Maps figure creator" />
+            <submenu Label="Waveform 2D scalp array figure creator" />
+            <submenu Label="Scalpmap time series figure creator" />
+            <submenu Label="Scalpmap SS-EP series figure creator" />
+        </menu>  
 </LW_Manager>

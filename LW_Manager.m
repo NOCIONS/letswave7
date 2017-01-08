@@ -14,7 +14,7 @@ Manager_Init();
         set(handles.fig,'DockControls','off');
         % menu labels
         menu_name={'File','Edit','Process','Toolbox','Statistics','View',...
-            'Plugins','Addition1','Addition2','Addition3'};
+            'Plugins'};
         for k=1:length(menu_name)
             % find related xml file
             str=['menu_',menu_name{k},'.xml'];

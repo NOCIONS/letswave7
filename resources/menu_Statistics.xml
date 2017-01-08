@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="Statistics">
-    <menu Label="ANOVA" />
-    <menu Label="T-test（One sample）" callback="FLW_ttest_constant"/>
-    <menu Label="T-test（paired sample/two sample）" callback="FLW_ttest"/>
+    <menu Label="Compare dataset against a constant (one-sample t-test)" callback="FLW_ttest_constant"/>
+    <menu Label="Compare two datasets (paired sample/two sample t-test）" callback="FLW_ttest"/>
+    <menu Label="Compare more than two datasets (ANOVA)" />
+    <menu Label="Compare signal amplitude at event latencies" />
+    <menu Label="Bootstrap test against a reference interval" />
 </LW_Manager>

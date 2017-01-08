@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="Edit">
-    <menu Label="Electrode">
-        <submenu Label="Edit coordinates"/>
-        <submenu Label="Labels edit"/>
+    <menu Label="Electrodes">
+        <submenu Label="Edit electrode coordinates"/>
+        <submenu Label="Edit electrode labels"/>
         <submenu Label="Flip left/right electrodes"/>
         <submenu Label="Electrode bridge detector"/>
-        <submenu Label="Interploate channel with neighbouring electrodes"/>
+        <submenu Label="Interpolate channel using neighbouring electrodes"/>
     </menu>
-    <menu Label="Event">
-        <submenu Label="Browse and edit event"/>
-        <submenu Label="Creat events from level trigger"/>
-        <submenu Label="Merge event codes and latnecies"/>
+    <menu Label="Events">
+        <submenu Label="Browse and edit events"/>
+        <submenu Label="Create events from level trigger"/>
+        <submenu Label="Merge event codes and latencies"/>
+        <submenu Label="Sort epochs according to event latencies"/>
     </menu>
-    <menu Label="Epochdata">
+    <menu Label="Epoch data">
         <submenu Label="Add or edit epochdata"/>
+        <submenu Label="Select epochs according to epochdata"/>
+        <submenu Label="Sort epochs according to epochdata"/>
     </menu>
-    <menu Label="Arrang signals">
-        <submenu Label="Datasets Selection(Rearrange/Delete epoch/channel/index)" callback="FLW_selection"/>
-        <submenu Label="Datasets Merge(epoch/channel/index)" callback="FLW_merge"/>
+    <menu Label="Arrange signals">
+        <submenu Label="Rearrange or delete epochs, channels, indexes" callback="FLW_selection"/>
+        <submenu Label="Merge dataset epochs, channels, indexes" callback="FLW_merge"/>
+        <submenu Label="Equalize number of epochs across datasets"/>
     </menu>
     <menu Label="Resample Signals">
-        <submenu Label="Crop signal"/>
-        <submenu Label="Downsample signals(integer ratio)"/>
+        <submenu Label="Crop signals" callback="FLW_crop_epochs"/>
+        <submenu Label="Downsample signals (integer ratio)"/>
+        <submenu Label="Resample signals (user defined sampling rate)"/>
         <submenu Label="New channel: linear mix"/>
-        <submenu Label="Resample signals(user difined sampling rate)"/>
     </menu>
-    <menu Label="Edit datafile properties"/>
+    <menu Label="Dataset properties"/>
 </LW_Manager>

@@ -267,7 +267,7 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             if option.xaxis_chk==1;
                 %limits : find dx1 and dx2
                 dx1=round(((option.xstart-header.xstart)/header.xstep)+1);
-                dx2=round(((option.xend-header.xstart)/header.xstep));
+                dx2=round(((option.xend-header.xstart)/header.xstep)+1);
                 if dx1<1;
                     dx1=1;
                 end;
@@ -283,7 +283,7 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             if option.yaxis_chk==1;
                 %limits : find dy1 and dy2
                 dy1=round(((option.ystart-header.ystart)/header.ystep)+1);
-                dy2=round(((option.yend-header.ystart)/header.ystep));
+                dy2=round(((option.yend-header.ystart)/header.ystep)+1);
                 if dy1<1;
                     dy1=1;
                 end;
@@ -299,7 +299,7 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             if option.zaxis_chk==1;
                 %limits : find dz1 and dz2
                 dz1=round(((option.zstart-header.zstart)/header.zstep)+1);
-                dz2=round(((option.zend-header.zstart)/header.zstep));
+                dz2=round(((option.zend-header.zstart)/header.zstep)+1);
                 if dz1<1;
                     dz1=1;
                 end;

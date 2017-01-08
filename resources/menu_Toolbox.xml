@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="Toolbox">
-    <menu Label="ICA analysis">
-        <submenu Label="Computer ICA matrix" />
-        <submenu Label="assign ICA matrix" />
-        <submenu Label="apply ICA spatial filter"/>
-        <submenu Label="ICA unmix signal (sensors->ICs)"/>
-        <submenu Label="ICA remix signal (ICs->sensors)"/>
-    </menu>
-    <menu Label="Source Analysis">
-        <submenu Label="Computer ICA matrix" />
-        <submenu Label="assign ICA matrix" />
-        <submenu Label="apply ICA spatial filter"/>
-        <submenu Label="ICA unmix signal (sensors->ICs)"/>
-        <submenu Label="ICA remix signal (ICs->sensors)"/>
+    <menu Label="Single trial analysis (MLR)">
+        <submenu Label="Build CWT time-frequency filter template" />
+        <submenu Label="Apply CWT time-frequency filter template" />
+        <submenu Label="Multiple linear regression (MLR) (Hu et al. 2010)" />
+        <submenu Label="MLR with dispersion term (Hu et al. 2011)" />
+    </menu>  
+    <menu Label="Source Analysis (DIPFIT)">
+        <submenu Label="Define MNI channel coordinates" />
+        <submenu Label="Define head model" />
+        <submenu Label="Define MRI data"/>
+        <submenu Label="DIPFIT : fit fipole at a given latency"/>
+        <submenu Label="DIPFIT : fit fipole at event latency"/>
+        <submenu Label="DIPFIT : fit fipole onto IC/PC topography"/>
+        <submenu Label="View dipoles"/>
     </menu>
     <menu Label="SEEG">
         <submenu Label="Edit coordinates"/>
     </menu>
     <menu Label="EKG processing">
-        <submenu Label="Find EKG QRS event"/>
-        <submenu Label="Computer PCA matrix"/>
+        <submenu Label="Find EKG QRS events"/>
+        <submenu Label="Compute heart-rate signal"/>
     </menu>
-    <menu Label="Time-frequencyfilters">
-    </menu>
-    <menu Label="Single trial Analysis">
-        
-    </menu>
+    <menu Label="Find peaks in waveforms"/>
+    <menu Label="Variance explained"/>
+    <menu Label="Lissajous analysis" />
+    
 </LW_Manager>
