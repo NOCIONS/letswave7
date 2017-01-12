@@ -169,7 +169,6 @@ Manager_Init();
         end
     end
 
-
     function file_listbox_select_changed()
         %execute on change in selection
         %file_listbox.userdata stores all filenames in the listbox
@@ -207,7 +206,6 @@ Manager_Init();
             end
         end
     end
-
 
     function suffix_listbox_Callback()
         %executes when selecting items in the suffix listbox
@@ -340,7 +338,6 @@ Manager_Init();
         end
     end
 
-
     function dataset_view()
         %view dataset
         option=get_selectfile();
@@ -349,8 +346,6 @@ Manager_Init();
         end
         GLW_multi_viewer(option);
     end
-
-
 
     function on_Timer()
         %executes on timer event
@@ -368,8 +363,6 @@ Manager_Init();
         end
     end
 
-
-
     function fig_Close()
         %executes on figure close
         try
@@ -378,8 +371,6 @@ Manager_Init();
         end
         closereq;
     end
-
-
 
     function update_handles()
         st=get(handles.path_edit,'String');

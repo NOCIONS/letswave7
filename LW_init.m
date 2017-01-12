@@ -12,7 +12,8 @@ str = strjoin(str(tf5|tf6),pathsep);
 rmpath(str);
 
 %add path entries to LW7 subfolders
-str=[strjoin(fullfile(p,{'resources',...
-    'LW_Function','LW_GUI'}),pathsep),pathsep,genpath(fullfile(p,'LW_Core')),pathsep,genpath(fullfile(p,'external'))];
+str=[strjoin(fullfile(p,{'resources','LW_Function','LW_GUI'}),pathsep),...
+    pathsep,genpath(fullfile(p,'LW_Core')),...
+    pathsep,genpath(fullfile(p,'external'))];
 addpath(str);
 end
