@@ -344,7 +344,18 @@ Manager_Init();
         if isempty(option)
             return;
         end
-        GLW_multi_viewer(option);
+        [p, n, ~]=fileparts(fullfile(option.file_path,option.file_str{1}));
+        header=CLW_load_header(fullfile(p,n));
+        if header.datasize(5)>1
+            GLW_multi_viewer_map(option);
+        else
+            if header.datasize(1)==1 && header.datasize(6)>1000 ...
+                    && header.datasize(6)*header.xstep>=10
+                GLW_multi_viewer_continuous(option);
+            else
+                GLW_multi_viewer_wave(option);
+            end
+        end
     end
 
     function on_Timer()

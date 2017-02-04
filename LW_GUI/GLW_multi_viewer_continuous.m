@@ -8,7 +8,6 @@ GLW_view_OpeningFcn;
 
 %% GLW_view_OpeningFcn
     function GLW_view_OpeningFcn()
-        tic;
         Init_parameter();
         Init_fig();
         Init_epoch();
@@ -21,7 +20,7 @@ GLW_view_OpeningFcn;
         Init_event_table();
         Init_event_btn();
         Init_function();
-        toc;
+        set(handles.fig,'Visible','on');
     end
     function Init_parameter()
         temp=get(0,'Screensize');
@@ -102,13 +101,13 @@ GLW_view_OpeningFcn;
         handles.line_marker=[];
     end
     function Init_fig()
-        handles.fig=figure('Visible','on','Color',0.94*[1,1,1]);
+        handles.fig=figure('Visible','off','Color',0.94*[1,1,1]);
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'numbertitle','off','name',[userdata.filename,' (multiviewer_continous)']);
         set(handles.fig,'DockControls','off');
         set(handles.fig,'position',userdata.fig_pos);
         
-        handles.panel_left=uipanel(handles.fig);%,'BorderType','none'
+        handles.panel_left=uipanel(handles.fig,'BorderType','none');
         Set_position(handles.panel_left,[3,3,160,675]);
         
         handles.panel_mid=uipanel(handles.fig);

@@ -1,15 +1,14 @@
 function header=CLW_elec_autoload(header)
-load('mat_chanlocs.mat');
-if isempty(chanlocs);
+if isempty(header.chanlocs);
     return;
 end
-for k=1:length(header.chanlocs);
-    channel_labels{k}=header.chanlocs(k).labels;
-end
-for k=1:length(chanlocs);
-    chanloc_labels{k}=chanlocs(k).labels;
-end
+load('mat_chanlocs.mat');
+%addpath('/Users/huanggan/Documents/MATLAB/letswave6/resources/electrodes/spherical_locations');
+%chanlocs=readlocs('biosemi_locations_256.xyz');
+chanloc_labels={chanlocs.labels};
+channel_labels={header.chanlocs.labels};
 header_chanlocs=header.chanlocs;
+
 for chanpos=1:length(channel_labels);
     a=find(strcmpi(channel_labels{chanpos},chanloc_labels)==1);
     if isempty(a);

@@ -1,4 +1,4 @@
-function GLW_multi_viewer(inputfiles)
+function GLW_multi_viewer_wave(inputfiles)
 handles=[];
 userdata=[];
 datasets_header={};
@@ -7,10 +7,11 @@ GLW_my_view_OpeningFcn;
 
 %% init_parameter()
     function init_parameter()
-        S=load('mat_multiviewer.mat');
+        S=load('GLW_multi_viewer_wave.mat');
         userdata=S.userdata;
         handles=S.handles;
-        for k=1:length(inputfiles)
+        clear S;
+        for k=1:length(inputfiles.file_str)
             [p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{k}));
             userdata.datasets_path=p;
             userdata.datasets_filename{k}=n;
@@ -28,6 +29,7 @@ GLW_my_view_OpeningFcn;
     function fig1_init()
         icon=load('icon.mat');
         handles.fig1=figure('CloseRequestFcn',@fig1_CloseReq_Callback,...
+            'numbertitle','off','name','multiviewer_wave',...
             'Visible','off','Color',0.94*[1,1,1]);
         set(handles.fig1,'WindowButtonDownFcn',@fig_BtnDown);
         set(handles.fig1,'WindowButtonMotionFcn',@fig_BtnMotion);
@@ -346,7 +348,9 @@ GLW_my_view_OpeningFcn;
 %% fig2_init
     function fig2_init()
         icon=load('icon.mat');
-        handles.fig2=figure('CloseRequestFcn',@fig2_CloseReq_Callback,'Visible','off');
+        handles.fig2=figure('Visible','off','numbertitle','off',...
+            'name','multiviewer_wave','PaperPositionMode','auto',...
+            'CloseRequestFcn',@fig2_CloseReq_Callback,'Visible','off');
         set(handles.fig2,'WindowButtonDownFcn',@fig_BtnDown);
         set(handles.fig2,'WindowButtonMotionFcn',@fig_BtnMotion);
         set(handles.fig2,'WindowButtonUpFcn',@fig_BtnUp);
@@ -362,7 +366,12 @@ GLW_my_view_OpeningFcn;
         set(handles.toolbar2_split,'CData',icon.icon_split);
         set(handles.toolbar2_split,'ClickedCallback',{@fig_split});
         set(handles.toolbar2_split,'State','on');
-        set(findall(handles.fig2,'ToolTipString','Save Figure'),'Parent',handles.toolbar2);
+         handles.toolbar2_save = uipushtool(handles.toolbar2,'Separator','on');
+        set(handles.toolbar2_save,'TooltipString','Save the figure');
+        set(handles.toolbar2_save,'CData',...
+            get(findall(handles.fig2,'ToolTipString','Save Figure'),'CData'));
+        set(handles.toolbar2_save,'ClickedCallback',{@fig_save});
+        %set(findall(handles.fig2,'ToolTipString','Save Figure'),'Parent',handles.toolbar2);
         set(findall(handles.fig2,'ToolTipString','Zoom In'),'Parent',handles.toolbar2);
         set(findall(handles.fig2,'ToolTipString','Zoom Out'),'Parent',handles.toolbar2);
         set(findall(handles.fig2,'ToolTipString','Pan'),'Parent',handles.toolbar2);
@@ -1769,11 +1778,83 @@ GLW_my_view_OpeningFcn;
                 set(handles.axes_headplot,'Visible','off');
                 set(handles.title_headplot,'Visible','off');
                 set(handles.surface_headplot,'Visible','off');
-                set(handles.line_headplot,'Visible','off');
                 set(handles.dot_headplot,'Visible','off');
             end
         end
         fig2_SizeChangedFcn();
+    end
+
+%% fig_save
+    function fig_save(~,~)
+        [FileName,PathName,FilterIndex] = uiputfile(...
+            {'*.tif','TIFF image (*.tif)';...
+            '*.eps','EPS file (*.eps)';...
+            '*.jpg','JPEG image (*.jpg)';...
+            '*.bmp','Bitmap file (*.bmp)';...
+            '*.pdf','Portable Document Format (*.pdf)';...
+            '*.png','Protable Network Graphics file (*.png)'},...
+            'Save As','new figure');
+        
+%             '*.tif','TIFF no compression image (*.tif)';...
+%             '*.pcx','Painbrush 24-bit file (*.pcx)';...
+%             '*.pbm','Portable Bitmap file (*.pbm)';...
+%             '*.pgm','Portable Graymap file (*.pgm)';...
+%             '*.ppm','Portable Pixmap file (*.ppm)';...
+%             '*.svg','Scalable Vector Graphics file (*.svg)';...
+%             '*.fig','MATLAB Figure (*.fig)';...
+        if FilterIndex==0
+            return;
+        end
+        is_split=userdata.is_split;
+        if ~is_split
+            fig_split();
+        end
+        set(handles.panel_fig,'background',[1,1,1]);
+        switch  FilterIndex
+            case 1 %tiff compressed
+                saveas(handles.fig2,fullfile(PathName,FileName));
+            case 2 %EPS file
+                is_headplot=userdata.is_headplot;
+                is_shade=userdata.is_shade;
+                if is_headplot
+                    set(handles.toolbar2_headplot,'State','off');
+                    fig_headplot();
+                end
+                if is_shade
+                    set(handles.toolbar2_shade,'State','off');
+                    fig_shade();
+                end
+                saveas(handles.fig2,fullfile(PathName,FileName),'epsc');
+                if is_shade
+                    set(handles.toolbar2_shade,'State','on');
+                    fig_shade();
+                end
+                if is_headplot
+                    set(handles.toolbar2_headplot,'State','on');
+                    fig_headplot();
+                end
+            case 3 %JPEG image
+                saveas(handles.fig2,fullfile(PathName,FileName));
+            case 4 %Bitmap file
+                saveas(handles.fig2,fullfile(PathName,FileName));
+            case 5 %Portable Document Format
+                is_headplot=userdata.is_headplot;
+                if is_headplot
+                    set(handles.toolbar2_headplot,'State','off');
+                    fig_headplot();
+                end
+                saveas(handles.fig2,fullfile(PathName,FileName));
+                if is_headplot
+                    set(handles.toolbar2_headplot,'State','on');
+                    fig_headplot();
+                end
+            case 6 %Protable Network Graphics
+                saveas(handles.fig2,fullfile(PathName,FileName));
+        end
+        set(handles.panel_fig,'background',0.94*[1,1,1]);
+        if ~is_split
+            fig_split();
+        end
     end
 
 %% get_iyz_pos
@@ -1815,7 +1896,6 @@ GLW_my_view_OpeningFcn;
     function edit_dataset_Add(~, ~)
         [FileName,PathName] = uigetfile({'*.lw6','Select the lw6 file'},'MultiSelect','on');
         userdata.datasets_path=PathName;
-        FileName=cellstr(FileName);
         if PathName~=0;
             FileName=cellstr(FileName);
             for k=1:length(FileName)
@@ -1825,7 +1905,7 @@ GLW_my_view_OpeningFcn;
                 if isempty(chan_used)
                     datasets_header(end).header=CLW_elec_autoload(datasets_header(end).header);
                 end
-                %datasets_header(end).header=CLW_make_spl(datasets_header(end).header);
+                datasets_header(end).header=CLW_make_spl(datasets_header(end).header);
             end
             set(handles.dataset_listbox,'String',userdata.datasets_filename);
         end
