@@ -339,7 +339,6 @@ Manager_Init();
     end
 
     function dataset_view()
-        %view dataset
         option=get_selectfile();
         if isempty(option)
             return;
@@ -349,8 +348,11 @@ Manager_Init();
         if header.datasize(5)>1
             GLW_multi_viewer_map(option);
         else
-            if header.datasize(1)==1 && header.datasize(6)>1000 ...
-                    && header.datasize(6)*header.xstep>=10
+            if length(option.file_str)==1 &&...
+                    header.datasize(1)==1 &&...
+                    header.datasize(6)>1000 && ...
+                    header.datasize(6)*header.xstep>=10 &&...
+                    strcmpi(header.filetype,'time_amplitude');
                 GLW_multi_viewer_continuous(option);
             else
                 GLW_multi_viewer_wave(option);

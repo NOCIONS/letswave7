@@ -16,12 +16,6 @@
         <submenu Label="Baseline correction" callback="FLW_baseline"/>
         <submenu Label="Frequency Spectrum baseline correction" callback="FLW_baseline_SNR"/>
     </menu>
-    <menu Label="Frequency filters">
-        <submenu Label="DC removal and linear detrend" callback="FLW_dc_removal"/>
-        <submenu Label="Butterworth filters" callback="FLW_butterworth_filter"/>
-        <submenu Label="FFT filters" callback="FLW_FFT_filter"/>
-        <submenu Label="FFT multinotch filter" callback="FLW_FFT_filter"/>
-    </menu>
     <menu Label="Spatial filters (ICA/PCA)">
         <submenu Label="Compute ICA matrix" />
         <submenu Label="Compute ICA matrix (merged)" />
@@ -39,12 +33,19 @@
         <submenu Label="Suppress artefact (latency-defined)"/>
         <submenu Label="Suppress artefact (event-defined)"/>
     </menu>
-    <menu Label="Frequency and time-frequency transforms">
-        <submenu Label="Fast Fourier Transform (FFT)" callback="FLW_FFT"/>
-        <submenu Label="Inverse FFT" callback="FLW_iFFT"/>
-        <submenu Label="Short-Time Fourier Transform (STFT)"/>
-        <submenu Label="Short-Time Fourier Transform (STFT) (Zhang et al. 2012)"/>
-        <submenu Label="Continue Wavelet Transform (CWT)"/>
+    <menu Label="Frequency ananysis and filters">
+        <submenu Label="------Frequency analysis------"/>
+        <submenu Label="FFT (Fast Fourier Transform)" callback="FLW_FFT"/>
+        <submenu Label="iFFT (Inverse FFT)" callback="FLW_iFFT"/>
+        <submenu Label="------Time-Frequency analysis------"/>
+        <submenu Label="STFT (Short-Time Fourier Transform)" callback="FLW_STFT"/>
+        <submenu Label="CWT (Continue Wavelet Transform)"/>
+        <submenu Label="------Frequency filters------"/>
+        <submenu Label="DC removal and linear detrend" callback="FLW_dc_removal"/>
+        <submenu Label="Butterworth filters" callback="FLW_butterworth_filter"/>
+        <submenu Label="FFT filters" callback="FLW_FFT_filter"/>
+        <submenu Label="FFT multinotch filter" callback="FLW_FFT_filter"/>
+        <submenu Label="------Others------"/>
         <submenu Label="Fast CWT (Mouraux et al. 2003)"/>
         <submenu Label="Hilbert transform "/>
         <submenu Label="Hilbert transform and FFT across frequency bands"/>

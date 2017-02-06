@@ -1,5 +1,4 @@
 function GLW_multi_viewer_map(inputfiles)
-clc;
 LW_init();
 handles=[];
 userdata=[];

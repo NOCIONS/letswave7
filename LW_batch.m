@@ -5,7 +5,7 @@ handle=[];
 Batch_Init();
 h_fig=handle.fig;
 
-%%  Batch_init
+%% Batch_init
     function Batch_Init()
         %create figure
         handle.fig = figure('position',[100,100,520,605],'Resize','off',...
@@ -481,7 +481,7 @@ h_fig=handle.fig;
         temp=[section_num(2:end)-section_num(1:end-1)];
         section_num=setdiff(section_num,section_num(temp==1));
         
-        script{end+1}='LW_Init();';
+        script{end+1}='LW_init();';
         for section_pos=1:length(section_num)
             if length(section_num)~=1
                 script{end+1}=['% section ',num2str(section_pos)];

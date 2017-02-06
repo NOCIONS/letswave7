@@ -81,10 +81,8 @@ classdef FLW_iFFT<CLW_generic
             end
             if isempty(time_header)
                 option.half_spectrum=0;
-                option.normalize=1;
             else
                 option.half_spectrum=time_header.half_spectrum;
-                option.normalize=time_header.normalize;
             end
             if option.half_spectrum
                 datasize_new=lwdata_in.header.datasize(6);
@@ -99,12 +97,7 @@ classdef FLW_iFFT<CLW_generic
             else
                 data=lwdata_in.data;
             end
-            switch option.normalize
-                case 2
-                    data=data*size(data,6);
-                case 3
-                    data=data*size(data,6)/2;
-            end
+            data=data*size(data,6);
             data=ifft(data,[],6);
             if option.force_real
                 data=real(data);

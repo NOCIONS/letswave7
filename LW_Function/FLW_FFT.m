@@ -22,13 +22,6 @@ classdef FLW_FFT<CLW_generic
             obj.h_half_spectrum_chx=uicontrol('style','checkbox',...
                 'String','Output only first half of spectrum','value',1,...
                 'position',[35,390,250,30],'parent',obj.h_panel);
-            uicontrol('style','text','position',[35,350,200,20],...
-                'string','Normalize:','HorizontalAlignment','left',...
-                'parent',obj.h_panel);
-            obj.h_normalized_pop=uicontrol('style','popupmenu',...
-                'String',{'no normalization','normalized(divided by N)',...
-                'normalized(divided by N/2)'},'value',1,...
-                'position',[35,320,200,30],'parent',obj.h_panel);
         end
         
         function option=get_option(obj)
@@ -37,7 +30,6 @@ classdef FLW_FFT<CLW_generic
             str_value=get(obj.h_output_pop,'value');
             option.output=str{str_value};
             option.half_spectrum=get(obj.h_half_spectrum_chx,'value');
-            option.normalize=get(obj.h_normalized_pop,'value');
         end
         
         function set_option(obj,option)
@@ -57,7 +49,6 @@ classdef FLW_FFT<CLW_generic
                     set(obj.h_output_pop,'value',6);
             end
             set(obj.h_half_spectrum_chx,'value',option.half_spectrum);
-            set(obj.h_normalized_pop,'value',option.normalize);
         end
         
         function str=get_Script(obj)
@@ -67,8 +58,6 @@ classdef FLW_FFT<CLW_generic
                 option.output,''','];
             frag_code=[frag_code,'''half_spectrum'',',...
                 num2str(option.half_spectrum),','];
-            frag_code=[frag_code,'''normalize'',',...
-                num2str(option.normalize),','];
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
     end
@@ -104,7 +93,6 @@ classdef FLW_FFT<CLW_generic
             if option.half_spectrum==1
                 header_out.datasize(6)=ceil((header_out.datasize(6)+1)/2);
             end
-            
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end
@@ -115,15 +103,14 @@ classdef FLW_FFT<CLW_generic
         function lwdata_out=get_lwdata(lwdata_in,varargin)
             option.output='amplitude';
             option.half_spectrum=1;
-            option.normalize=1;
             
             option.suffix='fft';
             option.is_save=0;
             option=CLW_check_input(option,{'output','half_spectrum',...
-                'normalize','suffix','is_save'},varargin);
+                'suffix','is_save'},varargin);
             header=FLW_FFT.get_header(lwdata_in.header,option);
             option=header.history(end).option;
-            data=fft(lwdata_in.data,[],6);
+            data=fft(lwdata_in.data,[],6)/lwdata_in.header.datasize(6);
             switch option.output
                 case 'amplitude'
                     data=abs(data);
@@ -136,14 +123,21 @@ classdef FLW_FFT<CLW_generic
                 case 'imagery part'
                     data=imag(data);
             end
-            switch option.normalize
-                case 2
-                    data=data/size(data,6);
-                case 3
-                    data=data/size(data,6)*2;
-            end
             if option.half_spectrum==1
                 data=data(:,:,:,:,:,1:ceil((size(data,6)+1)/2));
+                switch option.output
+                    case 'amplitude'
+                        data(:,:,:,:,:,2:end-1)=data(:,:,:,:,:,2:end-1)*2;
+                        if mod(size(data,6),2)==0
+                            data(:,:,:,:,:,end)=data(:,:,:,:,:,end)*2;
+                        end
+                    case 'power'
+                        data=data(:,:,:,:,:,1:ceil((size(data,6)+1)/2));
+                        data(:,:,:,:,:,2:end-1)=data(:,:,:,:,:,2:end-1)*4;
+                        if mod(size(data,6),2)==0
+                            data(:,:,:,:,:,end)=data(:,:,:,:,:,end)*4;
+                        end
+                end
             end
             
             lwdata_out.header=header;

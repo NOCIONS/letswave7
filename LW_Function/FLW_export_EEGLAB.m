@@ -77,7 +77,7 @@ classdef FLW_export_EEGLAB
             userdata=get(obj.h_file_list, 'userdata');
             value=get(obj.h_file_list, 'value');
             script={};
-            script{end+1}='LW_Init();';
+            script{end+1}='LW_init();';
             for k=value
                 script{end+1}=['FLW_export_EEGLAB.get_lwdata(',...
                     '''filename'',''',userdata{k},'.lw6',''','...

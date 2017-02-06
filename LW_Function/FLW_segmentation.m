@@ -123,7 +123,7 @@ classdef FLW_segmentation<CLW_generic
             end
             latency=[events_in(event_idx).latency];
             event_idx=event_idx(latency+option.x_start>=header_in.xstart...
-                &latency+option.x_start+option.x_duration<=...
+                &latency+option.x_start+option.x_duration-header_in.xstep<=...
                 header_in.xstart+header_in.xstep*header_in.datasize(6));
             
             if isempty(event_idx);
@@ -208,6 +208,11 @@ classdef FLW_segmentation<CLW_generic
                 for event_labels_pos=1:length(option.event_labels)
                     event_idx=[event_idx,find(strcmp({events_in.code},option.event_labels{event_labels_pos}))];
                 end
+                latency=[events_in(event_idx).latency];
+                event_idx=event_idx(latency+option.x_start>=lwdata_in.header.xstart...
+                    &latency+option.x_start+option.x_duration-lwdata_in.header.xstep<=...
+                    lwdata_in.header.xstart+lwdata_in.header.xstep*lwdata_in.header.datasize(6));
+            
                 dxsize=fix((option.x_duration)/lwdata_in.header.xstep);
                 epoch_pos=0;
                 for k=event_idx

@@ -125,7 +125,7 @@ classdef FLW_import_data
         function get_script(obj,varargin)
             userdata=get(obj.h_file_list, 'userdata');
             script={};
-            script{end+1}='LW_Init();';
+            script{end+1}='LW_init();';
             if ~isempty(userdata.file_path)
                 for k=1:length(userdata.file_path)
                     script{end+1}=['FLW_import_data.get_lwdata(',...
