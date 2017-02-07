@@ -1,9 +1,8 @@
-classdef FLW_STFT<CLW_generic
+classdef FLW_CWT<CLW_generic
     properties
         FLW_TYPE=1;
         
-        h_hanning_width;
-        h_sliding_step;
+        h_wavelet_name;
         h_low_frequency;
         h_high_frequency;
         h_num_frequency_lines;
@@ -11,24 +10,16 @@ classdef FLW_STFT<CLW_generic
     end
     
     methods
-        function obj = FLW_STFT(batch_handle)
-            obj@CLW_generic(batch_handle,'STFT','stft',...
-                'Compute a time-frequency transform using a short-term FFT. Hann window is used.');
+        function obj = FLW_CWT(batch_handle)
+            obj@CLW_generic(batch_handle,'CWT','cwt',...
+                'Compute a time-frequency transform using the Continuous Wavelet Transform.');
             
-            
-            
-            
-            uicontrol('style','text','position',[30,450,140,20],...
-                'string','Hanning windows width(s):','HorizontalAlignment','right',...
-                'parent',obj.h_panel);
-            obj.h_hanning_width=uicontrol('style','edit','string','0.2',...
-                'position',[180,453,100,20],'parent',obj.h_panel);
             
             uicontrol('style','text','position',[30,420,140,20],...
-                'string','Sliding step (bins):','HorizontalAlignment','right',...
+                'string','Mother wavelet short name','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
-            obj.h_sliding_step=uicontrol('style','edit','string','1',...
-                'position',[180,423,100,20],'parent',obj.h_panel);
+            obj.h_wavelet_name=uicontrol('style','edit','string','cmor1-1.5',...
+                'position',[180,453,100,20],'parent',obj.h_panel);
             
             uicontrol('style','text','position',[30,390,140,20],...
                 'string','Lower frequency:','HorizontalAlignment','right',...
@@ -45,7 +36,7 @@ classdef FLW_STFT<CLW_generic
             uicontrol('style','text','position',[30,330,140,20],...
                 'string','Number of lines:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
-            obj.h_num_frequency_lines=uicontrol('style','edit','string','30',...
+            obj.h_num_frequency_lines=uicontrol('style','edit','string','100',...
                 'position',[180,333,100,20],'parent',obj.h_panel);
             
             
@@ -60,8 +51,7 @@ classdef FLW_STFT<CLW_generic
         
         function option=get_option(obj)
             option=get_option@CLW_generic(obj);
-            option.hanning_width=str2num(get(obj.h_hanning_width,'string'));
-            option.sliding_step=round(str2num(get(obj.h_sliding_step,'string')));
+            option.wavelet_name=get(obj.h_wavelet_name,'string');
             option.low_frequency=str2num(get(obj.h_low_frequency,'string'));
             option.high_frequency=str2num(get(obj.h_high_frequency,'string'));
             option.num_frequency_lines=str2num(get(obj.h_num_frequency_lines,'string'));
@@ -73,8 +63,7 @@ classdef FLW_STFT<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            set(obj.h_hanning_width,'string',num2str(option.hanning_width));
-            set(obj.h_sliding_step,'string',num2str(option.sliding_step));
+            set(obj.h_wavelet_name,'string',option.wavelet_name);
             set(obj.h_low_frequency,'string',num2str(option.low_frequency));
             set(obj.h_high_frequency,'string',num2str(option.high_frequency));
             set(obj.h_num_frequency_lines,'string',num2str(option.num_frequency_lines));
@@ -98,10 +87,8 @@ classdef FLW_STFT<CLW_generic
         function str=get_Script(obj)
             option=get_option(obj);
             frag_code=[];
-            frag_code=[frag_code,'''hanning_width'',',...
-                num2str(option.hanning_width),','];
-            frag_code=[frag_code,'''sliding_step'',',...
-                num2str(option.sliding_step),','];
+            frag_code=[frag_code,'''wavelet_name'',''',...
+                option.wavelet_name,''','];
             frag_code=[frag_code,'''low_frequency'',',...
                 num2str(option.low_frequency),','];
             frag_code=[frag_code,'''high_frequency'',',...
@@ -121,16 +108,11 @@ classdef FLW_STFT<CLW_generic
             end
             header_out=header_in;
             
-            winsize=round((option.hanning_width/header_out.xstep-1)/2)*2+1;
-            noverlap=winsize-option.sliding_step;
-            header_out.xstep=option.sliding_step*header_in.xstep;
-            header_out.xstart=header_in.xstart+(winsize-1)/2*header_in.xstep;
-            header_out.datasize(6)=floor((header_out.datasize(6)-noverlap)/(winsize-noverlap));
-            
             f=linspace(option.low_frequency,option.high_frequency,option.num_frequency_lines);
             header_out.ystep=f(2)-f(1);
             header_out.ystart=f(1);
             header_out.datasize(5)=length(f);
+            header_out.datasize(4)=1;
             
             switch option.output
                 case 'amplitude'
@@ -155,54 +137,38 @@ classdef FLW_STFT<CLW_generic
         end
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
-            option.hanning_width=0.2;
-            option.sliding_step=1;
+            option.wavelet_name='cmor1-1.5';
             option.low_frequency=1;
             option.high_frequency=30;
-            option.num_frequency_lines=30;
+            option.num_frequency_lines=100;
             option.output='amplitude';
             
-            option.suffix='stft';
+            option.suffix='cwt';
             option.is_save=0;
-            option=CLW_check_input(option,{'output','hanning_width',...
-                'sliding_step','low_frequency','high_frequency',...
-                'num_frequency_lines','suffix','is_save'},varargin);
-            header=FLW_STFT.get_header(lwdata_in.header,option);
+            option=CLW_check_input(option,{'output','wavelet_name',...
+                'low_frequency','high_frequency','num_frequency_lines',...
+                'suffix','is_save'},varargin);
+            header=FLW_CWT.get_header(lwdata_in.header,option);
             option=header.history(end).option;
             
+            central_freq=centfrq(option.wavelet_name);
+            frequencies=header.ystart+(0:header.datasize(5)-1)*header.ystep;
+            scales=(central_freq/header.xstep)./frequencies;
             
-            t=header.xstart+(0:header.datasize(6)-1)*header.xstep;
-            f=header.ystart+(0:header.datasize(5)-1)*header.ystep;
-            Fs=1/header.xstep;
-            winsize=round((option.hanning_width/header.xstep-1)/2)*2+1;
-            x_step=round(option.sliding_step);
-            w = window('hann',winsize);
-            
-            nfft = round(Fs/header.ystep) * max(1,2^(nextpow2(winsize/round(Fs/header.ystep))));
-            f_full = Fs/2*linspace(0,1,round(nfft/2)+1);
-            f_idx=zeros(1,length(f));
-            for k=1:length(f)
-                [~,f_idx(k)]=min(abs(f_full-f(k)));
-            end
             data=zeros(header.datasize);
-            
-            for t_index=1:header.datasize(6)
-                temp = lwdata_in.data(:,:,:,:,1,(t_index-1)*x_step+(1:winsize));
-                temp = permute(temp,[6,1,2,3,4,5]);
-                temp = bsxfun(@times,w,temp);
-                temp = detrend(temp,'constant');
-                temp = fft(temp,nfft,1);
-                temp = temp(f_idx,:,:,:,:,:);
-                temp = permute(temp,[2,3,4,5,1,6]);
-                data(:,:,:,:,:,t_index)=temp;
+            for epochpos=1:header.datasize(1);
+                for channelpos=1:header.datasize(2);
+                    for indexpos=1:header.datasize(3);
+                        data(epochpos,channelpos,indexpos,1,:,:)=cwt(lwdata_in.data(epochpos,channelpos,indexpos,1,1,:),scales,option.wavelet_name);
+                    end
+                end
             end
             
-            data=data/winsize/mean(w);
             switch option.output
                 case 'amplitude'
-                    data=abs(data)*2;
+                    data=abs(data);
                 case 'power'
-                    data=abs(data*2).^2;
+                    data=abs(data).^2;
                 case 'phase angle'
                     data=angle(data);
                 case 'real part'

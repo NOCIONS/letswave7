@@ -1127,6 +1127,9 @@ GLW_view_OpeningFcn;
         ch_num=get(handles.channel_listbox,'value');
         y_max=max([max(userdata.y,[],1)-userdata.y(1,:),...
             userdata.y(1,:)-min(userdata.y,[],1)])*2;
+        if y_max==0
+            y_max=1;
+        end
         userdata.y_range=y_max*length(ch_num)/10;
         temp=10^floor(log10(userdata.y_range));
         userdata.y_range=ceil(userdata.y_range/temp)*temp;
