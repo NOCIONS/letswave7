@@ -191,7 +191,7 @@ classdef FLW_crop_epochs<CLW_generic
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
-        function item_size_changed(obj,varargin);
+        function item_size_changed(obj,varargin)
             xsize=str2num(get(obj.h_xsize_edit,'string'));
             ysize=str2num(get(obj.h_ysize_edit,'string'));
             zsize=str2num(get(obj.h_zsize_edit,'string'));
@@ -206,7 +206,7 @@ classdef FLW_crop_epochs<CLW_generic
             set(obj.h_zend_edit,'string',num2str(zend));            
         end
 
-        function item_end_changed(obj,varargin);
+        function item_end_changed(obj,varargin)
             xend=str2num(get(obj.h_xend_edit,'string'));
             yend=str2num(get(obj.h_yend_edit,'string'));
             zend=str2num(get(obj.h_zend_edit,'string'));
@@ -220,22 +220,27 @@ classdef FLW_crop_epochs<CLW_generic
             set(obj.h_ysize_edit,'string',num2str(ysize));
             set(obj.h_zsize_edit,'string',num2str(zsize));            
         end
-
         
         function GUI_update(obj,batch_pre)
             obj.virtual_filelist=batch_pre.virtual_filelist;
             obj.lwdataset=batch_pre.lwdataset;
             lwdataset=batch_pre.lwdataset;
             header=lwdataset(1).header;
-            if isempty(get(obj.h_xsize_edit,'String'));
+            if isempty(get(obj.h_xsize_edit,'String'))
+                set(obj.h_xstart_edit,'String',num2str(header.xstart));
+                set(obj.h_xend_edit,'String',num2str(header.xstart+header.datasize(6)*header.xstep));
                 set(obj.h_xsize_edit,'String',num2str(header.datasize(6)));
-            end;
-            if isempty(get(obj.h_ysize_edit,'String'));
+            end
+            if isempty(get(obj.h_ysize_edit,'String'))
+                set(obj.h_ystart_edit,'String',num2str(header.ystart));
+                set(obj.h_yend_edit,'String',num2str(header.ystart+header.datasize(5)*header.ystep));
                 set(obj.h_ysize_edit,'String',num2str(header.datasize(5)));
-            end;
-            if isempty(get(obj.h_zsize_edit,'String'));
+            end
+            if isempty(get(obj.h_zsize_edit,'String'))
+                set(obj.h_zstart_edit,'String',num2str(header.zstart));
+                set(obj.h_zend_edit,'String',num2str(header.zstart+header.datasize(4)*header.zstep));
                 set(obj.h_zsize_edit,'String',num2str(header.datasize(4)));
-            end;
+            end
             xsize=str2num(get(obj.h_xsize_edit,'String'));
             set(obj.h_xend_edit,'String',num2str(header.xstart+(xsize-1)*header.xstep));
             ysize=str2num(get(obj.h_ysize_edit,'String'));

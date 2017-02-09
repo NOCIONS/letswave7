@@ -12,10 +12,13 @@ GLW_my_view_OpeningFcn;
         handles=S.handles;
         clear S;
         for k=1:length(inputfiles.file_str)
-            [p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{k}));
+            [p, n, e]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{k}));
             userdata.datasets_path=p;
             userdata.datasets_filename{k}=n;
-            [datasets_header(k).header, datasets_data(k).data]=CLW_load(fullfile(p,n));
+            [datasets_header(k).header, datasets_data(k).data]=CLW_load(fullfile(p,[n,e]));
+            if ~isreal(datasets_data(k).data)
+                datasets_data(k).data=abs(datasets_data(k).data);
+            end
             chan_used=find([datasets_header(k).header.chanlocs.topo_enabled]==1, 1);
             if isempty(chan_used)
                 datasets_header(k).header=CLW_elec_autoload(datasets_header(k).header);

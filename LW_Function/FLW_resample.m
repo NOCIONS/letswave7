@@ -86,7 +86,7 @@ classdef FLW_resample<CLW_generic
             set(obj.h_y_resample_chk,'Value',option.y_resample_chk);
             set(obj.h_z_resample_chk,'Value',option.z_resample_chk);
             str=get(obj.h_interpolation_pop,'String');
-            [a,b]=intersect(str,option.interpolation_method);
+            [~,b]=intersect(str,option.interpolation_method);
             if isempty(b);
                 set(obj.h_interpolation_pop,'Value',1);
             else
@@ -161,8 +161,7 @@ classdef FLW_resample<CLW_generic
     
     
     methods (Static = true)
-        
-          function [ntpx,ntpy,ntpz]=resample_vector(inheader,option)
+        function [ntpx,ntpy,ntpz]=resample_vector(inheader,option)
             %ntpx
             ntpx=[];
             if option.x_resample_chk==1;
@@ -188,7 +187,6 @@ classdef FLW_resample<CLW_generic
                 ntpz=zstart:zstep:zend;
             end;
         end
-
         
         function header_out= get_header(header_in,option)
             header_out=header_in;
@@ -245,9 +243,9 @@ classdef FLW_resample<CLW_generic
             %prepare data
             data=zeros(header.datasize);
             %method
-            disp(['Interpolation method : ' option.interpolation_method]);
+            %disp(['Interpolation method : ' option.interpolation_method]);
             %interp3 (X/Y/Z)
-            if (option.x_resample_chk==1)&(option.y_resample_chk==1)&(option.z_resample_chk==1);
+            if (option.x_resample_chk==1) && (option.y_resample_chk==1) && (option.z_resample_chk==1);
                 disp('3D interpolation (X/Y/Z)');
                 %loop through epochs
                 for epochpos=1:header.datasize(1);
@@ -259,7 +257,7 @@ classdef FLW_resample<CLW_generic
                 end;
             end;
             %interp2 (X/Y)
-            if (option.x_resample_chk==1)&(option.y_resample_chk==1)&(option.z_resample_chk==0);
+            if (option.x_resample_chk==1)&& (option.y_resample_chk==1) && (option.z_resample_chk==0);
                 disp('2D interpolation (X/Y)');
                 %loop through epochs
                 for epochpos=1:header.datasize(1);
@@ -271,9 +269,9 @@ classdef FLW_resample<CLW_generic
                         end;
                     end;
                 end;
-            end;          
+            end;
             %interp2 (X/Z)
-            if (option.x_resample_chk==1)&(option.y_resample_chk==0)&(option.z_resample_chk==1);
+            if (option.x_resample_chk==1) && (option.y_resample_chk==0) && (option.z_resample_chk==1);
                 disp('2D interpolation (X/Z)');
                 %loop through epochs
                 for epochpos=1:header.datasize(1);

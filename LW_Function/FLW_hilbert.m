@@ -88,8 +88,12 @@ classdef FLW_hilbert<CLW_generic
             option=CLW_check_input(option,{'output','suffix','is_save'},varargin);
             header=FLW_hilbert.get_header(lwdata_in.header,option);
             option=header.history(end).option;
+            
             data=permute(lwdata_in.data,[6,1,2,3,4,5]);
+            [ds(1),ds(2),ds(3),ds(4),ds(5),ds(6)]=size(data);
+            data=reshape(data,ds(1),[]);
             data=hilbert(data);
+            data=reshape(data,ds(1),ds(2),ds(3),ds(4),ds(5),ds(6));
             data=ipermute(data,[6,1,2,3,4,5]);
             switch option.output
                 case 'amplitude'
