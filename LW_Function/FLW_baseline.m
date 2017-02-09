@@ -39,7 +39,7 @@ classdef FLW_baseline<CLW_generic
         function reset_Callback(obj,varargin)
             xstart=obj.lwdataset(1).header.xstart;
             for data_pos=2:length(obj.lwdataset)
-                xstart=max(obj.lwdataset(1).header.xstart);
+                xstart=max(xstart,obj.lwdataset(data_pos).header.xstart);
             end
             if(xstart>0)
                 xend=xstart;

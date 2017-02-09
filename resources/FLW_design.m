@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_STFT';
+FLW_name='FLW_resample';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

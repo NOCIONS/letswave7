@@ -93,6 +93,9 @@ GLW_view_OpeningFcn;
                 userdata.datasets_filename{file_index}=n;
                 datasets_header(file_index).header=header;
                 datasets_data(file_index).data=CLW_load_data(fullfile(p,n));
+                if ~isreal(datasets_data(file_index).data)
+                    datasets_data(file_index).data=abs(datasets_data(file_index).data);
+                end
                 chan_used=find([datasets_header(file_index).header.chanlocs.topo_enabled]==1, 1);
                 if isempty(chan_used)
                     datasets_header(file_index).header=CLW_elec_autoload(datasets_header(file_index).header);
