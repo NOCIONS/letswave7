@@ -132,6 +132,7 @@ h_fig=handle.fig;
             'position',[70,1,20,20],'callback',@scroll_down);
         set(handle.tab_up,'CData',icon.icon_dataset_up,'visible','off');
         set(handle.tab_down,'CData',icon.icon_dataset_down,'visible','off');
+        handle.h_parent=[];
         if ~isempty(varargin)
             option=varargin{1};
             set(handle.path_edit,'String',option.file_path);
@@ -142,6 +143,9 @@ h_fig=handle.fig;
             add_function(option.fun_name);
             CheckTab(1,2);
             handle.is_close=1;
+            if length(varargin)>=2
+                handle.h_parent=varargin{2};
+            end
         else
             handle.is_close=0;
         end
@@ -317,6 +321,9 @@ h_fig=handle.fig;
                     lwdataset=[];
                 end
                 T=evalc(script{script_idx(k)});
+                if ~isempty(handle.h_parent)
+                    set(handle.h_parent,'userdata',1);
+                end
                 if ~isempty(T)
                     C = strsplit(T,sprintf('\n'));
                     for k=1:length(C)

@@ -8,7 +8,7 @@ Manager_Init();
     function Manager_Init()
         % create figure
         handles.fig=figure('Position',[100 50 500 670],...
-            'name','Letswave7','NumberTitle','off');
+            'name','Letswave7','NumberTitle','off','userdata',0);
         %% init menu
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
@@ -152,7 +152,6 @@ Manager_Init();
         set(handles.file_listbox,'KeyPressFcn',@key_Press)
         %update_handles
         update_handles();
-        handles.batch={};
         %% init timer
         handles.timer = timer('BusyMode','drop','ExecutionMode','fixedRate','TimerFcn',{@(obj,events)on_Timer()});
         start(handles.timer);
@@ -296,26 +295,34 @@ Manager_Init();
     function menu_callback(fun_name)
         %executes on menu_callback
         %fun_name = name of function associated with menu callback
-        if ~isempty([strfind(fun_name,'FLW_export_'),strfind(fun_name,'FLW_import_')])
-            %if fun_name is FLW_export or FLW_import
+        if ~isempty(strfind(fun_name,'FLW_import_'))
+            %if fun_name is  FLW_import
+            %execute the function with handles.fig
+            eval([fun_name,'(handles.fig);']);
+%             update_handles();
+            return;
+        end
+        
+        if ~isempty(strfind(fun_name,'FLW_export_'))
+            %if fun_name is FLW_export
             %execute the function without any arguments
             eval([fun_name,'();']);
             update_handles();
             return;
-        else
-            %if fun_name is any other function
-            %get the selection of files > option
-            option=get_selectfile();
-            if isempty(option)
-                return;
-            end
+        end
+        
+        %if fun_name is any other function
+        %get the selection of files > option
+        option=get_selectfile();
+        if isempty(option)
+            return;
         end
         %if first letter of function name is 'F'
         if(fun_name(1)=='F')
             %add option.fun_name to option
             option.fun_name = fun_name;
             %LW_batch(option)
-            handles.batch{end+1}=LW_batch(option);
+            LW_batch(option,handles.fig);
         else
             eval([fun_name,'(option);']);
             update_handles();
@@ -363,17 +370,12 @@ Manager_Init();
 
     function on_Timer()
         %executes on timer event
-        if ~isempty(handles.batch)
-            index=[];
-            for k=1:length(handles.batch)
-                if ishandle(handles.batch{k})
-                    index=[index,k];
-                end
-            end
-            if length(index)~=length(handles.batch)
-                handles.batch=[handles.batch{index}];
-                update_handles();
-            end
+        is_update=get(handles.fig,'userdata');
+%         clc;disp(datetime('now'));
+%         disp(is_update);
+        if is_update==1
+            update_handles();
+            set(handles.fig,'userdata',0);
         end
     end
 

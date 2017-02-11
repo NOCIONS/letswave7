@@ -7,10 +7,16 @@ classdef FLW_import_data
         h_import_btn;
         h_script_btn;
         h_toolbar;
+        h_parent;
     end
     
     methods
-        function obj = FLW_import_data()
+        function obj = FLW_import_data(varargin)
+            if ~isempty(varargin)
+                obj.h_parent=varargin{1};
+            else
+                obj.h_parent=[];
+            end
             obj=obj.init_handles();
             userdata.file_path={};
             userdata.file_name={};
@@ -150,6 +156,9 @@ classdef FLW_import_data
                     option.pathname=userdata.file_path{k};
                     option.is_save=1;
                     FLW_import_data.get_lwdata(option);
+                    if ~isempty(obj.h_parent)
+                        set(obj.h_parent,'userdata',1);
+                    end
                     
                     str{k}=['<html><p style="color:red">',userdata.file_name{k},'&nbsp;&nbsp;(Done)</p></html>'];
                     set( obj.h_file_list,'String',str);

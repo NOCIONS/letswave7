@@ -17,10 +17,16 @@ classdef FLW_import_mat
         h_dimension3_pop;
         h_dimension4_pop;
         h_process_btn;
+        h_parent;
     end
     
     methods
-        function obj = FLW_import_mat()
+        function obj = FLW_import_mat(varargin)
+            if ~isempty(varargin)
+                obj.h_parent=varargin{1};
+            else
+                obj.h_parent=[];
+            end
             obj=obj.init_handles();
             obj=obj.update_handles();
             
@@ -178,6 +184,9 @@ classdef FLW_import_mat
                 option.filename=st{v(k)};
                 matdata=evalin('base',option.filename);
                 obj.get_lwdata(matdata,option);
+                if ~isempty(obj.h_parent)
+                    set(obj.h_parent,'userdata',1);
+                end
             end
             set(obj.h_process_btn,'String','Done');
             set(obj.h_process_btn,'Enable','off');
