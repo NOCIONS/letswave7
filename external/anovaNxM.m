@@ -127,6 +127,8 @@ end
 
 %create error terms
 nbErr=length(xmatErr);
+
+errTerms=struct([]);
 for i=nbErr:-1:1
     errTerms(i).Name=pnameErr{i};
     errTerms(i).X=xmatErr(i).p;
@@ -154,7 +156,7 @@ errTerms(end).Name='Residual';
 errTerms(end).X=RE.full.Residual;
 %finalize the F values
 for i=1:nbEff
-    if isempty(stats(i).errDF)
+    if ~isfield(stats,'errDF')|| isempty(stats(i).errDF)
         stats(i).errDF=errTerms(end).DF;
         stats(i).errSSE=errTerms(end).SSE;
         stats(i).errMSE=errTerms(end).MSE;
@@ -171,7 +173,6 @@ results.err=errTerms;
 
 %-------------create design matrix using combination and factors-----------
 function [xmat, pname] = createX(factors,factorNames,combinations)
-
 if isempty(combinations)
     xmat=[];
     pname={};
@@ -275,30 +276,30 @@ end
 
 function [R] = stats_glm_anova(pname,xmat,y)
 
-xfull=[];
+xfull=zeros(size(y,1),0);
 
 for p=1:length(xmat)
-
-R.pname(p)=pname(p);
-xfull=[xfull xmat(p).p];
-
-xplist=[1:1:length(xmat)];
-xplist(p)=[];
-
-xred(p).p=[];
-
-for pp=1:length(xplist)
-xred(p).p=[xred(p).p xmat(xplist(pp)).p];
-end
-
-R.red(p)=stats_glm_matrix(1,xred(p).p,y);
-
+    
+    R.pname(p)=pname(p);
+    xfull=[xfull xmat(p).p];
+    
+    xplist=[1:1:length(xmat)];
+    xplist(p)=[];
+    
+    xred(p).p=zeros(size(y,1),0);
+    
+    for pp=1:length(xplist)
+        xred(p).p=[xred(p).p xmat(xplist(pp)).p];
+    end
+    
+    R.red(p)=stats_glm_matrix(1,xred(p).p,y);
+    
 end
 
 R.full=stats_glm_matrix(1,xfull,y);
 
 for p=1:length(xmat)
-R.red(p).F=((R.red(p).SSE-R.full.SSE)/(R.red(p).DFE-R.full.DFE))/(R.full.SSE/R.full.DFE);
+    R.red(p).F=((R.red(p).SSE-R.full.SSE)/(R.red(p).DFE-R.full.DFE))/(R.full.SSE/R.full.DFE);
 end
 
 %------------------------end of stats_glm_anova----------------------------

@@ -15,9 +15,6 @@ classdef FLW_STFT<CLW_generic
             obj@CLW_generic(batch_handle,'STFT','stft',...
                 'Compute a time-frequency transform using a short-term FFT. Hann window is used.');
             
-            
-            
-            
             uicontrol('style','text','position',[30,450,140,20],...
                 'string','Hanning windows width(s):','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
@@ -168,7 +165,6 @@ classdef FLW_STFT<CLW_generic
                 'sliding_step','low_frequency','high_frequency',...
                 'num_frequency_lines','suffix','is_save'},varargin);
             header=FLW_STFT.get_header(lwdata_in.header,option);
-            option=header.history(end).option;
             
             
             t=header.xstart+(0:header.datasize(6)-1)*header.xstep;

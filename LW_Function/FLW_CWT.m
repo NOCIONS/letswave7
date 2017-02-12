@@ -14,7 +14,6 @@ classdef FLW_CWT<CLW_generic
             obj@CLW_generic(batch_handle,'CWT','cwt',...
                 'Compute a time-frequency transform using the Continuous Wavelet Transform.');
             
-            
             uicontrol('style','text','position',[30,420,140,20],...
                 'string','Mother wavelet short name:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
@@ -149,7 +148,6 @@ classdef FLW_CWT<CLW_generic
                 'low_frequency','high_frequency','num_frequency_lines',...
                 'suffix','is_save'},varargin);
             header=FLW_CWT.get_header(lwdata_in.header,option);
-            option=header.history(end).option;
             
             central_freq=centfrq(option.wavelet_name);
             frequencies=header.ystart+(0:header.datasize(5)-1)*header.ystep;

@@ -134,6 +134,13 @@ h_fig=handle.fig;
         set(handle.tab_down,'CData',icon.icon_dataset_down,'visible','off');
         handle.h_parent=[];
         if ~isempty(varargin)
+            if length(varargin)>=2
+                handle.h_parent=varargin{2};
+                pos=get (handle.h_parent,'position');
+                pos(3:4)=[520,605];
+                pos(1)=pos(1)+300;
+                set(handle.fig,'position',pos);
+            end
             option=varargin{1};
             set(handle.path_edit,'String',option.file_path);
             add_function('FLW_load');
@@ -143,9 +150,6 @@ h_fig=handle.fig;
             add_function(option.fun_name);
             CheckTab(1,2);
             handle.is_close=1;
-            if length(varargin)>=2
-                handle.h_parent=varargin{2};
-            end
         else
             handle.is_close=0;
         end

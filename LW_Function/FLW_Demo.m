@@ -2,10 +2,10 @@ classdef FLW_Demo<CLW_generic
     properties
         % set the type of the FLW class
         % 0 for load (only input);
-        % 1 for the function dealing with single dataset (1in-1out)
-        % 2 for the function with Nin-1out, like merge
-        % 3 for the function with 1in-Nout, like segmentation_separate
-        % 4 for the function with Nin-Mout, like math_multiple, t-test
+        % 1 for the function dealing with single dataset (1_in_1_out)
+        % 2 for the function with N_in_1_out, like merge, ANOVA
+        % 3 for the function with 1_in_N_out, like segmentation_separate
+        % 4 for the function with N_in_M_out, like math_multiple, t-test
         FLW_TYPE=1;
     end
     
