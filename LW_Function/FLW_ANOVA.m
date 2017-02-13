@@ -7,6 +7,7 @@ classdef FLW_ANOVA<CLW_generic
         h_add_between;
         h_clear;
         h_group;
+        h_show_progress;
     end
     
     methods
@@ -37,6 +38,10 @@ classdef FLW_ANOVA<CLW_generic
             obj.h_group=uitable('Data',[],'ColumnName',{},...
                 'ColumnWidth',{70},'ColumnEditable',true,...
                 'position',[5,140,408,260],'parent',obj.h_panel);
+            
+            obj.h_show_progress=uicontrol('style','checkbox',...
+                'string','show_process','value',1,...
+                'position',[315,402,130,20],'parent',obj.h_panel);
             
             set(obj.h_add_within,'callback',@(varargin)obj.add_factor_btn(1));
             set(obj.h_add_between,'callback',@(varargin)obj.add_factor_btn(2));
@@ -77,10 +82,12 @@ classdef FLW_ANOVA<CLW_generic
             option=get_option@CLW_generic(obj);
             option.factor_name=get(obj.h_group,'ColumnName');
             option.factor_label=get(obj.h_group,'Data');
+            option.show_progress=get(obj.h_show_progress,'value');
         end
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
+            set(obj.h_show_progress,'value',option.show_progress);
             lwdataset=batch_pre.lwdataset;
             RowName={};
             for k=1:length(lwdataset)
@@ -136,6 +143,9 @@ classdef FLW_ANOVA<CLW_generic
                 end
                 frag_code=[frag_code,']},'];
             end
+            
+            frag_code=[frag_code,'''show_progress'',',...
+                num2str(option.show_progress),','];
             %str=get_Script@CLW_generic(obj,frag_code,option);
             
             temp='option=struct(';
@@ -208,11 +218,13 @@ classdef FLW_ANOVA<CLW_generic
         function lwdata_out=get_lwdata(lwdataset_in,varargin)
             option.factor_name={'B:factor'};
             option.factor_label=[1:length(lwdataset_in)]';
+            option.show_progress=1;
             
             option.suffix='anova';
             option.is_save=0;
             
-            option=CLW_check_input(option,{'factor_name','factor_label','suffix','is_save'},varargin);
+            option=CLW_check_input(option,{'factor_name','factor_label',...
+                'show_progress','suffix','is_save'},varargin);
             header=FLW_ANOVA.get_header(lwdataset_in,option);
             data=zeros(header.datasize([3,1,2,4,5,6]));
 
@@ -247,6 +259,23 @@ classdef FLW_ANOVA<CLW_generic
             [~,~,ic]=unique(btfactors,'rows','sorted');
             tpsubjects=tpsubjects+(ic-1)*epochs_max;
             
+            if option.show_progress==1
+                fig=figure('numbertitle','off','name','ANOVA progress',...
+                    'MenuBar','none','DockControls','off');
+                pos=get(fig,'position');
+                pos(3:4)=[400,100];
+                set(fig,'position',pos);
+                hold on;
+                run_slider=rectangle('Position',[0 0 0 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
+                rectangle('Position',[0 0 1 1]);
+                xlim([0,1]);
+                ylim([-1,2]);
+                axis off;
+                h_text=text(1,-0.5,'starting...','HorizontalAlignment','right','Fontsize',12,'FontWeight','bold');
+                pause(0.001);
+                tic;
+                t1=toc;
+            end
             for k=1:ceil(size(tpdata,2)/200)
                 if k<ceil(size(tpdata,2)/200)
                     idx=(1:200)+(k-1)*200;
@@ -258,6 +287,19 @@ classdef FLW_ANOVA<CLW_generic
                     data(j,idx)=result.eff(j).p;
                     data(j+length(result.eff),idx)=result.eff(j).F;
                 end
+                t=toc;
+                if option.show_progress==1 && ishandle(fig) && t-t1>0.2
+                    t1=t;
+                    N=k/ceil(size(tpdata,2)/200);
+                    set(run_slider,'Position',[0 0 N 1]);
+                    set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
+                    pause(0.001);
+                end
+            end
+            if option.show_progress==1 && ishandle(fig)
+                set(run_slider,'Position',[0 0 1 1]);
+                set(h_text,'string','finished and saving.');
+                pause(0.001);
             end
             for i=1:length(result.eff)
                 header.index_labels{i}=['p: ',result.eff(i).Name];
@@ -268,6 +310,9 @@ classdef FLW_ANOVA<CLW_generic
             lwdata_out.data=data;
             if option.is_save
                 CLW_save(lwdata_out);
+            end
+            if option.show_progress==1 && ishandle(fig)
+                close(fig);
             end
         end
     end

@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_ANOVA';
+FLW_name='FLW_STFT';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

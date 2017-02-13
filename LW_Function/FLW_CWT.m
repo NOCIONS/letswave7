@@ -7,6 +7,7 @@ classdef FLW_CWT<CLW_generic
         h_high_frequency;
         h_num_frequency_lines;
         h_output_pop;
+        h_show_progress;
     end
     
     methods
@@ -46,6 +47,11 @@ classdef FLW_CWT<CLW_generic
                 'String',{'amplitude','power','phase angle','real part',...
                 'imagery part','complex'},'value',1,...
                 'position',[180,303,100,20],'parent',obj.h_panel);
+            
+            
+            obj.h_show_progress=uicontrol('style','checkbox',...
+                'string','show_process','value',1,...
+                'position',[130,260,130,20],'parent',obj.h_panel);
         end
         
         function option=get_option(obj)
@@ -58,10 +64,12 @@ classdef FLW_CWT<CLW_generic
             str=get(obj.h_output_pop,'String');
             str_value=get(obj.h_output_pop,'value');
             option.output=str{str_value};
+            option.show_progress=get(obj.h_show_progress,'value');
         end
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
+            set(obj.h_show_progress,'value',option.show_progress);
             set(obj.h_wavelet_name,'string',option.wavelet_name);
             set(obj.h_low_frequency,'string',num2str(option.low_frequency));
             set(obj.h_high_frequency,'string',num2str(option.high_frequency));
@@ -96,6 +104,8 @@ classdef FLW_CWT<CLW_generic
                 num2str(option.num_frequency_lines),','];
             frag_code=[frag_code,'''output'',''',...
                 option.output,''','];
+            frag_code=[frag_code,'''show_progress'',',...
+                num2str(option.show_progress),','];
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
     end
@@ -141,12 +151,13 @@ classdef FLW_CWT<CLW_generic
             option.high_frequency=30;
             option.num_frequency_lines=100;
             option.output='amplitude';
+            option.show_progress=1;
             
             option.suffix='cwt';
             option.is_save=0;
             option=CLW_check_input(option,{'output','wavelet_name',...
                 'low_frequency','high_frequency','num_frequency_lines',...
-                'suffix','is_save'},varargin);
+                'show_progress','suffix','is_save'},varargin);
             header=FLW_CWT.get_header(lwdata_in.header,option);
             
             central_freq=centfrq(option.wavelet_name);
@@ -154,12 +165,45 @@ classdef FLW_CWT<CLW_generic
             scales=(central_freq/header.xstep)./frequencies;
             
             data=zeros(header.datasize);
+            if option.show_progress==1
+                fig=figure('numbertitle','off','name','ANOVA progress',...
+                    'MenuBar','none','DockControls','off');
+                pos=get(fig,'position');
+                pos(3:4)=[400,100];
+                set(fig,'position',pos);
+                hold on;
+                run_slider=rectangle('Position',[0 0 0 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
+                rectangle('Position',[0 0 1 1]);
+                xlim([0,1]);
+                ylim([-1,2]);
+                axis off;
+                h_text=text(1,-0.5,'starting...','HorizontalAlignment','right','Fontsize',12,'FontWeight','bold');
+                pause(0.001);
+                tic;
+                t1=toc;
+            end
             for epochpos=1:header.datasize(1);
                 for channelpos=1:header.datasize(2);
                     for indexpos=1:header.datasize(3);
                         data(epochpos,channelpos,indexpos,1,:,:)=cwt(lwdata_in.data(epochpos,channelpos,indexpos,1,1,:),scales,option.wavelet_name);
+                        t=toc;
+                        if option.show_progress==1 && ishandle(fig) && t-t1>0.2
+                            t1=t;
+                            N=(((epochpos-1)*header.datasize(2)+channelpos-1)...
+                                *header.datasize(3)+indexpos)/...
+                                (header.datasize(3)*header.datasize(2)*header.datasize(1));
+                            set(run_slider,'Position',[0 0 N 1]);
+                            set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
+                            pause(0.001);
+                        end
                     end
                 end
+            end
+            
+            if option.show_progress==1 && ishandle(fig)
+                set(run_slider,'Position',[0 0 1 1]);
+                set(h_text,'string','finished and saving.');
+                pause(0.001);
             end
             
             switch option.output
@@ -179,6 +223,9 @@ classdef FLW_CWT<CLW_generic
             lwdata_out.data=data;
             if option.is_save
                 CLW_save(lwdata_out);
+            end
+            if option.show_progress==1 && ishandle(fig)
+                close(fig);
             end
         end
     end
