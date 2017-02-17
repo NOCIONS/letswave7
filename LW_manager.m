@@ -8,7 +8,7 @@ Manager_Init();
     function Manager_Init()
         % create figure
         handles.fig=figure('Position',[100 50 500 670],...
-            'name','Letswave7','NumberTitle','off','userdata',0);
+            'name','Letswave7--Manager','NumberTitle','off','userdata',0);
         %% init menu
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
@@ -67,7 +67,7 @@ Manager_Init();
             end
         end
         %build context menu (labels and callbacks)
-        hcmenu = uicontextmenu;
+        hcmenu = uicontextmenu('parent',handles.fig);
         uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
         uimenu(hcmenu,'Label','rename','Callback',{@(obj,events)menu_callback('GLW_rename')});
         uimenu(hcmenu,'Label','delete','Callback',{@(obj,events)menu_callback('GLW_delete')});
@@ -155,15 +155,17 @@ Manager_Init();
         %% init timer
         handles.timer = timer('BusyMode','drop','ExecutionMode','fixedRate','TimerFcn',{@(obj,events)on_Timer()});
         start(handles.timer);
+        set(handles.fig,'handlevisibility','off');
+        
     end
 
     function file_listbox_Callback()
         %on change in selection
-        if strcmp(get(gcf,'SelectionType'),'normal')
+        if strcmp(get(handles.fig,'SelectionType'),'normal')
             file_listbox_select_changed();
         end
         %on open
-        if strcmp(get(gcf,'SelectionType'),'open')
+        if strcmp(get(handles.fig,'SelectionType'),'open')
             dataset_view();
         end
     end

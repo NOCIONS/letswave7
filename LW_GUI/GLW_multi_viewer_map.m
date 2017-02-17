@@ -1392,7 +1392,7 @@ GLW_view_OpeningFcn;
         temp = get(gca,'CurrentPoint');
         if (temp(1,1)>userdata.last_axis(1) && temp(1,1)<userdata.last_axis(2)...
                 && temp(1,2)>userdata.last_axis(3) && temp(1,2)<userdata.last_axis(4))
-            switch get(obj,'SelectionType')
+            switch get(gcf,'SelectionType')
                 case 'normal'
                     if userdata.is_shade==1
                         userdata.mouse_state=1;

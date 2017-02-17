@@ -86,8 +86,9 @@ draw();
         plot(r,x,y,'.');
         axis off;
         hold on;
+        idx=find([header.chanlocs.topo_enabled]==1);
         for k=1:N
-            text(x(k),y(k),header.chanlocs(k).labels);
+            text(x(k),y(k),header.chanlocs(idx(k)).labels);
         end
         line_x=[];
         line_y=[];

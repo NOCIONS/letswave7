@@ -77,8 +77,6 @@ classdef CLW_permutation<CLW_generic
             set(h,'enable','off');
         end
         
-        
-        
         function showpanel(obj,varargin)
             h=findobj(obj.h_permutation_panel,'tag','permute');
             if get(obj.h_permutation_test_chk,'value')

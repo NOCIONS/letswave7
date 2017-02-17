@@ -17,7 +17,7 @@
         <submenu Label="Frequency Spectrum baseline correction" callback="FLW_baseline_SNR"/>
     </menu>
     <menu Label="Spatial filters (ICA/PCA)">
-        <submenu Label="Compute ICA matrix" />
+        <submenu Label="run ICA" callback="FLW_run_ICA"/>
         <submenu Label="Compute ICA matrix (merged)" />
         <submenu Label="Compute PCA matrix"/>
         <submenu Label="Compute PCA matrix (merged)"/>

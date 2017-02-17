@@ -2,7 +2,7 @@ classdef FLW_ANOVA<CLW_generic
     properties
         FLW_TYPE=2;
         
-        h_file_name;
+        h_factor_name;
         h_add_within;
         h_add_between;
         h_clear;
@@ -18,7 +18,7 @@ classdef FLW_ANOVA<CLW_generic
             uicontrol('style','text','position',[10,495,80,20],...
                 'string','Factor name:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
-            obj.h_file_name=uicontrol('style','edit','string','factor1',...
+            obj.h_factor_name=uicontrol('style','edit','string','factor1',...
                 'HorizontalAlignment','left',...
                 'position',[10,470,150,28],'parent',obj.h_panel);
             
@@ -49,7 +49,7 @@ classdef FLW_ANOVA<CLW_generic
         end
         
         function add_factor_btn(obj,varargin)
-            str=get(obj.h_file_name,'str');
+            str=get(obj.h_factor_name,'str');
             if isempty(str)
                 return;
             end
@@ -194,7 +194,7 @@ classdef FLW_ANOVA<CLW_generic
             end
             datasize=lwdataset_in(1).header.datasize;
             for k=2:length(lwdataset_in)
-                if (lwdataset_in(1).header.datasize([2,4:6])-datasize([2,4:6]))~=0
+                if (lwdataset_in(k).header.datasize([2,4:6])-datasize([2,4:6]))~=0
                     error(['***dataset No. ',num2str(k),...
                         ' did not have the same size with the first dataset.***']);
                 end

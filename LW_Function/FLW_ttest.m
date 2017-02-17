@@ -158,6 +158,7 @@ classdef FLW_ttest<CLW_permutation
             else
                 header_out.datasize(3)=2;
             end
+            header_out.events=[];
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end
@@ -223,9 +224,13 @@ classdef FLW_ttest<CLW_permutation
                 temp=CLW_elec_autoload(header);
                 [y,x]= pol2cart(pi/180.*[temp.chanlocs.theta],[temp.chanlocs.radius]);
             else
+                temp=header;
                 [y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
             end
-            dist=squareform(pdist([x;y]'))<option.chan_dist;
+            dist_temp=squareform(pdist([x;y]'))<option.chan_dist;
+            idx=find([temp.chanlocs.topo_enabled]==1);
+            dist= false(header.datasize(2),header.datasize(2));
+            dist(idx,idx)=dist_temp;
             
             
             data_n=size(lwdataset_in(2).data,1);
@@ -322,31 +327,6 @@ classdef FLW_ttest<CLW_permutation
                             end
                             
                             tstat=permute(STATS.tstat,[6,5,1,2,3,4]);
-                            data_tmp=ones(size(tstat));
-                            switch option.tails
-                                case 'both'
-                                    data_tmp=data_tmp.*...
-                                        CLW_detect_cluster(tstat.*(tstat>=t_threshold),...
-                                        option,cluster_distribute);
-                                    data_tmp=data_tmp.*...
-                                        CLW_detect_cluster(-tstat.*(tstat<=-t_threshold),...
-                                        option,cluster_distribute);
-                                case 'left'
-                                    data_tmp=data_tmp.*...
-                                        CLW_detect_cluster(-tstat.*(tstat<=-t_threshold),...
-                                        option,cluster_distribute);
-                                case 'right'
-                                    data_tmp=data_tmp.*...
-                                        CLW_detect_cluster(tstat.*(tstat>=t_threshold),...
-                                        option,cluster_distribute);
-                            end
-                            data_tmp=ipermute(data_tmp,[6,5,1,2,3,4]);
-                            data(:,ch_idx,3,z_idx,:,:)=data_tmp;
-                            data(:,ch_idx,4,z_idx,:,:)=(data_tmp<1)...
-                                .*data(:,ch_idx,2,z_idx,:,:);
-                            
-                            
-                            tstat=permute(STATS.tstat,[6,5,1,2,3,4]);
                             switch option.tails
                                 case 'both'
                                     data_tmp=CLW_detect_cluster(tstat.*(tstat>t_threshold),...
@@ -401,7 +381,7 @@ classdef FLW_ttest<CLW_permutation
                         data_tmp=[lwdataset_in(2).data(:,:,1,z_idx,:,:);...
                             lwdataset_in(1).data(:,:,1,z_idx,:,:)];
                     end
-                    cluster_distribute=zeros(length(t_threshold),option.num_permutations);
+                    cluster_distribute=zeros(1,option.num_permutations);
                     for iter=1:option.num_permutations
                         if strcmp(option.test_type,'paired sample')
                             if option.num_permutations==2^(size(data_tmp,1)-1)
@@ -466,7 +446,7 @@ classdef FLW_ttest<CLW_permutation
                                 option,cluster_distribute,dist);
                         case 'right'
                             data_tmp=CLW_detect_cluster(tstat.*(tstat>threshold_tmp),...
-                                option,cluster_distribute(t_threshold_idx,:),dist);
+                                option,cluster_distribute,dist);
                     end
                     data_tmp=ipermute(data_tmp,[6,5,1,2,3,4]);
                     data(:,:,3,z_idx,:,:)=data_tmp;

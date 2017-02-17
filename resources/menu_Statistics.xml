@@ -3,6 +3,7 @@
     <menu Label="Compare dataset against a constant (one-sample t-test)" callback="FLW_ttest_constant"/>
     <menu Label="Compare two datasets (paired sample/two sample t-test）" callback="FLW_ttest"/>
     <menu Label="Compare more than two datasets (ANOVA)" callback="FLW_ANOVA"/>
+    <menu Label="One way ANOVA with permutation test" callback="FLW_ANOVA_permutation"/>
     <menu Label="Compare signal amplitude at event latencies" />
     <menu Label="Bootstrap test against a reference interval" />
 </LW_Manager>

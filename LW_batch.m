@@ -9,7 +9,7 @@ h_fig=handle.fig;
     function Batch_Init()
         %create figure
         handle.fig = figure('position',[100,100,520,605],'Resize','off',...
-            'name','Letswave Batch','numbertitle','off');
+            'name','Letswave7--Batch','numbertitle','off');
         %% initialize the toolbar and menu
         set(handle.fig,'MenuBar','none');
         set(handle.fig,'DockControls','off');
@@ -314,9 +314,9 @@ h_fig=handle.fig;
                     {[html_pre,script{script_idx(k)+1},html_post]}];
                 set(handle.run_edit,'string',str);
                 ListboxTop=get(handle.run_edit,'ListboxTop');
-                set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                set(handle.run_edit,'ListboxTop',ceil(min(ListboxTop+2,length(str))));
                 drawnow;
-                set(handle.run_edit,'ListboxTop',min(ListboxTop+3,length(str)));
+                set(handle.run_edit,'ListboxTop',ceil(min(ListboxTop+3,length(str))));
                 drawnow;
                 tab_updated(k);
                 if strcmp( class(batch{batch_idx(k)}),'FLW_load')
