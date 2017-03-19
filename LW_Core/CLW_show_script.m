@@ -8,7 +8,11 @@ f=figure('MenuBar','none','DockControls','off',...
 jCodePane=com.mathworks.widgets.SyntaxTextPane;
 codeType=jCodePane.M_MIME_TYPE;
 jCodePane.setContentType(codeType);
-script = strjoin(script,'\n');
+str_temp=[];
+for k=1:length(script)
+    str_temp=[str_temp,script{k},sprintf('\n')];
+end
+script = str_temp;%strjoin(script,'\n');
 script=strrep(script,'%','%%');
 jCodePane.setText(script);
 jScrollPane=com.mathworks.mwswing.MJScrollPane(jCodePane);

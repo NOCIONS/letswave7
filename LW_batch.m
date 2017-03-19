@@ -9,7 +9,7 @@ h_fig=handle.fig;
     function Batch_Init()
         %create figure
         handle.fig = figure('position',[100,100,520,605],'Resize','off',...
-            'name','Letswave7--Batch','numbertitle','off');
+            'name','Letswave7--Batch','numbertitle','off','color',0.94*[1,1,1]);
         %% initialize the toolbar and menu
         set(handle.fig,'MenuBar','none');
         set(handle.fig,'DockControls','off');
@@ -104,23 +104,36 @@ h_fig=handle.fig;
         %path_btn
         handle.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,...
             'position',[493,578,25,25],'Callback',{@(obj,events)path_btn_Callback()});
-        %% initialize run panel
-        handle.run_panel=uipanel(handle.fig,'units','pixels',...
+      
+       %% initialize run panel
+        handle.run_panel=uipanel(handle.fig,'units','pixels','backgroundcolor',0.94*[1,1,1],...
             'position',[99,1,421,570],'BorderType','etchedin','visible','off');
-        handle.run_ax=axes('parent',handle.run_panel,'position',[0.02,0.93,0.94,0.03]);
-        title(handle.run_ax,'check each step','Units','normalized',...
-            'Position',[1 1.2],'HorizontalAlignment','right');
-        axis(handle.run_ax,'off');
-        handle.run_slider=rectangle('Position',[0 0 0.1 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
-        handle.run_frame=rectangle('Position',[0 0 1 1]);
-        set(handle.run_ax,'xlim',[0,1]);
-        set(handle.run_ax,'ylim',[0,1]);
+        handle.run_txt=uicontrol(handle.run_panel,'style','text',...
+           'units','normalized','backgroundcolor',0.94*[1,1,1],...
+            'position',[0,0,1,0.99],'string','check each step     .',...
+            'HorizontalAlignment','right','fontweight','bold');
+        handle.run_ax=uicontrol(handle.run_panel,'style','text',...
+           'units','normalized','backgroundcolor',0*[1,1,1],...
+            'position',[0.02,0.93,0.94,0.03],'string','');
+        set(handle.run_ax,'units','pixels');
+        pos=get(handle.run_ax,'position');
+        pos=pos+[1,1,-2,-2];
+        handle.run_frame=uicontrol(handle.run_panel,'style','text',...
+           'units','pixels','backgroundcolor',0.94*[1,1,1],...
+            'position',pos,'string','');
+        set(handle.run_ax,'units','normalized');
+        set(handle.run_frame,'units','normalized');
+        pos=get(handle.run_frame,'position');
+        handle.run_slider=uicontrol(handle.run_panel,'style','text',...
+           'units','normalized','backgroundcolor',[255,71,38]/255,...
+            'position',pos,'string','');
         handle.run_edit=uicontrol('parent',handle.run_panel,'min',0,'max',2,...
             'style','listbox','value',[],'position',[10,50,395,470],...
             'HorizontalAlignment','left','backgroundcolor',[1,1,1]);
         handle.run_close_btn=uicontrol('parent',handle.run_panel,...
             'string','close','style','pushbutton','position',[5,5,405,40],...
             'callback',@close_script);
+       
         %% initialize tab panel
         handle.tab_panel=uipanel(handle.fig,'BorderType','none',...
             'units','pixels','position',[1,45,100,528]);
@@ -153,6 +166,7 @@ h_fig=handle.fig;
         else
             handle.is_close=0;
         end
+      
 %         add_function('FLW_selection');
 %         batch{1}.add_file(fullfile(pwd,'data_1'));
 %         %batch{1}.add_file(fullfile(pwd,'chan-select data_1'));
@@ -291,10 +305,17 @@ h_fig=handle.fig;
 %% run_script
     function run_script(varargin)
         uistack(handle.run_panel,'top');
+        uistack(handle.run_txt,'top');
+        uistack(handle.run_ax,'top');
+        uistack(handle.run_frame,'top');
+        uistack(handle.run_slider,'top');
+        uistack(handle.run_edit,'top');
+        uistack(handle.run_close_btn,'top');
+        
         set(handle.btn_run,'visible','off');
         set(findobj(handle.fig),'busyaction','cancel');
-        set(handle.run_slider,'FaceColor',[255,71,38]/255);
-        title(handle.run_ax,'check each operation...');
+        set(handle.run_slider,'backgroundcolor',[255,71,38]/255);
+        set(handle.run_txt,'string','check each operation...     .');
         set(handle.run_panel,'visible','on');
         option=[];
         lwdata=[];
@@ -304,8 +325,11 @@ h_fig=handle.fig;
             [batch_idx,script_idx,script]=get_script();
             n=length(batch_idx);
             for k=1:n
-                title(handle.run_ax,['step: ',num2str(k),'/',num2str(n)]);
-                set(handle.run_slider,'Position',[0 0 k/n 1]);
+                pos=get(handle.run_frame,'position');
+                pos(3)=pos(3)*k/n;
+                set(handle.run_slider,'Position',pos);
+                set(handle.run_txt,'string',...
+                    ['step: ',num2str(k),'/',num2str(n),'     .']);
                 color=get(batch{batch_idx(k)}.h_tab,'foregroundcolor');
                 html_pre=['<html><font color=rgb(',num2str(ceil(color(1)*255)),',',num2str(ceil(color(2)*255)),',',num2str(ceil(color(3)*255)),')>'];
                 html_post=['</font></html>'];
@@ -318,7 +342,7 @@ h_fig=handle.fig;
                 drawnow;
                 set(handle.run_edit,'ListboxTop',ceil(min(ListboxTop+3,length(str))));
                 drawnow;
-                tab_updated(k);
+                tab_updated(batch_idx(k));
                 if strcmp( class(batch{batch_idx(k)}),'FLW_load')
                     option=[];
                     lwdata=[];
@@ -329,33 +353,47 @@ h_fig=handle.fig;
                     set(handle.h_parent,'userdata',1);
                 end
                 if ~isempty(T)
-                    C = strsplit(T,sprintf('\n'));
-                    for k=1:length(C)
-                        if ~isempty(C{k})
-                            str = [str,{[html_pre,C{k},html_post]}];
-                            set(handle.run_edit,'string',str);
-                            ListboxTop=get(handle.run_edit,'ListboxTop');
-                            set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-                            drawnow;
-                            set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
-                            drawnow;
+                    idx=find(T==sprintf('\n'));
+                    for k=1:length(idx)
+                        if k==1
+                            if idx(k)==1
+                                continue;
+                            end
+                            str = [str,{[html_pre,T(1:idx(k)-1),html_post]}];
+                        else
+                            if idx(k-1)==idx(k)
+                                continue;
+                            end
+                            str = [str,{[html_pre,T(idx(k-1)+1:idx(k)-1),html_post]}];
                         end
+                        set(handle.run_edit,'string',str);
+                        ListboxTop=get(handle.run_edit,'ListboxTop');
+                        set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
+                        drawnow;
+                        set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                        drawnow;
                     end
                 end
                 T=evalc(script{script_idx(k)+1});
-                if ~isempty(T)
-                    C = strsplit(T,sprintf('\n'));
-                    for k=1:length(C)
-                        if ~isempty(C{k})
-                            str = [str,{[html_pre,C{k},html_post]}];
-                            set(handle.run_edit,'string',str);
-                            ListboxTop=get(handle.run_edit,'ListboxTop');
-                            set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-                            drawnow;
-                            set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
-                            drawnow;
+                idx=find(T==sprintf('\n'));
+                for k=1:length(idx)
+                    if k==1
+                        if idx(k)==1
+                            continue;
                         end
+                        str = [str,{[html_pre,T(1:idx(k)-1),html_post]}];
+                    else
+                        if idx(k-1)==idx(k)
+                            continue;
+                        end
+                        str = [str,{[html_pre,T(idx(k-1)+1:idx(k)-1),html_post]}];
                     end
+                    set(handle.run_edit,'string',str);
+                    ListboxTop=get(handle.run_edit,'ListboxTop');
+                    set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
+                    drawnow;
+                    set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                    drawnow;
                 end
                 str = [str,{''}];
                 set(handle.run_edit,'string',str);
@@ -363,8 +401,8 @@ h_fig=handle.fig;
                 set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
                 drawnow;
             end
-            set(handle.run_slider,'FaceColor',[0,1,0]);
-            title(handle.run_ax,'finished');
+            set(handle.run_txt,'string','finished.     .');
+            set(handle.run_slider,'backgroundcolor',[0,1,0]);
             if ~isempty(handle.h_parent)
                 set(handle.h_parent,'userdata',1);
             end
@@ -377,8 +415,8 @@ h_fig=handle.fig;
             msgString = regexprep(msgString, '<.*?>', '');
             str=[str,cellstr(msgString)];
             set(handle.run_edit,'String',str,'ForegroundColor','red');
-            set(handle.run_slider,'FaceColor',[1,0,0]);
-            title(handle.run_ax,'Error.');
+            set(handle.run_slider,'backgroundcolor',[1,0,0]);
+            set(handle.run_txt,'string','Error.     .');
             rethrow(exception);
         end
     end

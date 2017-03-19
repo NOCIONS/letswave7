@@ -7,7 +7,7 @@ Manager_Init();
 
     function Manager_Init()
         % create figure
-        handles.fig=figure('Position',[100 50 500 670],...
+        handles.fig=figure('Position',[100 50 500 670],'color',0.94*[1,1,1],...
             'name','Letswave7--Manager','NumberTitle','off','userdata',0);
         %% init menu
         set(handles.fig,'MenuBar','none');
@@ -86,7 +86,7 @@ Manager_Init();
             'TooltipString','browse for folder');
         %filter path edit
         handles.path_edit=uicontrol('style','edit','string',pwd,...
-            'HorizontalAlignment','left','position',[73,637,420,28]);
+            'HorizontalAlignment','left','position',[73,637,420,28],'backgroundcolor',[1,1,1]);
         %label 'Include'
         uicontrol('style','text','string','Include:',...
             'HorizontalAlignment','left','position',[5,600,80,28]);
@@ -95,21 +95,21 @@ Manager_Init();
             'string','Filter','position',[80,608,100,28]);
         %filter include listbox
         handles.suffix_include_listbox=uicontrol('style','listbox',...
-            'string','Filter','position',[5,292,120,320]);
+            'string','Filter','position',[5,292,120,320],'backgroundcolor',[1,1,1]);
         set(handles.suffix_include_listbox,'max',2,'min',0);
         %label 'Exclude'
         uicontrol('style','text','string','Exclude:',...
             'HorizontalAlignment','left','position',[5,255,80,28]);
         %filter exclude listbox
         handles.suffix_exclude_listbox=uicontrol('style','listbox',...
-            'string','Filter','position',[5,20,120,247]);
+            'string','Filter','position',[5,20,120,247],'backgroundcolor',[1,1,1]);
         set(handles.suffix_exclude_listbox,'max',2,'min',0);
         %label 'Datasets'
         uicontrol('style','text','string','Datasets:',...
             'HorizontalAlignment','left','position',[140,600,80,28]);
         %file listbox
         handles.file_listbox=uicontrol('style','listbox','string',...
-            'Filter','position',[140,40,355,572]);
+            'Filter','position',[140,40,355,572],'backgroundcolor',[1,1,1]);
         set(handles.file_listbox,'max',2,'min',0);
         set(handles.file_listbox,'uicontextmenu',hcmenu);
         %label epochs
