@@ -412,7 +412,7 @@ classdef FLW_import_mat
             option.ystart=0;
             option.xstep=1;
             option.ystep=1;
-            option.is_save=1;
+            option.is_save=0;
             option.filename='mat';
             option=CLW_check_input(option,{'dimension_descriptors','unit',...
                 'xunit','yunit','xstart','ystart',...

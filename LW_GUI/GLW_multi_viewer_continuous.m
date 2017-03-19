@@ -55,12 +55,12 @@ GLW_view_OpeningFcn;
         userdata.y=[];
         userdata.is_event_locked=1;
         
-        [p, n, ~]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{1}));
+        [p, n, e]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{1}));
         %[p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/EEGlab/ep eeglab_data.lw6');
         %[p, n, ~]=fileparts('/Users/huanggan/Documents/MATLAB/letswave_data/BrainVision/SubjectEEG/subj2.lw6');
         userdata.filename=n;
         userdata.filepath=p;
-        [header, data]=CLW_load(fullfile(p,n));
+        [header, data]=CLW_load(fullfile(p,[n,e]));
         
         userdata.N=header.datasize(6);
         userdata.t=header.xstart+(0:userdata.N-1)*header.xstep;

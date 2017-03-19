@@ -365,7 +365,9 @@ h_fig=handle.fig;
             end
             set(handle.run_slider,'FaceColor',[0,1,0]);
             title(handle.run_ax,'finished');
-            
+            if ~isempty(handle.h_parent)
+                set(handle.h_parent,'userdata',1);
+            end
             pause(0.5);
             if(handle.is_close)
                 closereq();
