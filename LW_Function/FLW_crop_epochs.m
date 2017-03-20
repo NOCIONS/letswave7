@@ -47,16 +47,19 @@ classdef FLW_crop_epochs<CLW_generic
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %xstart_edit
             obj.h_xstart_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','0','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_end_changed(1),...
                 'position',[35,440,100,20],'parent',obj.h_panel);
             %xend_edit
             obj.h_xend_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','0','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_end_changed(1),...
                 'position',[140,440,100,20],'parent',obj.h_panel);
             %xsize_edit
             obj.h_xsize_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_size_changed(1),...
                 'position',[245,440,100,20],'parent',obj.h_panel);
@@ -77,15 +80,18 @@ classdef FLW_crop_epochs<CLW_generic
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %ystart_edit
             obj.h_ystart_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','0','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_end_changed(2),...
                 'position',[35,360,100,20],'parent',obj.h_panel);
             %yend_edit
             obj.h_yend_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','0','HorizontalAlignment','left',...
                 'position',[140,360,100,20],'parent',obj.h_panel);
             %ysize_edit
             obj.h_ysize_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_size_changed(2),...
                 'position',[245,360,100,20],'parent',obj.h_panel);
@@ -106,16 +112,19 @@ classdef FLW_crop_epochs<CLW_generic
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %zstart_edit
             obj.h_zstart_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','0','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_end_changed(3),...
                 'position',[35,280,100,20],'parent',obj.h_panel);
             %zend_edit
             obj.h_zend_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','0','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_end_changed(3),...
                 'position',[140,280,100,20],'parent',obj.h_panel);
             %zsize_edit
             obj.h_zsize_edit=uicontrol('style','edit',...
+                 'backgroundcolor',[1,1,1],...
                 'String','','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_size_changed(3),...
                 'position',[245,280,100,20],'parent',obj.h_panel);
@@ -303,15 +312,15 @@ classdef FLW_crop_epochs<CLW_generic
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end
-            if option.xcrop_chk==1;
+            if option.xcrop_chk==1
                 header_out.datasize(6)=floor(option.xend-option.xstart)/header_out.xstep;
                 header_out.xstart=option.xstart;
             end
-            if option.ycrop_chk==1;
+            if option.ycrop_chk==1
                 header_out.datasize(5)=floor(option.yend-option.ystart)/header_out.ystep;
                 header_out.ystart=option.zstart;
             end
-            if option.zcrop_chk==1;
+            if option.zcrop_chk==1
                 header_out.datasize(4)=floor(option.zend-option.zstart)/header_out.ystep;
                 header_out.zstart=option.zstart;
             end
@@ -341,11 +350,11 @@ classdef FLW_crop_epochs<CLW_generic
             data=lwdata_in.data;
             %%%
             %dxstart,dxend
-            if option.xcrop_chk==1;
+            if option.xcrop_chk==1
                 disp('Crop X dimension');
                 dxstart=round(((option.xstart-header_in.xstart)/header_in.xstep))+1;
                 dxend=round(((option.xend-header_in.xstart)/header_in.xstep));
-                if dxstart<dxend
+                if dxstart>dxend
                     temp=dxend;
                     dxend=dxstart;
                     dxstart=temp;
@@ -357,11 +366,11 @@ classdef FLW_crop_epochs<CLW_generic
                 dxend=header_in.datasize(6);
             end;
             %dystart,dyend
-            if option.ycrop_chk==1;
+            if option.ycrop_chk==1
                 disp('Crop Y dimension');
                 dystart=round(((option.ystart-header_in.ystart)/header_in.ystep))+1;
                 dyend=round(((option.yend-header_in.ystart)/header_in.ystep));
-                if dystart<dyend
+                if dystart>dyend
                     temp=dyend;
                     dyend=dystart;
                     dystart=temp;
@@ -373,11 +382,11 @@ classdef FLW_crop_epochs<CLW_generic
                 dyend=header_in.datasize(5);
             end;
             %dzstart,dzend
-            if option.zcrop_chk==1;
+            if option.zcrop_chk==1
                 disp('Crop Z dimension');
                 dzstart=round(((option.zstart-header_in.zstart)/header_in.zstep))+1;
                 dzend=round(((option.zend-header_in.zstart)/header_in.zstep));
-                if dzstart<dzend
+                if dzstart>dzend
                     temp=dzend;
                     dzend=dzstart;
                     dzstart=temp;
