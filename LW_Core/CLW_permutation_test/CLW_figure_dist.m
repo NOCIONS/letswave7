@@ -10,8 +10,8 @@ end
 dist=squareform(pdist([x;y]'));
 d_max=max(max(dist));
 
-f=figure('Resize','off');
-set(f,'WindowStyle','modal')
+f=figure('Resize','off','color',0.94*[1,1,1]);
+%set(f,'WindowStyle','modal')
 p=get(f,'position');
 p([3,4])=[560 420];
 set(f,'position',p);
@@ -34,7 +34,7 @@ if sld_value>d_max
 end
 sld = uicontrol('Style', 'slider','Min',0,'Max',d_max,...
     'Value',sld_value,...
-    'units','normal','Position', [0.05 0.12 0.7 0],...
+    'units','normal','Position', [0.05 0.084 0.7 0.038],...
     'Callback', @callback_sld);
 
 edt = uicontrol('Style', 'edit','string',num2str(sld_value),...

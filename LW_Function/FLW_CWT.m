@@ -112,7 +112,7 @@ classdef FLW_CWT<CLW_generic
     
     methods (Static = true)
         function header_out= get_header(header_in,option)
-            if ~strcmpi(header_in.filetype,'time_amplitude');
+            if ~strcmpi(header_in.filetype,'time_amplitude')
                 warning('!!! WARNING : input data is not of format time_amplitude!');
             end
             header_out=header_in;
