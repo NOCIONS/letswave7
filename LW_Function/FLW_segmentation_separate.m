@@ -34,6 +34,10 @@ classdef FLW_segmentation_separate<CLW_generic
             obj.h_x_duration_edit=uicontrol('style','edit',...
                 'position',[230,320,180,30],'HorizontalAlignment','left',...
                 'string','1','parent',obj.h_panel);
+            
+            set(obj.h_code_list,'backgroundcolor',[1,1,1]);
+            set(obj.h_x_start_edit,'backgroundcolor',[1,1,1]);
+            set(obj.h_x_duration_edit,'backgroundcolor',[1,1,1]);
         end
         
         function select_All(obj,varargin)

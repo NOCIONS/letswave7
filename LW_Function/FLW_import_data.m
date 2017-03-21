@@ -32,11 +32,18 @@ classdef FLW_import_data
             uiwait(obj.h_fig);
         end
         
-        
         function obj=init_handles(obj)
             obj.h_fig=figure('name','Import Data','NumberTitle','off');
             pos=get(obj.h_fig,'Position');
+            
             pos(3:4)=[300 510];
+            scrsz = get(0,'ScreenSize'); 
+            if pos(1)+pos(3)>scrsz(3)
+                pos(1)=(scrsz(3)-pos(3))/2;
+            end
+            if pos(2)+pos(4)+100>scrsz(4)
+                pos(2)=(scrsz(4)-pos(4)-100)/2;
+            end
             set(obj.h_fig,'Position',pos);
             
             set(obj.h_fig,'MenuBar','none');
@@ -63,7 +70,7 @@ classdef FLW_import_data
             
             
             obj.h_file_list=uicontrol('style','listbox','string','',...
-                'HorizontalAlignment','left',...
+                'HorizontalAlignment','left','backgroundcolor',[1,1,1],...
                 'Fontsize',14,'value',[],'max',10);
             set(obj.h_file_list,'units','normalized');
             set(obj.h_file_list,'position',[0,0,1,1]);
@@ -147,6 +154,7 @@ classdef FLW_import_data
         function obj=import_file(obj,varargin)
             userdata=get(obj.h_file_list, 'userdata');
             if ~isempty(userdata.file_path)
+                set(obj.h_file_list,'String',userdata.file_name);
                 str=get( obj.h_file_list, 'String' );
                 for k=1:length(userdata.file_path)
                     str{k}=['<html><b>',userdata.file_name{k},'&nbsp;&nbsp;(processing...)</b></html>'];
@@ -166,8 +174,6 @@ classdef FLW_import_data
                 end
             end
         end
-        
-        
     end
     
     methods (Static = true)

@@ -331,10 +331,11 @@ GLW_view_OpeningFcn;
         x_tick=get(handles.ax_slide,'xtick');
         text(userdata.t(1),-3,num2str(userdata.t(1)));
         text(userdata.t(end),-3,num2str(userdata.t(end)),'HorizontalAlignment','right');
+        
         for k=1:length(x_tick)
             if min(abs(x_tick(k)-userdata.t(1)),abs(x_tick(k)-userdata.t(end)))>=(x_tick(2)-x_tick(1))/2
                 line([x_tick(k),x_tick(k)],[-0.5,0.5],'color',[0,0,0],'Parent',handles.ax_slide);
-                text(x_tick(k),-3,num2str(x_tick(k)),'HorizontalAlignment','center');
+                text(x_tick(k),-3,num2str(x_tick(k)),'HorizontalAlignment','center','Parent',handles.ax_slide);
             end
         end
         axis off;
@@ -361,7 +362,7 @@ GLW_view_OpeningFcn;
         handles.category_checkbox=uicontrol(handles.panel_right_down,...
             'style','checkbox','String','All',...
             'Value',userdata.is_category_selected);
-        Set_position(handles.category_checkbox,[200,150,50,20]);
+        Set_position(handles.category_checkbox,[205,150,40,20]);
         icon=load('icon.mat');
         handles.category_del_btn=uicontrol(handles.panel_right_down,...
             'style','pushbutton','CData',icon.icon_delete,...
@@ -455,10 +456,8 @@ GLW_view_OpeningFcn;
         set(handles.y_auto_checkbox,        'callback',@Y_auto_callback);
         set(handles.index_popup,            'Callback',@GLW_view_UpdataFcn);
         
-        set(handles.rect_bg_slide,'buttonDownFcn',@Slider_BtnDown);
-        set(handles.line_slide,'buttonDownFcn',@Slider_BtnDown);
-        set(handles.rect_slide,'buttonDownFcn',@Slider_BtnDown);
-        set(handles.line_event_slide,'buttonDownFcn',@Slider_BtnDown);
+        temp=get(handles.ax_slide,'Children');
+        set(temp,'buttonDownFcn',@Slider_BtnDown);
         set(handles.fig,'WindowButtonUpFcn',@Slider_BtnUp);
         
         %% right panel
@@ -579,9 +578,11 @@ GLW_view_OpeningFcn;
         [~,b]=sort([events.table(idx_temp).latency]);
         idx_temp=idx_temp(b);
         d=cell(length(idx_temp),3);
+        if ~isempty(idx_temp)
         d(:,1)={events.table(idx_temp).code};
         d(:,2)={events.table(idx_temp).latency};
         d(:,3)={events.table(idx_temp).epoch};
+        end
         set(handles.event_table,'data',d);
         events.table_idx=idx_temp;
     end

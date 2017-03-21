@@ -43,9 +43,17 @@ classdef FLW_import_mat
         end
         
         function obj=init_handles(obj)
-            obj.h_fig=figure('name','Import mat variable','NumberTitle','off');
+            obj.h_fig=figure('name','Import mat variable',...
+                'NumberTitle','off','color',0.94*[1,1,1]);
             pos=get(obj.h_fig,'Position');
             pos(3:4)=[600 510];
+            scrsz = get(0,'ScreenSize'); 
+            if pos(1)+pos(3)>scrsz(3)
+                pos(1)=(scrsz(3)-pos(3))/2;
+            end
+            if pos(2)+pos(4)+100>scrsz(4)
+                pos(2)=(scrsz(4)-pos(4)-100)/2;
+            end
             set(obj.h_fig,'Position',pos);
             set(obj.h_fig,'MenuBar','none');
             set(obj.h_fig,'DockControls','off');
@@ -64,7 +72,6 @@ classdef FLW_import_mat
             icon=load('icon.mat');
             obj.h_script_btn=uicontrol('style','pushbutton',...
                 'position',[550,345,40,40],'CData',icon.icon_script);
-            
             uicontrol('style','text','string','Unit:',...
                 'HorizontalAlignment','left',...
                 'position',[340,307,150,40]);
@@ -143,9 +150,22 @@ classdef FLW_import_mat
             obj.h_process_btn=uicontrol('style','pushbutton','string','Import',...
                 'HorizontalAlignment','left',...
                 'position',[270,10,320,60]);
+           set(obj.h_var_list, 'backgroundcolor',[1,1,1]);
+           set(obj.h_unit_pop, 'backgroundcolor',[1,1,1]);
+           set(obj.h_xstart_edit, 'backgroundcolor',[1,1,1]);
+           set(obj.h_xstep_edit, 'backgroundcolor',[1,1,1]);
+           set(obj.h_xunit_pop, 'backgroundcolor',[1,1,1]);
+           set(obj.h_ystart_edit, 'backgroundcolor',[1,1,1]);
+           set(obj.h_ystep_edit, 'backgroundcolor',[1,1,1]);
+           set(obj.h_yunit_pop, 'backgroundcolor',[1,1,1]);
+           set(obj.h_dimension1_pop, 'backgroundcolor',[1,1,1]);
+           set(obj.h_dimension2_pop, 'backgroundcolor',[1,1,1]);
+           set(obj.h_dimension3_pop, 'backgroundcolor',[1,1,1]);
+           set(obj.h_dimension4_pop, 'backgroundcolor',[1,1,1]);
             try
                 set(get(obj.h_fig,'children'),'units','normalized');
             end
+            
         end
         
         function obj=load(obj,varargin)

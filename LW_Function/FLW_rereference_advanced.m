@@ -52,6 +52,9 @@ classdef FLW_rereference_advanced<CLW_generic
                 'position',[0,125,240,20],'foregroundcolor',[1,0,0],...
                 'string','The datasets share different channel property.',...
                 'HorizontalAlignment','center','parent',obj.h_panel);
+            set(obj.h_active_list,'backgroundcolor',[1,1,1]);
+            set(obj.h_ref_list,'backgroundcolor',[1,1,1]);
+            set(obj.h_new_list,'backgroundcolor',[1,1,1]);
        end
        
        function channel_add(obj,varargin)

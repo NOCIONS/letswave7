@@ -17,6 +17,7 @@ classdef FLW_hilbert<CLW_generic
                 'String',{'amplitude','power','phase angle','real part',...
                 'imagery part','complex'},'value',3,...
                 'position',[35,440,200,30],'parent',obj.h_panel);
+            set(obj.h_output_pop,'backgroundcolor',[1,1,1]);
         end
         
         function option=get_option(obj)

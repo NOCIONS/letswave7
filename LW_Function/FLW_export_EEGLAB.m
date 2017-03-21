@@ -23,6 +23,13 @@ classdef FLW_export_EEGLAB
             obj.h_fig=figure('name','Export Data to EEGLab','NumberTitle','off');
             pos=get(obj.h_fig,'Position');
             pos(3:4)=[300 510];
+            scrsz = get(0,'ScreenSize'); 
+            if pos(1)+pos(3)>scrsz(3)
+                pos(1)=(scrsz(3)-pos(3))/2;
+            end
+            if pos(2)+pos(4)+100>scrsz(4)
+                pos(2)=(scrsz(4)-pos(4)-100)/2;
+            end
             set(obj.h_fig,'Position',pos);
             set(obj.h_fig,'MenuBar','none');
             set(obj.h_fig,'DockControls','off');
@@ -44,7 +51,7 @@ classdef FLW_export_EEGLAB
             
             icon=load('icon.mat');
             obj.h_file_list=uicontrol('style','listbox','string','',...
-                'HorizontalAlignment','left','value',[],...
+                'HorizontalAlignment','left','value',[],'backgroundcolor',[1,1,1],...
                 'max',10,'units','normalized','position',[0,0.08,1,0.92],...
                 'string',filename,'userdata',filename);
             

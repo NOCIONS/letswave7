@@ -97,6 +97,10 @@ classdef FLW_selection<CLW_generic
                 'position',[160,131,400,20],'foregroundcolor',[1,0,0],...
                 'string','The datasets share different epoch/channel/index property.',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
+        
+            set(obj.h_selection_items_pop,'backgroundcolor',[1,1,1]);
+            set(obj.h_old_list,'backgroundcolor',[1,1,1]);
+            set(obj.h_new_list,'backgroundcolor',[1,1,1]);
         end
         
         function old_list_Callback(obj,varargin)

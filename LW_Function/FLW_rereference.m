@@ -21,7 +21,6 @@ classdef FLW_rereference<CLW_generic
                 'string','Select All','callback',@obj.reference_Callback,...
                 'position',[35,141,150,35],'parent',obj.h_panel);
             
-            
             uicontrol('style','text','position',[235,495,150,20],...
                 'string','Apply reference to:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
@@ -34,6 +33,9 @@ classdef FLW_rereference<CLW_generic
                 'position',[0,125,400,20],'foregroundcolor',[1,0,0],...
                 'string','The datasets share different channel property.',...
                 'HorizontalAlignment','center','parent',obj.h_panel);
+            
+            set(obj.h_reference_list,'backgroundcolor',[1,1,1]);
+            set(obj.h_apply_list,'backgroundcolor',[1,1,1]);
         end
         
         function reference_Callback(obj,varargin)

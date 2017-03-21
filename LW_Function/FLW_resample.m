@@ -59,6 +59,11 @@ classdef FLW_resample<CLW_generic
             obj.h_interpolation_pop=uicontrol('style','popupmenu',...
                 'String',{'nearest','linear','spline','pchip','cubic','v5cubic'},'value',1,...
                 'position',[35,300,200,30],'parent',obj.h_panel);
+            
+            set(obj.h_x_SR_edit,'backgroundcolor',[1,1,1]);
+            set(obj.h_y_SR_edit,'backgroundcolor',[1,1,1]);
+            set(obj.h_z_SR_edit,'backgroundcolor',[1,1,1]);
+            set(obj.h_interpolation_pop,'backgroundcolor',[1,1,1]);
         end
         
         %get the parameters setting from the GUI

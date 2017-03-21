@@ -51,13 +51,22 @@ classdef FLW_dc_removal<CLW_generic
             
             data=lwdata_in.data;
             data=permute(data,[6,1,2,3,4,5]);
-            data=detrend(data,'constant');
             if option.linear_detrend==1
                 for k3=1:size(data,3)
                     for k4=1:size(data,4)
                         for k5=1:size(data,5)
                             for k6=1:size(data,6)
                                 data(:,:,k3,k4,k5,k6)=detrend(data(:,:,k3,k4,k5,k6),'linear');
+                            end
+                        end
+                    end
+                end
+            else
+                for k3=1:size(data,3)
+                    for k4=1:size(data,4)
+                        for k5=1:size(data,5)
+                            for k6=1:size(data,6)
+                                data(:,:,k3,k4,k5,k6)=detrend(data(:,:,k3,k4,k5,k6),'constant');
                             end
                         end
                     end

@@ -47,6 +47,7 @@ classdef FLW_STFT<CLW_generic
                 'position',[180,333,100,20],'parent',obj.h_panel);
             
             
+            
             uicontrol('style','text','position',[30,300,140,20],...
                 'string','Output:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
@@ -58,6 +59,13 @@ classdef FLW_STFT<CLW_generic
             obj.h_show_progress=uicontrol('style','checkbox',...
                 'string','show_process','value',1,...
                 'position',[130,260,130,20],'parent',obj.h_panel);
+            
+            set(obj.h_hanning_width,'backgroundcolor',[1,1,1]);
+            set(obj.h_sliding_step,'backgroundcolor',[1,1,1]);
+            set(obj.h_low_frequency,'backgroundcolor',[1,1,1]);
+            set(obj.h_high_frequency,'backgroundcolor',[1,1,1]);
+            set(obj.h_num_frequency_lines,'backgroundcolor',[1,1,1]);
+            set(obj.h_output_pop,'backgroundcolor',[1,1,1]);
         end
         
         function option=get_option(obj)
@@ -199,7 +207,7 @@ classdef FLW_STFT<CLW_generic
                 pos(3:4)=[400,100];
                 set(fig,'position',pos);
                 hold on;
-                run_slider=rectangle('Position',[0 0 0 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
+                run_slider=rectangle('Position',[0 0 eps 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
                 rectangle('Position',[0 0 1 1]);
                 xlim([0,1]);
                 ylim([-1,2]);

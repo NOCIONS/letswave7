@@ -42,13 +42,15 @@ classdef FLW_run_ICA<CLW_generic
                 'string','number of components:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             obj.h_buttongroup=uibuttongroup('units','pixels','userdata',1,...
-                'position',[40,410,360,24],'parent',obj.h_panel);
+                'position',[40,405,360,24],'parent',obj.h_panel);
             obj.h_r1=uicontrol(obj.h_buttongroup,'style','radiobutton','userdata',1,...
                 'String','All components','position',[1,1,120,20],'handleVisibility','off');
             obj.h_r2=uicontrol(obj.h_buttongroup,'style','radiobutton','userdata',2,...
                 'String','decide by user','position',[123,1,120,20],'handleVisibility','off');
             obj.h_r3=uicontrol(obj.h_buttongroup,'style','radiobutton','userdata',3,...
-                'String','decide by PICA','position',[246,1,120,20],'handleVisibility','off');
+                'String','decide by PICA','position',[246,1,100,20],'handleVisibility','off');
+            set(obj.h_buttongroup,'SelectionChangeFcn',@obj.bselection);
+            %set(obj.h_buttongroup,'SelectionChangedFcn',@obj.bselection);
             
             obj.h_r2_text=uicontrol('style','text','position',[35,350,150,20],...
                 'string','Components Numbers:',...
@@ -79,7 +81,10 @@ classdef FLW_run_ICA<CLW_generic
             set(obj.h_r3_method,'visible','off');
             set(obj.h_r3_text2,'visible','off');
             set(obj.h_r3_percentage,'visible','off');
-            set(obj.h_buttongroup,'SelectionChangedFcn',@obj.bselection)
+            set(obj.h_algorithm,'backgroundcolor',[1,1,1]);
+            set(obj.h_r2_num_ICs,'backgroundcolor',[1,1,1]);
+            set(obj.h_r3_method,'backgroundcolor',[1,1,1]);
+            set(obj.h_r3_percentage,'backgroundcolor',[1,1,1]);
         end
         
         function bselection(obj,~,callbackdata)

@@ -86,6 +86,15 @@ classdef FLW_FFT_filter<CLW_generic
                 obj.h_notch_width_txt;  obj.h_notch_width_edt;
                 obj.h_slope_width_txt;  obj.h_slope_width_edt;
                 obj.h_harmonic_num_txt;	obj.h_harmonic_num_edt];
+            set(obj.h_filtertype_pop,'backgroundcolor',[1,1,1]);
+            set(obj.h_low_cutoff_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_low_width_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_high_cutoff_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_high_width_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_notch_fre_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_notch_width_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_slope_width_edt,'backgroundcolor',[1,1,1]);
+            set(obj.h_harmonic_num_edt,'backgroundcolor',[1,1,1]);
         end
         
         function method_change(obj,varargin)
