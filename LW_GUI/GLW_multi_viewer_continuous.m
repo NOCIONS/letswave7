@@ -132,6 +132,7 @@ GLW_view_OpeningFcn;
         handles.epoch_listbox=uicontrol(handles.panel_left,...
             'style','listbox','String',st,'value',1);
         Set_position(handles.epoch_listbox,[5,170,55,485]);
+        set(handles.epoch_listbox,'backgroundcolor',[1,1,1]);
     end
     function Init_channel()
         handles.channel_text=uicontrol(handles.panel_left,...
@@ -143,6 +144,8 @@ GLW_view_OpeningFcn;
         set(handles.channel_listbox,'String',{header.chanlocs.labels});
         set(handles.channel_listbox,'value',1:header.datasize(2));
         Set_position(handles.channel_listbox,[70,170,85,485]);
+        
+        set(handles.channel_listbox,'backgroundcolor',[1,1,1]);
     end
     function Init_filter()
         handles.filter_panel=uipanel(handles.panel_left,...
@@ -186,6 +189,11 @@ GLW_view_OpeningFcn;
             'String',{'1','2','3','4','5','6','7','8','9','10'});
         Set_position(handles.filter_order_popup,[80,5,70,25]);
         
+        if ispc
+            Set_position(handles.filter_notch_popup,[80,35,50,25]);
+            Set_position(handles.filter_order_popup,[80,5,50,25]);
+        end
+        
         set(handles.filter_lowpass_checkbox,'Enable','off');
         set(handles.filter_lowpass_edit,'Enable','off');
         set(handles.filter_highpass_checkbox,'Enable','off');
@@ -194,6 +202,11 @@ GLW_view_OpeningFcn;
         set(handles.filter_notch_popup,'Enable','off');
         set(handles.filter_order_text,'Enable','off');
         set(handles.filter_order_popup,'Enable','off');
+        
+        set(handles.filter_lowpass_edit,'backgroundcolor',[1,1,1]);
+        set(handles.filter_highpass_edit,'backgroundcolor',[1,1,1]);
+        set(handles.filter_notch_popup,'backgroundcolor',[1,1,1]);
+        set(handles.filter_order_popup,'backgroundcolor',[1,1,1]);
     end
     function Init_range()
         %% x_range
@@ -283,6 +296,10 @@ GLW_view_OpeningFcn;
             end
             set(handles.index_popup,'value',1);
         end
+        set(handles.x1_edit,'backgroundcolor',[1,1,1]);
+        set(handles.x2_edit,'backgroundcolor',[1,1,1]);
+        set(handles.x_scale_edit,'backgroundcolor',[1,1,1]);
+        set(handles.y_scale_edit,'backgroundcolor',[1,1,1]);
     end
     function Init_ax_fig()
         %% ax_fig
@@ -303,6 +320,8 @@ GLW_view_OpeningFcn;
     function Init_ax_slider()
         handles.ax_slide=axes();
         Set_position(handles.ax_slide,[165,45,930,30]);
+        handles.rect_bg_slide=rectangle('position',[userdata.t(1),-5,userdata.t(end),10],...
+            'EdgeColor',0.94*[1,1,1],'facecolor',0.94*[1,1,1],'Parent',handles.ax_slide);
         handles.line_slide=line(userdata.t([1,end]),[0,0],'linewidth',4,...
             'color',[0.7,0.7,0.7],'Parent',handles.ax_slide);
         handles.rect_slide=rectangle('position',[userdata.t(1),-1,userdata.x_range,2],...
@@ -336,7 +355,8 @@ GLW_view_OpeningFcn;
         handles.category_listbox=uicontrol(handles.panel_right_down,...
             'style','listbox','Min',1,'Max',3,...
             'string',events.code,'value',events.code_sel);
-        Set_position(handles.category_listbox,[0,0,200,170]);
+        Set_position(handles.category_listbox,[0,0,200,167]);
+        set(handles.category_listbox,'backgroundcolor',[1,1,1]);
         
         handles.category_checkbox=uicontrol(handles.panel_right_down,...
             'style','checkbox','String','All',...
@@ -383,6 +403,7 @@ GLW_view_OpeningFcn;
             'HorizontalAlignment','left','String','Prefix:');
         handles.events_prefix_edt=uicontrol(handles.panel_right_up,'style','edit',...
             'String','ep_edit','HorizontalAlignment','left');
+        set(handles.events_prefix_edt,'backgroundcolor',[1,1,1]);
         handles.events_recovery_btn=uicontrol(handles.panel_right_up,...
             'style','pushbutton','CData',icon.icon_open_path,...
             'tooltipstring','recovery the events');
@@ -434,13 +455,18 @@ GLW_view_OpeningFcn;
         set(handles.y_auto_checkbox,        'callback',@Y_auto_callback);
         set(handles.index_popup,            'Callback',@GLW_view_UpdataFcn);
         
+        set(handles.rect_bg_slide,'buttonDownFcn',@Slider_BtnDown);
         set(handles.line_slide,'buttonDownFcn',@Slider_BtnDown);
         set(handles.rect_slide,'buttonDownFcn',@Slider_BtnDown);
         set(handles.line_event_slide,'buttonDownFcn',@Slider_BtnDown);
         set(handles.fig,'WindowButtonUpFcn',@Slider_BtnUp);
         
         %% right panel
-        set(handles.panel_right_up,         'SizeChangedFcn',@Panel_right_SizeChangedFcn);
+        if verLessThan('matlab','8.4')
+            set(handles.panel_right_up,         'ResizeFcn',@Panel_right_SizeChangedFcn);
+        else
+            set(handles.panel_right_up,         'SizeChangedFcn',@Panel_right_SizeChangedFcn);
+        end
         set(handles.event_table,            'CellSelectionCallback',@Event_table_Selected);
         set(handles.event_table,            'CellEditCallback',@Event_table_Edited);
         set(handles.events_lock_btn,        'Callback',@Events_lock_btn_callback);
@@ -1197,7 +1223,6 @@ GLW_view_OpeningFcn;
             c3=[temp(1)+5,temp(2)-c1(4)/2+(temp_range(k)/userdata.y_range/10+0.5)*temp(4),c1(3),c1(4)-2];
             set(handles.linetext(k),'Position',c3);
         end
-        
         
         set(handles.panel_right_up,'Units','pixels');
         temp=get(handles.panel_right_up,'position');

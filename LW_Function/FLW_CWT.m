@@ -19,24 +19,28 @@ classdef FLW_CWT<CLW_generic
                 'string','Mother wavelet short name:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
             obj.h_wavelet_name=uicontrol('style','edit','string','cmor1-1.5',...
+                'backgroundcolor',[1,1,1],...
                 'position',[180,423,100,20],'parent',obj.h_panel);
             
             uicontrol('style','text','position',[30,390,140,20],...
                 'string','Lower frequency:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
             obj.h_low_frequency=uicontrol('style','edit','string','1',...
+                'backgroundcolor',[1,1,1],...
                 'position',[180,393,100,20],'parent',obj.h_panel);
             
             uicontrol('style','text','position',[30,360,140,20],...
                 'string','Higher frequency:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
             obj.h_high_frequency=uicontrol('style','edit','string','30',...
+                'backgroundcolor',[1,1,1],...
                 'position',[180,363,100,20],'parent',obj.h_panel);
             
             uicontrol('style','text','position',[30,330,140,20],...
                 'string','Number of lines:','HorizontalAlignment','right',...
                 'parent',obj.h_panel);
             obj.h_num_frequency_lines=uicontrol('style','edit','string','100',...
+                'backgroundcolor',[1,1,1],...
                 'position',[180,333,100,20],'parent',obj.h_panel);
             
             
@@ -46,6 +50,7 @@ classdef FLW_CWT<CLW_generic
             obj.h_output_pop=uicontrol('style','popupmenu',...
                 'String',{'amplitude','power','phase angle','real part',...
                 'imagery part','complex'},'value',1,...
+                'backgroundcolor',[1,1,1],...
                 'position',[180,303,100,20],'parent',obj.h_panel);
             
             
@@ -165,20 +170,20 @@ classdef FLW_CWT<CLW_generic
             scales=(central_freq/header.xstep)./frequencies;
             
             data=zeros(header.datasize);
-            if option.show_progress==1
+            if option.show_progress
                 fig=figure('numbertitle','off','name','ANOVA progress',...
                     'MenuBar','none','DockControls','off');
                 pos=get(fig,'position');
                 pos(3:4)=[400,100];
                 set(fig,'position',pos);
                 hold on;
-                run_slider=rectangle('Position',[0 0 0 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
+                run_slider=rectangle('Position',[0 0 eps 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
                 rectangle('Position',[0 0 1 1]);
                 xlim([0,1]);
                 ylim([-1,2]);
                 axis off;
                 h_text=text(1,-0.5,'starting...','HorizontalAlignment','right','Fontsize',12,'FontWeight','bold');
-                pause(0.001);
+                drawnow;
                 tic;
                 t1=toc;
             end
@@ -200,10 +205,10 @@ classdef FLW_CWT<CLW_generic
                 end
             end
             
-            if option.show_progress==1 && ishandle(fig)
+            if option.show_progress && ishandle(fig)
                 set(run_slider,'Position',[0 0 1 1]);
                 set(h_text,'string','finished and saving.');
-                pause(0.001);
+                drawnow;
             end
             
             switch option.output
@@ -224,7 +229,7 @@ classdef FLW_CWT<CLW_generic
             if option.is_save
                 CLW_save(lwdata_out);
             end
-            if option.show_progress==1 && ishandle(fig)
+            if option.show_progress && ishandle(fig)
                 close(fig);
             end
         end

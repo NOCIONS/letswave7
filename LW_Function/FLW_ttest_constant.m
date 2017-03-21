@@ -15,12 +15,14 @@ classdef FLW_ttest_constant<CLW_permutation
                 'parent',obj.h_panel);
             obj.h_tail_pop=uicontrol('style','popupmenu','value',1,...
                 'String',{'two-tailed test','left-tailed test','right-tailed test'},...
+                'backgroundcolor',1*[1,1,1],...
                 'position',[35,465,200,30],'parent',obj.h_panel);
             
             uicontrol('style','text','position',[35,435,200,20],...
                 'string','Compare to constant','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_constant_edit=uicontrol('style','edit','String','0',...
+                'backgroundcolor',1*[1,1,1],...
                 'position',[35,415,200,25],'parent',obj.h_panel);
         end
         
@@ -107,7 +109,6 @@ classdef FLW_ttest_constant<CLW_permutation
             header=FLW_ttest_constant.get_header(lwdata_in.header,option);
             
             
-            h_line=-1;
             if option.multiple_sensor
                 chan_used=find([header.chanlocs.topo_enabled]==1, 1);
                 if isempty(chan_used)
@@ -123,6 +124,24 @@ classdef FLW_ttest_constant<CLW_permutation
                 option.num_permutations=2^(size(lwdata_in.data,1)-1);
             end
             
+            if option.show_progress==1
+                fig=figure('numbertitle','off','name','ANOVA progress',...
+                    'MenuBar','none','DockControls','off');
+                pos=get(fig,'position');
+                pos(3:4)=[400,100];
+                set(fig,'position',pos);
+                hold on;
+                run_slider=rectangle('Position',[0 0 0.001 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
+                rectangle('Position',[0 0 1 1]);
+                xlim([0,1]);
+                ylim([-1,2]);
+                axis off;
+                h_text=text(1,-0.5,'starting...','HorizontalAlignment','right','Fontsize',12,'FontWeight','bold');
+                pause(0.001);
+                tic;
+                t1=toc;
+            end
+            
             data=zeros(header.datasize);
             for z_idx=1:header.datasize(4)
                 if option.multiple_sensor==0
@@ -132,7 +151,6 @@ classdef FLW_ttest_constant<CLW_permutation
                         data(:,ch_idx,1,z_idx,:,:)=P;
                         data(:,ch_idx,2,z_idx,:,:)=STATS.tstat;
                         
-                        curve=[];
                         if option.permutation==1
                             if sum(P(:)<=option.alpha)==0
                                 data(:,ch_idx,3,z_idx,:,:)=1;
@@ -170,24 +188,14 @@ classdef FLW_ttest_constant<CLW_permutation
                                             CLW_max_cluster(tstat.*(tstat>=t_threshold));
                                 end
                                 cluster_distribute(iter)=max_tstat;
-                                
-                                
-                                if option.show_progress
-                                    criticals=prctile(cluster_distribute(1,1:iter),(1-option.cluster_threshold)*100);
-                                    curve=[curve,reshape(criticals,[],1)];
-                                    if ~ishandle(h_line)
-                                        figure();
-                                        h_line=plot(1:iter,curve);
-                                        xlim([1,option.num_permutations]);
-                                    else
-                                        set(h_line,'XData',1:iter,'YData',curve);
-                                        str=['channel: ',num2str(ch_idx),'/',num2str(header.datasize(2))];
-                                        if header.datasize(4)>1
-                                            str=[str,' z:',num2str(z_idx),'/',num2str(header.datasize(4))];
-                                        end
-                                        title(get(h_line,'parent'),str);
-                                    end
-                                    drawnow;
+                                t=toc;
+                                if option.show_progress && ishandle(fig) && t-t1>0.2
+                                    t1=t;
+                                    N=(iter+(ch_idx-1+(z_idx-1)*header.datasize(2))*option.num_permutations);
+                                    N=N/option.num_permutations/header.datasize(2)/header.datasize(4);
+                                    set(run_slider,'Position',[0 0 N 1]);
+                                    set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
+                                    drawnow ;
                                 end
                             end
                             
@@ -236,7 +244,6 @@ classdef FLW_ttest_constant<CLW_permutation
                         data(:,:,4,z_idx,:,:)=0;
                         continue;
                     end
-                    curve=[];
                     if strcmp(option.tails,'both')
                         t_threshold = abs(tinv(option.alpha/2,size(data_tmp,1)-1));
                     else
@@ -290,24 +297,13 @@ classdef FLW_ttest_constant<CLW_permutation
 %                             colormap(lines);
 %                             x=colormap;x(1,:)=[1,1,1];colormap(x);
 %                         end
-                        
-                        
-                        
-                        
-                        if option.show_progress
-                            criticals=prctile(cluster_distribute(1,1:iter),(1-option.cluster_threshold)*100);
-                            curve=[curve,reshape(criticals,[],1)];
-                            if ~ishandle(h_line)
-                                figure();
-                                h_line=plot(1:iter,curve);
-                                xlim([1,option.num_permutations]);
-                            else
-                                set(h_line,'XData',1:iter,'YData',curve);
-                                if header.datasize(4)>1
-                                    str=[' z:',num2str(z_idx),'/',num2str(header.datasize(4))];
-                                    title(get(h_line,'parent'),str);
-                                end
-                            end
+                       t=toc;
+                        if option.show_progress && ishandle(fig) && t-t1>0.2
+                            t1=t;
+                            N=(iter+(z_idx-1)*option.num_permutations);
+                            N=N/option.num_permutations/header.datasize(4);
+                            set(run_slider,'Position',[0 0 N 1]);
+                            set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
                             drawnow;
                         end
                     end
@@ -352,16 +348,19 @@ classdef FLW_ttest_constant<CLW_permutation
                     data(:,:,4,z_idx,:,:)=(data_tmp<1).*data(:,:,2,z_idx,:,:);
                 end
             end
+            if option.show_progress==1 && ishandle(fig)
+                set(run_slider,'Position',[0 0 1 1]);
+                set(h_text,'string','finished and saving.');
+                drawnow;
+            end
             
             lwdata_out.header=header;
             lwdata_out.data=data;
             if option.is_save
                 CLW_save(lwdata_out);
             end
-            if option.permutation && option.show_progress
-                if ishandle(h_line)
-                    close(get(get(h_line,'parent'),'parent'));
-                end
+            if option.permutation && option.show_progress  && ishandle(fig)
+                close(fig);
             end
         end
         

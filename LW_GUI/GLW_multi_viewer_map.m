@@ -50,7 +50,7 @@ GLW_view_OpeningFcn;
         userdata.num_rows=1;
         userdata.num_cols=1;
         userdata.mouse_state=0;
-        userdata.color_style='parula';
+        userdata.color_style='jet';
         S=load('GLW_multi_viewer_wave.mat');
         userdata.POS=S.userdata.POS;
         userdata.TRI=S.userdata.TRI;
@@ -223,10 +223,18 @@ GLW_view_OpeningFcn;
         handles.caxis_auto_checkbox=uicontrol(handles.axis_panel,...
             'style','checkbox','String','full range','Value',userdata.auto_y);
         Set_position(handles.caxis_auto_checkbox,[65,52,100,20]);
-        handles.caxis_style_popup=uicontrol(handles.axis_panel,...
-            'style','popup','String',{'parula','jet','hsv','hot','cool',...
-            'spring','summer','autumn','winter','gray','bone','copper',...
-            'pink'},'Value',1);
+        
+        if verLessThan('matlab','8.4')
+            handles.caxis_style_popup=uicontrol(handles.axis_panel,...
+                'style','popup','String',{'jet','hsv','hot','cool',...
+                'spring','summer','autumn','winter','gray','bone','copper',...
+                'pink'},'Value',1);
+        else
+            handles.caxis_style_popup=uicontrol(handles.axis_panel,...
+                'style','popup','String',{'parula','jet','hsv','hot','cool',...
+                'spring','summer','autumn','winter','gray','bone','copper',...
+                'pink'},'Value',1);
+        end
         Set_position(handles.caxis_style_popup,[3,5,140,20]);
         
         handles.cursor_panel=uipanel(handles.panel_edit,'Title','Cursor');
@@ -288,6 +296,7 @@ GLW_view_OpeningFcn;
         set(handles.interval2_edit_x,'backgroundcolor',[1,1,1]);
         set(handles.interval1_edit_y,'backgroundcolor',[1,1,1]);
         set(handles.interval2_edit_y,'backgroundcolor',[1,1,1]);
+        set(handles.caxis_style_popup,'backgroundcolor',[1,1,1]);
     end
 
     function Fig2_init()

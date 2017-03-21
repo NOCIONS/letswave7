@@ -150,6 +150,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
                 'multiple_sensor','chan_dist','suffix','is_save'},...
                 varargin);
             header=FLW_ANOVA_permutation.get_header(lwdataset_in,option);
+            
             chan_used=find([header.chanlocs.topo_enabled]==1, 1);
             if isempty(chan_used)
                 temp=CLW_elec_autoload(header);
@@ -188,7 +189,6 @@ classdef FLW_ANOVA_permutation<CLW_permutation
                 end
             end
             
-            
             if option.show_progress==1
                 fig=figure('numbertitle','off','name','ANOVA progress',...
                     'MenuBar','none','DockControls','off');
@@ -196,7 +196,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
                 pos(3:4)=[400,100];
                 set(fig,'position',pos);
                 hold on;
-                run_slider=rectangle('Position',[0 0 0.001 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
+                run_slider=rectangle('Position',[0 0 eps 1],'FaceColor',[255,71,38]/255,'LineStyle','none');
                 rectangle('Position',[0 0 1 1]);
                 xlim([0,1]);
                 ylim([-1,2]);
@@ -205,8 +205,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
                 pause(0.001);
                 tic;
                 t1=toc;
-            end
-                    
+            end    
                     
             data=zeros(header.datasize([3,2,4,1,5,6]));
             for z_idx=1:header.datasize(4)
