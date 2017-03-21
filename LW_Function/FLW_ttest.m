@@ -244,7 +244,7 @@ classdef FLW_ttest<CLW_permutation
             end
             
             if option.show_progress==1
-                fig=figure('numbertitle','off','name','ANOVA progress',...
+                fig=figure('numbertitle','off','name','ttest progress',...
                     'MenuBar','none','DockControls','off');
                 pos=get(fig,'position');
                 pos(3:4)=[400,100];

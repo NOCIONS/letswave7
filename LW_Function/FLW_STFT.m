@@ -193,7 +193,7 @@ classdef FLW_STFT<CLW_generic
             data=zeros(header.datasize);
             
             if option.show_progress==1
-                fig=figure('numbertitle','off','name','ANOVA progress',...
+                fig=figure('numbertitle','off','name','STFT progress',...
                     'MenuBar','none','DockControls','off');
                 pos=get(fig,'position');
                 pos(3:4)=[400,100];

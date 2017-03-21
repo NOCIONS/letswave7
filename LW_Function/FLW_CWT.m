@@ -171,7 +171,7 @@ classdef FLW_CWT<CLW_generic
             
             data=zeros(header.datasize);
             if option.show_progress
-                fig=figure('numbertitle','off','name','ANOVA progress',...
+                fig=figure('numbertitle','off','name','CWT progress',...
                     'MenuBar','none','DockControls','off');
                 pos=get(fig,'position');
                 pos(3:4)=[400,100];
