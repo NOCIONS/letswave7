@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_ANOVA_permutation';
+FLW_name='FLW_spatial_filter_assign';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

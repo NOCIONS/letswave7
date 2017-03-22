@@ -68,6 +68,10 @@ PathName=handles.file_path;
         set(handles.suffix_selected_listbox,'max',2,'min',0);
         set(handles.suffix_baned_listbox,'max',2,'min',0);
         set(handles.file_listbox,'max',2,'min',0);
+        set(handles.path_edit,'BackgroundColor',[1,1,1]);
+        set(handles.suffix_selected_listbox,'BackgroundColor',[1,1,1]);
+        set(handles.suffix_baned_listbox,'BackgroundColor',[1,1,1]);
+        set(handles.file_listbox,'BackgroundColor',[1,1,1]);
         
         try
             set(get(handles.fig,'children'),'units','normalized');            

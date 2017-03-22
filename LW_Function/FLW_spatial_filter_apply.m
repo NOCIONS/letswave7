@@ -1,4 +1,4 @@
-classdef FLW_run_ICA<CLW_generic
+classdef FLW_spatial_filter_assign<CLW_generic
     properties
         % set the type of the FLW class
         % 0 for load (only input);
@@ -8,83 +8,28 @@ classdef FLW_run_ICA<CLW_generic
         % 4 for the function with Nin-Mout, like math_multiple, t-test
         FLW_TYPE=1;
         %properties
-        h_algorithm;
-        h_buttongroup;
-        h_r1;
-        h_r2;
-        h_r3;
-        h_r2_text;
-        h_r2_num_ICs;
-        h_r3_text1;
-        h_r3_method;
-        h_r3_text2;
-        h_r3_percentage;
+        h_filepath;
     end
     
     methods
         % the constructor of this class
-        function obj = FLW_run_ICA(batch_handle)
+        function obj = FLW_spatial_filter_assign(batch_handle)
             %call the constructor of the superclass
             %CLW_generic(tabgp,fun_name,suffix_name,help_str)
-            obj@CLW_generic(batch_handle,'ICA','ica',...
+            obj@CLW_generic(batch_handle,'assign filter','assign',...
                 ['Compute an Independent Component Analysis (ICA) separatly',...
                 ' for each dataset.The ICA decomposition can be performed',... 
                 ' using the RUNICA algorithm (as implemented in EEGLAB),',...
                 ' or using the JADER algorithm. The mixing and unmixing',...
                 ' matrices are stored in the history of dataset header.']);
             uicontrol('style','text','position',[35,480,150,20],...
-                'string','algorithm :',...
+                'string','select the file for the spatial filter:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_algorithm=uicontrol('style','popupmenu',...
-                'String',{'runica','jader'},'value',1,...
-                'position',[35,460,100,20],'parent',obj.h_panel);
-            uicontrol('style','text','position',[35,430,150,20],...
-                'string','number of components:',...
-                'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_buttongroup=uibuttongroup('units','pixels','userdata',1,...
-                'position',[40,405,360,24],'parent',obj.h_panel);
-            obj.h_r1=uicontrol(obj.h_buttongroup,'style','radiobutton','userdata',1,...
-                'String','All components','position',[1,1,120,20],'handleVisibility','off');
-            obj.h_r2=uicontrol(obj.h_buttongroup,'style','radiobutton','userdata',2,...
-                'String','decide by user','position',[123,1,120,20],'handleVisibility','off');
-            obj.h_r3=uicontrol(obj.h_buttongroup,'style','radiobutton','userdata',3,...
-                'String','decide by PICA','position',[246,1,100,20],'handleVisibility','off');
-            set(obj.h_buttongroup,'SelectionChangeFcn',@obj.bselection);
-            %set(obj.h_buttongroup,'SelectionChangedFcn',@obj.bselection);
-            
-            obj.h_r2_text=uicontrol('style','text','position',[35,350,150,20],...
-                'string','Components Numbers:',...
-                'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_r2_num_ICs=uicontrol('style','edit',...
-                'String','','position',[80,331,250,20],'parent',obj.h_panel);
-            
-            obj.h_r3_text1=uicontrol('style','text','position',[35,350,150,20],...
-                'string','Criterion for PICA estimate:',...
-                'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_r3_method=uicontrol('style','popupmenu',...
-                'String',{'Laplacian Estimate (LAP)',...
-                'Bayesian Information Criterion (BIC)',...
-                'Rajan & Rayner (RRN)',...
-                ' Akaike information criterion (AIC)',...
-                'minimum description length (MDL)'},...
-                'value',1,'position',[76,330,260,20],'parent',obj.h_panel);
-            
-            obj.h_r3_text2=uicontrol('style','text','position',[35,300,180,20],...
+            obj.h_file=uicontrol('style','edit','position',[35,300,180,20],...
+                'string','','HorizontalAlignment','left','parent',obj.h_panel);
+            uicontrol('style','pushbutton','position',[35,300,180,20],...
                 'string','Percentage of PICA estimate:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_r3_percentage=uicontrol('style','edit',...
-                'String','100','position',[80,280,250,20],'parent',obj.h_panel);
-            
-            set(obj.h_r2_text,'visible','off');
-            set(obj.h_r2_num_ICs,'visible','off');
-            set(obj.h_r3_text1,'visible','off');
-            set(obj.h_r3_method,'visible','off');
-            set(obj.h_r3_text2,'visible','off');
-            set(obj.h_r3_percentage,'visible','off');
-            set(obj.h_algorithm,'backgroundcolor',[1,1,1]);
-            set(obj.h_r2_num_ICs,'backgroundcolor',[1,1,1]);
-            set(obj.h_r3_method,'backgroundcolor',[1,1,1]);
-            set(obj.h_r3_percentage,'backgroundcolor',[1,1,1]);
         end
         
         function bselection(obj,~,callbackdata)
@@ -217,7 +162,7 @@ classdef FLW_run_ICA<CLW_generic
         function GUI_update(obj,batch_pre)
             obj.lwdataset=batch_pre.lwdataset;
             if isempty(get(obj.h_r2_num_ICs,'string'))
-                set(obj.h_r2_num_ICs,'string',num2str(obj.lwdataset(1).header.datasize(2)));
+                set(obj.h_r2_num_ICs,'string',obj.lwdataset(1).header.datasize(2));
             end
             obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
@@ -232,8 +177,6 @@ classdef FLW_run_ICA<CLW_generic
                 header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
-            option.unmix_matrix=eye(header_in.datasize(2),header_in.datasize(2));
-            option.mix_matrix=eye(header_in.datasize(2),header_in.datasize(2));
             header_out.history(end+1).option=option;
         end
         
