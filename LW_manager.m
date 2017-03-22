@@ -9,6 +9,12 @@ Manager_Init();
         % create figure
         handles.fig=figure('Position',[100 50 500 670],'color',0.94*[1,1,1],...
             'name','Letswave7--Manager','NumberTitle','off','userdata',0);
+        scrsz = get(0,'ScreenSize');
+        pos=get(handles.fig,'Position');
+        if pos(2)+pos(4)>scrsz(4)-60
+            pos(2)=scrsz(4)-60-pos(4);
+        end
+        set(handles.fig,'Position',pos);
         %% init menu
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
@@ -73,7 +79,7 @@ Manager_Init();
         uimenu(hcmenu,'Label','delete','Callback',{@(obj,events)menu_callback('GLW_delete')});
         uimenu(hcmenu,'Label','send to workspace','Callback',{@(obj,events)sendworkspace_btn_Callback});
         uimenu(hcmenu,'Label','read from workspace','Callback',{@(obj,events)readworkspace_btn_Callback});
-        %% init the controller
+       %% init the controller
         
         icon=load('icon.mat');
         %refresh button
@@ -134,9 +140,13 @@ Manager_Init();
         handles.tip_text=uicontrol('style','text','string','tips:',...
             'position',[2,-1,490,19],'HorizontalAlignment','left');
         %change units to 'normalized'
-        try
-            set(get(handles.fig,'children'),'units','normalized');
+        st=get(handles.fig,'children');
+        for k=1:length(st)
+            try
+                set(st(k),'units','normalized');
+            end
         end
+        
         %set path to pwd
         set(handles.path_edit,'String',pwd);
         set(handles.path_edit,'Userdata',pwd);

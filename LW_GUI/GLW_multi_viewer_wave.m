@@ -497,6 +497,13 @@ GLW_my_view_OpeningFcn;
             set(handles.fig1,'resizefcn',@fig1_SizeChangedFcn);
             set(handles.fig2,'resizefcn',@fig2_SizeChangedFcn);
         end
+        
+        scrsz = get(0,'ScreenSize');
+        pos=get(handles.fig1,'Position');
+        if pos(2)+pos(4)>scrsz(4)-60
+            pos(2)=scrsz(4)-60-pos(4);
+        end
+        set(handles.fig1,'Position',pos);
         set(handles.fig1,'Visible','on');
     end
 

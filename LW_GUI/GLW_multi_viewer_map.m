@@ -21,13 +21,14 @@ GLW_view_OpeningFcn;
             set(handles.fig1,'resizefcn',@Fig1_SizeChangedFcn);
             set(handles.fig2,'resizefcn',@Fig2_SizeChangedFcn);
         end
+        
         set(handles.fig1,'Visible','on');
     end
 
     function Init_parameter()
         temp=get(0,'Screensize');
-        userdata.fig1_pos=[(temp(3)-1350)/2,(temp(4)-680)/2-50,1350,680];
-        userdata.fig2_pos=[(temp(3)-1350)/2+465,(temp(4)-680)/2-50,900,680];
+        userdata.fig1_pos=[(temp(3)-1350)/2,(temp(4)-680)/2-20,1350,680];
+        userdata.fig2_pos=[(temp(3)-1350)/2+465,(temp(4)-680)/2-20,900,680];
         userdata.auto_x=1;
         userdata.auto_y=1;
         userdata.lock_cursor=0;

@@ -24,7 +24,7 @@ GLW_view_OpeningFcn;
     end
     function Init_parameter()
         temp=get(0,'Screensize');
-        userdata.fig_pos=[(temp(3)-1350)/2,(temp(4)-680)/2-50,1350,680];
+        userdata.fig_pos=[(temp(3)-1350)/2,(temp(4)-680)/2,1350,680];
         userdata.yscale_lock=1;
         userdata.is_filter=0;
         userdata.is_filter_low=1;
