@@ -162,10 +162,13 @@ classdef FLW_import_mat
            set(obj.h_dimension2_pop, 'backgroundcolor',[1,1,1]);
            set(obj.h_dimension3_pop, 'backgroundcolor',[1,1,1]);
            set(obj.h_dimension4_pop, 'backgroundcolor',[1,1,1]);
-            try
-                set(get(obj.h_fig,'children'),'units','normalized');
-            end
-            
+           st=get(handles.fig,'children');
+           for k=1:length(st)
+               try
+                   set(st(k),'units','normalized');
+               end
+           end
+           
         end
         
         function obj=load(obj,varargin)

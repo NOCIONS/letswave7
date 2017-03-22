@@ -68,7 +68,10 @@ classdef FLW_load<CLW_generic
         function dataset_Add(obj,varargin)
             [FileName,PathName] = GLW_getfile({obj.virtual_filelist.filename});
             if(PathName~=0)
-                filename=fullfile(PathName,FileName);
+                filename=cell(1,length(FileName));
+                for k=1:length(FileName)
+                filename{k}=fullfile(PathName,FileName{k});
+                end
                 obj.add_file(filename);
             end
         end

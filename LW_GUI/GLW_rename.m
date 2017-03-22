@@ -54,8 +54,11 @@ uiwait(handles.fig);
             'position',[415,60,370,430]);
         handles.OK_btn=uicontrol('style','pushbutton','string','Done','HorizontalAlignment','left',...
             'position',[5,5,790,50]);
-        try
-            set(get(handles.fig,'children'),'units','normalized');
+        st=get(handles.fig,'children');
+        for k=1:length(st)
+            try
+                set(st(k),'units','normalized');
+            end
         end
         set(handles.keyword1,'Callback',{@(obj,events)update_handles()});
         set(handles.keyword2,'Callback',{@(obj,events)update_handles()});

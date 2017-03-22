@@ -72,9 +72,11 @@ PathName=handles.file_path;
         set(handles.suffix_selected_listbox,'BackgroundColor',[1,1,1]);
         set(handles.suffix_baned_listbox,'BackgroundColor',[1,1,1]);
         set(handles.file_listbox,'BackgroundColor',[1,1,1]);
-        
-        try
-            set(get(handles.fig,'children'),'units','normalized');            
+        st=get(handles.fig,'children');
+        for k=1:length(st)
+            try
+                set(st(k),'units','normalized');
+            end
         end
         set(handles.path_edit,'String',pwd);
         set(handles.path_edit,'Userdata',pwd);

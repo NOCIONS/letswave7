@@ -77,7 +77,7 @@ for k=1:length(file_str)
         if ispc
             str=['rename "',fullfile(p,[filename_pre,'.mat']),...
                 '" "',fullfile(p,[filename_post,'.mat']),'"'];
-            if dos(str);
+            if dos(str)
                 try
                     movefile(fullfile(p,[filename_pre,'.mat']),fullfile(p,[filename_post,'.mat']));
                 end
