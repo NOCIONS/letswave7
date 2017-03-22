@@ -23,30 +23,36 @@ classdef FLW_spatial_filter_assign<CLW_generic
             uicontrol('style','text','position',[35,430,200,20],...
                 'string','load the data set the mix/unmix matrix:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_file_edit=uicontrol('style','edit','position',[35,400,250,25],...
-                'string','','HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_sele_btn=uicontrol('style','pushbutton','position',[305,400,80,25],...
+            obj.h_file_edit=uicontrol('style','edit','position',[35,370,250,55],...
+                'Max',3,'string','','userdata','',...
+                'HorizontalAlignment','left','parent',obj.h_panel);
+            obj.h_sele_btn=uicontrol('style','pushbutton','position',[305,370,80,55],...
                 'string','select','parent',obj.h_panel);
-            
             set(obj.h_sele_btn,'Callback',@obj.btn_selection);
         end
         
-        
-        function bselection(obj)
-            
+        function btn_selection(obj,varargin)
+            [FileName,PathName] = GLW_getfile({obj.virtual_filelist.filename});
+            if(PathName~=0)
+                filename=fullfile(PathName,FileName{1});
+                set(obj.h_file_edit,'string',FileName{1});
+                set(obj.h_file_edit,'userdata',filename);
+            end
         end
         
         
         %get the parameters setting from the GUI
         function option=get_option(obj)
             option=get_option@CLW_generic(obj);
-            option.source=get(obj.h_file_edit,'string');
+            option.source=get(obj.h_file_edit,'userdata');
         end
         
         %set the GUI via the parameters setting
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            set(obj.h_file_edit,'string',option.source);
+            [~,n]=fileparts(option.source);
+            set(obj.h_file_edit,'string',n);
+            set(obj.h_file_edit,'userdata',option.source);
         end
         
         function str=get_Script(obj)
@@ -57,12 +63,48 @@ classdef FLW_spatial_filter_assign<CLW_generic
             %%%
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
+        
+        function GUI_update(obj,batch_pre)
+            GUI_update@CLW_generic(obj,batch_pre);
+            st=get(obj.h_file_edit,'userdata');
+            [p,n]=fileparts(st);
+            if isempty(p)
+                p=pwd;
+            end
+            file_index=strcmp(n,{obj.virtual_filelist.filename});
+            if sum(file_index)==0
+                if ~exist(st,'file')
+                    set(obj.h_file_edit,'string','');
+                    set(obj.h_file_edit,'userdata','');
+                end
+            end
+        end
+        
+        function header_update(obj,batch_pre)
+            header_update@CLW_generic(obj,batch_pre);
+            st=get(obj.h_file_edit,'userdata');
+            [p,n]=fileparts(st);
+            if isempty(p)
+                p=pwd;
+            end
+            file_index=strcmp(n,{obj.virtual_filelist.filename});
+            if sum(file_index)==0
+                if ~exist(st,'file')
+                    error('***No files are selected.***')
+                end
+            end
+        end
     end
     
     methods (Static = true)
         function header_out= get_header(header_in,option)
             header_out=header_in;
-            source_header=option.source;
+            header_source=CLW_load_header(option.source);
+            [option.unmix_matrix,option.mix_matrix]=...
+                CLW_get_mix_unmix_matrix(header_source);
+            if isempty(option.unmix_matrix) && isempty(option.mix_matrix)
+                error('***No unmix/mix matrix is loaded.***');
+            end
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end
@@ -76,43 +118,7 @@ classdef FLW_spatial_filter_assign<CLW_generic
             option.source='';
             option.is_save=0;
             option=CLW_check_input(option,{'source','suffix','is_save'},varargin);
-            inheader=lwdata_in.header;
-            header=FLW_run_ICA.get_header(inheader,option);
-            data=permute(lwdata_in.data(:,:,1,1,1,:),[2,6,1,3,4,5]);
-            if option.ICA_mode==3
-                dimprob=pca_dim(data(:,:));
-                switch option.criterion_PICA
-                    case 'LAP'
-                        [~,num_ICs]=max(dimprob.lap);
-                    case 'BIC'
-                        [~,num_ICs]=max(dimprob.bic);
-                    case 'RRN'
-                        [~,num_ICs]=max(dimprob.rrn);
-                    case 'AIC'
-                        [~,num_ICs]=max(dimprob.aic);
-                    case 'MDL'
-                        [~,num_ICs]=max(dimprob.mdl);
-                end
-                num_ICs=round(num_ICs*(option.percentage_PICA/100));
-            end
-            switch option.algorithm
-                case 1
-                    if option.ICA_mode==1
-                        [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:));
-                    else
-                        [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:),'pca',num_ICs);
-                    end
-                    ica_um=ica.weights*ica.sphere;
-                case 2
-                    if option.ICA_mode==1
-                        ica_um=jader(data(:,:));
-                    else
-                        ica_um=jader(data(:,:),num_ICs);
-                    end
-            end
-            header.history(end).option.unmix_matrix=ica_um;
-            header.history(end).option.mix_matrix=pinv(ica_um);
-            lwdata_out.header=header;
+            lwdata_out.header=FLW_spatial_filter_assign.get_header(lwdata_in.header,option);
             lwdata_out.data=lwdata_in.data;
             if option.is_save
                 CLW_save(lwdata_out);

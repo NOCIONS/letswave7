@@ -1,4 +1,4 @@
-classdef FLW_run_ICA<CLW_generic
+classdef FLW_compute_ICA<CLW_generic
     properties
         % set the type of the FLW class
         % 0 for load (only input);
@@ -23,7 +23,7 @@ classdef FLW_run_ICA<CLW_generic
     
     methods
         % the constructor of this class
-        function obj = FLW_run_ICA(batch_handle)
+        function obj = FLW_compute_ICA(batch_handle)
             %call the constructor of the superclass
             %CLW_generic(tabgp,fun_name,suffix_name,help_str)
             obj@CLW_generic(batch_handle,'ICA','ica',...
@@ -232,6 +232,7 @@ classdef FLW_run_ICA<CLW_generic
                 header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
+            
             option.unmix_matrix=eye(header_in.datasize(2),header_in.datasize(2));
             option.mix_matrix=eye(header_in.datasize(2),header_in.datasize(2));
             header_out.history(end+1).option=option;
@@ -249,7 +250,7 @@ classdef FLW_run_ICA<CLW_generic
             option=CLW_check_input(option,{'ICA_mode','algorithm','num_ICs',...
                 'percentage_PICA','criterion_PICA','suffix','is_save'},varargin);
             inheader=lwdata_in.header;
-            header=FLW_run_ICA.get_header(inheader,option);
+            header=FLW_compute_ICA.get_header(inheader,option);
             data=permute(lwdata_in.data(:,:,1,1,1,:),[2,6,1,3,4,5]);
             if option.ICA_mode==3
                 dimprob=pca_dim(data(:,:));

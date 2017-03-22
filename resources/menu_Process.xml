@@ -17,12 +17,14 @@
         <submenu Label="Frequency Spectrum baseline correction" callback="FLW_baseline_SNR"/>
     </menu>
     <menu Label="Spatial filters (ICA/PCA)">
-        <submenu Label="run ICA" callback="FLW_run_ICA"/>
+        <submenu Label="------Compute spatial filter------"/>
+        <submenu Label="Compute ICA" callback="FLW_compute_ICA"/>
         <submenu Label="Compute ICA matrix (merged)" />
         <submenu Label="Compute PCA matrix"/>
         <submenu Label="Compute PCA matrix (merged)"/>
-        <submenu Label="Assign ICA or PCA matrix" />
-        <submenu Label="Apply ICA or PCA spatial filter"/>
+        <submenu Label="------Compute spatial filter------"/>
+        <submenu Label="Apply ICA/PCA spatial filter"/>
+        <submenu Label="Assign ICA/PCA matrix"  callback="FLW_spatial_filter_assign"/>
         <submenu Label="ICA/PCA unmix signal (sensors->ICs/PCs)"/>
         <submenu Label="ICA/PCA remix signal (ICs/PCs->sensors)"/>
     </menu>
