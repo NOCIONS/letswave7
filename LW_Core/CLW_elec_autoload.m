@@ -1,5 +1,5 @@
 function header=CLW_elec_autoload(header)
-if isempty(header.chanlocs);
+if isempty(header.chanlocs)
     return;
 end
 load('mat_chanlocs.mat');
@@ -9,9 +9,9 @@ chanloc_labels={chanlocs.labels};
 channel_labels={header.chanlocs.labels};
 header_chanlocs=header.chanlocs;
 
-for chanpos=1:length(channel_labels);
+for chanpos=1:length(channel_labels)
     a=find(strcmpi(channel_labels{chanpos},chanloc_labels)==1);
-    if isempty(a);
+    if isempty(a)
     else
         header_chanlocs(chanpos).theta=chanlocs(a).theta;
         header_chanlocs(chanpos).radius=chanlocs(a).radius;

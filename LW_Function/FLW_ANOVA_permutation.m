@@ -64,13 +64,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
             frag_code=[frag_code,'''',option.factor_name,''''];
             frag_code=[frag_code,','];
             frag_code=[frag_code,get_Script@CLW_permutation(obj)];
-            
-            temp='option=struct(';
-            temp=[temp,frag_code];
-            temp=[temp,'''suffix'',''',option.suffix,''','];
-            temp=[temp,'''is_save'',',num2str(option.is_save)];
-            temp=[temp,');'];
-            str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdataset,option);']}];
+            str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
         function header_update(obj,batch_pre)
@@ -341,7 +335,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
                 CLW_save(lwdata_out);
             end
             
-            if option.permutation && option.show_progress  && ishandle(fig)
+            if option.show_progress  && ishandle(fig)
                 close(fig);
             end
         end

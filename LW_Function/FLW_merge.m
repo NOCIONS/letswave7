@@ -55,12 +55,7 @@ classdef FLW_merge<CLW_generic
             option=get_option(obj);
             frag_code=[];
             frag_code=[frag_code,'''type'',''',option.type,''','];
-            temp='option=struct(';
-            temp=[temp,frag_code];
-            temp=[temp,'''suffix'',''',option.suffix,''','];
-            temp=[temp,'''is_save'',',num2str(option.is_save)];
-            temp=[temp,');'];
-            str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdataset,option);']}];
+            str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
         function header_update(obj,batch_pre)

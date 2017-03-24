@@ -111,13 +111,7 @@ classdef FLW_ttest<CLW_permutation
             frag_code=[frag_code,'''ref_dataset'',',...
                 num2str(option.ref_dataset),','];
             frag_code=[frag_code,get_Script@CLW_permutation(obj)];
-            
-            temp='option=struct(';
-            temp=[temp,frag_code];
-            temp=[temp,'''suffix'',''',option.suffix,''','];
-            temp=[temp,'''is_save'',',num2str(option.is_save)];
-            temp=[temp,');'];
-            str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdataset,option);']}];
+            str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
         function header_update(obj,batch_pre)
@@ -456,7 +450,7 @@ classdef FLW_ttest<CLW_permutation
                 end
             end
             
-            if option.show_progress==1 && ishandle(fig)
+            if option.show_progress && ishandle(fig)
                 set(run_slider,'Position',[0 0 1 1]);
                 set(h_text,'string','finished and saving.');
                 drawnow;
@@ -467,7 +461,7 @@ classdef FLW_ttest<CLW_permutation
             if option.is_save
                 CLW_save(lwdata_out);
             end
-            if option.permutation && option.show_progress  && ishandle(fig)
+            if option.show_progress  && ishandle(fig)
                 close(fig);
             end
         end

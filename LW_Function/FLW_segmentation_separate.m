@@ -78,13 +78,7 @@ classdef FLW_segmentation_separate<CLW_generic
             frag_code=[frag_code,'}},'];
             frag_code=[frag_code,'''x_start'',',num2str(option.x_start),','];
             frag_code=[frag_code,'''x_duration'',',num2str(option.x_duration),','];
-            
-            temp='option=struct(';
-            temp=[temp,frag_code];
-            temp=[temp,'''suffix'',''',option.suffix,''','];
-            temp=[temp,'''is_save'',',num2str(option.is_save)];
-            temp=[temp,');'];
-            str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdata,option);']}];
+            str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
         function GUI_update(obj,batch_pre)

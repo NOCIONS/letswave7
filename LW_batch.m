@@ -104,28 +104,28 @@ h_fig=handle.fig;
         %path_btn
         handle.path_btn=uicontrol('style','pushbutton','CData',icon.icon_open_path,...
             'position',[493,578,25,25],'Callback',{@(obj,events)path_btn_Callback()});
-      
-       %% initialize run panel
+        
+        %% initialize run panel
         handle.run_panel=uipanel(handle.fig,'units','pixels','backgroundcolor',0.94*[1,1,1],...
             'position',[99,1,421,570],'BorderType','etchedin','visible','off');
         handle.run_txt=uicontrol(handle.run_panel,'style','text',...
-           'units','normalized','backgroundcolor',0.94*[1,1,1],...
+            'units','normalized','backgroundcolor',0.94*[1,1,1],...
             'position',[0,0,1,0.99],'string','check each step     .',...
             'HorizontalAlignment','right','fontweight','bold');
         handle.run_ax=uicontrol(handle.run_panel,'style','text',...
-           'units','normalized','backgroundcolor',0*[1,1,1],...
+            'units','normalized','backgroundcolor',0*[1,1,1],...
             'position',[0.02,0.93,0.94,0.03],'string','');
         set(handle.run_ax,'units','pixels');
         pos=get(handle.run_ax,'position');
         pos=pos+[1,1,-2,-2];
         handle.run_frame=uicontrol(handle.run_panel,'style','text',...
-           'units','pixels','backgroundcolor',0.94*[1,1,1],...
+            'units','pixels','backgroundcolor',0.94*[1,1,1],...
             'position',pos,'string','');
         set(handle.run_ax,'units','normalized');
         set(handle.run_frame,'units','normalized');
         pos=get(handle.run_frame,'position');
         handle.run_slider=uicontrol(handle.run_panel,'style','text',...
-           'units','normalized','backgroundcolor',[255,71,38]/255,...
+            'units','normalized','backgroundcolor',[255,71,38]/255,...
             'position',pos,'string','');
         handle.run_edit=uicontrol('parent',handle.run_panel,'min',0,'max',2,...
             'style','listbox','value',[],'position',[10,50,395,470],...
@@ -133,7 +133,7 @@ h_fig=handle.fig;
         handle.run_close_btn=uicontrol('parent',handle.run_panel,...
             'string','close','style','pushbutton','position',[5,5,405,40],...
             'callback',@close_script);
-       
+        
         %% initialize tab panel
         handle.tab_panel=uipanel(handle.fig,'BorderType','none',...
             'units','pixels','position',[1,45,100,528]);
@@ -166,12 +166,12 @@ h_fig=handle.fig;
         else
             handle.is_close=0;
         end
-      
-%         add_function('FLW_selection');
-%         batch{1}.add_file(fullfile(pwd,'data_1'));
-%         %batch{1}.add_file(fullfile(pwd,'chan-select data_1'));
-%         handle.tab_idx=2;
-%         tab_updated(2);
+        
+        %         add_function('FLW_selection');
+        %         batch{1}.add_file(fullfile(pwd,'data_1'));
+        %         %batch{1}.add_file(fullfile(pwd,'chan-select data_1'));
+        %         handle.tab_idx=2;
+        %         tab_updated(2);
     end
 
     function path_edit_Callback()
@@ -320,7 +320,9 @@ h_fig=handle.fig;
         option=[];
         lwdata=[];
         lwdataset=[];
-        str={};
+        str_N=36;
+        str=cell(str_N,1);
+        str_index=0;
         try
             [batch_idx,script_idx,script]=get_script();
             n=length(batch_idx);
@@ -333,14 +335,14 @@ h_fig=handle.fig;
                 color=get(batch{batch_idx(k)}.h_tab,'foregroundcolor');
                 html_pre=['<html><font color=rgb(',num2str(ceil(color(1)*255)),',',num2str(ceil(color(2)*255)),',',num2str(ceil(color(3)*255)),')>'];
                 html_post=['</font></html>'];
-                str = [str,{[html_pre,'step: ',num2str(k),'/',num2str(n),html_post]},...
-                    {[html_pre,script{script_idx(k)},html_post]},...
-                    {[html_pre,script{script_idx(k)+1},html_post]}];
-                set(handle.run_edit,'string',str);
-                ListboxTop=get(handle.run_edit,'ListboxTop');
-                set(handle.run_edit,'ListboxTop',ceil(min(ListboxTop+2,length(str))));
-                drawnow;
-                set(handle.run_edit,'ListboxTop',ceil(min(ListboxTop+3,length(str))));
+                
+                str{mod(str_index,str_N)+1}=[html_pre,'step: ',num2str(k),'/',num2str(n),html_post];
+                str_index=str_index+1;
+                str{mod(str_index,str_N)+1}=[html_pre,script{script_idx(k)},html_post];
+                str_index=str_index+1;
+                str{mod(str_index,str_N)+1}=[html_pre,script{script_idx(k)+1},html_post];
+                str_index=str_index+1;
+                set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
                 drawnow;
                 tab_updated(batch_idx(k));
                 if strcmp( class(batch{batch_idx(k)}),'FLW_load')
@@ -359,20 +361,36 @@ h_fig=handle.fig;
                             if idx(k)==1
                                 continue;
                             end
-                            str = [str,{[html_pre,T(1:idx(k)-1),html_post]}];
+                            str{mod(str_index,str_N)+1}=[html_pre,T(1:idx(k)-1),html_post];
+                            str_index=str_index+1;
                         else
                             if idx(k-1)==idx(k)
                                 continue;
                             end
-                            str = [str,{[html_pre,T(idx(k-1)+1:idx(k)-1),html_post]}];
+                            str{mod(str_index,str_N)+1}=[html_pre,T(idx(k-1)+1:idx(k)-1),html_post];
+                            str_index=str_index+1;
                         end
-                        set(handle.run_edit,'string',str);
-                        ListboxTop=get(handle.run_edit,'ListboxTop');
-                        set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-                        drawnow;
-                        set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                        set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
                         drawnow;
                     end
+                end
+                
+                if strcmp(script{script_idx(k)+1},'lwdata= FLW_compute_ICA.get_lwdata(lwdata,option);')...
+                || strcmp(script{script_idx(k)+1},'lwdataset= FLW_compute_ICA_merged.get_lwdataset(lwdataset,option);')
+                    str{mod(str_index,str_N)+1}=[html_pre,'Runing ICA...',html_post];
+                    str_index=str_index+1;
+                    set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
+                    drawnow;
+                    tic;
+                    T=evalc(script{script_idx(k)+1});
+                    temp=toc;
+                    str{mod(str_index,str_N)+1}=[html_pre,'Done (',num2str(temp),' second has been consumed).',html_post];
+                    str_index=str_index+1;
+                    str{mod(str_index,str_N)+1}='';
+                    str_index=str_index+1;
+                    set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
+                    drawnow;
+                    continue;
                 end
                 T=evalc(script{script_idx(k)+1});
                 idx=find(T==sprintf('\n'));
@@ -381,24 +399,21 @@ h_fig=handle.fig;
                         if idx(k)==1
                             continue;
                         end
-                        str = [str,{[html_pre,T(1:idx(k)-1),html_post]}];
+                        str{mod(str_index,str_N)+1}=[html_pre,T(1:idx(k)-1),html_post];
+                        str_index=str_index+1;
                     else
                         if idx(k-1)==idx(k)
                             continue;
                         end
-                        str = [str,{[html_pre,T(idx(k-1)+1:idx(k)-1),html_post]}];
+                        str{mod(str_index,str_N)+1}=[html_pre,T(idx(k-1)+1:idx(k)-1),html_post];
+                        str_index=str_index+1;
                     end
-                    set(handle.run_edit,'string',str);
-                    ListboxTop=get(handle.run_edit,'ListboxTop');
-                    set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
-                    drawnow;
-                    set(handle.run_edit,'ListboxTop',min(ListboxTop+2,length(str)));
+                    set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
                     drawnow;
                 end
-                str = [str,{''}];
-                set(handle.run_edit,'string',str);
-                ListboxTop=get(handle.run_edit,'ListboxTop');
-                set(handle.run_edit,'ListboxTop',min(ListboxTop+1,length(str)));
+                str{mod(str_index,str_N)+1}='';
+                str_index=str_index+1;
+                set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
                 drawnow;
             end
             set(handle.run_txt,'string','finished.     .');
@@ -413,7 +428,31 @@ h_fig=handle.fig;
         catch exception
             msgString = getReport(exception);
             msgString = regexprep(msgString, '<.*?>', '');
-            str=[str,cellstr(msgString)];
+            idx=find(msgString==sprintf('\n'));
+            for k=1:length(idx)
+                if k==1
+                    if idx(k)==1
+                        continue;
+                    end
+                    str{mod(str_index,str_N)+1}=msgString(1:idx(k)-1);
+                    str_index=str_index+1;
+                else
+                    if idx(k-1)==idx(k)
+                        continue;
+                    end
+                    str{mod(str_index,str_N)+1}=msgString(idx(k-1)+1:idx(k)-1);
+                    str_index=str_index+1;
+                end
+            end
+            set(handle.run_edit,'string',str(mod((1:str_N)+str_index*(str_index>str_N)-1,str_N)+1));
+            drawnow;
+                    
+%             temp=cellstr(msgString);
+%             for k=1:length(temp)
+%                 str{mod(str_index,str_N)+1}=temp{k};
+%                 str_index=str_index+1;
+%             end
+            %str=[str,cellstr(msgString)];
             set(handle.run_edit,'String',str,'ForegroundColor','red');
             set(handle.run_slider,'backgroundcolor',[1,0,0]);
             set(handle.run_txt,'string','Error.     .');

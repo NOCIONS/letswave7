@@ -147,14 +147,7 @@ classdef FLW_ANOVA<CLW_generic
             
             frag_code=[frag_code,'''show_progress'',',...
                 num2str(option.show_progress),','];
-            %str=get_Script@CLW_generic(obj,frag_code,option);
-            
-            temp='option=struct(';
-            temp=[temp,frag_code];
-            temp=[temp,'''suffix'',''',option.suffix,''','];
-            temp=[temp,'''is_save'',',num2str(option.is_save)];
-            temp=[temp,');'];
-            str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdataset,option);']}];
+            str=get_Script@CLW_generic(obj,frag_code,option);
         end
    
         function GUI_update(obj,batch_pre)
@@ -312,7 +305,7 @@ classdef FLW_ANOVA<CLW_generic
             if option.is_save
                 CLW_save(lwdata_out);
             end
-            if option.show_progress==1 && ishandle(fig)
+            if option.show_progress && ishandle(fig)
                 close(fig);
             end
         end
