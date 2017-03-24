@@ -249,8 +249,8 @@ classdef FLW_compute_ICA<CLW_generic
             option.is_save=0;
             option=CLW_check_input(option,{'ICA_mode','algorithm','num_ICs',...
                 'percentage_PICA','criterion_PICA','suffix','is_save'},varargin);
-            inheader=lwdata_in.header;
-            header=FLW_compute_ICA.get_header(inheader,option);
+            header_in=lwdata_in.header;
+            header=FLW_compute_ICA.get_header(header_in,option);
             data=permute(lwdata_in.data(:,:,1,1,1,:),[2,6,1,3,4,5]);
             if option.ICA_mode==3
                 dimprob=pca_dim(data(:,:));

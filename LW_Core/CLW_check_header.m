@@ -40,6 +40,10 @@ if ~isfield(header,'index_labels')
     header.index_labels=tp;
 end
 
+if ~isfield(header,'epochdata')
+    header.epochdata=struct([]);
+end
+
 if ~isfield(header,'events')|| isempty(header.events)
     header.events=struct('code',{},'latency',{},'epoch',{});
 else
