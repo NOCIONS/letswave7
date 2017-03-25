@@ -315,6 +315,25 @@ Manager_Init();
             return;
         end
         
+        if strcmp(fun_name,'FLW_spatial_filter_apply')
+            %disp('bingo');
+            file_list=get_selectfile();
+            lwdataset_in=[];
+            for k=1:length(file_list.file_str)
+                lwdata=[];
+                [header,data]=CLW_load(fullfile(file_list.file_path,file_list.file_str{k}));
+                lwdataset_in(end+1).header=header;
+                lwdataset_in(end).data=data;
+            end
+            option.suffix='sp_filter';
+            option.is_save=1;
+            option.mode='manager';
+            
+            FLW_spatial_filter_apply.get_lwdataset(lwdataset_in,option);
+            update_handles();
+            return;
+        end
+        
         if ~isempty(strfind(fun_name,'FLW_export_'))
             %if fun_name is FLW_export
             %execute the function without any arguments

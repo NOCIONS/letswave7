@@ -29,7 +29,7 @@
         <submenu Label="ICA/PCA remix signal (ICs/PCs->sensors)"  callback="FLW_spatial_filter_remix"/>
     </menu>
     <menu Label="Artefact rejection and suppression">
-        <submenu Label="Suppress ocular artefacts (Graton and Coles)"/>
+        <submenu Label="Suppress ocular artefacts (Graton and Coles)" callback="FLW_ocular_remove"/>
         <submenu Label="Reject epochs (amplitude criterion)" callback="FLW_reject_epochs_amplitude"/>
         <submenu Label="Reject epochs (visual inspection)"/>
         <submenu Label="Suppress artefact (latency-defined)"/>

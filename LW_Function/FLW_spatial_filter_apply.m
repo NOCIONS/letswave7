@@ -18,6 +18,11 @@ classdef FLW_spatial_filter_apply<CLW_generic
                 'Using Interactive GUI to apply spatial filter by removing components manually.');
         end
         
+        function option=get_option(obj)
+            option=get_option@CLW_generic(obj);
+            option.mode='batch';
+        end
+        
         function str=get_Script(obj)
             option=get_option(obj);
             frag_code=[];
@@ -52,11 +57,14 @@ classdef FLW_spatial_filter_apply<CLW_generic
         function lwdataset_out= get_lwdataset(lwdataset_in,varargin)
             option.suffix='sp_filter';
             option.is_save=0;
+            option.mode='manager';
             option=CLW_check_input(option,{'suffix','is_save'},varargin);
             lwdataset_out = FLW_spatial_filter_apply.get_headerset(lwdataset_in,option);
             remove_idx=GLW_spatial_filter(lwdataset_in,lwdataset_out(1).header.history(end).option);
-            if isnan(remove_idx)
-                error('Spatial filter has been canceled!');
+            if isnan(remove_idx) 
+                if strcmp(option.mode,'batch')
+                    error('Spatial filter has been canceled!');
+                end
             else
                 remix_matrix=lwdataset_out(1).header.history(end).option.mix_matrix;
                 remix_matrix(:,remove_idx)=0;
@@ -67,10 +75,10 @@ classdef FLW_spatial_filter_apply<CLW_generic
                     data=reshape(matrix*data(:,:),[],size_temp(2),size_temp(3),size_temp(4),size_temp(5),size_temp(6));
                     lwdataset_out(k).data=ipermute(data,[2,1,3,4,5,6]);
                     lwdataset_out(k).header.history(end).option.remove_idx=remove_idx;
+                    if option.is_save
+                        CLW_save(lwdataset_out(k));
+                    end
                 end
-            end
-            if option.is_save
-                CLW_save(lwdataset_out(k));
             end
         end
     end

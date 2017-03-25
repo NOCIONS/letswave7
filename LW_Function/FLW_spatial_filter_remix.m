@@ -8,11 +8,13 @@ classdef FLW_spatial_filter_remix<CLW_generic
         function obj = FLW_spatial_filter_remix(batch_handle)
             obj@CLW_generic(batch_handle,'remix','sp_mm',...
                 'Unmix original signals into a set of components. This requires a dataset with an associated ICA/PCA unmix matrix.');
-            uicontrol('style','text','position',[35,520,200,20],...
+            
+            obj.h_comp_list=uicontrol('style','listbox','min',0,'max',2,...
+                'position',[110,140,140,360],'parent',obj.h_panel); 
+            uicontrol('style','text','position',[105,500,200,20],...
                 'string','Select the component to remove:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            obj.h_comp_list=uicontrol('style','listbox','min',0,'max',2,...
-                'position',[35,150,150,350],'parent',obj.h_panel);
+            set(obj.h_comp_list,'backgroundcolor',[1,1,1]);
         end
         
         function option=get_option(obj)
@@ -22,7 +24,7 @@ classdef FLW_spatial_filter_remix<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            set(obj.h_reference_list,'value',option.remove_idx);
+            set(obj.h_comp_list,'value',option.remove_idx);
         end
         
         function str=get_Script(obj)

@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_spatial_filter_assign';
+FLW_name='FLW_ocular_remove';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)
