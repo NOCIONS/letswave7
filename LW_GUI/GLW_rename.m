@@ -27,7 +27,8 @@ set(handles.fig,'WindowStyle','modal');
 uiwait(handles.fig);
 
     function GLW_rename_Init()
-        handles.fig=figure('Position',[100 50 800 600],'name','Rename','NumberTitle','off');
+        handles.fig=figure('Position',[100 50 800 600],'name','Rename',...
+            'NumberTitle','off','Color',0.94*[1,1,1]);
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
         uicontrol('style','text','string','From:','HorizontalAlignment','left',...
@@ -63,6 +64,12 @@ uiwait(handles.fig);
         set(handles.keyword1,'Callback',{@(obj,events)update_handles()});
         set(handles.keyword2,'Callback',{@(obj,events)update_handles()});
         set(handles.OK_btn,'Callback',{@(obj,events)OK_btn_Callback()});
+        
+        
+        set(handles.keyword1,'backgroundcolor',[1,1,1]);
+        set(handles.keyword2,'backgroundcolor',[1,1,1]);
+        set(handles.filename1,'backgroundcolor',[1,1,1]);
+        set(handles.filename2,'backgroundcolor',[1,1,1]);
     end
 
     function OK_btn_Callback()

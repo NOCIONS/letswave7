@@ -1904,13 +1904,14 @@ GLW_my_view_OpeningFcn;
 
 %% edit_dataset_Add
     function edit_dataset_Add(~, ~)
-        [FileName,PathName] = uigetfile({'*.lw6','Select the lw6 file'},'MultiSelect','on');
+        [FileName,PathName] = GLW_getfile();
+        %[FileName,PathName] = uigetfile({'*.lw6','Select the lw6 file'},'MultiSelect','on');
         userdata.datasets_path=PathName;
         if PathName~=0;
             FileName=cellstr(FileName);
             for k=1:length(FileName)
                 userdata.datasets_filename{end+1}=FileName{k}(1:end-4);
-                [datasets_header(end+1).header, datasets_data(end+1).data]=CLW_load([PathName,FileName{k}]);
+                [datasets_header(end+1).header, datasets_data(end+1).data]=CLW_load(fullfile(PathName,FileName{k}));
                 chan_used=find([datasets_header(end).header.chanlocs.topo_enabled]==1, 1);
                 if isempty(chan_used)
                     datasets_header(end).header=CLW_elec_autoload(datasets_header(end).header);

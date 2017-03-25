@@ -352,7 +352,9 @@ h_fig=handle.fig;
                 end
                 T=evalc(script{script_idx(k)});
                 if ~isempty(handle.h_parent)
-                    set(handle.h_parent,'userdata',1);
+                    try
+                        set(handle.h_parent,'userdata',1);
+                    end
                 end
                 if ~isempty(T)
                     idx=find(T==sprintf('\n'));
@@ -419,7 +421,9 @@ h_fig=handle.fig;
             set(handle.run_txt,'string','finished.     .');
             set(handle.run_slider,'backgroundcolor',[0,1,0]);
             if ~isempty(handle.h_parent)
-                set(handle.h_parent,'userdata',1);
+                try
+                    set(handle.h_parent,'userdata',1);
+                end
             end
             pause(0.5);
             if(handle.is_close)

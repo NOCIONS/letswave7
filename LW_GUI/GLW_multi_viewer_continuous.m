@@ -624,7 +624,7 @@ GLW_view_OpeningFcn;
         else
             legend(handles.ax_fig,handles.line_event(1:length(events.code_sel)),...
                 events.code(events.code_sel),'location','northeast',...
-                'ButtonDownFcn',{});
+                'Interpreter','none','ButtonDownFcn',{});
         end
     end
     function GLW_event_slider_UpdataFcn(~,~)

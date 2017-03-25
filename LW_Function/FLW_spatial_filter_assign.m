@@ -29,6 +29,7 @@ classdef FLW_spatial_filter_assign<CLW_generic
             obj.h_sele_btn=uicontrol('style','pushbutton','position',[305,370,80,55],...
                 'string','select','parent',obj.h_panel);
             set(obj.h_sele_btn,'Callback',@obj.btn_selection);
+            set(obj.h_file_edit,'background',[1,1,1]);
         end
         
         function btn_selection(obj,varargin)
