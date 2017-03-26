@@ -468,8 +468,9 @@ Manager_Init();
         %
         is_filter=get(handles.isfilter_checkbox,'value');
         if is_filter==1
-            set(handles.suffix_include_listbox,'string',suffix);
             [~,selected_idx]=intersect(suffix,selected_str,'stable');
+            set(handles.suffix_include_listbox,'value',[]);
+            set(handles.suffix_include_listbox,'string',suffix);
             set(handles.suffix_include_listbox,'value',selected_idx);
             
             if isempty(selected_idx)
@@ -487,12 +488,13 @@ Manager_Init();
                 set(handles.file_listbox,'String',{});
                 set(handles.file_listbox,'userdata',{});
                 set(handles.file_listbox,'value',[]);
-                set(handles.suffix_exclude_listbox,'String',{});
                 set(handles.suffix_exclude_listbox,'value',[]);
+                set(handles.suffix_exclude_listbox,'String',{});
             else
                 suffix_baned=sort(unique([filelist_suffix{selected_file_index}]));
                 suffix_baned=setdiff(suffix_baned,suffix(selected_idx));
                 [~,baned_idx]=intersect(suffix_baned,baned_str,'stable');
+                set(handles.suffix_exclude_listbox,'value',[]);
                 set(handles.suffix_exclude_listbox,'String',suffix_baned);
                 set(handles.suffix_exclude_listbox,'value',baned_idx);
                 band_file_index=[];
@@ -502,15 +504,16 @@ Manager_Init();
                     end
                 end
                 [~,idx]=intersect(filelist(band_file_index),file_str,'stable');
+                set(handles.file_listbox,'value',[]);
                 set(handles.file_listbox,'String',filelist(band_file_index));
                 set(handles.file_listbox,'userdata',{filename{band_file_index}});
                 set(handles.file_listbox,'value',idx);
             end
         else
-            set(handles.suffix_include_listbox,'string',suffix);
             set(handles.suffix_include_listbox,'value',[]);
-            set(handles.suffix_exclude_listbox,'string',suffix);
+            set(handles.suffix_include_listbox,'string',suffix);
             set(handles.suffix_exclude_listbox,'value',[]);
+            set(handles.suffix_exclude_listbox,'string',suffix);
             set(handles.file_listbox,'string',filelist);
             set(handles.file_listbox,'userdata',filename);
             [~,idx]=intersect(filelist,file_str,'stable');

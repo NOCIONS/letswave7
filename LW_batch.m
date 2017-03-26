@@ -321,6 +321,9 @@ h_fig=handle.fig;
         lwdata=[];
         lwdataset=[];
         str_N=36;
+        if ispc
+            str_N=32;
+        end
         str=cell(str_N,1);
         str_index=0;
         try

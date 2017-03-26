@@ -3,10 +3,10 @@ header=obj.lwdataset(1).header;
 chan_used=find([header.chanlocs.topo_enabled]==1, 1);
 if isempty(chan_used)
     temp=CLW_elec_autoload(header);
+    header.chanlocs=temp.chanlocs;
     [y,x]= pol2cart(pi/180.*[temp.chanlocs.theta],[temp.chanlocs.radius]);
-else
-    [y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
 end
+[y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
 dist=squareform(pdist([x;y]'));
 d_max=max(max(dist));
 
