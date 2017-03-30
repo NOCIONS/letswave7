@@ -112,12 +112,15 @@ classdef FLW_ttest_constant<CLW_permutation
             if option.multiple_sensor
                 chan_used=find([header.chanlocs.topo_enabled]==1, 1);
                 if isempty(chan_used)
-                    temp=CLW_elec_autoload(header);
+                    temp=CLW_elec_autoload(header); 
+                    chan_used=find([temp.chanlocs.topo_enabled]==1);
                     [y,x]= pol2cart(pi/180.*[temp.chanlocs.theta],[temp.chanlocs.radius]);
                 else
                     [y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
                 end
-                dist=squareform(pdist([x;y]'))<option.chan_dist;
+                dist=zeros(length(header.chanlocs),length(header.chanlocs));
+                dist(chan_used,chan_used)=squareform(pdist([x;y]'))<option.chan_dist;
+                
             end
             
             if option.permutation && option.num_permutations>=2^(size(lwdata_in.data,1)-1)
