@@ -2,8 +2,9 @@ function CLW_figure_dist(obj)
 header=obj.lwdataset(1).header;
 chan_used=find([header.chanlocs.topo_enabled]==1, 1);
 if isempty(chan_used)
-    header=CLW_elec_autoload(header);
-end
+    temp=CLW_elec_autoload(header);
+    header.chanlocs=temp.chanlocs;
+end 
 [y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
 dist=squareform(pdist([x;y]'));
 d_max=max(max(dist));
