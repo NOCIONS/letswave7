@@ -45,6 +45,7 @@ classdef FLW_import_mat
         function obj=init_handles(obj)
             obj.h_fig=figure('name','Import mat variable',...
                 'NumberTitle','off','color',0.94*[1,1,1]);
+            set(obj.h_fig,'WindowStyle','modal');
             pos=get(obj.h_fig,'Position');
             pos(3:4)=[600 510];
             scrsz = get(0,'ScreenSize'); 
@@ -162,6 +163,7 @@ classdef FLW_import_mat
            set(obj.h_dimension2_pop, 'backgroundcolor',[1,1,1]);
            set(obj.h_dimension3_pop, 'backgroundcolor',[1,1,1]);
            set(obj.h_dimension4_pop, 'backgroundcolor',[1,1,1]);
+           
            st=get(handles.fig,'children');
            for k=1:length(st)
                try

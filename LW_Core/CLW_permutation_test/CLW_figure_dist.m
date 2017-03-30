@@ -2,16 +2,14 @@ function CLW_figure_dist(obj)
 header=obj.lwdataset(1).header;
 chan_used=find([header.chanlocs.topo_enabled]==1, 1);
 if isempty(chan_used)
-    temp=CLW_elec_autoload(header);
-    [y,x]= pol2cart(pi/180.*[temp.chanlocs.theta],[temp.chanlocs.radius]);
-else
-    [y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
+    header=CLW_elec_autoload(header);
 end
+[y,x]= pol2cart(pi/180.*[header.chanlocs.theta],[header.chanlocs.radius]);
 dist=squareform(pdist([x;y]'));
 d_max=max(max(dist));
 
 f=figure('Resize','off','color',0.94*[1,1,1]);
-%set(f,'WindowStyle','modal')
+set(f,'WindowStyle','modal')
 p=get(f,'position');
 p([3,4])=[560 420];
 set(f,'position',p);
@@ -87,7 +85,7 @@ draw();
         axis off;
         hold on;
         idx=find([header.chanlocs.topo_enabled]==1);
-        for k=1:N
+        for k=1:length(idx)
             text(x(k),y(k),header.chanlocs(idx(k)).labels);
         end
         line_x=[];
