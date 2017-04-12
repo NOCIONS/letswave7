@@ -173,11 +173,11 @@ classdef FLW_selection<CLW_generic
             set_option@CLW_generic(obj,option);
             switch option.type
                 case 'epoch'
-                    set(obj.h_merge_items_pop,'value',1);
+                    set(obj.h_selection_items_pop,'value',1);
                 case 'channel'
-                    set(obj.h_merge_items_pop,'value',2);
+                    set(obj.h_selection_items_pop,'value',2);
                 case 'index'
-                    set(obj.h_merge_items_pop,'value',3);
+                    set(obj.h_selection_items_pop,'value',3);
             end
             get(set(obj.h_new_list,'String',option.items));
         end

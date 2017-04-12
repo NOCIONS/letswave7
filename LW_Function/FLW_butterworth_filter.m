@@ -85,12 +85,12 @@ classdef FLW_butterworth_filter<CLW_generic
             switch(option.filter_type)
                 case 'lowpass'
                     set(obj.h_filtertype_pop,'value',1);
-                    set(obj.h_low_cutoff_edt,'string',num2str(option.low_cutoff));
+                    set(obj.h_high_cutoff_edt,'string',num2str(option.high_cutoff));
                     set(obj.h_low_cutoff_txt,'visible','off');
                     set(obj.h_low_cutoff_edt,'visible','off');
                 case 'highpass'
                     set(obj.h_filtertype_pop,'value',2);
-                    set(obj.h_high_cutoff_edt,'string',num2str(option.high_cutoff));
+                    set(obj.h_low_cutoff_edt,'string',num2str(option.low_cutoff));
                     set(obj.h_high_cutoff_txt,'visible','off');
                     set(obj.h_high_cutoff_edt,'visible','off');
                 case 'bandpass'

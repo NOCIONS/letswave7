@@ -7,6 +7,9 @@ Manager_Init();
 
     function Manager_Init()
         % create figure
+        load('version.mat');
+        handles.version=lw_version;
+        handles.version_checkked=0;
         handles.fig=figure('Position',[100 50 500 670],'color',0.94*[1,1,1],...
             'name','Letswave7--Manager','NumberTitle','off','userdata',0);
         scrsz = get(0,'ScreenSize');
@@ -404,9 +407,20 @@ Manager_Init();
         is_update=get(handles.fig,'userdata');
 %         clc;disp(datetime('now'));
 %         disp(is_update);
-        if is_update==1
+        if is_update
             update_handles();
             set(handles.fig,'userdata',0);
+        end
+        
+        if ~handles.version_checkked
+            check_version();
+        end
+    end
+
+    function check_version()
+        if verLessThan('matlab','8.4')
+            data = webread('http://letswave.cn/version.html');
+        else
         end
     end
 
