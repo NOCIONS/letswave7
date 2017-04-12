@@ -7,9 +7,7 @@ Manager_Init();
 
     function Manager_Init()
         % create figure
-        load('version.mat');
-        handles.version=lw_version;
-        handles.version_checkked=0;
+        handles.version_checkked=-3;
         handles.fig=figure('Position',[100 50 500 670],'color',0.94*[1,1,1],...
             'name','Letswave7--Manager','NumberTitle','off','userdata',0);
         scrsz = get(0,'ScreenSize');
@@ -412,15 +410,24 @@ Manager_Init();
             set(handles.fig,'userdata',0);
         end
         
-        if ~handles.version_checkked
+        if handles.version_checkked<=0
             check_version();
         end
     end
 
     function check_version()
-        if verLessThan('matlab','8.4')
-            data = webread('http://letswave.cn/version.html');
-        else
+        url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
+        try
+            lw_version = str2num(urlread(url,'Timeout',0.5));
+            handles.version_checkked=1;
+            temp=load('version.txt');
+            if temp<lw_version
+                set(handles.tip_text,'string','tips: there is new version of letswave, please update it');
+            else
+                set(handles.tip_text,'string','tips: the currest version of letswave is the latest.');
+            end
+        catch
+            handles.version_checkked=handles.version_checkked+1;
         end
     end
 
