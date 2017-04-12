@@ -12,6 +12,6 @@
         </menu>
         <menu Label="Delete dataset(s)" callback="GLW_delete"/>
         <menu Label="Rename dataset" callback="GLW_rename"/>       
-        <menu Label="Check for updates"/>
+        <menu Label="Update" callback="GLW_update"/>
         <menu Label="Help"/>
     </LW_Manager>

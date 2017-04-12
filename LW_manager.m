@@ -403,8 +403,6 @@ Manager_Init();
     function on_Timer()
         %executes on timer event
         is_update=get(handles.fig,'userdata');
-%         clc;disp(datetime('now'));
-%         disp(is_update);
         if is_update
             update_handles();
             set(handles.fig,'userdata',0);
@@ -422,11 +420,11 @@ Manager_Init();
             handles.version_checkked=1;
             temp=load('version.txt');
             if temp<lw_version
-                set(handles.tip_text,'string','tips: there is new version of letswave, please update it');
+                set(handles.tip_text,'string','tips: There is new version of Letswave, please update Letswave');
             else
-                set(handles.tip_text,'string','tips: the currest version of letswave is the latest.');
+                set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
             end
-        catch
+        catch 
             handles.version_checkked=handles.version_checkked+1;
         end
     end
