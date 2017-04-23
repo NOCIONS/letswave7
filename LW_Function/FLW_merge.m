@@ -12,7 +12,7 @@ classdef FLW_merge<CLW_generic
                 'string','Merge Items:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_merge_items_pop=uicontrol('style','popupmenu',...
-                'String',{'epoch','channel','index'},'backgroundcolor',[1,1,1],...
+                'String',{'epoch','channel','index','X','Y'},'backgroundcolor',[1,1,1],...
                 'callback',@obj.item_Changed,'position',[35,440,150,30],...
                 'parent',obj.h_panel);
         end
@@ -28,6 +28,10 @@ classdef FLW_merge<CLW_generic
                         set(obj.h_suffix_edit,'string','merge_channel');
                     case 3
                         set(obj.h_suffix_edit,'string','merge_index');
+                    case 4
+                        set(obj.h_suffix_edit,'string','merge_X');
+                    case 5
+                        set(obj.h_suffix_edit,'string','merge_Y');
                 end
             end
         end
@@ -48,6 +52,10 @@ classdef FLW_merge<CLW_generic
                     set(obj.h_merge_items_pop,'value',2);
                 case 'merge_index'
                     set(obj.h_merge_items_pop,'value',3);
+                case 'merge_X'
+                    set(obj.h_merge_items_pop,'value',4);
+                case 'merge_Y'
+                    set(obj.h_merge_items_pop,'value',5);
             end
         end
         
@@ -82,6 +90,10 @@ classdef FLW_merge<CLW_generic
                     header_out = FLW_merge.get_header_channel(lwdataset_in);
                 case 'index'
                     header_out = FLW_merge.get_header_index(lwdataset_in);
+                case 'X'
+                    header_out = FLW_merge.get_header_X(lwdataset_in);
+                case 'Y'
+                    header_out = FLW_merge.get_header_Y(lwdataset_in);
             end
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
@@ -94,7 +106,7 @@ classdef FLW_merge<CLW_generic
             %% check the files
             header_out=lwdataset_in(1).header;
             for dataset_pos=2:length(lwdataset_in)
-                if ~(header_out.datasize(2:6)==lwdataset_in(dataset_pos).header.datasize(2:6));
+                if ~(header_out.datasize(2:6)==lwdataset_in(dataset_pos).header.datasize(2:6))
                     error('***Datasets cannot be merged as their sizes do not match. ***');
                 end
             end
@@ -102,7 +114,7 @@ classdef FLW_merge<CLW_generic
             for dataset_pos=2:length(lwdataset_in)
                 if ~isempty(lwdataset_in(dataset_pos).header.events)
                     events=lwdataset_in(dataset_pos).header.events;
-                    for i=1:length(events);
+                    for i=1:length(events)
                         events(i).epoch=events(i).epoch+num_epochs;
                     end
                     header_out.events=[header_out.events,events];
@@ -116,7 +128,7 @@ classdef FLW_merge<CLW_generic
             %% check the files
             header_out=lwdataset_in(1).header;
             for dataset_pos=2:length(lwdataset_in)
-                if ~(header_out.datasize([1,3:6])==lwdataset_in(dataset_pos).header.datasize([1,3:6]));
+                if ~(header_out.datasize([1,3:6])==lwdataset_in(dataset_pos).header.datasize([1,3:6]))
                     error('***Datasets cannot be merged as their sizes do not match. ***');
                 end
             end
@@ -140,7 +152,7 @@ classdef FLW_merge<CLW_generic
             %% check the files
             header_out=lwdataset_in(1).header;
             for dataset_pos=2:length(lwdataset_in)
-                if ~(header_out.datasize([1:2,4:6])==lwdataset_in(dataset_pos).header.datasize([1:2,4:6]));
+                if ~(header_out.datasize([1:2,4:6])==lwdataset_in(dataset_pos).header.datasize([1:2,4:6]))
                     error('***Datasets cannot be merged as their sizes do not match. ***');
                 end
             end
@@ -151,6 +163,47 @@ classdef FLW_merge<CLW_generic
             header_out=CLW_events_duplicate_check(header_out);
             header_out.datasize(3)=length(header_out.index_labels);
         end
+        
+        function header_out= get_header_X(lwdataset_in)
+            %% check the files
+            header_out=lwdataset_in(1).header;
+            for dataset_pos=2:length(lwdataset_in)
+                if ~(header_out.datasize([1:5])==lwdataset_in(dataset_pos).header.datasize([1:5]))
+                    error('***Datasets cannot be merged as their sizes do not match. ***');
+                end
+            end
+            data_length=header_out.datasize(6);
+            for dataset_pos=2:length(lwdataset_in)
+                t=header_out.xstart+data_length*header_out.xstep-lwdataset_in(dataset_pos).header.xstart;
+                events=lwdataset_in(dataset_pos).header.events;
+                for k=1:length(events)
+                    events(k).latency=events(k).latency+t;
+                end
+                header_out.events=[header_out.events  events];
+                data_length=data_length+lwdataset_in(dataset_pos).header.datasize(6);
+            end
+            header_out=CLW_events_duplicate_check(header_out);
+            header_out.datasize(6)=data_length;
+        end
+        
+        function header_out= get_header_Y(lwdataset_in)
+            %% check the files
+            header_out=lwdataset_in(1).header;
+            for dataset_pos=2:length(lwdataset_in)
+                if ~(header_out.datasize([1:4,6])==lwdataset_in(dataset_pos).header.datasize([1:4,6]))
+                    error('***Datasets cannot be merged as their sizes do not match. ***');
+                end
+            end
+            data_length=header_out.datasize(5);
+            for dataset_pos=2:length(lwdataset_in)
+                events=lwdataset_in(dataset_pos).header.events;
+                header_out.events=[header_out.events  events];
+                data_length=data_length+lwdataset_in(dataset_pos).header.datasize(5);
+            end
+            header_out=CLW_events_duplicate_check(header_out);
+            header_out.datasize(5)=data_length;
+        end
+        
         
         function lwdata_out=get_lwdata(lwdataset_in,varargin)
             option.suffix='merge_epoch';
@@ -172,6 +225,14 @@ classdef FLW_merge<CLW_generic
                 case 'index'
                     for dataset_pos=2:length(lwdataset_in)
                         data=cat(3,data,lwdataset_in(dataset_pos).data);
+                    end
+                case 'X'
+                    for dataset_pos=2:length(lwdataset_in)
+                        data=cat(6,data,lwdataset_in(dataset_pos).data);
+                    end
+                case 'Y'
+                    for dataset_pos=2:length(lwdataset_in)
+                        data=cat(5,data,lwdataset_in(dataset_pos).data);
                     end
             end
             lwdata_out.header=header;

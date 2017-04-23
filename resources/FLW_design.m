@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_ocular_remove';
+FLW_name='FLW_interpolate_channel';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

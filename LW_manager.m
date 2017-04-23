@@ -80,7 +80,7 @@ Manager_Init();
         uimenu(hcmenu,'Label','delete','Callback',{@(obj,events)menu_callback('GLW_delete')});
         uimenu(hcmenu,'Label','send to workspace','Callback',{@(obj,events)sendworkspace_btn_Callback});
         uimenu(hcmenu,'Label','read from workspace','Callback',{@(obj,events)readworkspace_btn_Callback});
-       %% init the controller
+        %% init the controller
         
         icon=load('icon.mat');
         %refresh button
@@ -164,6 +164,7 @@ Manager_Init();
         %update_handles
         update_handles();
         %% init timer
+        pause(0.01);
         handles.timer = timer('BusyMode','drop','ExecutionMode','fixedRate','TimerFcn',{@(obj,events)on_Timer()});
         start(handles.timer);
         set(handles.fig,'handlevisibility','off');
@@ -308,11 +309,22 @@ Manager_Init();
     function menu_callback(fun_name)
         %executes on menu_callback
         %fun_name = name of function associated with menu callback
+        if strcmp(fun_name,'GLW_update')
+            if GLW_update()
+                fig_Close();
+                letswave7;
+            end
+            return;
+        end
+        if strcmp(fun_name,'GLW_help')
+            web('http://letswave.cn/all_docs.html','-browser');
+            return;
+        end
+        
         if ~isempty(strfind(fun_name,'FLW_import_'))
             %if fun_name is  FLW_import
             %execute the function with handles.fig
             eval([fun_name,'(handles.fig);']);
-%             update_handles();
             return;
         end
         

@@ -5,7 +5,7 @@
         <submenu Label="Edit electrode labels"/>
         <submenu Label="Flip left/right electrodes"/>
         <submenu Label="Electrode bridge detector"/>
-        <submenu Label="Interpolate channel using neighbouring electrodes"/>
+        <submenu Label="Interpolate channel using neighbouring electrodes" callback="FLW_interpolate_channel"/>
     </menu>
     <menu Label="Events">
         <submenu Label="Browse and edit events"/>

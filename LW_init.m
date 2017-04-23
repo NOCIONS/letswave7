@@ -5,7 +5,7 @@ str=which('letswave7');
 p=fileparts(str);
 
 str=path;
-idx=find(str==';');
+idx=find(str==pathsep);
 str_rm=[];
 for k=1:length(idx)
     if k==1
@@ -13,9 +13,15 @@ for k=1:length(idx)
     else
         str_idx=str(idx(k-1)+1:idx(k)-1);
     end
-    if ~isempty(strfind(str_idx,'letswave7'))||...
-            ~isempty(strfind(str_idx,'letswave6'))
-        str_rm=[str_rm,pathsep,str_idx];
+    str_temp=lower(str_idx);
+    if ~isempty(strfind(str_temp,'letswave'))||...
+            ~isempty(strfind(str_temp,'eeglab'))||...
+            ~isempty(strfind(str_temp,'fieldtrip'))
+        if isempty(str_rm)
+            str_rm=str_idx;
+        else
+            str_rm=[str_rm,pathsep,str_idx];
+        end
     end
 end
 if ~isempty(str_rm)
