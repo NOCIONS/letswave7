@@ -316,13 +316,10 @@ Manager_Init();
             end
             return;
         end
-<<<<<<< HEAD
         if strcmp(fun_name,'GLW_help')
             web('http://letswave.cn/all_docs.html','-browser');
             return;
         end
-=======
->>>>>>> origin/master
         
         if ~isempty(strfind(fun_name,'FLW_import_'))
             %if fun_name is  FLW_import
