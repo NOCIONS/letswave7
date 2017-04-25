@@ -99,11 +99,11 @@ classdef FLW_interpolate_channel<CLW_generic
             frag_code=[];
             
             frag_code=[frag_code,'''channel_to_interpolate'',''',...
-                option.channel_to_interpolate,''','];
+                strrep(option.channel_to_interpolate,'''',''''''),''','];
             
             frag_code=[frag_code,'''channels_for_interpolation_list'',{{'];
             for k=1:length(option.channels_for_interpolation_list)
-                frag_code=[frag_code,'''',option.channels_for_interpolation_list{k},''''];
+                frag_code=[frag_code,'''',strrep(option.channels_for_interpolation_list{k},'''',''''''),''''];
                 if k~=length(option.channels_for_interpolation_list)
                     frag_code=[frag_code,','];
                 end

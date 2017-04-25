@@ -220,7 +220,7 @@ classdef FLW_rereference_advanced<CLW_generic
            frag_code=[];
            frag_code=[frag_code,'''active_list'',{{'];
            for k=1:length(option.active_list)
-               frag_code=[frag_code,'''',option.active_list{k},''''];
+               frag_code=[frag_code,'''',strrep(option.active_list{k},'''',''''''),''''];
                if k~=length(option.active_list)
                    frag_code=[frag_code,','];
                end
@@ -228,7 +228,7 @@ classdef FLW_rereference_advanced<CLW_generic
            frag_code=[frag_code,'}},'];
            frag_code=[frag_code,'''ref_list'',{{'];
            for k=1:length(option.ref_list)
-               frag_code=[frag_code,'''',option.ref_list{k},''''];
+               frag_code=[frag_code,'''',strrep(option.ref_list{k},'''',''''''),''''];
                if k~=length(option.ref_list)
                    frag_code=[frag_code,','];
                end

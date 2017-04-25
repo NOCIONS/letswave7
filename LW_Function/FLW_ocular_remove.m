@@ -39,7 +39,7 @@ classdef FLW_ocular_remove<CLW_generic
             
             frag_code=[frag_code,'''ocular_channel'',{{'];
             for k=1:length(option.ocular_channel)
-                frag_code=[frag_code,'''',option.ocular_channel{k},''''];
+                frag_code=[frag_code,'''',strrep(option.ocular_channel{k},'''',''''''),''''];
                 if k~=length(option.ocular_channel)
                     frag_code=[frag_code,','];
                 end
