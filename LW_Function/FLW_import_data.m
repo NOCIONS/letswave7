@@ -25,15 +25,16 @@ classdef FLW_import_data
             set(obj.h_import_btn,'enable','off');
             set(obj.h_script_btn,'enable','off');
             
-            set(obj.h_add_btn,'ClickedCallback',@obj.add_file);
-            set(obj.h_del_btn,'ClickedCallback',@obj.del_file);
-            set(obj.h_script_btn,'ClickedCallback',@obj.get_script);
-            set(obj.h_import_btn,'ClickedCallback',@obj.import_file);
+            set(obj.h_add_btn,'Callback',@obj.add_file);
+            set(obj.h_del_btn,'Callback',@obj.del_file);
+            set(obj.h_script_btn,'Callback',@obj.get_script);
+            set(obj.h_import_btn,'Callback',@obj.import_file);
             uiwait(obj.h_fig);
         end
         
         function obj=init_handles(obj)
-            obj.h_fig=figure('name','Import Data','NumberTitle','off');
+            obj.h_fig=figure('name','Import Data','NumberTitle','off','resize','off');
+            set(obj.h_fig,'windowstyle','modal');
             pos=get(obj.h_fig,'Position');
             
             pos(3:4)=[300 510];
@@ -50,30 +51,31 @@ classdef FLW_import_data
             set(obj.h_fig,'DockControls','off');
             
             icon=load('icon.mat');
-            obj.h_toolbar = uitoolbar(obj.h_fig);
-            
-            obj.h_add_btn = uipushtool(obj.h_toolbar);
+            obj.h_add_btn=uicontrol(obj.h_fig,'style','pushbutton');
             set(obj.h_add_btn,'TooltipString','add files');
             set(obj.h_add_btn,'CData',icon.icon_dataset_add);
             
-            obj.h_del_btn = uipushtool(obj.h_toolbar);
+            obj.h_del_btn=uicontrol(obj.h_fig,'style','pushbutton');
             set(obj.h_del_btn,'TooltipString','remove files');
             set(obj.h_del_btn,'CData',icon.icon_dataset_del);
             
-            obj.h_script_btn = uipushtool(obj.h_toolbar);
+            obj.h_script_btn=uicontrol(obj.h_fig,'style','pushbutton');
             set(obj.h_script_btn,'TooltipString','show script');
             set(obj.h_script_btn,'CData',icon.icon_script);
             
-            obj.h_import_btn = uipushtool(obj.h_toolbar);
+            obj.h_import_btn=uicontrol(obj.h_fig,'style','pushbutton');
             set(obj.h_import_btn,'TooltipString','import files');
             set(obj.h_import_btn,'CData',icon.icon_run);
             
-            
+            set(obj.h_add_btn,'position',[0,pos(4)-29, 30, 30]);
+            set(obj.h_del_btn,'position',[29,pos(4)-29, 30, 30]);
+            set(obj.h_script_btn,'position',[29*2,pos(4)-29, 30, 30]);
+            set(obj.h_import_btn,'position',[29*3,pos(4)-29, 30, 30]);
             obj.h_file_list=uicontrol('style','listbox','string','',...
                 'HorizontalAlignment','left','backgroundcolor',[1,1,1],...
                 'Fontsize',14,'value',[],'max',10);
+            set(obj.h_file_list,'position',[0,0, pos(3), pos(4)-29]);
             set(obj.h_file_list,'units','normalized');
-            set(obj.h_file_list,'position',[0,0,1,1]);
             
         end
         
@@ -188,13 +190,13 @@ classdef FLW_import_data
             end
             
             str=fullfile(option.pathname,option.filename);
+            hdr=ft_read_header(str);
+            trg=ft_read_event(str,'header',hdr);
             [~,name,~] = fileparts(str);
-            lwdata_out.data=permute(single(ft_read_data(str)),[3,1,4,5,6,2]);
+            lwdata_out.data=permute(single(ft_read_data(str,'header',hdr)),[3,1,4,5,6,2]);
             %epoch,channel,index,Z,Y,X
             %channel,X,epoch,1,1,1
             
-            hdr=ft_read_header(str);
-            trg=ft_read_event(str);
             lwdata_out.header=[];
             lwdata_out.header.filetype='time_amplitude';
             lwdata_out.header.name= name;
@@ -212,24 +214,24 @@ classdef FLW_import_data
             chanloc.labels='';
             chanloc.topo_enabled=0;
             chanloc.SEEG_enabled=0;
-            for chanpos=1:hdr.nChans;
+            for chanpos=1:hdr.nChans
                 chanloc.labels=hdr.label{chanpos};
                 lwdata_out.header.chanlocs(chanpos)=chanloc;
             end
             
             
             numevents=size(trg,2);
-            if numevents==0;
+            if numevents==0
                 lwdata_out.header.events=[];
             else
                 for eventpos=1:numevents
                     event.code='unknown';
-                    if isempty(trg(eventpos).value);
+                    if isempty(trg(eventpos).value)
                         event.code=trg(eventpos).type;
                     else
                         event.code=trg(eventpos).value;
                     end
-                    if isnumeric(event.code);
+                    if isnumeric(event.code)
                         event.code=num2str(event.code);
                     end
                     event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;

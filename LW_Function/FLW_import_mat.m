@@ -39,6 +39,7 @@ classdef FLW_import_mat
             set(obj.h_load_btn,'Callback',@obj.load);
             set(obj.h_process_btn,'Callback',@obj.process);
             set(obj.h_script_btn,'Callback',@obj.get_script);
+            set(obj.h_fig,'windowstyle','modal');
             uiwait(obj.h_fig);
         end
         
@@ -164,7 +165,7 @@ classdef FLW_import_mat
            set(obj.h_dimension3_pop, 'backgroundcolor',[1,1,1]);
            set(obj.h_dimension4_pop, 'backgroundcolor',[1,1,1]);
            
-           st=get(handles.fig,'children');
+           st=get(obj.h_fig,'children');
            for k=1:length(st)
                try
                    set(st(k),'units','normalized');

@@ -16,6 +16,7 @@ classdef FLW_export_EEGLAB
             set(obj.h_script_btn,'Callback',@obj.get_script);
             set(obj.h_export_btn,'Callback',@obj.export_file);
             set(obj.h_file_list,'Callback',@obj.on_select_chg);
+            set(obj.h_fig,'windowstyle','modal');
             uiwait(obj.h_fig);
         end
         

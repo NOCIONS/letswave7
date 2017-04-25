@@ -4,6 +4,7 @@ handles=[];
 userdata=[];
 remove_idx=nan;
 GLW_view_OpeningFcn();
+set(handles.fig,'windowstyle','modal');
 uiwait(handles.fig);
 
     function GLW_view_OpeningFcn()
@@ -203,9 +204,11 @@ uiwait(handles.fig);
         remove_idx=get(handles.remove_component_listbox,'value');
         closereq;
     end
+
     function Cancel_btn_callback(~,~)
         closereq;
     end
+
     function Assgin_electrode(~,~)
         [p,~,~] = fileparts(which('letswave7'));
         DefaultName=fullfile(p,'resources','electrodes','spherical_locations','Standard-10-20-Cap81.locs');

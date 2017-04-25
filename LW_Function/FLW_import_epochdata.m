@@ -39,6 +39,7 @@ classdef FLW_import_mat
             set(obj.h_load_btn,'Callback',@obj.load);
             set(obj.h_process_btn,'Callback',@obj.process);
             set(obj.h_script_btn,'Callback',@obj.get_script);
+            set(obj.h_fig,'windowstyle','modal');
             uiwait(obj.h_fig);
         end
         

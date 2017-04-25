@@ -26,6 +26,7 @@ update_handles();
 set(handles.fig,'WindowStyle','modal');
 uiwait(handles.fig);
 
+
     function GLW_rename_Init()
         handles.fig=figure('Position',[100 50 800 600],'name','Rename',...
             'NumberTitle','off','Color',0.94*[1,1,1]);

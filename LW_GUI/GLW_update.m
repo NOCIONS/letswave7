@@ -24,8 +24,8 @@ try
 catch
     set(update_txt,'string','Unable to access the website.');
 end
+set(fig,'windowstyle','modal');
 uiwait(fig);
-
 
     function updateing(~,~)
         set(update_txt,'String','Downloading from server...');

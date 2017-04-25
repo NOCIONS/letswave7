@@ -15,7 +15,7 @@ function [status] = ft_hastoolbox(toolbox, autoadd, silent)
 % silent = 0 means that it will give some feedback about adding the toolbox
 % silent = 1 means that it will not give feedback
 
-% Copyright (C) 2005-2013, Robert Oostenveld
+% Copyright (C) 2005-2017, Robert Oostenveld
 %
 % This file is part of FieldTrip, see http://www.fieldtriptoolbox.org
 % for the documentation and details.
@@ -83,6 +83,7 @@ url = {
   'MENTAT'     'see http://robertoostenveld.nl, or contact Robert Oostenveld'
   'SON2'       'see http://www.kcl.ac.uk/depsta/biomedical/cfnr/lidierth.html, or contact Malcolm Lidierth'
   '4D-VERSION' 'contact Christian Wienbruch'
+  'COMM'       'see http://www.mathworks.com/products/communications'
   'SIGNAL'     'see http://www.mathworks.com/products/signal'
   'OPTIM'      'see http://www.mathworks.com/products/optim'
   'IMAGE'      'see http://www.mathworks.com/products/image'  % Mathworks refers to this as IMAGES
@@ -105,16 +106,16 @@ url = {
   'DENOISE'       'see http://lumiere.ens.fr/Audition/adc/meg, or contact Alain de Cheveigne'
   'BCI2000'       'see http://bci2000.org'
   'NLXNETCOM'     'see http://www.neuralynx.com'
-
+  'GTEC'          'see http://www.gtec.at'
   'DIPOLI'        'see ftp://ftp.fcdonders.nl/pub/fieldtrip/external'
   'MNE'           'see http://www.nmr.mgh.harvard.edu/martinos/userInfo/data/sofMNE.php'
   'TCP_UDP_IP'    'see http://www.mathworks.com/matlabcentral/fileexchange/345, or contact Peter Rydesaeter'
   'BEMCP'         'contact Christophe Phillips'
-  'OPENMEEG'      'see http://gforge.inria.fr/projects/openmeeg and http://gforge.inria.fr/frs/?group_id=435'
+  'OPENMEEG'      'see http://openmeeg.github.io and http://www.fieldtriptoolbox.org/faq/how_do_i_install_the_openmeeg_binaries'
   'PRTOOLS'       'see http://www.prtools.org'
   'ITAB'          'contact Stefania Della Penna'
   'BSMART'        'see http://www.brain-smart.org'
-  'PEER'          'see http://fieldtrip.fcdonders.nl/development/peer'
+  'PEER'          'see http://www.fieldtriptoolbox.org/development/peer'
   'FREESURFER'    'see http://surfer.nmr.mgh.harvard.edu/fswiki'
   'SIMBIO'        'see https://www.mrt.uni-jena.de/simbio/index.php/Main_Page'
   'VGRID'         'see http://www.rheinahrcampus.de/~medsim/vgrid/manual.html'
@@ -147,6 +148,9 @@ url = {
   'NPMK'          'see https://github.com/BlackrockMicrosystems/NPMK'
   'VIDEOMEG'      'see https://github.com/andreyzhd/VideoMEG'
   'WAVEFRONT'     'see http://mathworks.com/matlabcentral/fileexchange/27982-wavefront-obj-toolbox'
+  'NEURONE'       'see http://www.megaemg.com/support/unrestricted-downloads'
+  'BREWERMAP'     'see https://nl.mathworks.com/matlabcentral/fileexchange/45208-colorbrewer--attractive-and-distinctive-colormaps'
+  'CELLFUNCTION'  'see https://github.com/schoffelen/cellfunction'
   };
 
 if nargin<2
@@ -179,17 +183,28 @@ switch toolbox
     dependency = {'spm', get_spm_version()==99};
   case 'SPM2'
     dependency = {'spm', get_spm_version()==2};
+  case 'SPM2UP' % version 2 or later, but not SPM 9X
+    dependency = {'spm', get_spm_version()>=2, get_spm_version()<95};
+    %This is to avoid crashes when trying to add SPM to the path
+    fallback_toolbox = 'SPM8';
   case 'SPM5'
     dependency = {'spm', get_spm_version()==5};
+  case 'SPM5UP' % version 5 or later, but not SPM 9X
+    dependency = {'spm', get_spm_version()>=5, get_spm_version()<95};
+    %This is to avoid crashes when trying to add SPM to the path
+    fallback_toolbox = 'SPM5';
   case 'SPM8'
     dependency = {'spm', get_spm_version()==8};
   case 'SPM8UP' % version 8 or later, but not SPM 9X
     dependency = {'spm', get_spm_version()>=8, get_spm_version()<95};
-
     %This is to avoid crashes when trying to add SPM to the path
     fallback_toolbox = 'SPM8';
   case 'SPM12'
     dependency = {'spm', get_spm_version()==12};
+  case 'SPM12UP' % version 12 or later, but not SPM 9X
+    dependency = {'spm', get_spm_version()>=12, get_spm_version()<95};
+    %This is to avoid crashes when trying to add SPM to the path
+    fallback_toolbox = 'SPM12';
   case 'MEG-PD'
     dependency = {'rawdata', 'channames'};
   case 'MEG-CALC'
@@ -203,8 +218,7 @@ switch toolbox
   case 'MRI'    % other functions in the mri section
     dependency = {'avw_hdr_read', 'avw_img_read'};
   case 'NEUROSHARE'
-    dependency = {'ns_OpenFile', 'ns_SetLibrary', ...
-                            'ns_GetAnalogData'};
+    dependency = {'ns_OpenFile', 'ns_SetLibrary', 'ns_GetAnalogData'};
   case 'ARTINIS'
     dependency = {'read_artinis_oxy3'};
   case 'BESA'
@@ -232,19 +246,21 @@ switch toolbox
   case '4D-VERSION'
     dependency  = {'read4d', 'read4dhdr'};
   case {'STATS', 'STATISTICS'}
-    dependency = has_license('statistics_toolbox');         % also check the availability of a toolbox license
+    dependency = has_license('statistics_toolbox');               % also check the availability of a toolbox license
   case {'OPTIM', 'OPTIMIZATION'}
-    dependency = has_license('optimization_toolbox');       % also check the availability of a toolbox license
+    dependency = has_license('optimization_toolbox');             % also check the availability of a toolbox license
   case {'SPLINES', 'CURVE_FITTING'}
-    dependency = has_license('curve_fitting_toolbox');      % also check the availability of a toolbox license
+    dependency = has_license('curve_fitting_toolbox');            % also check the availability of a toolbox license
+  case 'COMM'
+    dependency = {has_license('communication_toolbox'), 'de2bi'}; % also check the availability of a toolbox license
   case 'SIGNAL'
-    dependency = {has_license('signal_toolbox'), 'window'}; % also check the availability of a toolbox license
+    dependency = {has_license('signal_toolbox'), 'window'};       % also check the availability of a toolbox license
   case 'IMAGE'
-    dependency = has_license('image_toolbox');              % also check the availability of a toolbox license
+    dependency = has_license('image_toolbox');                    % also check the availability of a toolbox license
   case {'DCT', 'DISTCOMP'}
-    dependency = has_license('distrib_computing_toolbox');  % also check the availability of a toolbox license
+    dependency = has_license('distrib_computing_toolbox');        % also check the availability of a toolbox license
   case 'COMPILER'
-    dependency = has_license('compiler');                   % also check the availability of a toolbox license
+    dependency = has_license('compiler');                         % also check the availability of a toolbox license
   case 'FASTICA'
     dependency = 'fpica';
   case 'BRAINSTORM'
@@ -256,8 +272,7 @@ switch toolbox
   case 'BCI2000'
     dependency  = {'load_bcidat'};
   case 'NLXNETCOM'
-    dependency = {'MatlabNetComClient', 'NlxConnectToServer', ...
-                    'NlxGetNewCSCData'};
+    dependency = {'MatlabNetComClient', 'NlxConnectToServer', 'NlxGetNewCSCData'};
   case 'DIPOLI'
     dependency = {'dipoli.maci', 'file'};
   case 'MNE'
@@ -346,11 +361,16 @@ switch toolbox
     dependency = {'comp_tstamps' 'load_audio0123', 'load_video123'};
   case 'WAVEFRONT'
     dependency = {'write_wobj' 'read_wobj'};
-
-    % the following are fieldtrip modules/toolboxes
+  case 'NEURONE'
+    dependency = {'readneurone' 'readneuronedata' 'readneuroneevents'};
+  case 'BREWERMAP'
+    dependency = {'brewermap' 'brewermap_view'};
+  case 'GTEC'
+    dependency = {'ghdf5read' 'ghdf5fileimport'};
+    
+    % the following are FieldTrip modules/toolboxes
   case 'FILEIO'
-    dependency = {'ft_read_header', 'ft_read_data', ...
-                    'ft_read_event', 'ft_read_sens'};
+    dependency = {'ft_read_header', 'ft_read_data', 'ft_read_event', 'ft_read_sens'};
   case 'FORWARD'
     dependency = {'ft_compute_leadfield', 'ft_prepare_vol_sens'};
   case 'PLOTTING'
@@ -363,6 +383,8 @@ switch toolbox
     dependency = {'ft_spiketriggeredaverage', 'ft_spiketriggeredspectrum'};
   case 'FILEEXCHANGE'
     dependency = is_subdir_in_fieldtrip_path('/external/fileexchange');
+  case 'CELLFUNCTION'
+    dependency = {'cellmean', 'cellvecadd', 'cellcat'};
   case {'INVERSE', 'REALTIME', 'SPECEST', 'PREPROC', ...
           'COMPAT', 'STATFUN', 'TRIALFUN', 'UTILITIES/COMPAT', ...
           'FILEIO/COMPAT', 'PREPROC/COMPAT', 'FORWARD/COMPAT', ...
@@ -384,13 +406,13 @@ end
 % try to determine the path of the requested toolbox
 if autoadd>0 && ~status
 
-  % for core fieldtrip modules
+  % for core FieldTrip modules
   prefix = fileparts(which('ft_defaults'));
   if ~status
     status = myaddpath(fullfile(prefix, lower(toolbox)), silent);
   end
 
-  % for external fieldtrip modules
+  % for external FieldTrip modules
   prefix = fullfile(fileparts(which('ft_defaults')), 'external');
   if ~status
     status = myaddpath(fullfile(prefix, lower(toolbox)), silent);
@@ -402,14 +424,14 @@ if autoadd>0 && ~status
     end
   end
 
-  % for contributed fieldtrip extensions
+  % for contributed FieldTrip extensions
   prefix = fullfile(fileparts(which('ft_defaults')), 'contrib');
   if ~status
     status = myaddpath(fullfile(prefix, lower(toolbox)), silent);
     licensefile = [lower(toolbox) '_license'];
     if status && exist(licensefile, 'file')
-      % this will execute openmeeg_license and mne_license
-      % which display the license on screen for three seconds
+      % this will execute openmeeg_license, mne_license and artinis_license
+      % which display the license on screen for a few seconds
       feval(licensefile);
     end
   end
