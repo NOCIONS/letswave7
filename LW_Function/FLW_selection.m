@@ -189,7 +189,7 @@ classdef FLW_selection<CLW_generic
             
             frag_code=[frag_code,'''items'',{{'];
             for k=1:length(option.items)
-                frag_code=[frag_code,'''',option.items{k},''''];
+                frag_code=[frag_code,'''',strrep(option.items{k},'''',''''''),''''];
                 if k~=length(option.items)
                     frag_code=[frag_code,','];
                 end

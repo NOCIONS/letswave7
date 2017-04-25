@@ -234,11 +234,11 @@ GLW_my_view_OpeningFcn;
         set(handles.interval_panel,'Units','normalized');
         handles.interval1_edit=uicontrol(handles.interval_panel,'style','edit','Callback',@edit_interval_Changed);
         set(handles.interval1_edit,'Units','pixels');
-        set(handles.interval1_edit,'Position',[5,44,60,20]);
+        set(handles.interval1_edit,'Position',[5,54,60,20]);
         set(handles.interval1_edit,'Units','normalized');
         handles.interval2_edit=uicontrol(handles.interval_panel,'style','edit','Callback',@edit_interval_Changed);
         set(handles.interval2_edit,'Units','pixels');
-        set(handles.interval2_edit,'Position',[80,44,60,20]);
+        set(handles.interval2_edit,'Position',[80,54,60,20]);
         set(handles.interval2_edit,'Units','normalized');
         handles.interval_button=uicontrol(handles.interval_panel,'style','pushbutton','Callback',@edit_interval_table);
         set(handles.interval_button,'String','Table');
@@ -698,6 +698,22 @@ GLW_my_view_OpeningFcn;
 
 %% fig_BtnDown
     function fig_BtnDown(obj, ~)
+        is_inaxis=0;
+        for ax_id=1:userdata.num_cols*userdata.num_rows
+            col_pos=ceil(ax_id/userdata.num_rows);
+            row_pos=mod(ax_id-1,userdata.num_rows)+1;
+            temp=get(handles.axes((col_pos-1)*userdata.num_rows+row_pos),'CurrentPoint');
+            temp=temp(1,[1,2]);
+            if(temp(1)-userdata.last_axis(1))*(temp(1)-userdata.last_axis(2))<0 &&...
+                    (temp(2)-userdata.last_axis(3))*(temp(2)-userdata.last_axis(4))<0
+                is_inaxis=1;
+                break;
+            end
+        end
+        if(is_inaxis==0)
+            return;
+        end
+        
         persistent shade_x_temp;
         temp = get(gca,'CurrentPoint');
         if (temp(1,1)>userdata.last_axis(1) && temp(1,1)<userdata.last_axis(2)...

@@ -3,7 +3,7 @@ if isempty(filename)
     return;
 end
 filename=cellstr(filename);
-fig=[];
+fig=NaN;
 if length(filename)>10
     fig=figure('numbertitle','off','name','Delete files',...
         'MenuBar','none','DockControls','off');

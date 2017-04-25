@@ -15,7 +15,7 @@ if isempty(file_str) || isempty(keyword1_str)
 end
 file_str=cellstr(file_str);
 
-fig=[];
+fig=NaN;
 if length(file_str)>10
     fig=figure('numbertitle','off','name','Rename files',...
         'MenuBar','none','DockControls','off');
