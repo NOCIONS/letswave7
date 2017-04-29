@@ -240,10 +240,18 @@ GLW_my_view_OpeningFcn;
         set(handles.interval2_edit,'Units','pixels');
         set(handles.interval2_edit,'Position',[80,54,60,20]);
         set(handles.interval2_edit,'Units','normalized');
+        
+        
+        handles.interval_plot_button=uicontrol(handles.interval_panel,'style','pushbutton','Callback',@edit_interval_plot);
+        set(handles.interval_plot_button,'String','Topograph of Mean');
+        set(handles.interval_plot_button,'Units','pixels');
+        set(handles.interval_plot_button,'Position',[5,27,135,26]);
+        set(handles.interval_plot_button,'Units','normalized');
+        
         handles.interval_button=uicontrol(handles.interval_panel,'style','pushbutton','Callback',@edit_interval_table);
         set(handles.interval_button,'String','Table');
         set(handles.interval_button,'Units','pixels');
-        set(handles.interval_button,'Position',[5,7,135,25]);
+        set(handles.interval_button,'Position',[5,2,135,26]);
         set(handles.interval_button,'Units','normalized');
         
         handles.filter_panel=uipanel(handles.panel_edit);
@@ -267,6 +275,7 @@ GLW_my_view_OpeningFcn;
         set(handles.filter_lowpass_checkbox,'Units','normalized');
         set(handles.filter_lowpass_checkbox,'Value',userdata.is_filter_low);
         set(handles.filter_lowpass_checkbox,'Callback',@edit_filter_Changed);
+        
         handles.filter_lowpass_edit=uicontrol(handles.filter_panel,'style','edit');
         set(handles.filter_lowpass_edit,'String',num2str(userdata.filter_low));
         set(handles.filter_lowpass_edit,'Units','pixels');
@@ -2168,6 +2177,87 @@ GLW_my_view_OpeningFcn;
         btn=uicontrol('style','pushbutton','position',[1,1,pos(3),39],...
             'string','send the table to workspace');
         set(btn,'callback',@(src,eventdata)assignin('base','lw_table',table_data));
+    end
+
+%% edit_interval_plot
+    function edit_interval_plot(obj,~)
+        x1=str2num(get(handles.interval1_edit,'String'));
+        x2=str2num(get(handles.interval2_edit,'String'));
+        
+        fig_temp=figure();
+        [xq,yq] = meshgrid(linspace(-0.5,0.5,267),linspace(-0.5,0.5,267));
+        delta = (xq(2)-xq(1))/2;
+        ax_num=length(userdata.selected_datasets)*length(userdata.selected_epochs);
+        row_num=length(userdata.selected_datasets);
+        col_num=length(userdata.selected_epochs);
+        if(col_num>7)
+            col_num=7;
+            row_num=ceil(ax_num/7);
+        end
+        for ax_idx=1:ax_num
+            axes_topo(ax_idx)=subplot(row_num,col_num,ax_idx);
+            set(axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
+            set(axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
+            caxis(axes_topo(ax_idx),userdata.last_axis(3:4));
+            hold(axes_topo(ax_idx),'on');
+            axis(axes_topo(ax_idx),'square');
+            surface_topo(ax_idx)=surface(xq-delta,yq-delta,zeros(size(xq)),xq,...
+                'EdgeColor','none','FaceColor','flat','parent',axes_topo(ax_idx));
+            headx = 0.5*[sin(linspace(0,2*pi,100)),NaN,sin(-2*pi*10/360),0,sin(2*pi*10/360),NaN,...
+                0.1*cos(2*pi/360*linspace(80,360-80,100))-1,NaN,...
+                -0.1*cos(2*pi/360*linspace(80,360-80,100))+1];
+            heady = 0.5*[cos(linspace(0,2*pi,100)),NaN,cos(-2*pi*10/360),1.1,cos(2*pi*10/360),NaN,...
+                0.2*sin(2*pi/360*linspace(80,360-80,100)),NaN,0.2*sin(2*pi/360*linspace(80,360-80,100))];
+            line_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linewidth',2,'parent',axes_topo(ax_idx));
+            dot_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linestyle','none','Marker','.','Markersize',8,'parent',axes_topo(ax_idx));
+        end
+        colormap 'jet';
+        colorbar_topo=colorbar;
+        p=get(fig_temp,'position');
+        set(colorbar_topo,'units','pixels');
+        set(colorbar_topo,'position',[p(3)-40,10,10,p(4)-20]);
+        set(colorbar_topo,'units','normalized');
+        set(axes_topo,'Visible','off');
+        ax_idx=0;
+        for dataset_index=1:length(userdata.selected_datasets)
+            header=datasets_header(userdata.selected_datasets(dataset_index)).header;
+            chan_used=find([header.chanlocs.topo_enabled]==1);
+            if isempty(chan_used)
+                vq=nan(267,267);
+                for epoch_index=1:length(userdata.selected_epochs)
+                    ax_idx=ax_idx+1;
+                    set( surface_topo(ax_idx),'CData',vq);
+                    str=[char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']'];
+                    title_topo(ax_idx)=title(axes_topo(ax_idx),str,'Interpreter','none');
+                end
+            else
+                t=(0:header.datasize(6)-1)*header.xstep+header.xstart;
+                chanlocs=header.chanlocs(chan_used);
+                [y,x]= pol2cart(pi/180.*[chanlocs.theta],[chanlocs.radius]);
+                [index_pos,y_pos,z_pos]=get_iyz_pos(header);
+                [~,b]=min(abs(t-userdata.cursor_point));
+                
+                
+                dataset_pos=userdata.selected_datasets(dataset_index);
+                x_start=datasets_header(dataset_pos).header.xstart;
+                x_step=datasets_header(dataset_pos).header.xstep;
+                x_temp=(0:size(datasets_data(dataset_pos).data,6)-1)*x_step+x_start;
+                x_pos= x_temp>x1 & x_temp<x2;
+                
+                data=squeeze(mean(datasets_data(dataset_pos).data...
+                    (:,chan_used,index_pos,y_pos,z_pos,x_pos),6));
+                for epoch_index=1:length(userdata.selected_epochs)
+                    ax_idx=ax_idx+1;
+                    vq = griddata(x,y,data(userdata.selected_epochs(epoch_index),:),xq,yq,'cubic');
+                    set( surface_topo(ax_idx),'CData',vq);
+                    set( dot_topo(ax_idx),'XData',x);
+                    set( dot_topo(ax_idx),'YData',y);
+                    str=[char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']'];
+                    title_topo(ax_idx)=title(axes_topo(ax_idx),str,'Interpreter','none');
+                end
+            end
+        end
+        set(title_topo,'Visible','on');
     end
 
 %% fig_axis_Changed

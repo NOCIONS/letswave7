@@ -256,21 +256,24 @@ GLW_view_OpeningFcn;
         handles.interval_panel=uipanel(handles.panel_edit,'Title','Explore interval');
         Set_position(handles.interval_panel,[190,10,150,120]);
         handles.interval_text_x=uicontrol(handles.interval_panel,...
-            'style','text','string','x_range:','HorizontalAlignment','left');
-        Set_position(handles.interval_text_x,[5,88,120,20]);
+            'style','text','string','x:','HorizontalAlignment','left');
         handles.interval1_edit_x=uicontrol(handles.interval_panel,'style','edit');
-        Set_position(handles.interval1_edit_x,[5,74,60,20]);
         handles.interval2_edit_x=uicontrol(handles.interval_panel,'style','edit');
-        Set_position(handles.interval2_edit_x,[80,74,60,20]);
         handles.interval_text_y=uicontrol(handles.interval_panel,...
-            'style','text','string','y_range:','HorizontalAlignment','left');
-        Set_position(handles.interval_text_y,[5,52,120,20]);
+            'style','text','string','y:','HorizontalAlignment','left');
         handles.interval1_edit_y=uicontrol(handles.interval_panel,'style','edit');
-        Set_position(handles.interval1_edit_y,[5,37,60,20]);
         handles.interval2_edit_y=uicontrol(handles.interval_panel,'style','edit');
-        Set_position(handles.interval2_edit_y,[80,37,60,20]);
+        handles.interval_plot_button=uicontrol(handles.interval_panel,'style','pushbutton','String','Topograph of Mean');
         handles.interval_button=uicontrol(handles.interval_panel,'style','pushbutton','String','Table');
-        Set_position(handles.interval_button,[5,2,135,35]);
+        
+        Set_position(handles.interval_text_x,[5,78,20,20]);
+        Set_position(handles.interval1_edit_x,[20,78,55,20]);
+        Set_position(handles.interval2_edit_x,[87,78,55,20]);
+        Set_position(handles.interval_text_y,[5,52,20,20]);
+        Set_position(handles.interval1_edit_y,[20,52,55,20]);
+        Set_position(handles.interval2_edit_y,[87,52,55,20]);
+        Set_position(handles.interval_plot_button,[5,27,135,26]);
+        Set_position(handles.interval_button,[5,2,135,26]);
         
         set(handles.interval1_edit_x,'String',num2str(userdata.shade_x(1)));
         set(handles.interval2_edit_x,'String',num2str(userdata.shade_x(2)));
@@ -412,6 +415,7 @@ GLW_view_OpeningFcn;
         set(handles.interval1_edit_y,'Callback',@Edit_interval_Changed);
         set(handles.interval2_edit_x,'Callback',@Edit_interval_Changed);
         set(handles.interval2_edit_y,'Callback',@Edit_interval_Changed);
+        set(handles.interval_plot_button,'Callback',@Edit_interval_plot);
         set(handles.interval_button,'Callback',@Edit_interval_table);
         
         set(handles.fig2,'WindowButtonDownFcn',@Fig_BtnDown);
@@ -1360,6 +1364,96 @@ GLW_view_OpeningFcn;
         set(btn,'callback',@(src,eventdata)assignin('base','lw_table',table_data));
     end
 
+    function Edit_interval_plot(~,~)
+        x1 = str2num(get(handles.interval1_edit_x,'String'));
+        x2 = str2num(get(handles.interval2_edit_x,'String'));
+        y1 = str2num(get(handles.interval1_edit_y,'String'));
+        y2 = str2num(get(handles.interval2_edit_y,'String'));
+        
+        fig_temp=figure();
+        [xq,yq] = meshgrid(linspace(-0.5,0.5,267),linspace(-0.5,0.5,267));
+        delta = (xq(2)-xq(1))/2;
+        ax_num=length(userdata.selected_datasets)*length(userdata.selected_epochs);
+        row_num=length(userdata.selected_datasets);
+        col_num=length(userdata.selected_epochs);
+        if(col_num>7)
+            col_num=7;
+            row_num=ceil(ax_num/7);
+        end
+        for ax_idx=1:ax_num
+            axes_topo(ax_idx)=subplot(row_num,col_num,ax_idx);
+            set(axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
+            set(axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
+            caxis(axes_topo(ax_idx),userdata.last_axis(5:6));
+            hold(axes_topo(ax_idx),'on');
+            axis(axes_topo(ax_idx),'square');
+            surface_topo(ax_idx)=surface(xq-delta,yq-delta,zeros(size(xq)),xq,...
+                'EdgeColor','none','FaceColor','flat','parent',axes_topo(ax_idx));
+            headx = 0.5*[sin(linspace(0,2*pi,100)),NaN,sin(-2*pi*10/360),0,sin(2*pi*10/360),NaN,...
+                0.1*cos(2*pi/360*linspace(80,360-80,100))-1,NaN,...
+                -0.1*cos(2*pi/360*linspace(80,360-80,100))+1];
+            heady = 0.5*[cos(linspace(0,2*pi,100)),NaN,cos(-2*pi*10/360),1.1,cos(2*pi*10/360),NaN,...
+                0.2*sin(2*pi/360*linspace(80,360-80,100)),NaN,0.2*sin(2*pi/360*linspace(80,360-80,100))];
+            line_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linewidth',2,'parent',axes_topo(ax_idx));
+            dot_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linestyle','none','Marker','.','Markersize',8,'parent',axes_topo(ax_idx));
+        end
+        colormap(userdata.color_style);
+        colorbar_topo=colorbar;
+        p=get(fig_temp,'position');
+        set(colorbar_topo,'units','pixels');
+        set(colorbar_topo,'position',[p(3)-40,10,10,p(4)-20]);
+        set(colorbar_topo,'units','normalized');
+        set(axes_topo,'Visible','off');
+        ax_idx=0;
+        for dataset_index=1:length(userdata.selected_datasets)
+            header=datasets_header(userdata.selected_datasets(dataset_index)).header;
+            chan_used=find([header.chanlocs.topo_enabled]==1);
+            if isempty(chan_used)
+                vq=nan(267,267);
+                for epoch_index=1:length(userdata.selected_epochs)
+                    ax_idx=ax_idx+1;
+                    set( surface_topo(ax_idx),'CData',vq);
+                    str=[char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']'];
+                    title_topo(ax_idx)=title(axes_topo(ax_idx),str,'Interpreter','none');
+                end
+            else
+                t_x=(0:header.datasize(6)-1)*header.xstep+header.xstart;
+                t_y=(0:header.datasize(5)-1)*header.ystep+header.ystart;
+                chanlocs=header.chanlocs(chan_used);
+                [y,x]= pol2cart(pi/180.*[chanlocs.theta],[chanlocs.radius]);
+                [index_pos,z_pos]=Get_iz_pos(header);
+%                 [~,x_pos]=min(abs(t_x-userdata.cursor_point(1)));
+%                 [~,y_pos]=min(abs(t_y-userdata.cursor_point(2)));
+                
+                
+            dataset_pos=userdata.selected_datasets(dataset_index);
+            x_start=datasets_header(dataset_pos).header.xstart;
+            x_step=datasets_header(dataset_pos).header.xstep;
+            x_temp=(0:size(datasets_data(dataset_pos).data,6)-1)*x_step+x_start;
+            x_pos= x_temp>x1 & x_temp<x2;
+            
+            y_start=datasets_header(dataset_pos).header.ystart;
+            y_step=datasets_header(dataset_pos).header.ystep;
+            y_temp=(0:size(datasets_data(dataset_pos).data,5)-1)*y_step+y_start;
+            y_pos= y_temp>y1 & y_temp<y2;
+            
+            
+            data=squeeze(mean(mean(datasets_data(dataset_pos).data...
+                (:,chan_used,index_pos,z_pos,y_pos,x_pos),5),6));
+            for epoch_index=1:length(userdata.selected_epochs)
+                    ax_idx=ax_idx+1;
+                    vq = griddata(x,y,data(userdata.selected_epochs(epoch_index),:),xq,yq,'cubic');
+                    set( surface_topo(ax_idx),'CData',vq);
+                    set( dot_topo(ax_idx),'XData',x);
+                    set( dot_topo(ax_idx),'YData',y);
+                    str=[char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']'];
+                    title_topo(ax_idx)=title(axes_topo(ax_idx),str,'Interpreter','none');
+                end
+            end
+        end
+        set(title_topo,'Visible','on');
+    end
+
     function Fig_split(~, ~)
         userdata.is_split=~userdata.is_split;
         if userdata.is_split==1
@@ -1398,7 +1492,7 @@ GLW_view_OpeningFcn;
         Fig2_SizeChangedFcn;
     end
 
-    function Fig_BtnDown(obj, ~)
+    function Fig_BtnDown(~, ~)
         persistent shade_x_temp;
         persistent shade_y_temp;
         temp = get(gca,'CurrentPoint');
