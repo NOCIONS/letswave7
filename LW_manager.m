@@ -426,6 +426,7 @@ Manager_Init();
     end
 
     function check_version()
+        
         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
         try
             lw_version = str2num(urlread(url,'Timeout',0.5));
@@ -437,7 +438,7 @@ Manager_Init();
             else
                 set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
             end
-            urlread('https://github.com/NOCIONS/letswave7/blob/master/resources/version.txt','Timeout',0.5);
+            %urlread('https://github.com/NOCIONS/letswave7/blob/master/resources/version.txt','Timeout',0.5);
         catch 
             handles.version_checkked=handles.version_checkked+1;
         end

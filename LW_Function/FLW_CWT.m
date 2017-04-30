@@ -142,7 +142,7 @@ classdef FLW_CWT<CLW_generic
                 case 'complex'
                     header_out.filetype='time_frequency_complex';
             end
-            header.events=[];
+            header_out.events=[];
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end

@@ -39,6 +39,7 @@
         <submenu Label="------Frequency analysis------"/>
         <submenu Label="FFT (Fast Fourier Transform)" callback="FLW_FFT"/>
         <submenu Label="iFFT (Inverse FFT)" callback="FLW_iFFT"/>
+        <submenu Label="Welch Method (Fast Fourier Transform)" callback="FLW_welch"/>
         <submenu Label="------Time-Frequency analysis------"/>
         <submenu Label="STFT (Short-Time Fourier Transform)" callback="FLW_STFT"/>
         <submenu Label="CWT (Continue Wavelet Transform)" callback="FLW_CWT"/>
