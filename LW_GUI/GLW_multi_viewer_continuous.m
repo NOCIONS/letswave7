@@ -528,6 +528,7 @@ GLW_view_OpeningFcn;
         end
         set(handles.ax_fig,'xLim',[userdata.x1,userdata.x2]);
         set(handles.ax_fig,'ylim',[-userdata.y_range*5,userdata.y_range*5]);
+        set(handles.line_marker,'ydata',[-userdata.y_range*5,userdata.y_range*5]);
         set(handles.ax_fig,'ytick',linspace(-userdata.y_range*5,userdata.y_range*5,11));
         GLW_event_fig_UpdataFcn();
         set(handles.linetext(1:length(ch_num)),'Visible','on');

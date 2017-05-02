@@ -1132,6 +1132,7 @@ GLW_view_OpeningFcn;
             set(handles.xaxis2_edit,'String',num2str(userdata.last_axis(2)));
         end
         set(handles.axes,'XLim',userdata.last_axis(1:2));
+        set(handles.cursor_y,'XData',[userdata.last_axis(1),userdata.last_axis(2)]);
         for k=1:userdata.num_cols*userdata.num_rows
             zoom(handles.axes(k),'reset');
         end
@@ -1145,6 +1146,7 @@ GLW_view_OpeningFcn;
             set(handles.yaxis2_edit,'String',num2str(userdata.last_axis(4)));
         end
         set(handles.axes,'YLim',userdata.last_axis(3:4));
+        set(handles.cursor_x,'YData',[userdata.last_axis(3),userdata.last_axis(4)]);
         for k=1:userdata.num_cols*userdata.num_rows
             zoom(handles.axes(k),'reset');
         end
@@ -1189,6 +1191,7 @@ GLW_view_OpeningFcn;
             set(handles.xaxis2_edit,'String',x(2));
         end
         userdata.last_axis([1,2])=x;
+        set(handles.cursor_y,'XData',[userdata.last_axis(1),userdata.last_axis(2)]);
         set(handles.axes,'XLim',userdata.last_axis(1:2));
         userdata.auto_x=0;set(handles.xaxis_auto_checkbox,'Value',userdata.auto_x);
         for k=1:userdata.num_cols*userdata.num_rows
@@ -1213,6 +1216,7 @@ GLW_view_OpeningFcn;
         
         userdata.last_axis([3,4])=x;
         set(handles.axes,'YLim',userdata.last_axis(3:4));
+        set(handles.cursor_x,'YData',[userdata.last_axis(3),userdata.last_axis(4)]);
         userdata.auto_y=0;set(handles.yaxis_auto_checkbox,'Value',userdata.auto_y);
         for k=1:userdata.num_cols*userdata.num_rows
             zoom(handles.axes(k),'reset');

@@ -2055,6 +2055,7 @@ GLW_my_view_OpeningFcn;
         end
         
         userdata.last_axis([3,4])=x;
+        set(handles.cursor,'YData',[userdata.last_axis(3),userdata.last_axis(4)]);
         set(handles.axes,'YLim',userdata.last_axis(3:4));
         userdata.auto_y=0;set(handles.yaxis_auto_checkbox,'Value',userdata.auto_y);
         for k=1:userdata.num_cols*userdata.num_rows
@@ -2265,6 +2266,7 @@ GLW_my_view_OpeningFcn;
         if strcmp(get(event.Axes,'Tag'),'line')
             userdata.last_axis(1:2) = get(event.Axes,'XLim');
             userdata.last_axis(3:4) = get(event.Axes,'YLim');
+            set(handles.cursor,'YData',[userdata.last_axis(3),userdata.last_axis(4)]);
             set(handles.xaxis1_edit, 'String', num2str(userdata.last_axis(1)));
             set(handles.xaxis2_edit, 'String', num2str(userdata.last_axis(2)));
             set(handles.yaxis1_edit, 'String', num2str(userdata.last_axis(3)));
@@ -2284,7 +2286,6 @@ GLW_my_view_OpeningFcn;
                     caxis(handles.axes_headplot(k),userdata.last_axis(3:4));
                 end
             end
-            
             userdata.auto_x=0;set(handles.xaxis_auto_checkbox,'Value',userdata.auto_x);
             userdata.auto_y=0;set(handles.yaxis_auto_checkbox,'Value',userdata.auto_y);
         else
@@ -2312,6 +2313,7 @@ GLW_my_view_OpeningFcn;
         userdata.auto_y=get(handles.yaxis_auto_checkbox,'Value');
         if  userdata.auto_y==1
             userdata.last_axis(3:4)=userdata.minmax_axis(3:4);
+            set(handles.cursor,'YData',[userdata.last_axis(3),userdata.last_axis(4)]);
             set(handles.yaxis1_edit,'String',num2str(userdata.last_axis(3)));
             set(handles.yaxis2_edit,'String',num2str(userdata.last_axis(4)));
             if ~isempty(handles.axes_topo)
@@ -2326,6 +2328,7 @@ GLW_my_view_OpeningFcn;
             end
         end
         set(handles.axes,'YLim',userdata.last_axis(3:4));
+        
         for k=1:userdata.num_cols*userdata.num_rows
             zoom(handles.axes(k),'reset');
         end
