@@ -113,7 +113,6 @@ classdef FLW_interpolate_channel<CLW_generic
         end
         
         function GUI_update(obj,batch_pre)
-            
             channel_to_interpolate=get(obj.h_channel_to_interpolate,'String');
             if isempty(channel_to_interpolate)
                 channel_to_interpolate_idx=[];
@@ -149,6 +148,9 @@ classdef FLW_interpolate_channel<CLW_generic
             obj.chanlocs=lwdataset(1).header.chanlocs(idx);
             
             [~,~,idx] = intersect(channel_to_interpolate_idx,channel_labels,'stable');
+            if isempty(idx)
+                idx=1;
+            end
             set(obj.h_channel_to_interpolate,'value',idx);
             [~,~,idx] = intersect(channels_for_interpolation_idx,channel_labels,'stable');
             set(obj.h_channels_for_interpolation_list,'value',idx);

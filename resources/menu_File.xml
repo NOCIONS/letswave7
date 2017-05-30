@@ -3,12 +3,9 @@
         <menu Label="Import">
             <submenu Label="Import EEG/MEG datafiles" callback="FLW_import_data"/>
             <submenu Label="Import MAT file or variable" callback="FLW_import_mat"/>
-            <submenu Label="Import ASCII textfile"/>
         </menu>
         <menu Label="Export">
             <submenu Label="Export to EEGLAB" callback="FLW_export_EEGLAB"/>
-            <submenu Label="Export to ASCII"/>
-            <submenu Label="Export to MAT file"/>
         </menu>
         <menu Label="Delete dataset(s)" callback="GLW_delete"/>
         <menu Label="Rename dataset" callback="GLW_rename"/>       

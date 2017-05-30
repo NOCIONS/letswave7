@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="Edit">
     <menu Label="Electrodes">
-        <submenu Label="Edit electrode coordinates"/>
+        <submenu Label="Edit electrode coordinates" callback="FLW_electrode_location_assign"/>
         <submenu Label="Edit electrode labels"/>
         <submenu Label="Flip left/right electrodes"/>
         <submenu Label="Electrode bridge detector"/>
         <submenu Label="Interpolate channel using neighbouring electrodes" callback="FLW_interpolate_channel"/>
     </menu>
     <menu Label="Events">
-        <submenu Label="Browse and edit events"/>
+        <submenu Label="Browse and edit events" callback="GLW_multi_viewer_continuous"/>
         <submenu Label="Create events from level trigger"/>
         <submenu Label="Merge event codes and latencies"/>
         <submenu Label="Sort epochs according to event latencies"/>

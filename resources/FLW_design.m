@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_interpolate_channel';
+FLW_name='FLW_electrode_labels';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)
