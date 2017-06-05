@@ -91,7 +91,7 @@ classdef FLW_rereference<CLW_generic
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
-        function GUI_update(obj,batch_pre)     
+        function GUI_update(obj,batch_pre)
             reference_list=get(obj.h_reference_list,'String');
             if isempty(reference_list)
                 reference_idx=[];
