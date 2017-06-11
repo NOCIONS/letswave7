@@ -19,7 +19,7 @@ end
 
 if ~isfield(header,'index_labels')
     tp={};
-    for i=1:header.datasize(3);
+    for i=1:header.datasize(3)
         tp{i}=['index ' num2str(i)];
     end
     header.index_labels=tp;
@@ -34,7 +34,7 @@ header.zstart=double(header.zstart);
 
 if ~isfield(header,'index_labels')
     tp={};
-    for i=1:header.datasize(3);
+    for i=1:header.datasize(3)
         tp{i}=['index ' num2str(i)];
     end
     header.index_labels=tp;

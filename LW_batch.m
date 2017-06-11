@@ -3,7 +3,9 @@ function h_fig=LW_batch(varargin)
 batch={};
 handle=[];
 Batch_Init();
-h_fig=handle.fig;
+if nargout~=0
+    h_fig=handle.fig;
+end
 
 %% Batch_init
     function Batch_Init()
@@ -288,7 +290,9 @@ h_fig=handle.fig;
             delete(batch{k}.h_panel);
         end
         batch=batch(seq);
-        if ~isempty(seq)
+        if isempty(seq)
+            handle.tab_idx=0;
+        else
             if idx-1==0
                 handle.tab_idx=1;
                 batch{handle.tab_idx}.is_selected=1;
@@ -471,9 +475,9 @@ h_fig=handle.fig;
     function open_script(varargin)
         handle.is_close=0;
         [FileName,PathName] = uigetfile(...
-            {'*.lw_script','script Files(*.lw_script)';...
-            '*.lw6','lw6 Files(*.lw6)';...
-            '*.lw6;*.lw_script','Files(*.lw6,*.lw_script)'});
+            {'*.lw6;*.lw_script','Files(*.lw6,*.lw_script)';...
+            '*.lw_script','script Files(*.lw_script)';...
+            '*.lw6','lw6 Files(*.lw6)'});
         if PathName==0
             return;
         end

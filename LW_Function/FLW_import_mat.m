@@ -178,17 +178,20 @@ classdef FLW_import_mat
             st={};
             [st,pathname]=uigetfile('*.mat;*.MAT','select datafiles','MultiSelect','on');
             filename=[];
-            if ~isempty(st) && st~=0
+            if st==0
+                return;
+            end
+            if ~isempty(st)
                 if ~iscell(st)
                     st2{1}=st;
                     st=st2;
                 end
-                for i=1:length(st);
+                for i=1:length(st)
                     filename{i}=[pathname,st{i}];
                 end
             end
             if ~isempty(filename)
-                for i=1:length(filename);
+                for i=1:length(filename)
                     st=['load ''' filename{i} ''''];
                     evalin('base',st);
                 end

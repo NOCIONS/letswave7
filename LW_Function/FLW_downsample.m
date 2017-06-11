@@ -178,9 +178,9 @@ classdef FLW_downsample<CLW_generic
             data=lwdata_in.data;
             %%%
             %set xvector,yvector,zvector
-            zvector=1:option.z_dsratio:header.datasize(4);
-            yvector=1:option.y_dsratio:header.datasize(5);
-            xvector=1:option.x_dsratio:header.datasize(6);
+            zvector=1:option.z_dsratio:inheader.datasize(4);
+            yvector=1:option.y_dsratio:inheader.datasize(5);
+            xvector=1:option.x_dsratio:inheader.datasize(6);
             %update data
             data=data(:,:,:,zvector,yvector,xvector);
             %%%

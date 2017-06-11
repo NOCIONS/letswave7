@@ -29,8 +29,8 @@ classdef FLW_ocular_remove<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            set(obj.h_channel_list,'String',option.channel_list,...
-                'value',1:length(option.channel_list));
+            set(obj.h_channel_list,'String',option.ocular_channel);
+            set(obj.h_channel_list,'value',1:length(option.ocular_channel));
         end
         
         function str=get_Script(obj)

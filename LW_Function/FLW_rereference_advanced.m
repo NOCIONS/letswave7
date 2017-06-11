@@ -293,10 +293,19 @@ classdef FLW_rereference_advanced<CLW_generic
             option.ref_idx=ref_idx;
             header_out.datasize(2)=length(active_idx);
             header_out.chanlocs=[];
-            for i=1:length(active_idx);
+            for i=1:length(active_idx)
                 header_out.chanlocs(i).labels=[option.active_list{i} '-' option.ref_list{i}];
                 header_out.chanlocs(i).topo_enabled=0;
                 header_out.chanlocs(i).SEEG_enabled=0;
+                header_out.chanlocs(i).theta=[];
+                header_out.chanlocs(i).radius=[];
+                header_out.chanlocs(i).sph_theta=[];
+                header_out.chanlocs(i).sph_phi=[];
+                header_out.chanlocs(i).sph_theta_besa=[];
+                header_out.chanlocs(i).sph_phi_besa=[];
+                header_out.chanlocs(i).X=[];
+                header_out.chanlocs(i).Y=[];
+                header_out.chanlocs(i).Z=[];
             end
             
             if ~isempty(option.suffix)
