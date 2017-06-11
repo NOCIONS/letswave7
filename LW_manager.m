@@ -436,7 +436,7 @@ Manager_Init();
             if temp<lw_version
                 set(handles.tip_text,'string','tips: There is new version of Letswave, please update Letswave');
             else
-                set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
+                %set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
             end
             %urlread('https://github.com/NOCIONS/letswave7/blob/master/resources/version.txt','Timeout',0.5);
         catch 

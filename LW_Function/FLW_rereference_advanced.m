@@ -91,7 +91,16 @@ classdef FLW_rereference_advanced<CLW_generic
            end
            userdata.active_list=active_list;
            userdata.ref_list=ref_list;
-           set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+           
+           str={};
+           for k=1:length(active_list)
+               if strcmp(ref_list{k},'0')
+                   str{k}=active_list{k};
+               else
+                   str{k}=strcat(active_list{k},'-',ref_list{k});
+               end
+           end
+           set(obj.h_new_list,'string',str);
            set(obj.h_new_list,'userdata',userdata);
        end
        
@@ -113,7 +122,15 @@ classdef FLW_rereference_advanced<CLW_generic
            if isempty(active_list)
                set(obj.h_new_list,'string',[]);
            else
-               set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+               str={};
+               for k=1:length(active_list)
+                   if strcmp(ref_list{k},'0')
+                       str{k}=active_list{k};
+                   else
+                       str{k}=strcat(active_list{k},'-',ref_list{k});
+                   end
+               end
+               set(obj.h_new_list,'string',str);
            end
            set(obj.h_new_list,'userdata',userdata);
            idx=idx(1)-1;
@@ -150,7 +167,15 @@ classdef FLW_rereference_advanced<CLW_generic
            ref_list={ref_list{idx_order}};
            userdata.active_list=active_list;
            userdata.ref_list=ref_list;
-           set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+           str={};
+           for k=1:length(active_list)
+               if strcmp(ref_list{k},'0')
+                   str{k}=active_list{k};
+               else
+                   str{k}=strcat(active_list{k},'-',ref_list{k});
+               end
+           end
+           set(obj.h_new_list,'string',str);
            set(obj.h_new_list,'userdata',userdata);
            set(obj.h_new_list,'value',idx-1);
        end
@@ -181,7 +206,15 @@ classdef FLW_rereference_advanced<CLW_generic
            ref_list={ref_list{idx_order}};
            userdata.active_list=active_list;
            userdata.ref_list=ref_list;
-           set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+           str={};
+           for k=1:length(active_list)
+               if strcmp(ref_list{k},'0')
+                   str{k}=active_list{k};
+               else
+                   str{k}=strcat(active_list{k},'-',ref_list{k});
+               end
+           end
+           set(obj.h_new_list,'string',str);
            set(obj.h_new_list,'userdata',userdata);
            set(obj.h_new_list,'value',idx+1);
        end
@@ -196,11 +229,14 @@ classdef FLW_rereference_advanced<CLW_generic
        function set_option(obj,option)
            set_option@CLW_generic(obj,option);
            str=get(obj.h_active_list,'String');
+           str_ref=str;
+           str_ref{end+1}='0';
+           
            active_list=[];
            ref_list=[];
            for k=1:length(option.active_list)
                if sum(strcmp(option.active_list{k},str))>0 &&...
-                       sum(strcmp(option.ref_list{k},str))>0
+                       sum(strcmp(option.ref_list{k},str_ref))>0
                    active_list{end+1}=option.active_list{k};
                    ref_list{end+1}=option.ref_list{k};
                end
@@ -210,7 +246,15 @@ classdef FLW_rereference_advanced<CLW_generic
            if isempty(active_list)
                set(obj.h_new_list,'string',[]);
            else
-               set(obj.h_new_list,'string',strcat(active_list,'-',ref_list));
+               str={};
+               for k=1:length(active_list)
+                   if strcmp(ref_list{k},'0')
+                       str{k}=active_list{k};
+                   else
+                       str{k}=strcat(active_list{k},'-',ref_list{k});
+                   end
+               end
+               set(obj.h_new_list,'string',str);
            end
            set(obj.h_new_list,'userdata',userdata);
        end
@@ -253,7 +297,7 @@ classdef FLW_rereference_advanced<CLW_generic
             if isempty(channel_labels)
                 error('***No common channels.***')
             end
-            set(obj.h_ref_list,'String',channel_labels);
+            set(obj.h_ref_list,'String',['0',channel_labels]);
             set(obj.h_active_list,'String',channel_labels);
             
             option=obj.get_option();
@@ -268,7 +312,7 @@ classdef FLW_rereference_advanced<CLW_generic
         function header_out= get_header(header_in,option)
             header_out=header_in;
             channel_labels={header_in.chanlocs.labels};
-            
+            channel_labels{end+1}='0';
             active_idx=[];
             ref_idx=[];
             for k=1:length(option.active_list)
@@ -287,6 +331,7 @@ classdef FLW_rereference_advanced<CLW_generic
                 if length(temp)>1
                     error(['multiple channel ',option.ref_list{k},' is found']);
                 end
+                
                 ref_idx=[ref_idx,temp(1)];
             end
             option.active_idx=active_idx;
@@ -294,7 +339,11 @@ classdef FLW_rereference_advanced<CLW_generic
             header_out.datasize(2)=length(active_idx);
             header_out.chanlocs=[];
             for i=1:length(active_idx)
-                header_out.chanlocs(i).labels=[option.active_list{i} '-' option.ref_list{i}];
+                if strcmp(option.ref_list{i},'0')
+                    header_out.chanlocs(i).labels=option.active_list{i};
+                else
+                    header_out.chanlocs(i).labels=[option.active_list{i} '-' option.ref_list{i}];
+                end
                 header_out.chanlocs(i).topo_enabled=0;
                 header_out.chanlocs(i).SEEG_enabled=0;
                 header_out.chanlocs(i).theta=[];
@@ -322,8 +371,9 @@ classdef FLW_rereference_advanced<CLW_generic
             header=FLW_rereference_advanced.get_header(lwdata_in.header,option);
             ref_idx=header.history(end).option.ref_idx;
             active_idx=header.history(end).option.active_idx;
-            data=lwdata_in.data(:,active_idx,:,:,:,:)-...
-                lwdata_in.data(:,ref_idx,:,:,:,:);
+            data=lwdata_in.data;
+            data(:,end+1,:,:,:,:)=0;
+            data=data(:,active_idx,:,:,:,:)-data(:,ref_idx,:,:,:,:);
             try
                 rmfield(header.history(end).option,'ref_idx');
             end
