@@ -144,7 +144,7 @@ classdef FLW_compute_ICA_merged<CLW_generic
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
             set(obj.h_buttongroup,'userdata',option.ICA_mode);
-            set(obj.algorithm,'value',num2str(option.algorithm));
+            set(obj.h_algorithm,'value',option.algorithm);
             set(obj.h_buttongroup,'userdata',option.ICA_mode);
             switch option.ICA_mode
                 case 1

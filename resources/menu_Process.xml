@@ -66,7 +66,7 @@
         <submenu Label="Weighted channel average (apply template)"/>
     </menu>
     <menu Label="Math">
-        <submenu Label="Math operations using a constant"/>
+        <submenu Label="Math operations using a constant" callback="FLW_math_constant"/>
         <submenu Label="Math operations using two datasets"/>
         <submenu Label="Rectify or square signals"/>
         <submenu Label="Threshold signals"/>
