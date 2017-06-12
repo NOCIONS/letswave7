@@ -67,8 +67,7 @@
     </menu>
     <menu Label="Math">
         <submenu Label="Math operations using a constant" callback="FLW_math_constant"/>
-        <submenu Label="Math operations using two datasets"/>
-        <submenu Label="Rectify or square signals"/>
+        <submenu Label="Math operations using two datasets" callback="FLW_math"/>
         <submenu Label="Threshold signals"/>
         <submenu Label="Compute signal derivative"/>
     </menu>

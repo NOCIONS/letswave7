@@ -8,7 +8,7 @@ classdef FLW_math_constant<CLW_generic
     
     methods
         function obj = FLW_math_constant(batch_handle)
-            obj@CLW_generic(batch_handle,'math','add_c',...
+            obj@CLW_generic(batch_handle,'math constant','add_c',...
                 'Compute simple mathematical operations using one dataset and a constant value.');
             
             uicontrol('style','text','position',[35,470,200,20],...
@@ -16,7 +16,7 @@ classdef FLW_math_constant<CLW_generic
                 'parent',obj.h_panel);
             obj.h_operation_pop=uicontrol('style','popupmenu',...
                 'String',{'Add (A+constant)','Subtract (A-constant)','Multiple (A*constant)',...
-                'Divide (A/constant)','Opposite number (-A)','Absolute value (|A|)'},...
+                'Divide (A/constant)','Power (A^constant)','Opposite number (-A)','Absolute value (|A|)'},...
                  'backgroundcolor',[1,1,1],'value',1,'callback',@obj.method_change,...
                  'position',[35,440,300,30],'parent',obj.h_panel);
             
@@ -30,7 +30,7 @@ classdef FLW_math_constant<CLW_generic
          
         function method_change(obj,varargin)
             index=get(obj.h_operation_pop,'value');
-            if index<5
+            if index<6
                 set(obj.h_constant_txt,'enable','on');
                 set(obj.h_constant_edt,'enable','on');
             else
@@ -39,7 +39,7 @@ classdef FLW_math_constant<CLW_generic
             end
             
             str=get(obj.h_suffix_edit,'string');
-            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','opp','abs'}))==1
+            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','pow_c','opp','abs'}))==1
                 switch(index)
                     case 1
                         set(obj.h_suffix_edit,'string','add_c');
@@ -50,8 +50,10 @@ classdef FLW_math_constant<CLW_generic
                     case 4
                         set(obj.h_suffix_edit,'string','div_c');
                     case 5
-                        set(obj.h_suffix_edit,'string','opp');
+                        set(obj.h_suffix_edit,'string','pow_c');
                     case 6
+                        set(obj.h_suffix_edit,'string','opp');
+                    case 7
                         set(obj.h_suffix_edit,'string','abs');
                 end
             end
@@ -70,8 +72,10 @@ classdef FLW_math_constant<CLW_generic
                 case 4
                     option.operation='div';
                 case 5
-                    option.operation='opp';
+                    option.operation='pow';
                 case 6
+                    option.operation='opp';
+                case 7
                     option.operation='abs';
             end
             option.value=str2num(get(obj.h_constant_edt,'string'));
@@ -88,14 +92,16 @@ classdef FLW_math_constant<CLW_generic
                     set(obj.h_operation_pop,'value',3);
                 case 'div'
                     set(obj.h_operation_pop,'value',4);
-                case 'opp'
+                case 'pow'
                     set(obj.h_operation_pop,'value',5);
-                case 'abs'
+                case 'opp'
                     set(obj.h_operation_pop,'value',6);
+                case 'abs'
+                    set(obj.h_operation_pop,'value',7);
             end
             set(obj.h_constant_edt,'string',num2str(option.value));
             
-            if option.operation<5
+            if option.operation<6
                 set(obj.h_constant_txt,'enable','on');
                 set(obj.h_constant_edt,'enable','on');
             else
@@ -103,7 +109,7 @@ classdef FLW_math_constant<CLW_generic
                 set(obj.h_constant_edt,'enable','off');
             end
             str=get(obj.h_suffix_edit,'string');
-            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','opp','abs'}))==1
+            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','pow_c','opp','abs'}))==1
                 switch(option.operation)
                     case 1
                         set(obj.h_suffix_edit,'string','add_c');
@@ -114,8 +120,10 @@ classdef FLW_math_constant<CLW_generic
                     case 4
                         set(obj.h_suffix_edit,'string','div_c');
                     case 5
-                        set(obj.h_suffix_edit,'string','opp');
+                        set(obj.h_suffix_edit,'string','pow_c');
                     case 6
+                        set(obj.h_suffix_edit,'string','opp');
+                    case 7
                         set(obj.h_suffix_edit,'string','abs');
                 end
             end
@@ -158,6 +166,8 @@ classdef FLW_math_constant<CLW_generic
                     data=data*option.value;
                 case 'div'
                     data=data/option.value;
+                case 'pow'
+                    data=data^option.value;
                 case 'opp'
                     data=-data;
                 case 'abs'
