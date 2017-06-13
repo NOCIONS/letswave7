@@ -68,7 +68,7 @@
     <menu Label="Math">
         <submenu Label="Math operations using a constant" callback="FLW_math_constant"/>
         <submenu Label="Math operations using two datasets" callback="FLW_math"/>
-        <submenu Label="Threshold signals"/>
-        <submenu Label="Compute signal derivative"/>
+        <submenu Label="Threshold signals" callback="FLW_threshold"/>
+        <submenu Label="Compute signal derivative" callback="FLW_derivate_signals"/>
     </menu>
 </LW_Manager>

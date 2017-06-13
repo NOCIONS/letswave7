@@ -426,15 +426,16 @@ Manager_Init();
     end
 
     function check_version()
-        
         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
         try
             lw_version = str2num(urlread(url,'Timeout',0.5));
             % lw_version = str2num(urlread(url));
             handles.version_checkked=1;
             temp=load('version.txt');
+            
             if temp<lw_version
-                set(handles.tip_text,'string','tips: There is new version of Letswave, please update Letswave');
+                set(handles.tip_text,'string',['tips: There is new version of Letswave (',...
+                    num2str(floor(lw_version/1000000)),'), please update Letswave']);
             else
                 %set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
             end
