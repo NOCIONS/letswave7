@@ -9,10 +9,11 @@ end
 
 %% Batch_init
     function Batch_Init()
-        %create figure
+        %% create figure
         handle.fig = figure('position',[100,100,520,605],'Resize','off',...
             'name','Letswave7--Batch','numbertitle','off','color',0.94*[1,1,1]);
-        %% initialize the toolbar and menu
+        
+        %% initialize the toolbar
         set(handle.fig,'MenuBar','none');
         set(handle.fig,'DockControls','off');
         icon=load('icon.mat');
@@ -46,9 +47,9 @@ end
         handle.btn_run=uicontrol('style','pushbutton','string','Run',...
             'TooltipString','run script','callback',{@run_script},...
             'position',[2,5,518,40]);
-        %menu
-        menu_name={'Edit','Process','Toolbox','Statistics',...
-            'Plugins','Addition1','Addition2','Addition3'};
+        
+        %% initialize the menu
+        menu_name={'Edit','Process','Statistics'};
         root = uimenu(handle.fig,'Label','File','BusyAction','cancel');
         mh = uimenu(root,'Label','load', 'callback',@(obj,event)add_function('FLW_load'));
         for k=1:length(menu_name)
@@ -99,6 +100,68 @@ end
                 end
             end
         end
+        
+        %add batch
+        load('batch_plugins.mat');
+        root_batch = uimenu(handle.fig,'Label','Batch');
+        for k=1:length(batch_list)
+            mh = uimenu(root_batch,'Label',batch_list{k}(1:end-10));
+            set(mh,'callback',@(obj,event)add_script(batch_list{k}));
+        end
+        root_plugins = uimenu(handle.fig,'Label','Plugins');
+        for k=1:length(plugins_list)
+            str=fullfile(fileparts(which(mfilename)),'Plugins',plugins_list{k},'menu.xml');
+            
+            if ~exist(str,'file')
+                continue;
+            end
+            %convert xml to struct
+            s= xml2struct(str);
+            if ~isfield(s,'LW_Plugins')||~isfield(s.LW_Plugins,'menu')
+                continue;                
+            end
+            %build titlebar menu (labels and callback)
+            root = uimenu(root_plugins,'Label',plugins_list{k});
+            s=s.LW_Plugins.menu;
+            if ~iscell(s); s={s};end
+            for k1=1:length(s)
+                mh = uimenu(root,'Label',s{k1}.Attributes.Label);
+                if isfield(s{k1},'submenu')
+                    ss=s{k1}.submenu;
+                    if ~iscell(ss) ss={ss};end
+                    for k2=1:length(ss)
+                        eh = uimenu(mh,'Label',ss{k2}.Attributes.Label);
+                        if isfield(ss{k2},'subsubmenu')
+                            sss=ss{k2}.subsubmenu;
+                            if ~iscell(sss) sss={sss};end
+                            for k3=1:length(sss)
+                                if isfield(sss{k3}.Attributes,'callback') 
+                                    uimenu(eh,'Label',sss{k3}.Attributes.Label,...
+                                        'callback',@(obj,event)add_function(sss{k3}.Attributes.callback));
+                                else
+                                    uimenu(eh,'Label',sss{k3}.Attributes.Label,...
+                                        'enable', 'off');
+                                end
+                             end
+                        else
+                            if isfield(ss{k2}.Attributes,'callback') 
+                                set(eh,'callback',@(obj,event)add_function(ss{k2}.Attributes.callback));
+                            else
+                                set(eh,'enable', 'off');
+                            end
+                        end
+                    end
+                else
+                    if isfield(s{k1}.Attributes,'callback')
+                        set(mh,'callback',@(obj,event)add_function(s{k1}.Attributes.callback));
+                    else
+                        set(mh,'enable', 'off');
+                    end
+                end
+            end
+        end
+        
+        
         %path_edit
         handle.path_edit=uicontrol('style','edit','String',pwd,'userdata',pwd,...
             'HorizontalAlignment','left','position',[3,578,487,25],'backgroundcolor',1*[1,1,1],...
@@ -157,13 +220,41 @@ end
                 set(handle.fig,'position',pos);
             end
             option=varargin{1};
-            set(handle.path_edit,'String',option.file_path);
-            add_function('FLW_load');
-            for k=1:length(option.file_str)
-                batch{1}.add_file(fullfile(option.file_path,option.file_str{k}));
+            set(handle.path_edit,'String',pwd);
+            if isfield(option,'file_path')
+                set(handle.path_edit,'String',option.file_path);
+                add_function('FLW_load');
+                for k=1:length(option.file_str)
+                    batch{1}.add_file(fullfile(option.file_path,option.file_str{k}));
+                end
+                if isfield(option,'fun_name')
+                    add_function(option.fun_name);
+                    CheckTab(1,2);
+                end
             end
-            add_function(option.fun_name);
-            CheckTab(1,2);
+            if isfield(option,'script_name')
+                [pathstr,~,~]=fileparts(which('LW_manager.m'));
+                option1=load(fullfile(pathstr,'plugins',option.script_name),'-mat');
+                option1=option1.option;
+                idx=handle.tab_idx;
+                batch_num=length(batch);
+                for k=1:length(option1)
+                    if ~(k==1 && strcmp(option1{k}.function,'FLW_load') && length(batch)==1)
+                        eval(['batch{end+1}=',option1{k}.function,'(handle);']);
+                        set(batch{end}.h_tab,'Callback',{@SelectionChg});
+                        batch{end}.set_option(option1{k});
+                    end
+                end
+                if ~isempty(idx)
+                    I=[1:idx,batch_num+1:length(batch),idx+1:batch_num];
+                    batch=batch(I);
+                end
+                tab_order_check();
+                if isempty(idx)&& ~isempty(batch)
+                    %set(handle.tabgp,'SelectedTab',batch{1}.h_tab);
+                    handle.tab_idx=1;
+                end
+            end
             handle.is_close=1;
         else
             handle.is_close=0;
@@ -507,6 +598,31 @@ end
             %set(handle.tabgp,'SelectedTab',batch{1}.h_tab);
             handle.tab_idx=1;
         end
+    end
+
+%% add_script
+    function add_script(varargin)
+            script_name=varargin{1};
+            [pathstr,~,~]=fileparts(which('LW_manager.m'));
+            load(fullfile(pathstr,'plugins',script_name),'-mat');
+            idx=handle.tab_idx;
+            batch_num=length(batch);
+            for k=1:length(option)
+                if ~(k==1 && strcmp(option{k}.function,'FLW_load') && length(batch)==1)
+                    eval(['batch{end+1}=',option{k}.function,'(handle);']);
+                    set(batch{end}.h_tab,'Callback',{@SelectionChg});
+                    batch{end}.set_option(option{k});
+                end
+            end
+            if ~isempty(idx)
+                I=[1:idx,batch_num+1:length(batch),idx+1:batch_num];
+                batch=batch(I);
+            end
+            tab_order_check();
+            if isempty(idx)&& ~isempty(batch)
+                %set(handle.tabgp,'SelectedTab',batch{1}.h_tab);
+                handle.tab_idx=1;
+            end
     end
 
 %% show_script

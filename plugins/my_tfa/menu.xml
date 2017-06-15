@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LW_Plugins Label="TFA">
+        <menu Label="averaged CWT" callback="FLW_averaged_CWT"/>
+        <menu Label="averaged STFT" callback="FLW_averaged_STFT"/>
+</LW_Plugins>

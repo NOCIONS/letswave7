@@ -27,10 +27,39 @@ end
 if ~isempty(str_rm)
     rmpath(str_rm);
 end
+      
 str_add=[fullfile(p),pathsep,...
     fullfile(p,'resources'),pathsep,...
     fullfile(p,'LW_Function'),pathsep,...
     fullfile(p,'LW_GUI'),pathsep,...
     genpath(fullfile(p,'LW_Core')),pathsep,...
-    genpath(fullfile(p,'external')),pathsep];
+    genpath(fullfile(p,'external')),pathsep,...
+    genpath(fullfile(p,'plugins')),pathsep];
+
+
+pathstr=fullfile(p,'plugins');
+filename=dir(pathstr);
+batch_list=[];
+batch_idx=1;
+plugins_list=[];
+plugins_idx=1;
+
+for k=3:length(filename)
+    if filename(k).isdir%not a folder
+        str=fullfile(pathstr,filename(k).name,'menu.xml');
+        if ~exist(str,'file')
+            continue;
+        end
+        str_add=[str_add,fullfile(pathstr,filename(k).name),pathsep];
+        plugins_list{plugins_idx}=filename(k).name;
+        plugins_idx=plugins_idx+1;
+    else
+        [~,~,ext]=fileparts(filename(k).name);
+        if strcmp(ext,'.lw_script')
+            batch_list{batch_idx}=filename(k).name;
+            batch_idx=batch_idx+1;
+        end
+    end
+end
+save(fullfile(p,'resources','batch_plugins.mat'),'batch_list','plugins_list');
 addpath(str_add);

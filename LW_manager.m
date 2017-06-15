@@ -16,12 +16,12 @@ Manager_Init();
             pos(2)=scrsz(4)-60-pos(4);
         end
         set(handles.fig,'Position',pos);
+        
         %% init menu
         set(handles.fig,'MenuBar','none');
         set(handles.fig,'DockControls','off');
         % menu labels
-        menu_name={'File','Edit','Process','Toolbox','Statistics','View',...
-            'Plugins'};
+        menu_name={'File','Edit','Process','Statistics','View'};
         for k=1:length(menu_name)
             % find related xml file
             str=['menu_',menu_name{k},'.xml'];
@@ -33,6 +33,7 @@ Manager_Init();
             if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
                 continue;                
             end
+            
             %build titlebar menu (labels and callback)
             root = uimenu(handles.fig,'Label',s.LW_Manager.Attributes.Label);
             s=s.LW_Manager.menu;
@@ -73,6 +74,70 @@ Manager_Init();
                 end
             end
         end
+        
+        %add batch
+        load('batch_plugins.mat');
+        root_batch = uimenu(handles.fig,'Label','Batch');
+        mh = uimenu(root_batch,'Label','*EMPTY*');
+        set(mh,'callback',@(obj,event)menu_callback('LW_batch'));
+        for k=1:length(batch_list)
+            mh = uimenu(root_batch,'Label',batch_list{k}(1:end-10));
+            set(mh,'callback',@(obj,event)menu_callback(['LW_batch(',batch_list{k},')']));
+            
+        end
+        root_plugins = uimenu(handles.fig,'Label','Plugins');
+        for k=1:length(plugins_list)
+            str=fullfile(fileparts(which(mfilename)),'Plugins',plugins_list{k},'menu.xml');
+            
+            if ~exist(str,'file')
+                continue;
+            end
+            %convert xml to struct
+            s= xml2struct(str);
+            if ~isfield(s,'LW_Plugins')||~isfield(s.LW_Plugins,'menu')
+                continue;                
+            end
+            %build titlebar menu (labels and callback)
+            root = uimenu(root_plugins,'Label',plugins_list{k});
+            s=s.LW_Plugins.menu;
+            if ~iscell(s); s={s};end
+            for k1=1:length(s)
+                mh = uimenu(root,'Label',s{k1}.Attributes.Label);
+                if isfield(s{k1},'submenu')
+                    ss=s{k1}.submenu;
+                    if ~iscell(ss) ss={ss};end
+                    for k2=1:length(ss)
+                        eh = uimenu(mh,'Label',ss{k2}.Attributes.Label);
+                        if isfield(ss{k2},'subsubmenu')
+                            sss=ss{k2}.subsubmenu;
+                            if ~iscell(sss) sss={sss};end
+                            for k3=1:length(sss)
+                                if isfield(sss{k3}.Attributes,'callback') 
+                                    uimenu(eh,'Label',sss{k3}.Attributes.Label,...
+                                        'callback',@(obj,event)menu_callback(sss{k3}.Attributes.callback));
+                                else
+                                    uimenu(eh,'Label',sss{k3}.Attributes.Label,...
+                                        'enable', 'off');
+                                end
+                             end
+                        else
+                            if isfield(ss{k2}.Attributes,'callback') 
+                                set(eh,'callback',@(obj,event)menu_callback(ss{k2}.Attributes.callback));
+                            else
+                                set(eh,'enable', 'off');
+                            end
+                        end
+                    end
+                else
+                    if isfield(s{k1}.Attributes,'callback')
+                        set(mh,'callback',@(obj,event)menu_callback(s{k1}.Attributes.callback));
+                    else
+                        set(mh,'enable', 'off');
+                    end
+                end
+            end
+        end
+                    
         %build context menu (labels and callbacks)
         hcmenu = uicontextmenu('parent',handles.fig);
         uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
@@ -354,10 +419,27 @@ Manager_Init();
             update_handles();
             return;
         end
+        if ~isempty(strfind(fun_name,'LW_batch'))
+            option=[];
+            str=get(handles.file_listbox,'userdata');
+            idx=get(handles.file_listbox,'value');
+            if ~isempty(idx) && ~isempty(str)
+                option.file_str  = str(idx);
+                option.file_path = get(handles.path_edit,'userdata');
+            end
+            if length(fun_name)>8
+                option.script_name=fun_name(10:end-1);
+            end
+            LW_batch(option,handles.fig);
+            return;
+        end
         
         %if fun_name is any other function
         %get the selection of files > option
         option=get_selectfile();
+        
+        
+        
         if isempty(option)
             return;
         end
