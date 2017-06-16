@@ -5,7 +5,7 @@ classdef FLW_rereference<CLW_generic
         h_reference_btn;
         h_apply_list;
         h_apply_btn;
-        h_not_equal_txt
+        h_not_equal_txt;
     end
     
     methods

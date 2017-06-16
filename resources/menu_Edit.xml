@@ -2,9 +2,7 @@
 <LW_Manager Label="Edit">
     <menu Label="Electrodes">
         <submenu Label="Edit electrode coordinates" callback="FLW_electrode_location_assign"/>
-        <submenu Label="Edit electrode labels"/>
-        <submenu Label="Flip left/right electrodes"/>
-        <submenu Label="Electrode bridge detector"/>
+        <submenu Label="Edit electrode labels" callback="FLW_electrode_labels"/>
         <submenu Label="Interpolate channel using neighbouring electrodes" callback="FLW_interpolate_channel"/>
     </menu>
     <menu Label="Events">
