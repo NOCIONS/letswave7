@@ -3,14 +3,11 @@
     <menu Label="Epoch segmentation">
         <submenu Label="Segment relative to events" callback="FLW_segmentation"/>
         <submenu Label="Segment relative to events (one file per event code)" callback="FLW_segmentation_separate"/>
-        <submenu Label="Segment relative to events (periodic stimulation)" />
         <submenu Label="Segment epochs in successive chunks" callback="FLW_segmentation_chunk" />
     </menu>
     <menu Label="Rereference signals">
         <submenu Label="Rereference" callback="FLW_rereference"/>
         <submenu Label="Rereference (custom montage)" callback="FLW_rereference_advanced"/>
-        <submenu Label="Scalp current Source Density (CSD)"/>
-        <submenu Label="Linear current Source Density (linCSD)"/>
     </menu>
     <menu Label="Baseline operations">
         <submenu Label="Baseline correction" callback="FLW_baseline"/>
@@ -32,8 +29,6 @@
         <submenu Label="Suppress ocular artefacts (Graton and Coles)" callback="FLW_ocular_remove"/>
         <submenu Label="Reject epochs (amplitude criterion)" callback="FLW_reject_epochs_amplitude"/>
         <submenu Label="Reject epochs (visual inspection)"/>
-        <submenu Label="Suppress artefact (latency-defined)"/>
-        <submenu Label="Suppress artefact (event-defined)"/>
     </menu>
     <menu Label="Frequency ananysis and filters">
         <submenu Label="------Frequency analysis------"/>
@@ -49,11 +44,7 @@
         <submenu Label="FFT filters" callback="FLW_FFT_filter"/>
         <submenu Label="FFT multinotch filter" callback="FLW_FFT_filter"/>
         <submenu Label="------Others------"/>
-        <submenu Label="Fast CWT (Mouraux et al. 2003)"/>
         <submenu Label="Hilbert transform " callback="FLW_hilbert"/>
-        <submenu Label="Hilbert transform and FFT across frequency bands"/>
-        <submenu Label="Canonical Correlation Analysis (CCA)"/>
-        <submenu Label="Time course of Fourier-transform response"/>
     </menu>
     <menu Label="Average">
         <submenu Label="Compute average, std, median across epochs" callback="FLW_average_epochs"/>
@@ -61,7 +52,6 @@
         <submenu Label="Sliding average across trials (ERPimage)"/>
         <submenu Label="Grand average (weighted)"/>
         <submenu Label="Linear channel map"/>
-        <submenu Label="Pool channel"/>
         <submenu Label="Weighted channel average (create template)"/>
         <submenu Label="Weighted channel average (apply template)"/>
     </menu>
