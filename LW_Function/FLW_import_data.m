@@ -172,7 +172,10 @@ classdef FLW_import_data
                     
                     str{k}=['<html><p style="color:red">',userdata.file_name{k},'&nbsp;&nbsp;(Done)</p></html>'];
                     set( obj.h_file_list,'String',str);
-                    pause(0.01);
+                    set( obj.h_file_list,'value',min(k+3,length(userdata.file_path)));
+                    set( obj.h_file_list,'value',min(k+1,length(userdata.file_path)));
+                    drawnow;
+                    %pause(0.01);
                 end
             end
         end
