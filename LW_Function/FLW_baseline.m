@@ -137,7 +137,7 @@ classdef FLW_baseline<CLW_generic
                 dxend=dxstart;
                 dxstart=temp;
             end
-            if dxstart<1;
+            if dxstart<1
                 dxstart=1;
             end
             if dxend>dxsize

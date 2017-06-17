@@ -430,7 +430,7 @@ GLW_view_OpeningFcn;
 
     function Init_function()
         %% left panel
-        set(handles.epoch_listbox,          'Callback',@Event_Update);
+        set(handles.epoch_listbox,          'Callback',@GLW_view_event_UpdataFcn);
         set(handles.channel_listbox,        'Callback',@GLW_view_UpdataFcn);
         set(handles.filter_checkbox,        'Callback',@Filter_changed);
         set(handles.filter_lowpass_checkbox,'Callback',@Filter_changed);
@@ -486,6 +486,10 @@ GLW_view_OpeningFcn;
     end
 
 %% GLW_view_UpdataFcn
+    function GLW_view_event_UpdataFcn(~,~)
+        GLW_view_UpdataFcn();
+        Event_Update();
+    end
     function GLW_view_UpdataFcn(~,~)
         ch_num=get(handles.channel_listbox,'value');
         ep_num=get(handles.epoch_listbox,'value');

@@ -4,7 +4,7 @@
         <submenu Label="Segment relative to events" callback="FLW_segmentation"/>
         <submenu Label="Segment relative to events (one file per event code)" callback="FLW_segmentation_separate"/>
         <submenu Label="Segment relative to events (periodic stimulation)" />
-        <submenu Label="Segment epochs in successive chunks " />
+        <submenu Label="Segment epochs in successive chunks" callback="FLW_segmentation_chunk" />
     </menu>
     <menu Label="Rereference signals">
         <submenu Label="Rereference" callback="FLW_rereference"/>
