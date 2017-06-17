@@ -4,17 +4,13 @@
         <submenu Label="Edit electrode coordinates" callback="FLW_electrode_location_assign"/>
         <submenu Label="Edit electrode labels" callback="FLW_electrode_labels"/>
         <submenu Label="Interpolate channel using neighbouring electrodes" callback="FLW_interpolate_channel"/>
+        <submenu Label="New channel: averaged by existing channels" callback="FLW_new_channel_averaged"/>
     </menu>
     <menu Label="Events">
         <submenu Label="Browse and edit events" callback="GLW_multi_viewer_continuous"/>
         <submenu Label="Create events from level trigger"/>
         <submenu Label="Merge event codes and latencies"/>
         <submenu Label="Sort epochs according to event latencies"/>
-    </menu>
-    <menu Label="Epoch data">
-        <submenu Label="Add or edit epochdata"/>
-        <submenu Label="Select epochs according to epochdata"/>
-        <submenu Label="Sort epochs according to epochdata"/>
     </menu>
     <menu Label="Arrange signals">
         <submenu Label="Rearrange or delete epochs, channels, indexes" callback="FLW_selection"/>
@@ -26,7 +22,6 @@
         <submenu Label="Crop signals" callback="FLW_crop_epochs"/>
         <submenu Label="Downsample signals (integer ratio)" callback="FLW_downsample"/>
         <submenu Label="Resample signals (user defined sampling rate)" callback="FLW_resample"/>
-        <submenu Label="New channel: linear mix"/>
     </menu>
     <menu Label="Dataset properties"/>
 </LW_Manager>

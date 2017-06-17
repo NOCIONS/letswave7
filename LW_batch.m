@@ -10,8 +10,10 @@ end
 %% Batch_init
     function Batch_Init()
         %% create figure
+        temp=load('version.txt');
+        temp=floor(temp/1000000);
         handle.fig = figure('position',[100,100,520,605],'Resize','off',...
-            'name','Letswave7--Batch','numbertitle','off','color',0.94*[1,1,1]);
+            'name',['Letswave7--Batch (ver.',num2str(temp),')'],'numbertitle','off','color',0.94*[1,1,1]);
         
         %% initialize the toolbar
         set(handle.fig,'MenuBar','none');
