@@ -78,9 +78,9 @@ classdef FLW_ttest<CLW_permutation
             end
             N=length(get(obj.h_reference_pop ,'string'));
             if option.ref_dataset>N || option.ref_dataset<1
-                get(obj.h_reference_pop ,'value',1);
+                set(obj.h_reference_pop ,'value',1);
             else
-                get(obj.h_reference_pop ,'value',option.ref_dataset);
+                set(obj.h_reference_pop ,'value',option.ref_dataset);
             end
         end
         
