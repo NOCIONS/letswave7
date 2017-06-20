@@ -34,7 +34,7 @@ str_add=[fullfile(p),pathsep,...
     fullfile(p,'LW_GUI'),pathsep,...
     genpath(fullfile(p,'LW_Core')),pathsep,...
     genpath(fullfile(p,'external')),pathsep,...
-    genpath(fullfile(p,'plugins')),pathsep];
+    fullfile(p,'plugins'),pathsep];
 
 
 pathstr=fullfile(p,'plugins');
@@ -62,4 +62,5 @@ for k=3:length(filename)
     end
 end
 save(fullfile(p,'resources','batch_plugins.mat'),'batch_list','plugins_list');
+str_add=strrep(str_add,[pathsep,pathsep],pathsep);
 addpath(str_add);
