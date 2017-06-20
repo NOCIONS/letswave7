@@ -381,13 +381,17 @@ GLW_my_view_OpeningFcn;
          handles.toolbar2_save = uipushtool(handles.toolbar2,'Separator','on');
         set(handles.toolbar2_save,'TooltipString','Save the figure');
         set(handles.toolbar2_save,'CData',...
-            get(findall(handles.fig2,'ToolTipString','Save Figure'),'CData'));
+            get(findall(handles.fig2,'Tag','Standard.SaveFigure'),'CData'));
         set(handles.toolbar2_save,'ClickedCallback',{@fig_save});
         %set(findall(handles.fig2,'ToolTipString','Save Figure'),'Parent',handles.toolbar2);
-        set(findall(handles.fig2,'ToolTipString','Zoom In'),'Parent',handles.toolbar2);
-        set(findall(handles.fig2,'ToolTipString','Zoom Out'),'Parent',handles.toolbar2);
-        set(findall(handles.fig2,'ToolTipString','Pan'),'Parent',handles.toolbar2);
-        set(findall(handles.fig2,'ToolTipString','Rotate 3D'),'Parent',handles.toolbar2);
+        handles.toolbar2_zoomin=findall(handles.fig2,'Tag','Exploration.ZoomIn');
+        handles.toolbar2_zoomout=findall(handles.fig2,'Tag','Exploration.ZoomOut');
+        handles.toolbar2_pan=findall(handles.fig2,'Tag','Exploration.Pan');
+        handles.toolbar2_rotate=findall(handles.fig2,'Tag','Exploration.Rotate');
+        set(handles.toolbar2_zoomin,'Parent',handles.toolbar2);
+        set(handles.toolbar2_zoomout,'Parent',handles.toolbar2);
+        set(handles.toolbar2_pan,'Parent',handles.toolbar2);
+        set(handles.toolbar2_rotate,'Parent',handles.toolbar2);
         
         handles.toolbar2_polarity = uitoggletool(handles.toolbar2,'Separator','on');
         set(handles.toolbar2_polarity,'TooltipString','change polarity');
@@ -1079,6 +1083,13 @@ GLW_my_view_OpeningFcn;
     function fig_shade(~, ~)
         userdata.is_shade=strcmp(get(handles.toolbar2_shade,'State'),'on');
         if userdata.is_shade
+            zoom off;
+            pan off;
+            rotate3d off;
+            set(handles.toolbar2_zoomin,'State','off');
+            set(handles.toolbar2_zoomout,'State','off');
+            set(handles.toolbar2_pan,'State','off');
+            set(handles.toolbar2_rotate,'State','off');
             for ax_idx=length(handles.shade)+1:userdata.num_cols*userdata.num_rows
                 handles.shade(ax_idx)=fill(userdata.shade_x([1,2,2,1]),...
                     userdata.minmax_axis([3,3,4,4]),[0.8,0.8,0.8],...
@@ -1257,6 +1268,13 @@ GLW_my_view_OpeningFcn;
     function fig_cursor(~, ~)
         userdata.is_cursor=strcmp(get(handles.toolbar2_cursor,'State'),'on');
         if userdata.is_cursor
+            zoom off;
+            pan off;
+            rotate3d off;
+            set(handles.toolbar2_zoomin,'State','off');
+            set(handles.toolbar2_zoomout,'State','off');
+            set(handles.toolbar2_pan,'State','off');
+            set(handles.toolbar2_rotate,'State','off');
             for col_pos=1:userdata.num_cols
                 if length(handles.text_x)<col_pos
                     handles.text_x(col_pos)=uicontrol('Parent',handles.panel_fig,...
