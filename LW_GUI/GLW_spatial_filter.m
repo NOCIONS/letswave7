@@ -260,6 +260,7 @@ uiwait(handles.fig);
         end
         set(handles.epoch_listbox,'string',str);
         userdata.data=permute(lwdataset_in(dataset_idx).data(:,:,1,1,1,:),[2,6,1,3,4,5]);
+        userdata.data_um=zeros(size(userdata.unmix_matrix,1),size(userdata.data,2),header.datasize(1));
         for  k=1:header.datasize(1)
             userdata.data_um(:,:,k)=userdata.unmix_matrix*userdata.data(:,:,k);
         end
@@ -292,7 +293,8 @@ uiwait(handles.fig);
         set(handles.line_before,'XData',userdata.t,'YData',userdata.data(channel_idx,:,epoch_idx));
         remix_matrix=userdata.mix_matrix;
         remix_matrix(:,component_remove_idx)=0;
-        userdata.data_rm(:,:)=remix_matrix*userdata.data_um(:,:,epoch_idx);
+        
+        userdata.data_rm=remix_matrix*userdata.data_um(:,:,epoch_idx);
         set(handles.line_after,'XData',userdata.t,'YData',userdata.data_rm(channel_idx,:));
     end
 

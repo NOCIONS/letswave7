@@ -167,7 +167,7 @@ classdef FLW_math_constant<CLW_generic
                 case 'div'
                     data=data/option.value;
                 case 'pow'
-                    data=data^option.value;
+                    data=data.^option.value;
                 case 'opp'
                     data=-data;
                 case 'abs'
