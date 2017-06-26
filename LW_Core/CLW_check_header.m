@@ -78,7 +78,24 @@ else
     end
     if ~isfield(header.chanlocs,'topo_enabled')
         [header.chanlocs.topo_enabled]=deal(0);
+    else
+        for k=1:size(header.chanlocs,2)
+            if isempty(header.chanlocs(k).topo_enabled)
+                header.chanlocs(k).topo_enabled=0;
+            end
+        end
     end
+    
+    if ~isfield(header.chanlocs,'SEEG_enabled')
+        [header.chanlocs.SEEG_enabled]=deal(0);
+    else
+        for k=1:size(header.chanlocs,2)
+            if isempty(header.chanlocs(k).SEEG_enabled)
+                header.chanlocs(k).SEEG_enabled=0;
+            end
+        end
+    end
+    
     if ~isfield(header.chanlocs,'theta')
         [header.chanlocs.theta]=deal([]);
     end
@@ -105,8 +122,5 @@ else
     end
     if ~isfield(header.chanlocs,'Z')
         [header.chanlocs.Z]=deal([]);
-    end
-    if ~isfield(header.chanlocs,'SEEG_enabled')
-        [header.chanlocs.SEEG_enabled]=deal(0);
     end
 end
