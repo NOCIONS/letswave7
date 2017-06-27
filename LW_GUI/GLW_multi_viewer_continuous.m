@@ -1064,13 +1064,13 @@ GLW_view_OpeningFcn;
         if x_scale>userdata.t(end)-userdata.t(1)
             x_scale=userdata.t(end)-userdata.t(1);
         end
+        if x_scale>2*10^4/userdata.Fs
+            x_scale=2*10^4/userdata.Fs;
+        end
         x(2)=x(1)+x_scale;
         if x(2)>userdata.t(end)
             x(2)=userdata.t(end);
             x(1)=userdata.t(end)-x_scale;
-        end
-        if x_scale>2*10^4/userdata.Fs
-            x_scale=2*10^4/userdata.Fs;
         end
         userdata.x_range=x_scale;
         userdata.x1=x(1);

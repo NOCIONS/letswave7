@@ -4,6 +4,7 @@ classdef FLW_math_constant<CLW_generic
         h_operation_pop;
         h_constant_txt;
         h_constant_edt;
+        h_log_pop;
     end
     
     methods
@@ -16,7 +17,7 @@ classdef FLW_math_constant<CLW_generic
                 'parent',obj.h_panel);
             obj.h_operation_pop=uicontrol('style','popupmenu',...
                 'String',{'Add (A+constant)','Subtract (A-constant)','Multiple (A*constant)',...
-                'Divide (A/constant)','Power (A^constant)','Opposite number (-A)','Absolute value (|A|)'},...
+                'Divide (A/constant)','Power (A^constant)','Opposite number (-A)','Absolute value (|A|)','logarithm (log(A))'},...
                  'backgroundcolor',[1,1,1],'value',1,'callback',@obj.method_change,...
                  'position',[35,440,300,30],'parent',obj.h_panel);
             
@@ -25,6 +26,11 @@ classdef FLW_math_constant<CLW_generic
                 'parent',obj.h_panel);
             obj.h_constant_edt=uicontrol('style','edit','backgroundcolor',[1,1,1],...
                 'String','1','position',[40,390,100,19],'parent',obj.h_panel);
+            obj.h_log_pop=uicontrol('style','popupmenu','backgroundcolor',[1,1,1],...
+                'value',1,'String',{'log -Natural logarithm',...
+                'log2 -Base 2 logarithm','log10 -Base 10 logarithm'},...
+                'position',[35,390,200,19],'parent',obj.h_panel,...
+                'callback',@obj.method_change,'visible','off');
             
         end
          
@@ -38,8 +44,15 @@ classdef FLW_math_constant<CLW_generic
                 set(obj.h_constant_edt,'enable','off');
             end
             
+            if index==8
+                set(obj.h_log_pop,'visible','on');
+            else
+                set(obj.h_log_pop,'visible','off');
+            end
+            
+            
             str=get(obj.h_suffix_edit,'string');
-            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','pow_c','opp','abs'}))==1
+            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','pow_c','opp','abs','log','log2','log10'}))==1
                 switch(index)
                     case 1
                         set(obj.h_suffix_edit,'string','add_c');
@@ -55,6 +68,16 @@ classdef FLW_math_constant<CLW_generic
                         set(obj.h_suffix_edit,'string','opp');
                     case 7
                         set(obj.h_suffix_edit,'string','abs');
+                    case 8
+                        temp=get(obj.h_log_pop,'value');
+                        switch(temp)
+                            case 1
+                        set(obj.h_suffix_edit,'string','log');
+                            case 2
+                        set(obj.h_suffix_edit,'string','log2');
+                            case 3
+                        set(obj.h_suffix_edit,'string','log10');
+                        end
                 end
             end
         end
@@ -77,8 +100,14 @@ classdef FLW_math_constant<CLW_generic
                     option.operation='opp';
                 case 7
                     option.operation='abs';
+                case 8
+                    option.operation='log';
             end
-            option.value=str2num(get(obj.h_constant_edt,'string'));
+            if idx==8
+                option.value=get(obj.h_log_pop,'value');
+            else
+                option.value=str2num(get(obj.h_constant_edt,'string'));
+            end
         end
         
         function set_option(obj,option)
@@ -98,8 +127,22 @@ classdef FLW_math_constant<CLW_generic
                     set(obj.h_operation_pop,'value',6);
                 case 'abs'
                     set(obj.h_operation_pop,'value',7);
+                case 'log'
+                    set(obj.h_operation_pop,'value',8);
+                case 'log2'
+                    set(obj.h_operation_pop,'value',8);
+                case 'log10'
+                    set(obj.h_operation_pop,'value',8);
             end
-            set(obj.h_constant_edt,'string',num2str(option.value));
+            
+            if get(obj.h_operation_pop,'value')
+                set(obj.h_log_pop,'value',option.value);
+                set(obj.h_log_pop,'visible','on');
+            else
+                set(obj.h_constant_edt,'string',num2str(option.value));
+                set(obj.h_log_pop,'visible','off');
+            end
+            
             
             if option.operation<6
                 set(obj.h_constant_txt,'enable','on');
@@ -108,9 +151,10 @@ classdef FLW_math_constant<CLW_generic
                 set(obj.h_constant_txt,'enable','off');
                 set(obj.h_constant_edt,'enable','off');
             end
+            
             str=get(obj.h_suffix_edit,'string');
-            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','pow_c','opp','abs'}))==1
-                switch(option.operation)
+            if sum(strcmp(str,{'add_c','sub_c','mul_c','div_c','pow_c','opp','abs','log','log2','log10'}))==1
+                switch(get(obj.h_operation_pop,'value'))
                     case 1
                         set(obj.h_suffix_edit,'string','add_c');
                     case 2
@@ -125,6 +169,16 @@ classdef FLW_math_constant<CLW_generic
                         set(obj.h_suffix_edit,'string','opp');
                     case 7
                         set(obj.h_suffix_edit,'string','abs');
+                    case 8
+                        temp=get(obj.h_log_pop,'value');
+                        switch(temp)
+                            case 1
+                                set(obj.h_suffix_edit,'string','log');
+                            case 2
+                                set(obj.h_suffix_edit,'string','log2');
+                            case 3
+                                set(obj.h_suffix_edit,'string','log10');
+                        end
                 end
             end
         end
@@ -172,6 +226,15 @@ classdef FLW_math_constant<CLW_generic
                     data=-data;
                 case 'abs'
                     data=abs(data);
+                case 'log'
+                    switch option.value
+                        case 1
+                            data=log(data);
+                        case 2
+                            data=log2(data);
+                        case 3
+                            data=log10(data);
+                    end
             end
             
             lwdata_out.header=header;

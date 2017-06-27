@@ -228,35 +228,26 @@ classdef FLW_rereference_advanced<CLW_generic
        
        function set_option(obj,option)
            set_option@CLW_generic(obj,option);
-           str=get(obj.h_active_list,'String');
-           str_ref=str;
-           str_ref{end+1}='0';
            
-           active_list=[];
-           ref_list=[];
-           for k=1:length(option.active_list)
-               if sum(strcmp(option.active_list{k},str))>0 &&...
-                       sum(strcmp(option.ref_list{k},str_ref))>0
-                   active_list{end+1}=option.active_list{k};
-                   ref_list{end+1}=option.ref_list{k};
-               end
-           end
-           userdata.active_list=active_list;
-           userdata.ref_list=ref_list;
-           if isempty(active_list)
+           userdata.active_list=option.active_list;
+           userdata.ref_list=option.ref_list;
+           if isempty(option.active_list)
                set(obj.h_new_list,'string',[]);
            else
                str={};
-               for k=1:length(active_list)
-                   if strcmp(ref_list{k},'0')
-                       str{k}=active_list{k};
+               for k=1:length(option.active_list)
+                   if strcmp(option.ref_list{k},'0')
+                       str{k}=option.active_list{k};
                    else
-                       str{k}=strcat(active_list{k},'-',ref_list{k});
+                       str{k}=strcat(option.active_list{k},'-',option.ref_list{k});
                    end
                end
                set(obj.h_new_list,'string',str);
            end
            set(obj.h_new_list,'userdata',userdata);
+           
+           
+           
        end
        
        function str=get_Script(obj)
@@ -282,6 +273,7 @@ classdef FLW_rereference_advanced<CLW_generic
        end
        
        function GUI_update(obj,batch_pre)
+            option=obj.get_option();
             lwdataset=batch_pre.lwdataset;
             channel_labels={lwdataset(1).header.chanlocs.labels};
             set(obj.h_not_equal_txt,'visible','off');
@@ -300,12 +292,39 @@ classdef FLW_rereference_advanced<CLW_generic
             set(obj.h_ref_list,'String',['0',channel_labels]);
             set(obj.h_active_list,'String',channel_labels);
             
-            option=obj.get_option();
-            obj.set_option(option);
+            
+            str=channel_labels;
+            str_ref=['0',channel_labels];
+            
+            active_list=[];
+            ref_list=[];
+            for k=1:length(option.active_list)
+                if sum(strcmp(option.active_list{k},str))>0 &&...
+                        sum(strcmp(option.ref_list{k},str_ref))>0
+                    active_list{end+1}=option.active_list{k};
+                    ref_list{end+1}=option.ref_list{k};
+                end
+            end
+            userdata.active_list=active_list;
+            userdata.ref_list=ref_list;
+            if isempty(active_list)
+                set(obj.h_new_list,'string',[]);
+            else
+                str={};
+                for k=1:length(active_list)
+                    if strcmp(ref_list{k},'0')
+                        str{k}=active_list{k};
+                    else
+                        str{k}=strcat(active_list{k},'-',ref_list{k});
+                    end
+                end
+                set(obj.h_new_list,'string',str);
+            end
+            set(obj.h_new_list,'userdata',userdata);
             
             obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
-        end
+       end
     end
     
     methods (Static = true)

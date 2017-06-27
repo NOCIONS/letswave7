@@ -43,7 +43,6 @@ classdef FLW_math<CLW_generic
             end
         end
         
-        
         function option=get_option(obj)
             option=get_option@CLW_generic(obj);
             switch get(obj.h_operation_pop,'value')

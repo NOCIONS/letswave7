@@ -12,8 +12,8 @@ classdef FLW_electrode_labels<CLW_generic
     methods
         function obj = FLW_electrode_labels(batch_handle)
             obj@CLW_generic(batch_handle,'chan labels','chanlabels',...
-                'edit electrode labels');
-            obj.h_lable_tab=uitable(obj.h_panel,'position',[25,140,210,370],'data',{'F1','F3';'F2',''});
+                'Edit electrode labels');
+            obj.h_lable_tab=uitable(obj.h_panel,'position',[25,140,210,370],'data',{'F1';''});
             set(obj.h_lable_tab,'ColumnName', {'Old','New'});
             set(obj.h_lable_tab,'ColumnEditable', logical([0,1]));
             
@@ -68,7 +68,7 @@ classdef FLW_electrode_labels<CLW_generic
                 header=CLW_load_header([pathname filename]);
                 for i=1:length(header.chanlocs)
                     st{i}=header.chanlocs(i).labels;
-                end;
+                end
                 data=get(obj.h_lable_tab,'data');
                 for k=1:min(length(st),size(data,1))
                     if ~strcmp(data{k,1},st{k})
@@ -97,16 +97,9 @@ classdef FLW_electrode_labels<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            data=get(obj.h_lable_tab,'data');
-            for k=1:size(data,1)
-                data{k,2}='';
-            end
-            data=get(obj.h_lable_tab,'data');
-            for k=1:length(option.old_channel)
-                idx=find(strcmp(option.old_channel{k},data(:,1)));
-                if ~isempty(idx)
-                    data{idx,2}=option.new_channel{k};
-                end
+            for k=1:size(option.old_channel,1)
+                data{k,1}=option.old_channel{k};
+                data{k,2}=option.new_channel{k};
             end
             set(obj.h_lable_tab,'data',data);
         end
@@ -155,10 +148,14 @@ classdef FLW_electrode_labels<CLW_generic
             end
             data(:,1)=channel_labels;
             for k=1:size(data(:,1),1)
-                data{k,2}='';
+                idx=find(strcmp(data(k,1),option.old_channel), 1);
+                if isempty(idx)
+                    data{k,2}='';
+                else
+                    data{k,2}=option.new_channel{idx};
+                end
             end
             set(obj.h_lable_tab,'data',data);
-            obj.set_option(option);
         end
     end
     
