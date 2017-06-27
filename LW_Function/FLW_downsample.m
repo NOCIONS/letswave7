@@ -78,18 +78,18 @@ classdef FLW_downsample<CLW_generic
             option=get_option(obj);
             frag_code=[];
             %%%
-            if option.x_dsratio>1;
+            if option.x_dsratio>1
                 frag_code=[frag_code,'''x_dsratio'',',...
                     num2str(option.x_dsratio),','];
-            end;
-            if option.y_dsratio>1;
+            end
+            if option.y_dsratio>1
                 frag_code=[frag_code,'''y_dsratio'',',...
                     num2str(option.y_dsratio),','];
-            end;
-            if option.z_dsratio>1;
+            end
+            if option.z_dsratio>1
                 frag_code=[frag_code,'''z_dsratio'',',...
                     num2str(option.z_dsratio),','];
-            end;
+            end
             %%%
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
@@ -97,30 +97,30 @@ classdef FLW_downsample<CLW_generic
         
         function GUI_update(obj,batch_pre)
             header=batch_pre.lwdataset(1).header;
-            if isempty(get(obj.h_x_dsratio_edit,'String'));
+            if isempty(get(obj.h_x_dsratio_edit,'String'))
                 set(obj.h_x_dsratio_edit,'String','1');
-            end;
-            if isempty(get(obj.h_y_dsratio_edit,'String'));
+            end
+            if isempty(get(obj.h_y_dsratio_edit,'String'))
                 set(obj.h_y_dsratio_edit,'String','1');
-            end;
-            if isempty(get(obj.h_z_dsratio_edit,'String'));
+            end
+            if isempty(get(obj.h_z_dsratio_edit,'String'))
                 set(obj.h_z_dsratio_edit,'String','1');
-            end;
-            if header.datasize(6)==1;
+            end
+            if header.datasize(6)==1
                 set(obj.h_x_dsratio_edit,'String','1');
                 set(obj.h_x_dsratio_edit,'Visible','off');
                 set(obj.h_x_label,'Visible','off');
-            end;
-            if header.datasize(5)==1;
+            end
+            if header.datasize(5)==1
                 set(obj.h_y_dsratio_edit,'String','1');
                 set(obj.h_y_dsratio_edit,'Visible','off');
                 set(obj.h_y_label,'Visible','off');
-            end;
-            if header.datasize(4)==1;
+            end
+            if header.datasize(4)==1
                 set(obj.h_z_dsratio_edit,'String','1');
                 set(obj.h_z_dsratio_edit,'Visible','off');
                 set(obj.h_z_label,'Visible','off');
-            end;
+            end
         end
     end
     
@@ -128,21 +128,21 @@ classdef FLW_downsample<CLW_generic
         function header_out= get_header(header_in,option)
             header_out=header_in;
             %check that ratios are integer values
-            if floor(option.x_dsratio)==option.x_dsratio;
+            if floor(option.x_dsratio)==option.x_dsratio
             else
                 disp('!!! X downsample ratio is not an integer!');
                 return;
-            end;
-            if floor(option.y_dsratio)==option.y_dsratio;
+            end
+            if floor(option.y_dsratio)==option.y_dsratio
             else
                 disp('!!! Y downsample ratio is not an integer!');
                 return;
-            end;
-            if floor(option.z_dsratio)==option.z_dsratio;
+            end
+            if floor(option.z_dsratio)==option.z_dsratio
             else
                 disp('!!! Z downsample ratio is not an integer!');
                 return;
-            end;
+            end
             %update header
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];

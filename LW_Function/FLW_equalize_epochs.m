@@ -77,10 +77,10 @@ classdef FLW_equalize_epochs<CLW_generic
             obj.lwdataset=batch_pre.lwdataset;
         end
         
-        function equalize_btn_pressed(obj,varargin);
-            for i=1:length(obj.lwdataset);
+        function equalize_btn_pressed(obj,varargin)
+            for i=1:length(obj.lwdataset)
                 numepochs(i)=obj.lwdataset(i).header.datasize(1);
-            end;
+            end
             numepochs=min(numepochs);
             set(obj.h_numepochs_edit,'String',num2str(numepochs));
         end
@@ -114,43 +114,43 @@ classdef FLW_equalize_epochs<CLW_generic
             data=lwdata_in.data;
             %%%
             %epoch_idx
-            if option.selectrandom==0;
+            if option.selectrandom==0
                 %sequential
                 epoch_idx=1:1:option.numepochs;
             else
                 %random
                 rnd_idx=rand(inheader.datasize(1),1);
-                [a b]=sort(rnd_idx);
+                [~,b]=sort(rnd_idx);
                 epoch_idx=b(1:option.numepochs);
-            end;
+            end
             %data
             data=data(epoch_idx,:,:,:,:,:);
             %adjust events
-            if isfield(inheader,'events');
-                if isempty(inheader.events);
+            if isfield(inheader,'events')
+                if isempty(inheader.events)
                 else
-                    for i=1:length(inheader.events);
+                    for i=1:length(inheader.events)
                         event_epoch_idx(i)=inheader.events(i).epoch;
-                    end;
+                    end
                     new_events=[];
-                    for i=1:length(epoch_idx);
+                    for i=1:length(epoch_idx)
                         a=find(event_epoch_idx==epoch_idx(i));
-                        if isempty(a);
+                        if isempty(a)
                         else
                             tp=inheader.events(a);
-                            for j=1:length(tp);
+                            for j=1:length(tp)
                                 tp(j).epoch=i;
-                            end;
+                            end
                             new_events=[new_events tp];
-                        end;
-                    end;
+                        end
+                    end
                     header.events=new_events;
-                end;
-            end;
+                end
+            end
             %adjust epochdata
-            if isfield(inheader,'epochdata');
+            if isfield(inheader,'epochdata')
                 header.epochdata=inheader.epochdata(epoch_idx);
-            end;
+            end
             %store selected epochs in history
             header.history(end).option.selected_epochs=epoch_idx;
             %%%

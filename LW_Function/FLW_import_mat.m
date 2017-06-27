@@ -460,17 +460,17 @@ classdef FLW_import_mat
             
             dimlist={'epochs','channels','index','Z','Y','X'};
             dim_labels=option.dimension_descriptors;
-            for i=1:length(dim_labels);
+            for i=1:length(dim_labels)
                 tp=find(strcmpi(dim_labels{i},dimlist));
                 a(i)=tp;
-            end;
+            end
             dim_order=[0 0 0 0 0 0];
-            for i=1:length(a);
+            for i=1:length(a)
                 dim_order(a(i))=i;
-            end;
+            end
             tp=find(dim_order==0);
             if ~isempty(tp)
-                for i=1:length(tp);
+                for i=1:length(tp)
                     dim_order(tp(i))=length(a)+i;
                 end
             end
@@ -488,7 +488,7 @@ classdef FLW_import_mat
             chanloc.labels='';
             chanloc.topo_enabled=0;
             chanloc.SEEG_enabled=0;
-            for chanpos=1:header.datasize(2);
+            for chanpos=1:header.datasize(2)
                 chanloc.labels=['C' num2str(chanpos)];
                 header.chanlocs(chanpos)=chanloc;
             end

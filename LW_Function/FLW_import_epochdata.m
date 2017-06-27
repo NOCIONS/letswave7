@@ -1,4 +1,4 @@
-classdef FLW_import_mat
+classdef FLW_import_epochdata
     properties
         h_fig;
         h_var_list;

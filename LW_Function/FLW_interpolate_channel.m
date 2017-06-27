@@ -70,7 +70,7 @@ classdef FLW_interpolate_channel<CLW_generic
                 if chan_locs(i).topo_enabled==1
                     dist(i)=sqrt((chan_locs(i).X-chan_locs(bad_channel).X)^2+(chan_locs(i).Y-chan_locs(bad_channel).Y)^2+(chan_locs(i).Z-chan_locs(bad_channel).Z)^2);
                 end
-            end;
+            end
             dist((dist==-1))=max(dist);
             [~,idx]=sort(dist);
             channel_idx=idx(1:channel_num);

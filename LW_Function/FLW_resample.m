@@ -92,11 +92,11 @@ classdef FLW_resample<CLW_generic
             set(obj.h_z_resample_chk,'Value',option.z_resample_chk);
             str=get(obj.h_interpolation_pop,'String');
             [~,b]=intersect(str,option.interpolation_method);
-            if isempty(b);
+            if isempty(b)
                 set(obj.h_interpolation_pop,'Value',1);
             else
                 set(obj.h_interpolation_pop,'Value',b);
-            end;
+            end
         end
         
         %get the script for this operation
@@ -108,24 +108,24 @@ classdef FLW_resample<CLW_generic
             option=get_option(obj);
             frag_code=[];
             %%%
-            if option.x_resample_chk==1;
+            if option.x_resample_chk==1
                 frag_code=[frag_code,'''x_resample_chk'',',...
                     num2str(option.x_resample_chk),','];
                 frag_code=[frag_code,'''x_SR'',',...
                     num2str(option.x_SR),','];
-            end;
-            if option.y_resample_chk==1;
+            end
+            if option.y_resample_chk==1
                 frag_code=[frag_code,'''y_resample_chk'',',...
                     num2str(option.x_resample_chk),','];
                 frag_code=[frag_code,'''y_SR'',',...
                     num2str(option.y_SR),','];
-            end;
-            if option.z_resample_chk==1;
+            end
+            if option.z_resample_chk==1
                 frag_code=[frag_code,'''z_resample_chk'',',...
                     num2str(option.z_resample_chk),','];
                 frag_code=[frag_code,'''z_SR'',',...
                     num2str(option.z_SR),','];
-            end;
+            end
             frag_code=[frag_code,'''interpolation_method'',',...
                '''',option.interpolation_method,''','];
             %%%
@@ -135,30 +135,30 @@ classdef FLW_resample<CLW_generic
         
         function GUI_update(obj,batch_pre)
             header=batch_pre.lwdataset(1).header;
-            if isempty(get(obj.h_x_SR_edit,'String'));
+            if isempty(get(obj.h_x_SR_edit,'String'))
                 set(obj.h_x_SR_edit,'String',num2str(1/header.xstep));
-            end;
-            if isempty(get(obj.h_y_SR_edit,'String'));
+            end
+            if isempty(get(obj.h_y_SR_edit,'String'))
                 set(obj.h_y_SR_edit,'String',num2str(1/header.ystep));
-            end;
-            if isempty(get(obj.h_z_SR_edit,'String'));
+            end
+            if isempty(get(obj.h_z_SR_edit,'String'))
                 set(obj.h_z_SR_edit,'String',num2str(1/header.zstep));
-            end;
-            if header.datasize(6)==1;
+            end
+            if header.datasize(6)==1
                 set(obj.h_x_resample_chk,'Value',0);
                 set(obj.h_x_resample_chk,'Visible','off');
                 set(obj.h_x_SR_edit,'Visible','off');
-            end;
-            if header.datasize(5)==1;
+            end
+            if header.datasize(5)==1
                 set(obj.h_y_resample_chk,'Value',0);
                 set(obj.h_y_resample_chk,'Visible','off');
                 set(obj.h_y_SR_edit,'Visible','off');
-            end;
-            if header.datasize(4)==1;
+            end
+            if header.datasize(4)==1
                 set(obj.h_z_resample_chk,'Value',0);
                 set(obj.h_z_resample_chk,'Visible','off');
                 set(obj.h_z_SR_edit,'Visible','off');
-            end;
+            end
             
             %obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
@@ -172,28 +172,28 @@ classdef FLW_resample<CLW_generic
         function [ntpx,ntpy,ntpz]=resample_vector(inheader,option)
             %ntpx
             ntpx=[];
-            if option.x_resample_chk==1;
+            if option.x_resample_chk==1
                 xstart=inheader.xstart;
                 xend=((inheader.datasize(6)-1)*inheader.xstep)+inheader.xstart;
                 xstep=1/option.x_SR;
                 ntpx=xstart:xstep:xend;
-            end;
+            end
             %ntpy
             ntpy=[];
-            if option.y_resample_chk==1;
+            if option.y_resample_chk==1
                 ystart=inheader.ystart;
                 yend=((inheader.datasize(5)-1)*inheader.ystep)+inheader.ystart;
                 ystep=1/option.y_SR;
                 ntpy=ystart:ystep:yend;
-            end;
+            end
             %ntpz
             ntpz=[];
-            if option.z_resample_chk==1;
+            if option.z_resample_chk==1
                 zstart=inheader.zstart;
                 zend=((inheader.datasize(4)-1)*inheader.zstep)+inheader.zstart;
                 zstep=1/option.z_SR;
                 ntpz=zstart:zstep:zend;
-            end;
+            end
         end
         
         function header_out= get_header(header_in,option)
@@ -207,15 +207,15 @@ classdef FLW_resample<CLW_generic
             if option.x_resample_chk==1
                 header_out.xstep=1/option.x_SR;
                 header_out.datasize(6)=length(ntpx);
-            end;
+            end
             if option.y_resample_chk==1
                 header_out.ystep=1/option.y_SR;
                 header_out.datasize(5)=length(ntpy);
-            end;
+            end
             if option.z_resample_chk==1
                 header_out.zstep=1/option.z_SR;
                 header_out.datasize(4)=length(ntpz);
-            end;
+            end
             %
             option.function=mfilename;
             header_out.history(end+1).option=option;
@@ -253,107 +253,107 @@ classdef FLW_resample<CLW_generic
             %method
             %disp(['Interpolation method : ' option.interpolation_method]);
             %interp3 (X/Y/Z)
-            if (option.x_resample_chk==1) && (option.y_resample_chk==1) && (option.z_resample_chk==1);
+            if (option.x_resample_chk==1) && (option.y_resample_chk==1) && (option.z_resample_chk==1)
                 disp('3D interpolation (X/Y/Z)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
                             data(epochpos,chanpos,indexpos,:,:,:)=interp3(tpz,tpy,tpx,squeeze(indata(epochpos,chanpos,indexpos,:,:,:)),ntpz,ntpy,ntpx,option.interpolation_method);
-                        end;
-                    end;
-                end;
-            end;
+                        end
+                    end
+                end
+            end
             %interp2 (X/Y)
-            if (option.x_resample_chk==1)&& (option.y_resample_chk==1) && (option.z_resample_chk==0);
+            if (option.x_resample_chk==1)&& (option.y_resample_chk==1) && (option.z_resample_chk==0)
                 disp('2D interpolation (X/Y)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
-                            for dz=1:header.datasize(4);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
+                            for dz=1:header.datasize(4)
                                 data(epochpos,chanpos,indexpos,dz,:,:)=interp2(tpy,tpx,squeeze(indata(epochpos,chanpos,indexpos,dz,:,:)),ntpy,ntpx,option.interpolation_method);
-                            end;
-                        end;
-                    end;
-                end;
-            end;
+                            end
+                        end
+                    end
+                end
+            end
             %interp2 (X/Z)
-            if (option.x_resample_chk==1) && (option.y_resample_chk==0) && (option.z_resample_chk==1);
+            if (option.x_resample_chk==1) && (option.y_resample_chk==0) && (option.z_resample_chk==1)
                 disp('2D interpolation (X/Z)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
-                            for dy=1:header.datasize(5);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
+                            for dy=1:header.datasize(5)
                                 data(epochpos,chanpos,indexpos,:,dy,:)=interp2(tpz,tpx,squeeze(indata(epochpos,chanpos,indexpos,:,dy,:)),ntpz,ntpx,option.interpolation_method);
-                            end;
-                        end;
-                    end;
-                end;
-            end;
+                            end
+                        end
+                    end
+                end
+            end
             %interp2 (Y/Z)
-            if (option.x_resample_chk==0)&(option.z_resample_chk==1)&(option.z_resample_chk==1);
+            if (option.x_resample_chk==0)&&(option.z_resample_chk==1)&&(option.z_resample_chk==1)
                 disp('2D interpolation (Y/Z)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
-                            for dx=1:header.datasize(6);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
+                            for dx=1:header.datasize(6)
                                 data(epochpos,chanpos,indexpos,:,:,dx)=interp2(tpz,tpy,squeeze(indata(epochpos,chanpos,indexpos,:,:,dx)),ntpz,ntpy,option.interpolation_method);
-                            end;
-                        end;
-                    end;
-                end;
-            end;
+                            end
+                        end
+                    end
+                end
+            end
             %interp1 (X)
-            if (option.x_resample_chk==1)&(option.y_resample_chk==0)&(option.z_resample_chk==0);
+            if (option.x_resample_chk==1)&&(option.y_resample_chk==0)&&(option.z_resample_chk==0)
                 disp('1D interpolation (X)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
-                            for dz=1:header.datasize(4);
-                                for dy=1:header.datasize(5);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
+                            for dz=1:header.datasize(4)
+                                for dy=1:header.datasize(5)
                                     data(epochpos,chanpos,indexpos,dz,dy,:)=interp1(tpx,squeeze(indata(epochpos,chanpos,indexpos,dz,dy,:)),ntpx,option.interpolation_method);
-                                end;
-                            end;
-                        end;
-                    end;
-                end;
-            end;
+                                end
+                            end
+                        end
+                    end
+                end
+            end
             %interp1 (Y)
-            if (option.x_resample_chk==0)&(option.y_resample_chk==1)&(option.z_resample_chk==0);
+            if (option.x_resample_chk==0)&&(option.y_resample_chk==1)&&(option.z_resample_chk==0)
                 disp('1D interpolation (Y)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
-                            for dz=1:header.datasize(4);
-                                for dx=1:header.datasize(6);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
+                            for dz=1:header.datasize(4)
+                                for dx=1:header.datasize(6)
                                     data(epochpos,chanpos,indexpos,dz,:,dx)=interp1(tpy,squeeze(indata(epochpos,chanpos,indexpos,dz,:,dx)),ntpy,option.interpolation_method);
-                                end;
-                            end;
-                        end;
-                    end;
-                end;
-            end;
+                                end
+                            end
+                        end
+                    end
+                end
+            end
             %interp1 (Z)
-            if (option.x_resample_chk==0)&(option.y_resample_chk==0)&(option.z_resample_chk==1);
+            if (option.x_resample_chk==0)&&(option.y_resample_chk==0)&&(option.z_resample_chk==1)
                 disp('1D interpolation (Z)');
                 %loop through epochs
-                for epochpos=1:header.datasize(1);
-                    for chanpos=1:header.datasize(2);
-                        for indexpos=1:header.datasize(3);
-                            for dy=1:header.datasize(5);
-                                for dx=1:header.datasize(6);
+                for epochpos=1:header.datasize(1)
+                    for chanpos=1:header.datasize(2)
+                        for indexpos=1:header.datasize(3)
+                            for dy=1:header.datasize(5)
+                                for dx=1:header.datasize(6)
                                     data(epochpos,chanpos,indexpos,:,dy,dx)=interp1(tpz,squeeze(indata(epochpos,chanpos,indexpos,:,dy,dx)),ntpz,option.interpolation_method);
-                                end;
-                            end;
-                        end;
-                    end;
-                end;
-            end;
+                                end
+                            end
+                        end
+                    end
+                end
+            end
             %%%
             lwdata_out.header=header;
             lwdata_out.data=data;

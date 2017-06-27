@@ -5,12 +5,12 @@ function [header] = CLW_check_header(header)
 %     else
 %         disp('Deleting History as it is not compatible with LW6');
 %         header.history=[];
-%     end;
-% end;
+%     end
+% end
 
 %check history structure is compatible with LW6
-if isfield(header,'history');
-    if isfield(header.history,'option');
+if isfield(header,'history')
+    if isfield(header.history,'option')
     else
         %disp('Deleting History as it is not compatible with LW6');
         header.history=[];

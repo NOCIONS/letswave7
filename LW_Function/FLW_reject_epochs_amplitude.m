@@ -149,33 +149,33 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             option=get_option(obj);
             frag_code=[];
             %%%
-            if option.xaxis_chk==1;
+            if option.xaxis_chk==1
                 frag_code=[frag_code,'''xaxis_chk'',',...
                     num2str(option.xaxis_chk),','];
                 frag_code=[frag_code,'''xstart'',',...
                     num2str(option.xstart),','];
                 frag_code=[frag_code,'''xend'',',...
                     num2str(option.xend),','];
-            end;
-            if option.yaxis_chk==1;
+            end
+            if option.yaxis_chk==1
                 frag_code=[frag_code,'''yaxis_chk'',',...
                     num2str(option.yaxis_chk),','];
                 frag_code=[frag_code,'''ystart'',',...
                     num2str(option.ystart),','];
                 frag_code=[frag_code,'''yend'',',...
                     num2str(option.yend),','];
-            end;
-            if option.zaxis_chk==1;
+            end
+            if option.zaxis_chk==1
                 frag_code=[frag_code,'''zaxis_chk'',',...
                     num2str(option.zaxis_chk),','];
                 frag_code=[frag_code,'''zstart'',',...
                     num2str(option.zstart),','];
                 frag_code=[frag_code,'''zend'',',...
                     num2str(option.xend),','];
-            end;
+            end
             frag_code=[frag_code,'''amplitude_criterion'',',...
                 num2str(option.amplitude_criterion),','];
-            if option.channels_chk==1;
+            if option.channels_chk==1
                 frag_code=[frag_code,'''channels_chk'',',...
                     num2str(option.channels_chk),','];
                 frag_code=[frag_code,'''channels'',{{'];
@@ -186,19 +186,19 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
                     end
                 end
                 frag_code=[frag_code,'}},'];
-            end;
+            end
             %%%
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
-        function item_changed(obj,varargin);
+        function item_changed(obj,varargin)
             v=get(obj.h_channels_listbox,'Value');
-            if isempty(v);
+            if isempty(v)
                 str=get(obj.h_channels_listbox,'String');
                 v=1:length(str);
             else
                 v=[];
-            end;
+            end
             set(obj.h_channels_listbox,'Value',v);
         end
 
@@ -219,15 +219,15 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             set(obj.h_channels_listbox,'String',channel_labels);
             %xend, yend, zend
             header=lwdataset(1).header;
-            if isempty(get(obj.h_xend_edit,'String'));
+            if isempty(get(obj.h_xend_edit,'String'))
                 set(obj.h_xend_edit,'String',num2str(header.xstart+((header.datasize(6))*header.xstep)));
-            end;
-            if isempty(get(obj.h_yend_edit,'String'));
+            end
+            if isempty(get(obj.h_yend_edit,'String'))
                 set(obj.h_yend_edit,'String',num2str(header.ystart+((header.datasize(5))*header.ystep)));
-            end;
-            if isempty(get(obj.h_zend_edit,'String'));
+            end
+            if isempty(get(obj.h_zend_edit,'String'))
                 set(obj.h_zend_edit,'String',num2str(header.zstart+((header.datasize(4))*header.zstep)));
-            end;
+            end
         end
     end
     
@@ -265,103 +265,103 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             %%%
             %first step is to identify accepted epochs based on criterion
             %dx1,dx2
-            if option.xaxis_chk==1;
+            if option.xaxis_chk==1
                 %limits : find dx1 and dx2
                 dx1=round(((option.xstart-header.xstart)/header.xstep)+1);
                 dx2=round(((option.xend-header.xstart)/header.xstep));
-                if dx1<1;
+                if dx1<1
                     dx1=1;
-                end;
-                if dx2>header.datasize(6);
+                end
+                if dx2>header.datasize(6)
                     dx2=header.datasize(6);
-                end;
+                end
             else
                 %no limits : select all epoch range
                 dx1=1;
                 dx2=header.datasize(6);
-            end;
+            end
             %dy1,dy2
-            if option.yaxis_chk==1;
+            if option.yaxis_chk==1
                 %limits : find dy1 and dy2
                 dy1=round(((option.ystart-header.ystart)/header.ystep)+1);
                 dy2=round(((option.yend-header.ystart)/header.ystep));
-                if dy1<1;
+                if dy1<1
                     dy1=1;
-                end;
-                if dy2>header.datasize(5);
+                end
+                if dy2>header.datasize(5)
                     dy2=header.datasize(5);
-                end;
+                end
             else
                 %no limits : select all epoch range
                 dy1=1;
                 dy2=header.datasize(5);
-            end;
+            end
             %dz1,dz2
-            if option.zaxis_chk==1;
+            if option.zaxis_chk==1
                 %limits : find dz1 and dz2
                 dz1=round(((option.zstart-header.zstart)/header.zstep)+1);
                 dz2=round(((option.zend-header.zstart)/header.zstep));
-                if dz1<1;
+                if dz1<1
                     dz1=1;
-                end;
-                if dz2>header.datasize(4);
+                end
+                if dz2>header.datasize(4)
                     dz2=header.datasize(4);
-                end;
+                end
             else
                 %no limits : select all epoch range
                 dz1=1;
                 dz2=header.datasize(4);
-            end;
+            end
             disp(['DX1 : ' num2str(dx1) ' DX2 : ' num2str(dx2)]);
             disp(['DY1 : ' num2str(dy1) ' DY2 : ' num2str(dy2)]);
             disp(['DZ1 : ' num2str(dz1) ' DZ2 : ' num2str(dz2)]);
             %channels_idx
-            if option.channels_chk==1;
+            if option.channels_chk==1
                 st={header.chanlocs.labels};
-                [a,channels_idx]=intersect(st,option.channels);
+                [~,channels_idx]=intersect(st,option.channels);
             else
                 channels_idx=1:1:header.datasize(2);
-            end;
+            end
             %check criterion
             j=1;
             accepted_epochs=[];
-            for epochpos=1:header.datasize(1);
+            for epochpos=1:header.datasize(1)
                 tp=data(epochpos,channels_idx,1,dz1:dz2,dy1:dy2,dx1:dx2);
-                if max(abs(tp(:)))>option.amplitude_criterion;
+                if max(abs(tp(:)))>option.amplitude_criterion
                 else
                     accepted_epochs(j)=epochpos;
                     j=j+1;
-                end;
-            end;
+                end
+            end
             disp(['Selected epochs : ' num2str(accepted_epochs)]);
             %remove epochs
             data=data(accepted_epochs,:,:,:,:,:);
             %update header.datasize
             header.datasize=size(data);
             %fix events
-            if isfield(header,'events');
-                if isempty(header.events);
+            if isfield(header,'events')
+                if isempty(header.events)
                 else
                     j=1;
                     delete_events=[];
-                    for i=1:length(header.events);
+                    for i=1:length(header.events)
                         a=find(accepted_epochs==header.events(i).epoch);
                         header.events(i).epoch=a;
-                        if isempty(a);
+                        if isempty(a)
                             delete_events(j)=i;
                             j=j+1;
-                        end;
-                    end;
+                        end
+                    end
                     header.events(delete_events)=[];
-                end;
-            end;
+                end
+            end
             %fix epochdata
-            if isfield(header,'epochdata');
-                if isempty(header.epochdata);
+            if isfield(header,'epochdata')
+                if isempty(header.epochdata)
                 else
                     header.epochdata=header.epochdata(accepted_epochs);
-                end;
-            end;
+                end
+            end
             %%%
             lwdata_out.header=header;
             lwdata_out.data=data;

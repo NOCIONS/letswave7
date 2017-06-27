@@ -364,7 +364,7 @@ classdef FLW_crop_epochs<CLW_generic
             else
                 dxstart=1;
                 dxend=header_in.datasize(6);
-            end;
+            end
             %dystart,dyend
             if option.ycrop_chk==1
                 disp('Crop Y dimension');
@@ -380,7 +380,7 @@ classdef FLW_crop_epochs<CLW_generic
             else
                 dystart=1;
                 dyend=header_in.datasize(5);
-            end;
+            end
             %dzstart,dzend
             if option.zcrop_chk==1
                 disp('Crop Z dimension');
@@ -396,7 +396,7 @@ classdef FLW_crop_epochs<CLW_generic
             else
                 dzstart=1;
                 dzend=header_in.datasize(4);
-            end;
+            end
             %crop
             data=data(:,:,:,dzstart:dzend,dystart:dyend,dxstart:dxend);
             %%%
