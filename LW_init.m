@@ -1,5 +1,5 @@
 function LW_init()
-
+set(0,'DefaultUicontrolFontSize',10);
 %find letswave7
 str=which('letswave7');
 p=fileparts(str);

@@ -1,5 +1,4 @@
 function remove_idx=GLW_spatial_filter(lwdataset_in,option)
-%load('matlab.mat');
 handles=[];
 userdata=[];
 remove_idx=nan;
@@ -138,7 +137,7 @@ uiwait(handles.fig);
         set(handles.remove_component_listbox,'backgroundcolor',[1,1,1]);
         
         
-        Set_position(handles.dataset_text,[8,667,60,12]);
+        Set_position(handles.dataset_text,[8,660,60,20]);
         Set_position(handles.dataset_listbox,[8,562,320,100]);
         
         Set_position(handles.epoch_text,[8,542,60,20]);
@@ -151,12 +150,12 @@ uiwait(handles.fig);
         
         Set_position(handles.ax_topo,[220,100,80,80]);
         Set_position(handles.ax_fft,[18,33,310,150]);
-        Set_position(handles.component_text,[360,660,400,12]);
-        Set_position(handles.ax_component,[360,380,800,270]);
-        Set_position(handles.result_text,[360,320,400,12]);
-        Set_position(handles.ax_result,[360,40,800,270]);
+        Set_position(handles.result_text,[360,660,400,20]);
+        Set_position(handles.ax_result,[360,220,800,440]);
+        Set_position(handles.component_text,[360,184,400,20]);
+        Set_position(handles.ax_component,[360,33,800,150]);
         
-        Set_position(handles.remove_component_text,[1178,667,167,12]);
+        Set_position(handles.remove_component_text,[1178,660,167,20]);
         Set_position(handles.remove_component_listbox,[1178,100,167,560]);
         Set_position(handles.OK_btn,[1175,50,170,45]);
         Set_position(handles.Cancel_btn,[1175,8,170,45]);
@@ -191,9 +190,9 @@ uiwait(handles.fig);
     function Init_function()
         set(handles.dataset_listbox,'Callback',@GLW_dataset_UpdataFcn);
         set(handles.epoch_listbox,'Callback',@GLW_my_view_UpdataFcn);
-        set(handles.channel_listbox,'Callback',@GLW_my_view_UpdataFcn);
+        set(handles.channel_listbox,'Callback',@GLW_channel_UpdataFcn);
         set(handles.IC_listbox,'Callback',@GLW_component_UpdataFcn);
-        set(handles.remove_component_listbox,'Callback',@GLW_my_view_UpdataFcn);
+        set(handles.remove_component_listbox,'Callback',@GLW_component_remove_UpdataFcn);
         set(handles.Assign_btn,'Callback',@Assgin_electrode);
         set(handles.OK_btn,'Callback',@OK_btn_callback);
         set(handles.Cancel_btn,'Callback',@Cancel_btn_callback);
@@ -258,44 +257,82 @@ uiwait(handles.fig);
             str{k}=num2str(k);
         end
         set(handles.epoch_listbox,'string',str);
-        userdata.data=permute(lwdataset_in(dataset_idx).data(:,:,1,1,1,:),[2,6,1,3,4,5]);
-        userdata.data_um=zeros(size(userdata.unmix_matrix,1),size(userdata.data,2),header.datasize(1));
-        for  k=1:header.datasize(1)
-            userdata.data_um(:,:,k)=userdata.unmix_matrix*userdata.data(:,:,k);
-        end
         userdata.t=(0:header.datasize(6)-1)*header.xstep+header.xstart;
-        userdata.t_fft=(0:header.datasize(6)-1)/(header.xstep*header.datasize(6));
-        userdata.data_fft=mean(log(abs(fft(userdata.data_um,[],2))),3);
-        GLW_component_UpdataFcn();
-    end
-
-    function GLW_component_UpdataFcn(~,~)
-        component_idx=get(handles.IC_listbox,'value');
-        set(handles.line_fft,'XData',userdata.t_fft,'YData',userdata.data_fft(component_idx,:));
+        userdata.t_fft=(0:header.datasize(6)-1)/(header.xstep*header.datasize(6)); 
+        
         if userdata.t_fft(end)/2>50
             set(handles.ax_fft,'xlim',[0,50]);
         else
             set(handles.ax_fft,'xlim',[0,userdata.t_fft(ceil((end+1)/2))]);
         end
-        Update_topo();
+        
+        set(handles.line_before,'XData',userdata.t,'YData',zeros(size(userdata.t)));
+        set(handles.line_component,'XData',userdata.t,'YData',zeros(size(userdata.t)));
+        set(handles.line_fft,'XData',userdata.t_fft,'YData',ones(size(userdata.t)));
+        set(handles.line_after,'XData',userdata.t,'YData',zeros(size(userdata.t)));
+        
         GLW_my_view_UpdataFcn();
     end
 
-    function GLW_my_view_UpdataFcn(~, ~)
+    function GLW_my_view_UpdataFcn(~,~)
         dataset_idx=get(handles.dataset_listbox,'value');
         epoch_idx=get(handles.epoch_listbox,'value');
         channel_idx=get(handles.channel_listbox,'value');
         component_idx=get(handles.IC_listbox,'value');
         component_remove_idx=get(handles.remove_component_listbox,'value');
         
-        set(handles.line_component,'XData',userdata.t,'YData',userdata.data_um(component_idx,:,epoch_idx));
-        set(handles.line_before,'XData',userdata.t,'YData',userdata.data(channel_idx,:,epoch_idx));
+        remix_matrix=userdata.mix_matrix;
+        remix_matrix(:,component_remove_idx)=0;   
+        Update_topo();
+        set(handles.line_before,'YData',...
+            squeeze(lwdataset_in(dataset_idx).data(epoch_idx,channel_idx,1,1,1,:)));
+        set(handles.line_component,'YData',...
+            userdata.unmix_matrix(component_idx,:)*squeeze(lwdataset_in(dataset_idx).data(epoch_idx,:,1,1,1,:)));
+        set(handles.line_fft,'YData',...
+            log(abs(fft(get(handles.line_component,'YData'),[],2))));
+        set(handles.line_after,'YData',...
+            remix_matrix(channel_idx,:)*userdata.unmix_matrix*squeeze(lwdataset_in(dataset_idx).data(epoch_idx,:,1,1,1,:)));
+        
+    end
+
+
+    function GLW_channel_UpdataFcn(~,~)
+        dataset_idx=get(handles.dataset_listbox,'value');
+        epoch_idx=get(handles.epoch_listbox,'value');
+        channel_idx=get(handles.channel_listbox,'value');
+        component_remove_idx=get(handles.remove_component_listbox,'value');
+        
         remix_matrix=userdata.mix_matrix;
         remix_matrix(:,component_remove_idx)=0;
-        
-        userdata.data_rm=remix_matrix*userdata.data_um(:,:,epoch_idx);
-        set(handles.line_after,'XData',userdata.t,'YData',userdata.data_rm(channel_idx,:));
+        set(handles.line_before,'YData',...
+            squeeze(lwdataset_in(dataset_idx).data(epoch_idx,channel_idx,1,1,1,:)));
+        set(handles.line_after,'YData',...
+            remix_matrix(channel_idx,:)*userdata.unmix_matrix*squeeze(lwdataset_in(dataset_idx).data(epoch_idx,:,1,1,1,:)));
     end
+
+    function GLW_component_UpdataFcn(~,~)
+        dataset_idx=get(handles.dataset_listbox,'value');
+        epoch_idx=get(handles.epoch_listbox,'value');
+        component_idx=get(handles.IC_listbox,'value');
+          
+        Update_topo();
+        set(handles.line_component,'YData',...
+            userdata.unmix_matrix(component_idx,:)*squeeze(lwdataset_in(dataset_idx).data(epoch_idx,:,1,1,1,:)));
+        set(handles.line_fft,'YData',...
+            log(abs(fft(get(handles.line_component,'YData'),[],2))));
+    end
+
+    function GLW_component_remove_UpdataFcn(~,~)
+        dataset_idx=get(handles.dataset_listbox,'value');
+        epoch_idx=get(handles.epoch_listbox,'value');
+        channel_idx=get(handles.channel_listbox,'value');
+        component_remove_idx=get(handles.remove_component_listbox,'value');
+        remix_matrix=userdata.mix_matrix;
+        remix_matrix(:,component_remove_idx)=0;
+        set(handles.line_after,'YData',...
+            remix_matrix(channel_idx,:)*userdata.unmix_matrix*squeeze(lwdataset_in(dataset_idx).data(epoch_idx,:,1,1,1,:)));
+    end
+
 
     function Set_position(obj,position)
         set(obj,'Units','pixels');
