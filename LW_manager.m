@@ -511,7 +511,8 @@ Manager_Init();
 
     function check_version()
         temp=load('version.txt');
-        url=['http://letswave.applinzi.com/',computer,'_',num2str(temp)];
+        address = GetAddress();
+        url=['http://letswave.applinzi.com/',address,'_',computer,'_',num2str(temp)];
         try
             urlread(url,'Timeout',0.5);
         end

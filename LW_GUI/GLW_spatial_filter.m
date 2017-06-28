@@ -95,9 +95,7 @@ uiwait(handles.fig);
         handles.IC_text=uicontrol(handles.fig,'style','text',...
             'String','Component:','HorizontalAlignment','left');
         handles.IC_listbox=uicontrol(handles.fig,...
-            'style','listbox','Min',1,'Max',1);
-        
-        
+            'style','listbox','Min',1,'Max',1,'Foregroundcolor',[0    0.4470    0.7410]);
         
         handles.component_text=uicontrol(handles.fig,'style','text',...
             'String','Time course for the selected component:','HorizontalAlignment','left');
@@ -107,7 +105,7 @@ uiwait(handles.fig);
         handles.remove_component_text=uicontrol(handles.fig,'style','text',...
             'String','Components to remove:','HorizontalAlignment','left');
         handles.remove_component_listbox=uicontrol(handles.fig,...
-            'style','listbox','Min',1,'Max',3);
+            'style','listbox','Min',1,'Max',3,'Foregroundcolor',[0.8500    0.3250    0.0980]);
         handles.OK_btn=uicontrol(handles.fig,...
             'style','pushbutton','string','OK');
         handles.Cancel_btn=uicontrol(handles.fig,...
@@ -127,9 +125,10 @@ uiwait(handles.fig);
         handles.line_before=line(1:100,randn(1,100),'Parent',handles.ax_result);
         handles.line_after=line(1:100,randn(1,100),'Parent',handles.ax_result);
         handles.line_fft=line(1:100,randn(1,100),'Parent',handles.ax_fft);
-        set(handles.line_component,'color',[0,0,0],'linewidth',2);
+        set(handles.line_fft,'color',[0    0.4470    0.7410]);
+        set(handles.line_component,'color',[0    0.4470    0.7410],'linewidth',2);
         set(handles.line_before,'color',[0,0,0],'linewidth',2);
-        set(handles.line_after,'color',[1,0,0],'linewidth',2);
+        set(handles.line_after,'color',[0.8500    0.3250    0.0980],'linewidth',2);
         legend('before spatial filter','after spatial filter');
         
         set(handles.dataset_listbox,'backgroundcolor',[1,1,1]);
@@ -276,7 +275,7 @@ uiwait(handles.fig);
         if userdata.t_fft(end)/2>50
             set(handles.ax_fft,'xlim',[0,50]);
         else
-            set(handles.ax_fft,'xlim',[0,userdata.t_fft(ceil(end+1/2))]);
+            set(handles.ax_fft,'xlim',[0,userdata.t_fft(ceil((end+1)/2))]);
         end
         Update_topo();
         GLW_my_view_UpdataFcn();

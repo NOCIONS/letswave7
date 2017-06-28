@@ -294,6 +294,10 @@ classdef FLW_import_data
                 lwdata_out.header=CLW_check_header(lwdata_out.header);
                 CLW_save(lwdata_out);
             end
+            
+            if nargout>0
+                lwdata_out.data=double(lwdata_out.data);
+            end
         end
     end
 end
