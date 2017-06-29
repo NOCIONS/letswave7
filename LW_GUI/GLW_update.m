@@ -72,5 +72,6 @@ uiwait(fig);
         set(update_txt,'String','Finished installing. Letswave will restart.');
         pause(0.5);
         is_updated=1;
+        close(fig);
     end
 end
