@@ -266,10 +266,13 @@ uiwait(handles.fig);
             set(handles.ax_fft,'xlim',[0,userdata.t_fft(ceil((end+1)/2))]);
         end
         
+        
         set(handles.line_before,'XData',userdata.t,'YData',zeros(size(userdata.t)));
         set(handles.line_component,'XData',userdata.t,'YData',zeros(size(userdata.t)));
         set(handles.line_fft,'XData',userdata.t_fft,'YData',ones(size(userdata.t)));
         set(handles.line_after,'XData',userdata.t,'YData',zeros(size(userdata.t)));
+        set(handles.ax_component,'xlim',[userdata.t(1),userdata.t(end)]);
+        set(handles.ax_result,'xlim',[userdata.t(1),userdata.t(end)]);
         
         GLW_my_view_UpdataFcn();
     end
@@ -294,7 +297,6 @@ uiwait(handles.fig);
             remix_matrix(channel_idx,:)*userdata.unmix_matrix*squeeze(lwdataset_in(dataset_idx).data(epoch_idx,:,1,1,1,:)));
         
     end
-
 
     function GLW_channel_UpdataFcn(~,~)
         dataset_idx=get(handles.dataset_listbox,'value');
