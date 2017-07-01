@@ -31,6 +31,10 @@ classdef FLW_segmentation_chunk<CLW_generic
             obj.h_interval_edt=uicontrol('style','edit',...
                 'String','1','backgroundcolor',[1,1,1],...
                 'position',[55,325,200,25],'parent',obj.h_panel);
+            
+            set (obj.h_onset_edt,'backgroundcolor',[1,1,1]);
+            set (obj.h_duration_edt,'backgroundcolor',[1,1,1]);
+            set (obj.h_interval_edt,'backgroundcolor',[1,1,1]);
         end
         
         function option=get_option(obj)

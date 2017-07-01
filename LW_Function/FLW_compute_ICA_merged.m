@@ -283,14 +283,14 @@ classdef FLW_compute_ICA_merged<CLW_generic
                     case 'MDL'
                         [~,num_ICs]=max(dimprob.mdl);
                 end
-                num_ICs=round(num_ICs*(option.percentage_PICA/100));
+                option.num_ICs=round(num_ICs*(option.percentage_PICA/100));
             end
             switch option.algorithm
                 case 1
                     if option.ICA_mode==1
                         [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:));
                     else
-                        [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:),'pca',num_ICs);
+                        [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:),'pca',option.num_ICs);
                     end
                     ica_um=ica.weights*ica.sphere;
                 case 2
