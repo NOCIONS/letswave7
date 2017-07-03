@@ -105,10 +105,8 @@ uiwait(handles.fig);
             'String','Components to remove:','HorizontalAlignment','left');
         handles.remove_component_listbox=uicontrol(handles.fig,...
             'style','listbox','Min',1,'Max',3,'Foregroundcolor',[0.8500    0.3250    0.0980]);
-        handles.OK_btn=uicontrol(handles.fig,...
-            'style','pushbutton','string','OK');
-        handles.Cancel_btn=uicontrol(handles.fig,...
-            'style','pushbutton','string','Cancel');
+        handles.OK_btn=uicontrol(handles.fig,'style','pushbutton','string','OK');
+        handles.Cancel_btn=uicontrol(handles.fig,'style','pushbutton','string','Cancel');
         handles.Assign_btn=uicontrol(handles.fig,...
             'style','pushbutton','string','Assign electrode coordinates');
         
@@ -178,8 +176,8 @@ uiwait(handles.fig);
         end
         set(handles.channel_listbox,'string',str);
         
-        str=cell(lwdataset_in(1).header.datasize(2),1);
-        for k=1:lwdataset_in(1).header.datasize(2)
+        str=cell(size(userdata.unmix_matrix,1),1);
+        for k=1:size(userdata.unmix_matrix,1)
             str{k}=['comp ',num2str(k)];
         end
         set(handles.IC_listbox,'string',str);
@@ -265,7 +263,6 @@ uiwait(handles.fig);
         else
             set(handles.ax_fft,'xlim',[0,userdata.t_fft(ceil((end+1)/2))]);
         end
-        
         
         set(handles.line_before,'XData',userdata.t,'YData',zeros(size(userdata.t)));
         set(handles.line_component,'XData',userdata.t,'YData',zeros(size(userdata.t)));

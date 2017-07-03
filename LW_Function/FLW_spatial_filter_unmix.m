@@ -25,16 +25,18 @@ classdef FLW_spatial_filter_unmix<CLW_generic
             end
             
             header_out=header_in;
+            header_out.datasize(2)=size(option.unmix_matrix,1);
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end
             option.function=mfilename;
             chanlocs=header_out.chanlocs;
             option.original_chanlocs=chanlocs;
-            for k=1:length(chanlocs)
+            for k=1:size(option.unmix_matrix,1)
                 chanlocs(k).labels=['comp ',num2str(k)];
                 chanlocs(k).topo_enabled=0;
             end
+            chanlocs=chanlocs(1:size(option.unmix_matrix,1));
             header_out.chanlocs=chanlocs;
             header_out.history(end+1).option=option;
         end
