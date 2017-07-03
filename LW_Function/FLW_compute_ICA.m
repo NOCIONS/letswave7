@@ -273,7 +273,7 @@ classdef FLW_compute_ICA<CLW_generic
                     if option.ICA_mode==1
                         [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:));
                     else
-                        [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:),'pca',num_ICs);
+                        [ica.weights,ica.sphere,~,~,~,~,~]=runica(data(:,:),'pca',option.num_ICs);
                     end
                     ica_um=ica.weights*ica.sphere;
                 case 2
