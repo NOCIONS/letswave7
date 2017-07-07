@@ -187,9 +187,9 @@ classdef FLW_CWT<CLW_generic
                 tic;
                 t1=toc;
             end
-            for epochpos=1:header.datasize(1);
-                for channelpos=1:header.datasize(2);
-                    for indexpos=1:header.datasize(3);
+            for epochpos=1:header.datasize(1)
+                for channelpos=1:header.datasize(2)
+                    for indexpos=1:header.datasize(3)
                         data(epochpos,channelpos,indexpos,1,:,:)=cwt(lwdata_in.data(epochpos,channelpos,indexpos,1,1,:),scales,option.wavelet_name);
                         t=toc;
                         if option.show_progress==1 && ishandle(fig) && t-t1>0.2

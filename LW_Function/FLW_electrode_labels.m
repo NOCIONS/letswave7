@@ -13,7 +13,7 @@ classdef FLW_electrode_labels<CLW_generic
         function obj = FLW_electrode_labels(batch_handle)
             obj@CLW_generic(batch_handle,'chan labels','chanlabels',...
                 'Edit electrode labels');
-            obj.h_lable_tab=uitable(obj.h_panel,'position',[25,140,210,370],'data',{'F1';''});
+            obj.h_lable_tab=uitable(obj.h_panel,'position',[25,140,210,370],'data',{'F1',''});
             set(obj.h_lable_tab,'ColumnName', {'Old','New'});
             set(obj.h_lable_tab,'ColumnEditable', logical([0,1]));
             
@@ -128,7 +128,6 @@ classdef FLW_electrode_labels<CLW_generic
             %%%
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
-        
         
         function GUI_update(obj,batch_pre)
             option=obj.get_option();
