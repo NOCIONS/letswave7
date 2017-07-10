@@ -512,16 +512,12 @@ Manager_Init();
     function check_version()
         temp=load('version.txt');
         address = GetAddress();
-        url=['http://letswave.applinzi.com/',address,'_',computer,'_',num2str(temp)];
-        try
-            urlread(url,'Timeout',0.5);
-        end
-        url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
+        url=['http://letswave.applinzi.com/check_update.wigs?',address,'_',computer,'_',num2str(temp)];
+%         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
         try
             lw_version = str2num(urlread(url,'Timeout',0.5));
             % lw_version = str2num(urlread(url));
             handles.version_checkked=1;
-            
             if temp<lw_version
                 set(handles.tip_text,'string',['tips: There is new version of Letswave (',...
                     num2str(floor(lw_version/1000000)),'), please update Letswave']);

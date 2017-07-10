@@ -607,10 +607,10 @@ GLW_my_view_OpeningFcn;
             set(handles.channel_listbox,'String',channel_cursor);
             set(handles.channel_listbox,'Value',userdata.selected_channels);
             
-            if header.datasize(3)>1;
+            if header.datasize(3)>1
                 set(handles.index_text,'Visible','on');
                 set(handles.index_popup,'Visible','on');
-                if isfield(header,'index_labels');
+                if isfield(header,'index_labels')
                     set(handles.index_popup,'String',header.index_labels(1:header.datasize(3)));
                     selected_index=get(handles.index_popup,'Value');
                     userdata.selected_index=intersect(selected_index,1:header.datasize(3));
@@ -620,7 +620,7 @@ GLW_my_view_OpeningFcn;
                     end
                 else
                     st=cell(header.datasize(3),1);
-                    for i=1:header.datasize(3);
+                    for i=1:header.datasize(3)
                         st{i}=num2str(i);
                     end
                     set(handles.index_popup,'String',st);
@@ -631,7 +631,7 @@ GLW_my_view_OpeningFcn;
                 set(handles.index_popup,'Visible','off');
             end
             %y
-            if header.datasize(5)>1;
+            if header.datasize(5)>1
                 set(handles.y_text,'Visible','on');
                 set(handles.y_edit,'Visible','on');
                 y_value=get(handles.y_edit,'String');
@@ -643,7 +643,7 @@ GLW_my_view_OpeningFcn;
                 set(handles.y_edit,'Visible','off');
             end
             %z
-            if header.datasize(4)>1;
+            if header.datasize(4)>1
                 set(handles.z_text,'Visible','on');
                 set(handles.z_edit,'Visible','on');
                 z_value=get(handles.z_edit,'String');
