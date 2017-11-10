@@ -15,7 +15,7 @@
     </menu>
     <menu Label="Spatial filters (ICA/PCA)">
         <submenu Label="------Compute spatial filter------"/>
-        <submenu Label="Compute ICA" callback="FLW_compute_ICA"/>
+        <submenu Label="Compute ICA matrix" callback="FLW_compute_ICA"/>
         <submenu Label="Compute ICA matrix (merged)" callback="FLW_compute_ICA_merged"/>
         <submenu Label="Compute PCA matrix" callback="FLW_compute_PCA"/>
         <submenu Label="Compute PCA matrix (merged)" callback="FLW_compute_PCA_merged"/>

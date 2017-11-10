@@ -165,7 +165,7 @@ classdef FLW_butterworth_filter<CLW_generic
                     data=filtfilt(b,a,data);
                 case 'bandpass'
                     filtOrder=option.filter_order;
-                    if mod(filtOrder,2);
+                    if mod(filtOrder,2)
                         filtOrder=filtOrder-1;
                     end
                     filtOrder=filtOrder/2;

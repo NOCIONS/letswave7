@@ -188,9 +188,9 @@ classdef FLW_math<CLW_generic
                 case 'sub'
                     data=lwdataset_in(1).data-lwdataset_in(2).data;
                 case 'mul'
-                    data=lwdataset_in(1).data*lwdataset_in(2).data;
+                    data=lwdataset_in(1).data.*lwdataset_in(2).data;
                 case 'div'
-                    data=lwdataset_in(1).data/lwdataset_in(2).data;
+                    data=lwdataset_in(1).data./lwdataset_in(2).data;
             end
             lwdata_out.header=header;
             lwdata_out.data=data;

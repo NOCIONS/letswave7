@@ -399,6 +399,7 @@ classdef FLW_crop_epochs<CLW_generic
             end
             %crop
             data=data(:,:,:,dzstart:dzend,dystart:dyend,dxstart:dxend);
+            header.datasize=size(data);
             %%%
             lwdata_out.header=header;
             lwdata_out.data=data;
