@@ -1544,6 +1544,7 @@ GLW_view_OpeningFcn;
                     set(handles.cursor_edit_y,'String',num2str(userdata.cursor_point(2)));
                     Fig_cursor_Update();
                     Fig_topo_Update();
+                    Fig_headplot_Update();
                     if userdata.is_shade==1
                         userdata.mouse_state=0;
                         userdata.shade_x=shade_x_temp;

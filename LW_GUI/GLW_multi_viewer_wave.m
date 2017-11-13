@@ -1113,6 +1113,14 @@ GLW_my_view_OpeningFcn;
         end
         handles.legend=[];
         userdata.is_legend=strcmp(get(handles.toolbar2_legend,'State'),'on');
+        fig_legned_Update();
+        if userdata.is_legend
+            set(handles.legend,'FontSize',10,'Location','SouthEast','Interpreter', 'none');
+        end
+    end
+
+%% fig_legned_Update
+    function fig_legned_Update(~,~)
         if userdata.is_legend
             userdata.title_wave=cell(userdata.num_waves,1);
             switch(userdata.graph_style(3))
@@ -1126,7 +1134,6 @@ GLW_my_view_OpeningFcn;
             handles.legend=legend(handles.axes(userdata.num_cols*userdata.num_rows),...
                 handles.line((userdata.num_cols*userdata.num_rows-1)*userdata.num_waves+(1:userdata.num_waves)),...
                 userdata.title_wave);
-            set(handles.legend,'FontSize',10,'Location','SouthEast','Interpreter', 'none');
         end
     end
 
@@ -1309,6 +1316,7 @@ GLW_my_view_OpeningFcn;
             set(handles.point_y(1:userdata.num_rows*userdata.num_cols*userdata.num_waves),'Visible','on');
             set(handles.point_y(userdata.num_rows*userdata.num_cols*userdata.num_waves+1:end),'Visible','off');
             fig_cursor_Update();
+            fig_legned_Update();
         else
             if ~isempty(handles.cursor)
                 set(handles.cursor,'Visible','off');
@@ -1418,7 +1426,7 @@ GLW_my_view_OpeningFcn;
     end
 
 %% fig_topo_popup
-    function fig_topo_popup(obj,~)
+    function fig_topo_popup(~,~)
         if strcmp(get(gcf,'SelectionType'),'open')
             fig_temp=figure();
             [xq,yq] = meshgrid(linspace(-0.5,0.5,267),linspace(-0.5,0.5,267));
@@ -2199,7 +2207,7 @@ GLW_my_view_OpeningFcn;
     end
 
 %% edit_interval_plot
-    function edit_interval_plot(obj,~)
+    function edit_interval_plot(~,~)
         x1=str2num(get(handles.interval1_edit,'String'));
         x2=str2num(get(handles.interval2_edit,'String'));
         
