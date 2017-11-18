@@ -749,6 +749,7 @@ GLW_my_view_OpeningFcn;
                     set(handles.cursor_edit,'String',num2str(userdata.cursor_point));
                     fig_cursor_Update();
                     fig_topo_Update();
+                    fig_headplot_Update();
                     
                     if userdata.is_shade==1
                         userdata.mouse_state=0;
@@ -764,6 +765,7 @@ GLW_my_view_OpeningFcn;
                     set(handles.cursor_edit,'String',num2str(userdata.cursor_point));
                     fig_cursor_Update();
                     fig_topo_Update();
+                    fig_headplot_Update();
             end
         end
     end
