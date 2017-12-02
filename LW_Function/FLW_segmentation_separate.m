@@ -153,7 +153,8 @@ classdef FLW_segmentation_separate<CLW_generic
             option.event_labels=cellstr(option.event_labels);
             
             lwdataset_out=struct('header',[],'data',[]);
-            for event_labels=option.event_labels
+            for k=1:size(option.event_labels,2)
+                event_labels=option.event_labels(k);
                 option1=option;
                 option1.event_labels=event_labels;
                 if isempty(option1.suffix)
@@ -161,7 +162,7 @@ classdef FLW_segmentation_separate<CLW_generic
                 else
                     option1.suffix=[option1.suffix,'_',char(option1.event_labels)];
                 end
-                lwdataset_out(end+1)=FLW_segmentation.get_lwdata(lwdata_in,option1);
+                lwdataset_out(k)=FLW_segmentation.get_lwdata(lwdata_in,option1);
             end
         end
     end
