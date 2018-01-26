@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LW_Manager Label="File">
-        <menu Label="Import">
-            <submenu Label="Import EEG/MEG datafiles" callback="FLW_import_data"/>
-            <submenu Label="Import MAT file or variable" callback="FLW_import_mat"/>
-        </menu>
-        <menu Label="Export">
-            <submenu Label="Export to EEGLAB" callback="FLW_export_EEGLAB"/>
-        </menu>
-        <menu Label="Delete dataset(s)" callback="GLW_delete"/>
-        <menu Label="Rename dataset" callback="GLW_rename"/>       
-        <menu Label="Update" callback="GLW_update"/>
-        <menu Label="Help"  callback="GLW_help"/>
-    </LW_Manager>
+    <menu Label="Import">
+        <submenu Label="Import EEG/MEG datafiles" callback="FLW_import_data"/>
+        <submenu Label="Import MAT file or variable" callback="FLW_import_mat"/>
+    </menu>
+    <menu Label="Export">
+        <submenu Label="Export to EEGLAB" callback="FLW_export_EEGLAB"/>
+    </menu>
+    <menu Label="Delete dataset(s)" callback="GLW_delete"/>
+    <menu Label="Rename dataset" callback="GLW_rename"/>       
+    <menu Label="Update" callback="GLW_update"/>
+    <menu Label="Help"  callback="GLW_help"/>
+</LW_Manager>

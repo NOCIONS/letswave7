@@ -97,6 +97,8 @@ classdef FLW_compute_ICA_merged<CLW_generic
             set(obj.h_buttongroup,'userdata',t);
             switch t
                 case 1
+                    set(obj.h_r2_text,'visible','off');
+                    set(obj.h_r2_num_ICs,'visible','off');
                     set(obj.h_r3_text1,'visible','off');
                     set(obj.h_r3_method,'visible','off');
                     set(obj.h_r3_text2,'visible','off');
