@@ -91,10 +91,10 @@ classdef FLW_import_data
             %                 '*.eeg;*.seg;*.dat;*.vhdr;*.vmrk','BrainVision (*.eeg, *.seg, *.dat, *.vhdr, *.vmrk)';
             %                 '*.Poly5','TMSi (*.Poly5)';
             %                 '*.edf;*.gdf','generic standard formats (*.edf, *.gdf)'};
-            filterspec={'*.set;*.avr;*.cnt;*.eeg;*.bdf;*.vhdr;*.raw;*.edf;*.gdf','All support files';
+            filterspec={'*.set;*.avr;*.cnt;*.eeg;*.bdf;*.vhdr;*.raw;*.edf;*.gdf;*.avg','All support files';
                         '*.set','EEGLAB (*.set)';
                         '*.avr;*.cnt','ANT Neuro, eeprobe/cnt-riff (*.avr, *.cnt)';
-                        '*.eeg;*.cnt;','NeuroScan (*.eeg, *.cnt)';
+                        '*.eeg;*.cnt;*.avg','NeuroScan (*.eeg, *.cnt, *.avg)';
                         '*.bdf','Biosemi BDF (*.bdf)';
                         '*.vhdr','BrainVision ( *.vhdr)';
                         '*.raw','Electrical Geodesics, Inc. (EGI) (*.raw)';
@@ -194,8 +194,8 @@ classdef FLW_import_data
             
             str=fullfile(option.pathname,option.filename);
             [~,name,ext] = fileparts(str);
-            if strcmp('.edf',ext)
-                [data, header] = ReadEDF(str);
+            if strcmpi('.edf',ext) %|| strcmpi('.bdf',ext) 
+                [data, header] = Read_EDF_BDF(str);
                 temp=unique(header.samplerate);
                 if length(temp)~=1
                     error('All channels should with the same sampling rate');
