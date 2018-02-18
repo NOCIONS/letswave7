@@ -106,6 +106,9 @@ classdef FLW_ttest_constant<CLW_permutation
                 'cluster_threshold','show_progress',...
                 'multiple_sensor','chan_dist','suffix','is_save'},...
                 varargin);
+            if option.permutation==0
+                option.show_progress=0;
+            end
             header=FLW_ttest_constant.get_header(lwdata_in.header,option);
             
             
@@ -362,7 +365,7 @@ classdef FLW_ttest_constant<CLW_permutation
             if option.is_save
                 CLW_save(lwdata_out);
             end
-            if option.permutation && option.show_progress  && ishandle(fig)
+            if option.show_progress  && ishandle(fig)
                 close(fig);
             end
         end

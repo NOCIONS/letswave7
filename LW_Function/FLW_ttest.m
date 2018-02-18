@@ -213,6 +213,9 @@ classdef FLW_ttest<CLW_permutation
                 'cluster_threshold','show_progress','cluster_union',...
                 'multiple_sensor','chan_dist','suffix','is_save'},...
                 varargin);
+            if option.permutation==0
+                option.show_progress=0;
+            end
             option.ref_dataset=1;
             header=FLW_ttest.get_header(lwdataset_in(2).header,option);
             chan_used=find([header.chanlocs.topo_enabled]==1, 1);
