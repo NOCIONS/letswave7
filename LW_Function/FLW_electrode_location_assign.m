@@ -85,7 +85,7 @@ classdef FLW_electrode_location_assign<CLW_generic
             
             for chanpos=1:length(channel_labels)
                 chanlocs(chanpos).labels=channel_labels{chanpos};
-                idx=find(strcmp(channel_labels(chanpos),locs_labels)==1);
+                idx=find(strcmpi(channel_labels(chanpos),locs_labels)==1);
                 if isempty(idx)||isempty(locs(idx).X)
                     chanlocs(chanpos).topo_enabled=0;
                     chanlocs(chanpos).SEEG_enabled=0;

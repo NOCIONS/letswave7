@@ -69,7 +69,7 @@ for k=1:length(file_str)
     if ispc
         str=['rename "',fullfile(p,[filename_pre,e]),'" "',fullfile(p,[filename_post,e]),'"'];
         if dos(str)
-            try                
+            try
                 movefile(fullfile(p,[filename_pre,e]),fullfile(p,[filename_post,e]));
             end
         end

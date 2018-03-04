@@ -1,9 +1,11 @@
 function LW_init()
 set(0,'DefaultUicontrolFontSize',10);
-%find letswave7
+
+% find the path of letswave7
 str=which('letswave7');
 p=fileparts(str);
 
+% remove all the paths including 'letswave','eeglab','fieldtrip'
 str=path;
 idx=find(str==pathsep);
 str_rm=[];
@@ -27,7 +29,9 @@ end
 if ~isempty(str_rm)
     rmpath(str_rm);
 end
-      
+
+
+% add the paths  of letswave7
 str_add=[fullfile(p),pathsep,...
     fullfile(p,'resources'),pathsep,...
     fullfile(p,'LW_Function'),pathsep,...
@@ -36,7 +40,7 @@ str_add=[fullfile(p),pathsep,...
     genpath(fullfile(p,'external')),pathsep,...
     fullfile(p,'plugins'),pathsep];
 
-
+% init the environment
 pathstr=fullfile(p,'plugins');
 filename=dir(pathstr);
 batch_list=[];
@@ -45,7 +49,7 @@ plugins_list=[];
 plugins_idx=1;
 
 for k=3:length(filename)
-    if filename(k).isdir%not a folder
+    if filename(k).isdir % not a folder
         str=fullfile(pathstr,filename(k).name,'menu.xml');
         if ~exist(str,'file')
             continue;

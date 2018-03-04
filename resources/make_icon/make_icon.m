@@ -129,6 +129,29 @@ icon = fullfile('icon_rename.png');
 icon_rename= double(imread(icon))/255;
 icon_rename(icon_rename==1)=NaN;
 
+icon = fullfile('icon_data_manage.png');
+icon_data_manage= double(imread(icon))/255;
+icon_data_manage(icon_data_manage==0)=NaN;
+
+icon = fullfile('icon_figure_save.png');
+icon_figure_save= double(imread(icon))/255;
+icon_figure_save(icon_figure_save==0)=NaN;
+
+
+
+icon = fullfile('icon_figure.png');
+icon_figure= double(imread(icon))/255;
+icon_figure(icon_figure==0)=NaN;
+
+icon = fullfile('icon_axis.png');
+icon_axis= double(imread(icon))/255;
+icon_axis(icon_axis==0)=NaN;
+
+icon = fullfile('icon_content.png');
+icon_content= double(imread(icon))/255;
+icon_content(icon_content==0)=NaN;
+
+
 
 
 save('../icon.mat','icon_split','icon_polarity','icon_shade','icon_line',...
@@ -138,5 +161,6 @@ save('../icon.mat','icon_split','icon_polarity','icon_shade','icon_line',...
     'icon_script','icon_save','icon_delete','icon_import','icon_close',...
     'icon_stop','icon_open_path','icon_refresh','icon_undo','icon_redo',...
     'icon_lock','icon_unlock','icon_sendtoworkspace','icon_loadfromworkspace',...
-    'icon_recovery','icon_rename');
+    'icon_recovery','icon_rename','icon_data_manage','icon_figure_save',...
+    'icon_figure','icon_axis','icon_content');
 
