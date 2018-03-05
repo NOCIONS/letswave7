@@ -207,6 +207,7 @@ GLW_figure_openingFcn;
     end
     function init_panel_axis()
         handles.panel_axis=uipanel(handles.fig1,'bordertype','none','visible','off');
+        handles.axis_reverse_chk=uicontrol(handles.panel_axis,'style','checkbox','string','XY-axis reverse');
         handles.axis_box_chk=uicontrol(handles.panel_axis,'style','checkbox','string','Box');
         handles.axis_legend_chk=uicontrol(handles.panel_axis,'style','checkbox','string','Legend');
         
@@ -257,8 +258,9 @@ GLW_figure_openingFcn;
         set(handles.yaxis_tick_anchor_txt,'HorizontalAlignment','left');
         
         Set_position(handles.panel_axis,            [0,0,224,520]);
-        Set_position(handles.axis_box_chk,          [5,475,50,20]);
-        Set_position(handles.axis_legend_chk,       [5,445,60,20]);
+        Set_position(handles.axis_reverse_chk,      [5,490,120,20]);
+        Set_position(handles.axis_box_chk,          [5,470,80,20]);
+        Set_position(handles.axis_legend_chk,       [5,450,80,20]);
         
         Set_position(handles.xaxis_txt,             [3,420,120,20]);
         Set_position(handles.xaxis_limit_chk,       [5,400,55,20]);
@@ -326,9 +328,14 @@ GLW_figure_openingFcn;
         handles.panel_curve_color_btn=uicontrol(handles.panel_curve,'style','pushbutton','String','color','FontWeight','bold');
         handles.panel_curve_color_txt=uicontrol(handles.panel_curve,'style','text','String','Color: ');
         handles.panel_curve_width_txt=uicontrol(handles.panel_curve,'style','text','String','Width: ');
-        handles.panel_curve_style_txt=uicontrol(handles.panel_curve,'style','text','String','Style: ');
         handles.panel_curve_width_edt=uicontrol(handles.panel_curve,'style','edit','String','2');
-        handles.panel_curve_style_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted'},'value',1);
+        handles.panel_curve_style_txt=uicontrol(handles.panel_curve,'style','text','String','Line Style: ');
+        handles.panel_curve_style_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
+        handles.panel_curve_marker_txt=uicontrol(handles.panel_curve,'style','text','String','Marker: ');
+        handles.panel_curve_marker_pop=uicontrol(handles.panel_curve,'style','popupmenu',...
+            'String',{'No Marker','Circle','Plus sign','Asterisk','Point','Cross','Square','Cross','Diamond',...
+            'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
+            'Pentagram','Hexagram'},'value',1);
         
         handles.panel_curve_source_txt=uicontrol(handles.panel_curve,'style','text','String','Data Source:');
         handles.panel_curve_source_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'1','2','3'});
@@ -350,6 +357,7 @@ GLW_figure_openingFcn;
         set(handles.panel_curve_color_txt,'HorizontalAlignment','left');
         set(handles.panel_curve_width_txt,'HorizontalAlignment','left');
         set(handles.panel_curve_style_txt,'HorizontalAlignment','left');
+        set(handles.panel_curve_marker_txt,'HorizontalAlignment','left');
         set(handles.panel_curve_source_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_curve_source_epoch_txt,'HorizontalAlignment','left');
         set(handles.panel_curve_source_channel_txt,'HorizontalAlignment','left');
@@ -365,19 +373,21 @@ GLW_figure_openingFcn;
         Set_position(handles.panel_curve_width_edt,[70,340,110,20]);
         Set_position(handles.panel_curve_style_txt,[13,310,80,20]);
         Set_position(handles.panel_curve_style_pop,[70,310,110,20]);
+        Set_position(handles.panel_curve_marker_txt,[13,280,80,20]);
+        Set_position(handles.panel_curve_marker_pop,[70,280,110,20]);
         
-        Set_position(handles.panel_curve_source_txt,[13,250,150,20]);
-        Set_position(handles.panel_curve_source_pop,[5,230,220,20]);
-        Set_position(handles.panel_curve_source_epoch_txt,[13,200,50,20]);
-        Set_position(handles.panel_curve_source_epoch_pop,[70,200,110,20]);
-        Set_position(handles.panel_curve_source_channel_txt,[13,170,50,20]);
-        Set_position(handles.panel_curve_source_channel_pop,[70,170,110,20]);
-        Set_position(handles.panel_curve_source_index_txt,[13,140,50,20]);
-        Set_position(handles.panel_curve_source_index_pop,[70,140,110,20]);
-        Set_position(handles.panel_curve_source_y_txt,[13,110,30,20]);
-        Set_position(handles.panel_curve_source_y_edt,[70,110,110,20]);
-        Set_position(handles.panel_curve_source_z_txt,[13,80,30,20]);
-        Set_position(handles.panel_curve_source_z_edt,[70,80,110,20]);
+        Set_position(handles.panel_curve_source_txt,[13,220,150,20]);
+        Set_position(handles.panel_curve_source_pop,[5,200,220,20]);
+        Set_position(handles.panel_curve_source_epoch_txt,[13,170,50,20]);
+        Set_position(handles.panel_curve_source_epoch_pop,[70,170,110,20]);
+        Set_position(handles.panel_curve_source_channel_txt,[13,140,50,20]);
+        Set_position(handles.panel_curve_source_channel_pop,[70,140,110,20]);
+        Set_position(handles.panel_curve_source_index_txt,[13,110,50,20]);
+        Set_position(handles.panel_curve_source_index_pop,[70,110,110,20]);
+        Set_position(handles.panel_curve_source_y_txt,[13,80,30,20]);
+        Set_position(handles.panel_curve_source_y_edt,[70,80,110,20]);
+        Set_position(handles.panel_curve_source_z_txt,[13,50,30,20]);
+        Set_position(handles.panel_curve_source_z_edt,[70,50,110,20]);
     end
     function init_panel_line()
         handles.panel_line=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -413,18 +423,23 @@ GLW_figure_openingFcn;
             'style','text','String','Color: ');
         handles.panel_line_width_txt=uicontrol(handles.panel_line,...
             'style','text','String','Width: ');
-        handles.panel_line_style_txt=uicontrol(handles.panel_line,...
-            'style','text','String','Style: ');
         handles.panel_line_width_edt=uicontrol(handles.panel_line,...
             'style','edit','String','2');
-        handles.panel_line_style_pop=uicontrol(handles.panel_line,...
-            'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted'},'value',1);
+        handles.panel_line_style_txt=uicontrol(handles.panel_line,'style','text','String','Line Style: ');
+        handles.panel_line_style_pop=uicontrol(handles.panel_line,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
+        handles.panel_line_marker_txt=uicontrol(handles.panel_line,'style','text','String','Marker: ');
+        handles.panel_line_marker_pop=uicontrol(handles.panel_line,'style','popupmenu',...
+            'String',{'No Marker','Circle','Plus sign','Asterisk','Point','Cross','Square','Cross','Diamond',...
+            'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
+            'Pentagram','Hexagram'},'value',1);
+        
         
         
         set(handles.panel_line_config_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_line_color_txt,'HorizontalAlignment','left');
         set(handles.panel_line_width_txt,'HorizontalAlignment','left');
         set(handles.panel_line_style_txt,'HorizontalAlignment','left');
+        set(handles.panel_line_marker_txt,'HorizontalAlignment','left');
         
         set(handles.panel_line_from_txt,'HorizontalAlignment','left');
         set(handles.panel_line_to_txt,'HorizontalAlignment','left');
@@ -441,18 +456,20 @@ GLW_figure_openingFcn;
         Set_position(handles.panel_line_width_edt,[70,340,110,20]);
         Set_position(handles.panel_line_style_txt,[13,310,80,20]);
         Set_position(handles.panel_line_style_pop,[70,310,110,20]);
+        Set_position(handles.panel_line_marker_txt,[13,280,80,20]);
+        Set_position(handles.panel_line_marker_pop,[70,280,110,20]);
         
-        Set_position(handles.panel_line_from_txt,[13,275,110,20]);
-        Set_position(handles.panel_line_x1_txt,[13,250,20,20]);
-        Set_position(handles.panel_line_x1_edt,[35,250,80,20]);
-        Set_position(handles.panel_line_y1_txt,[120,250,20,20]);
-        Set_position(handles.panel_line_y1_edt,[140,250,80,20]);
+        Set_position(handles.panel_line_from_txt,[13,245,110,20]);
+        Set_position(handles.panel_line_x1_txt,[13,220,20,20]);
+        Set_position(handles.panel_line_x1_edt,[35,220,80,20]);
+        Set_position(handles.panel_line_y1_txt,[120,220,20,20]);
+        Set_position(handles.panel_line_y1_edt,[140,220,80,20]);
         
-        Set_position(handles.panel_line_to_txt,[13,215,110,20]);
-        Set_position(handles.panel_line_x2_txt,[13,190,20,20]);
-        Set_position(handles.panel_line_x2_edt,[35,190,80,20]);
-        Set_position(handles.panel_line_y2_txt,[120,190,20,20]);
-        Set_position(handles.panel_line_y2_edt,[140,190,80,20]);
+        Set_position(handles.panel_line_to_txt,[13,185,110,20]);
+        Set_position(handles.panel_line_x2_txt,[13,160,20,20]);
+        Set_position(handles.panel_line_x2_edt,[35,160,80,20]);
+        Set_position(handles.panel_line_y2_txt,[120,160,20,20]);
+        Set_position(handles.panel_line_y2_edt,[140,160,80,20]);
     end
     function init_panel_rect()
         handles.panel_rect=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -903,8 +920,102 @@ GLW_figure_openingFcn;
     end
     function init_panel_lissajous()
         handles.panel_lissajous=uipanel(handles.fig1,'bordertype','none','visible','off');
-        handles.panel_lissajous_txt=uicontrol(handles.panel_lissajous,'style','text','String','panel_lissajous');
+        handles.panel_lissajous_config_txt=uicontrol(handles.panel_lissajous,'style','text','String','Config:');
+        handles.panel_lissajous_color_btn=uicontrol(handles.panel_lissajous,'style','pushbutton','String','color','FontWeight','bold');
+        handles.panel_lissajous_color_txt=uicontrol(handles.panel_lissajous,'style','text','String','Color: ');
+        handles.panel_lissajous_width_txt=uicontrol(handles.panel_lissajous,'style','text','String','Width: ');
+        handles.panel_lissajous_width_edt=uicontrol(handles.panel_lissajous,'style','edit','String','2');
+        handles.panel_lissajous_style_txt=uicontrol(handles.panel_lissajous,'style','text','String','Line Style: ');
+        handles.panel_lissajous_style_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
+        handles.panel_lissajous_marker_txt=uicontrol(handles.panel_lissajous,'style','text','String','Marker: ');
+        handles.panel_lissajous_marker_pop=uicontrol(handles.panel_lissajous,'style','popupmenu',...
+            'String',{'No Marker','Circle','Plus sign','Asterisk','Point','Cross','Square','Cross','Diamond',...
+            'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
+            'Pentagram','Hexagram'},'value',1);
+        
+        handles.panel_lissajous_source1_txt=uicontrol(handles.panel_lissajous,'style','text','String','X Axis Data Source:');
+        handles.panel_lissajous_source1_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source1_epoch_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source1_channel_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source1_index_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source1_y_edt=uicontrol(handles.panel_lissajous,'style','edit');
+        handles.panel_lissajous_source1_z_edt=uicontrol(handles.panel_lissajous,'style','edit');
+        handles.panel_lissajous_source1_epoch_txt=uicontrol(handles.panel_lissajous,'style','text','String','epoch: ');
+        handles.panel_lissajous_source1_channel_txt=uicontrol(handles.panel_lissajous,'style','text','String','channel: ');
+        handles.panel_lissajous_source1_index_txt=uicontrol(handles.panel_lissajous,'style','text','String','index: ');
+        handles.panel_lissajous_source1_y_txt=uicontrol(handles.panel_lissajous,'style','text','String','y: ');
+        handles.panel_lissajous_source1_z_txt=uicontrol(handles.panel_lissajous,'style','text','String','z: ');
+        
+        
+        handles.panel_lissajous_source2_txt=uicontrol(handles.panel_lissajous,'style','text','String','Y Axis Data Source:');
+        handles.panel_lissajous_source2_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source2_epoch_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source2_channel_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source2_index_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_lissajous_source2_y_edt=uicontrol(handles.panel_lissajous,'style','edit');
+        handles.panel_lissajous_source2_z_edt=uicontrol(handles.panel_lissajous,'style','edit');
+        handles.panel_lissajous_source2_epoch_txt=uicontrol(handles.panel_lissajous,'style','text','String','epoch: ');
+        handles.panel_lissajous_source2_channel_txt=uicontrol(handles.panel_lissajous,'style','text','String','channel: ');
+        handles.panel_lissajous_source2_index_txt=uicontrol(handles.panel_lissajous,'style','text','String','index: ');
+        handles.panel_lissajous_source2_y_txt=uicontrol(handles.panel_lissajous,'style','text','String','y: ');
+        handles.panel_lissajous_source2_z_txt=uicontrol(handles.panel_lissajous,'style','text','String','z: ');
+        
+        set(handles.panel_lissajous_config_txt,'HorizontalAlignment','left','fontweight','bold');
+        c=get(handles.panel_lissajous_color_btn,'fontsize');
+        set(handles.panel_lissajous_color_btn,'fontsize',c+2);
+        set(handles.panel_lissajous_color_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_width_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_style_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_marker_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source1_txt,'HorizontalAlignment','left','fontweight','bold');
+        set(handles.panel_lissajous_source1_epoch_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source1_channel_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source1_index_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source1_y_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source1_z_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source2_txt,'HorizontalAlignment','left','fontweight','bold');
+        set(handles.panel_lissajous_source2_epoch_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source2_channel_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source2_index_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source2_y_txt,'HorizontalAlignment','left');
+        set(handles.panel_lissajous_source2_z_txt,'HorizontalAlignment','left');
+        
         Set_position(handles.panel_lissajous,[0,0,224,450]);
+        Set_position(handles.panel_lissajous_config_txt,[13,420,55,20]);
+        Set_position(handles.panel_lissajous_color_txt,[13,390,55,20]);
+        Set_position(handles.panel_lissajous_color_btn,[70,390,110,30]);
+        Set_position(handles.panel_lissajous_width_txt,[13,360,55,20]);
+        Set_position(handles.panel_lissajous_width_edt,[70,360,110,20]);
+        Set_position(handles.panel_lissajous_style_txt,[13,330,80,20]);
+        Set_position(handles.panel_lissajous_style_pop,[70,330,110,20]);
+        Set_position(handles.panel_lissajous_marker_txt,[13,300,80,20]);
+        Set_position(handles.panel_lissajous_marker_pop,[70,300,110,20]);
+        
+        Set_position(handles.panel_lissajous_source1_txt,[5,260,150,20]);
+        Set_position(handles.panel_lissajous_source1_pop,[5,240,220,20]);
+        Set_position(handles.panel_lissajous_source1_epoch_txt,[5,210,40,20]);
+        Set_position(handles.panel_lissajous_source1_epoch_pop,[45,210,85,20]);
+        Set_position(handles.panel_lissajous_source1_channel_txt,[5,180,40,20]);
+        Set_position(handles.panel_lissajous_source1_channel_pop,[45,180,85,20]);
+        Set_position(handles.panel_lissajous_source1_index_txt,[5,150,40,20]);
+        Set_position(handles.panel_lissajous_source1_index_pop,[45,150,85,20]);
+        Set_position(handles.panel_lissajous_source1_y_txt,[150,210,10,20]);
+        Set_position(handles.panel_lissajous_source1_y_edt,[165,210,55,20]);
+        Set_position(handles.panel_lissajous_source1_z_txt,[150,180,10,20]);
+        Set_position(handles.panel_lissajous_source1_z_edt,[165,180,55,20]);
+        
+        Set_position(handles.panel_lissajous_source2_txt,[5,120,150,20]);
+        Set_position(handles.panel_lissajous_source2_pop,[5,100,220,20]);
+        Set_position(handles.panel_lissajous_source2_epoch_txt,[5,70,40,20]);
+        Set_position(handles.panel_lissajous_source2_epoch_pop,[45,70,85,20]);
+        Set_position(handles.panel_lissajous_source2_channel_txt,[5,40,40,20]);
+        Set_position(handles.panel_lissajous_source2_channel_pop,[45,40,85,20]);
+        Set_position(handles.panel_lissajous_source2_index_txt,[5,10,40,20]);
+        Set_position(handles.panel_lissajous_source2_index_pop,[45,10,85,20]);
+        Set_position(handles.panel_lissajous_source2_y_txt,[150,70,10,20]);
+        Set_position(handles.panel_lissajous_source2_y_edt,[165,70,55,20]);
+        Set_position(handles.panel_lissajous_source2_z_txt,[150,40,10,20]);
+        Set_position(handles.panel_lissajous_source2_z_edt,[165,40,55,20]);
     end
 
     function init_data()
@@ -924,6 +1035,8 @@ GLW_figure_openingFcn;
         set(handles.panel_curve_source_pop,'string',name);
         set(handles.panel_image_source_pop,'string',name);
         set(handles.panel_topo_source_pop,'string',name);
+        set(handles.panel_lissajous_source1_pop,'string',name);
+        set(handles.panel_lissajous_source2_pop,'string',name);
     end
     function init_function()
         set(handles.fig1,'CloseRequestFcn',@fig1_closeReq_callback);
@@ -966,6 +1079,7 @@ GLW_figure_openingFcn;
         set(handles.sub_update_btn,'callback',@sub_update_btn_callback);
         
         %panel_axis
+        set(handles.axis_reverse_chk,'callback',@axis_reverse_chk_callback);
         set(handles.axis_box_chk,'callback',@axis_box_chk_callback);
         set(handles.axis_legend_chk,'callback',@axis_legend_chk_callback);
         set(handles.xaxis_limit_chk,'callback',@xaxis_limit_chk_callback);
@@ -1012,11 +1126,13 @@ GLW_figure_openingFcn;
         set(handles.panel_curve_color_btn,'callback',@curve_color_btn_callback);
         set(handles.panel_curve_width_edt,'callback',@curve_width_edt_callback);
         set(handles.panel_curve_style_pop,'callback',@curve_style_pop_callback);
+        set(handles.panel_curve_marker_pop,'callback',@curve_marker_pop_callback);
         
         %panel_line
         set(handles.panel_line_color_btn,'callback',@line_color_btn_callback);
         set(handles.panel_line_width_edt,'callback',@line_width_edt_callback);
         set(handles.panel_line_style_pop,'callback',@line_style_pop_callback);
+        set(handles.panel_line_marker_pop,'callback',@line_marker_pop_callback);
         set(handles.panel_line_x1_edt,'callback',@line_xy_edt_callback);
         set(handles.panel_line_x2_edt,'callback',@line_xy_edt_callback);
         set(handles.panel_line_y1_edt,'callback',@line_xy_edt_callback);
@@ -1087,6 +1203,24 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_colormap_pop,'callback',@topo_colormap_pop_callback);
         set(handles.panel_topo_contour_chk,'callback',@topo_contour_chk_callback);
         set(handles.panel_topo_contour_color_btn,'callback',@topo_contour_color_btn_callback);
+        
+        %panel_lissajous
+        set(handles.panel_lissajous_color_btn,'callback',@lissajous_color_btn_callback);
+        set(handles.panel_lissajous_width_edt,'callback',@lissajous_width_edt_callback);
+        set(handles.panel_lissajous_style_pop,'callback',@lissajous_style_pop_callback);
+        set(handles.panel_lissajous_marker_pop,'callback',@lissajous_marker_pop_callback);
+        set(handles.panel_lissajous_source1_pop,'callback',@lissajous_source1_pop_callback);
+        set(handles.panel_lissajous_source1_epoch_pop,'callback',@lissajous_source1_epoch_pop_callback);
+        set(handles.panel_lissajous_source1_channel_pop,'callback',@lissajous_source1_channel_pop_callback);
+        set(handles.panel_lissajous_source1_index_pop,'callback',@lissajous_source1_index_pop_callback);
+        set(handles.panel_lissajous_source1_z_edt,'callback',@lissajous_source1_z_edt_callback);
+        set(handles.panel_lissajous_source1_y_edt,'callback',@lissajous_source1_y_edt_callback);
+        set(handles.panel_lissajous_source2_pop,'callback',@lissajous_source2_pop_callback);
+        set(handles.panel_lissajous_source2_epoch_pop,'callback',@lissajous_source2_epoch_pop_callback);
+        set(handles.panel_lissajous_source2_channel_pop,'callback',@lissajous_source2_channel_pop_callback);
+        set(handles.panel_lissajous_source2_index_pop,'callback',@lissajous_source2_index_pop_callback);
+        set(handles.panel_lissajous_source2_z_edt,'callback',@lissajous_source2_z_edt_callback);
+        set(handles.panel_lissajous_source2_y_edt,'callback',@lissajous_source2_y_edt_callback);
     end
 
 %% panel_fig function
@@ -1240,6 +1374,7 @@ GLW_figure_openingFcn;
         option.ax{option.cnt_subfig}.title_visible='on';
         option.ax{option.cnt_subfig}.fontname='Helvetica';
         option.ax{option.cnt_subfig}.font_size=10;
+        option.ax{option.cnt_subfig}.axis_reverse=0;
         option.ax{option.cnt_subfig}.box='off';
         option.ax{option.cnt_subfig}.is_legend='off';
         
@@ -1566,6 +1701,7 @@ GLW_figure_openingFcn;
 
 %% panel_axis function
     function axis_callback()
+        set (handles.axis_reverse_chk,'value',option.ax{option.cnt_subfig}.axis_reverse);
         if strcmpi(option.ax{option.cnt_subfig}.box,'on')
             set (handles.axis_box_chk,'value',1);
         else
@@ -1753,6 +1889,14 @@ GLW_figure_openingFcn;
             set(l,'visible','off');
             set(handles.yaxis_label_chk,'value',0);
             set(handles.yaxis_label_edt,'enable','off');
+        end
+    end
+    function axis_reverse_chk_callback(~,~)
+        option.ax{option.cnt_subfig}.axis_reverse=get(handles.axis_reverse_chk,'value');
+        if option.ax{option.cnt_subfig}.axis_reverse
+            view(handles.ax(option.cnt_subfig),[90 -90]);
+        else
+            view(handles.ax(option.cnt_subfig),[0,90]);
         end
     end
     function axis_box_chk_callback(~,~)
@@ -2114,7 +2258,7 @@ GLW_figure_openingFcn;
         str_content=str_content{value_content};
         switch(option.ax{option.cnt_subfig}.style)
             case 'Curve'
-                set(handles.content_add_pop,'String',{'curve','line','rect','text'});
+                set(handles.content_add_pop,'String',{'curve','line','rect','text','lissajous'});
             case 'Image'
                 set(handles.content_add_pop,'String',{'line','rect','text'});
             case 'Topograph'
@@ -2146,22 +2290,50 @@ GLW_figure_openingFcn;
             0.6350    0.0780    0.1840];
         switch(str_content)
             case 'curve'
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.color=c(mod(option.ax{option.cnt_subfig}.content_order,7)+1,:);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth=2;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
+                
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.ep=1;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.ch=datasets_header(1).header.chanlocs(1).labels;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=1;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.z=datasets_header(1).header.zstart;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.y=datasets_header(1).header.ystart;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset=1;
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.color=c(mod(option.ax{option.cnt_subfig}.content_order,7)+1,:);
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth=2;
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
                 
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=line(...
                     'Parent',handles.ax(option.cnt_subfig),...
                     'linewidth',option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth,...
                     'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
+                    'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker,...
                     'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
-            case 'Lissajous'
+            case 'lissajous'
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.color=c(mod(option.ax{option.cnt_subfig}.content_order,7)+1,:);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth=2;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
+                
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ep=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch=datasets_header(1).header.chanlocs(1).labels;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_z=datasets_header(1).header.zstart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_y=datasets_header(1).header.ystart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_dataset=1;
+                
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ep=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch=datasets_header(1).header.chanlocs(1).labels;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_z=datasets_header(1).header.zstart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_y=datasets_header(1).header.ystart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_dataset=1;
+                
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=line(...
+                    'Parent',handles.ax(option.cnt_subfig),...
+                    'linewidth',option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth,...
+                    'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
+                    'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker,...
+                    'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
             case 'line'
                 x=[mean(x),mean(x)];
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.x=x;
@@ -2169,11 +2341,13 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.color=[0,0,0];
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth=2;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=line(...
                     'Parent',handles.ax(option.cnt_subfig),...
                     'linewidth',option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth,...
                     'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color,...
                     'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
+                    'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker,...
                     'xData',x,'YData',y);
             case 'rect'
                 w=(x(2)-x(1))/2;x(1)=x(1)+w/2;x(2)=x(1)+w;
@@ -2241,16 +2415,45 @@ GLW_figure_openingFcn;
                 set(handles.panel_curve_style_pop,'value',3);
             case '-.'
                 set(handles.panel_curve_style_pop,'value',4);
+            case 'none'
+                set(handles.panel_curve_style_pop,'value',5);
+        end
+        switch option.ax{option.cnt_subfig}.content{option.cnt_content}.marker
+            case 'none'
+                set(handles.panel_curve_marker_pop,'value',1);
+            case 'o'
+                set(handles.panel_curve_marker_pop,'value',2);
+            case '+'
+                set(handles.panel_curve_marker_pop,'value',3);
+            case '*'
+                set(handles.panel_curve_marker_pop,'value',4);
+            case '.'
+                set(handles.panel_curve_marker_pop,'value',5);
+            case 'x'
+                set(handles.panel_curve_marker_pop,'value',6);
+            case 's'
+                set(handles.panel_curve_marker_pop,'value',7);
+            case 'd'
+                set(handles.panel_curve_marker_pop,'value',8);
+            case '^'
+                set(handles.panel_curve_marker_pop,'value',9);
+            case 'v'
+                set(handles.panel_curve_marker_pop,'value',10);
+            case '>'
+                set(handles.panel_curve_marker_pop,'value',11);
+            case '<'
+                set(handles.panel_curve_marker_pop,'value',12);
+            case 'p'
+                set(handles.panel_curve_marker_pop,'value',13);
+            case 'h'
+                set(handles.panel_curve_marker_pop,'value',14);
         end
         
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
         set(handles.panel_curve_source_pop,'value',k);
         set(handles.panel_curve_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
         set(handles.panel_curve_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
-        
-        
         set(handles.panel_curve_source_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
-        
         ch_idx=1;
         for l=1:length({datasets_header(k).header.chanlocs.labels})
             if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.ch,...
@@ -2260,7 +2463,6 @@ GLW_figure_openingFcn;
             end
         end
         set(handles.panel_curve_source_channel_pop,'value',ch_idx);
-        
         if datasets_header(k).header.datasize(3)==1
             set(handles.panel_curve_source_index_txt,'visible','off');
             set(handles.panel_curve_source_index_pop,'visible','off');
@@ -2270,7 +2472,6 @@ GLW_figure_openingFcn;
             set(handles.panel_curve_source_index_pop,'string',datasets_header(k).header.index_labels);
             set(handles.panel_curve_source_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.idx);
         end
-        
         if datasets_header(k).header.datasize(4)==1
             set(handles.panel_curve_source_z_txt,'visible','off');
             set(handles.panel_curve_source_z_edt,'visible','off');
@@ -2332,7 +2533,10 @@ GLW_figure_openingFcn;
         y=squeeze(datasets_data(k).data(...
             option.ax{option.cnt_subfig}.content{option.cnt_content}.ep,...
             ch_idx,i_pos,z_pos,y_pos,:));
-        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'XData',x,'YData',y);
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,...
+            'XData',x,'YData',y,...
+            'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
+            'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker);
         if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
             temp=get(handles.ax(option.cnt_subfig),'xlim');
             set(handles.xaxis_limit1_edt,'string',num2str(temp(1)));
@@ -2365,17 +2569,50 @@ GLW_figure_openingFcn;
         switch c
             case 1
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle','-');
             case 2
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='--';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle','--');
             case 3
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style=':';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle',':');
             case 4
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-.';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle','-.');
+            case 5
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='none';
         end
+        curve_callback();
+    end
+    function curve_marker_pop_callback(~,~)
+        c=get(handles.panel_curve_marker_pop,'value');
+        switch c
+            case 1
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
+            case 2
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='o';
+            case 3
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='+';
+            case 4
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='*';
+            case 5
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='.';
+            case 6
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='x';
+            case 7
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='s';
+            case 8
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='d';
+            case 9
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='^';
+            case 10
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='v';
+            case 11
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='>';
+            case 12
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='<';
+            case 13
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='p';
+            case 14
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='h';
+        end
+        curve_callback();
     end
     function curve_source_pop_callback(~,~)
         % dataset
@@ -2441,6 +2678,7 @@ GLW_figure_openingFcn;
 
 %% panel_line function
     function line_callback()
+        line_update();
         c=option.ax{option.cnt_subfig}.content{option.cnt_content}.color;
         set(handles.panel_line_color_btn,'foregroundcolor',c);
         set(handles.panel_line_color_btn,'string',['[',num2str(c(1),'%0.2g'),',',num2str(c(2),'%0.2g'),',',num2str(c(3),'%0.2g'),']']);
@@ -2454,18 +2692,70 @@ GLW_figure_openingFcn;
                 set(handles.panel_line_style_pop,'value',3);
             case '-.'
                 set(handles.panel_line_style_pop,'value',4);
+            case 'none'
+                set(handles.panel_line_style_pop,'value',5);
+        end
+        switch option.ax{option.cnt_subfig}.content{option.cnt_content}.marker
+            case 'none'
+                set(handles.panel_line_marker_pop,'value',1);
+            case 'o'
+                set(handles.panel_line_marker_pop,'value',2);
+            case '+'
+                set(handles.panel_line_marker_pop,'value',3);
+            case '*'
+                set(handles.panel_line_marker_pop,'value',4);
+            case '.'
+                set(handles.panel_line_marker_pop,'value',5);
+            case 'x'
+                set(handles.panel_line_marker_pop,'value',6);
+            case 's'
+                set(handles.panel_line_marker_pop,'value',7);
+            case 'd'
+                set(handles.panel_line_marker_pop,'value',8);
+            case '^'
+                set(handles.panel_line_marker_pop,'value',9);
+            case 'v'
+                set(handles.panel_line_marker_pop,'value',10);
+            case '>'
+                set(handles.panel_line_marker_pop,'value',11);
+            case '<'
+                set(handles.panel_line_marker_pop,'value',12);
+            case 'p'
+                set(handles.panel_line_marker_pop,'value',13);
+            case 'h'
+                set(handles.panel_line_marker_pop,'value',14);
         end
         set(handles.panel_line_x1_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.x(1)));
         set(handles.panel_line_y1_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.y(1)));
         set(handles.panel_line_x2_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.x(2)));
         set(handles.panel_line_y2_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.y(2)));
     end
+    function line_update()
+        if ~strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.type,'line')
+            return;
+        end
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,...
+            'XData',option.ax{option.cnt_subfig}.content{option.cnt_content}.x,...
+            'YData',option.ax{option.cnt_subfig}.content{option.cnt_content}.y,...
+            'linewidth',option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth,...
+            'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color,...
+            'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
+            'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker);
+        if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
+            temp=get(handles.ax(option.cnt_subfig),'xlim');
+            set(handles.xaxis_limit1_edt,'string',num2str(temp(1)));
+            set(handles.xaxis_limit2_edt,'string',num2str(temp(2)));
+        end
+        if  strcmp(option.ax{option.cnt_subfig}.YlimMode,'auto')
+            temp=get(handles.ax(option.cnt_subfig),'ylim');
+            set(handles.yaxis_limit1_edt,'string',num2str(temp(1)));
+            set(handles.yaxis_limit2_edt,'string',num2str(temp(2)));
+        end
+    end
     function line_color_btn_callback(~,~)
-        c = uisetcolor(option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
-        option.ax{option.cnt_subfig}.content{option.cnt_content}.color=c;
-        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'color',c);
-        set(handles.panel_line_color_btn,'foregroundcolor',c);
-        set(handles.panel_line_color_btn,'string',['[',num2str(c(1),'%0.2g'),',',num2str(c(2),'%0.2g'),',',num2str(c(3),'%0.2g'),']']);
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.color=...
+            uisetcolor(option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
+        line_callback();
     end
     function line_width_edt_callback(~,~)
         c=str2num(get(handles.panel_line_width_edt,'string'));
@@ -2481,17 +2771,50 @@ GLW_figure_openingFcn;
         switch c
             case 1
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle','-');
             case 2
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='--';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle','--');
             case 3
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style=':';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle',':');
             case 4
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-.';
-                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,'linestyle','-.');
+            case 5
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='none';
         end
+        line_callback();
+    end
+    function line_marker_pop_callback(~,~)
+        c=get(handles.panel_line_style_pop,'value');
+        switch c
+            case 1
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
+            case 2
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='o';
+            case 3
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='+';
+            case 4
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='*';
+            case 5
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='.';
+            case 6
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='x';
+            case 7
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='s';
+            case 8
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='d';
+            case 9
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='^';
+            case 10
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='v';
+            case 11
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='>';
+            case 12
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='<';
+            case 13
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='p';
+            case 14
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='h';
+        end
+        line_callback();
     end
     function line_xy_edt_callback(~,~)
         x1=str2num(get(handles.panel_line_x1_edt,'string'));
@@ -3549,8 +3872,419 @@ GLW_figure_openingFcn;
 
 %% panel_lissajous function
     function lissajous_callback()
+        lissajous_update();
+        c=option.ax{option.cnt_subfig}.content{option.cnt_content}.color;
+        set(handles.panel_lissajous_color_btn,'foregroundcolor',c);
+        set(handles.panel_lissajous_color_btn,'string',['[',num2str(c(1),'%0.2g'),',',num2str(c(2),'%0.2g'),',',num2str(c(3),'%0.2g'),']']);
+        set(handles.panel_lissajous_width_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth));
+        switch option.ax{option.cnt_subfig}.content{option.cnt_content}.style
+            case '-'
+                set(handles.panel_lissajous_style_pop,'value',1);
+            case '--'
+                set(handles.panel_lissajous_style_pop,'value',2);
+            case ':'
+                set(handles.panel_lissajous_style_pop,'value',3);
+            case '-.'
+                set(handles.panel_lissajous_style_pop,'value',4);
+            case 'none'
+                set(handles.panel_lissajous_style_pop,'value',5);
+        end
+        switch option.ax{option.cnt_subfig}.content{option.cnt_content}.marker
+            case 'none'
+                set(handles.panel_lissajous_marker_pop,'value',1);
+            case 'o'
+                set(handles.panel_lissajous_marker_pop,'value',2);
+            case '+'
+                set(handles.panel_lissajous_marker_pop,'value',3);
+            case '*'
+                set(handles.panel_lissajous_marker_pop,'value',4);
+            case '.'
+                set(handles.panel_lissajous_marker_pop,'value',5);
+            case 'x'
+                set(handles.panel_lissajous_marker_pop,'value',6);
+            case 's'
+                set(handles.panel_lissajous_marker_pop,'value',7);
+            case 'd'
+                set(handles.panel_lissajous_marker_pop,'value',8);
+            case '^'
+                set(handles.panel_lissajous_marker_pop,'value',9);
+            case 'v'
+                set(handles.panel_lissajous_marker_pop,'value',10);
+            case '>'
+                set(handles.panel_lissajous_marker_pop,'value',11);
+            case '<'
+                set(handles.panel_lissajous_marker_pop,'value',12);
+            case 'p'
+                set(handles.panel_lissajous_marker_pop,'value',13);
+            case 'h'
+                set(handles.panel_lissajous_marker_pop,'value',14);
+        end
+        
+        k=option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_dataset;
+        set(handles.panel_lissajous_source1_pop,'value',k);
+        set(handles.panel_lissajous_source1_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
+        set(handles.panel_lissajous_source1_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ep);
+        set(handles.panel_lissajous_source1_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
+        ch_idx=1;
+        for l=1:length({datasets_header(k).header.chanlocs.labels})
+            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch,...
+                    datasets_header(k).header.chanlocs(l).labels)
+                ch_idx=l;
+                break;
+            end
+        end
+        set(handles.panel_lissajous_source1_channel_pop,'value',ch_idx);
+        if datasets_header(k).header.datasize(3)==1
+            set(handles.panel_lissajous_source1_index_txt,'visible','off');
+            set(handles.panel_lissajous_source1_index_pop,'visible','off');
+        else
+            set(handles.panel_lissajous_source1_index_txt,'visible','on');
+            set(handles.panel_lissajous_source1_index_pop,'visible','on');
+            set(handles.panel_lissajous_source1_index_pop,'string',datasets_header(k).header.index_labels);
+            set(handles.panel_lissajous_source1_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx);
+        end
+        if datasets_header(k).header.datasize(4)==1
+            set(handles.panel_lissajous_source1_z_txt,'visible','off');
+            set(handles.panel_lissajous_source1_z_edt,'visible','off');
+        else
+            set(handles.panel_lissajous_source1_z_txt,'visible','on');
+            set(handles.panel_lissajous_source1_z_edt,'visible','on');
+            set(handles.panel_lissajous_source1_z_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_z));
+        end
+        if datasets_header(k).header.datasize(5)==1
+            set(handles.panel_lissajous_source1_y_txt,'visible','off');
+            set(handles.panel_lissajous_source1_y_edt,'visible','off');
+        else
+            set(handles.panel_lissajous_source1_y_txt,'visible','on');
+            set(handles.panel_lissajous_source1_y_edt,'visible','on');
+            set(handles.panel_lissajous_source1_y_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_y));
+        end
+        
+        k=option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_dataset;
+        set(handles.panel_lissajous_source2_pop,'value',k);
+        set(handles.panel_lissajous_source2_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
+        set(handles.panel_lissajous_source2_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ep);
+        set(handles.panel_lissajous_source2_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
+        ch_idx=1;
+        for l=1:length({datasets_header(k).header.chanlocs.labels})
+            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch,...
+                    datasets_header(k).header.chanlocs(l).labels)
+                ch_idx=l;
+                break;
+            end
+        end
+        set(handles.panel_lissajous_source2_channel_pop,'value',ch_idx);
+        if datasets_header(k).header.datasize(3)==1
+            set(handles.panel_lissajous_source2_index_txt,'visible','off');
+            set(handles.panel_lissajous_source2_index_pop,'visible','off');
+        else
+            set(handles.panel_lissajous_source2_index_txt,'visible','on');
+            set(handles.panel_lissajous_source2_index_pop,'visible','on');
+            set(handles.panel_lissajous_source2_index_pop,'string',datasets_header(k).header.index_labels);
+            set(handles.panel_lissajous_source2_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx);
+        end
+        if datasets_header(k).header.datasize(4)==1
+            set(handles.panel_lissajous_source2_z_txt,'visible','off');
+            set(handles.panel_lissajous_source2_z_edt,'visible','off');
+        else
+            set(handles.panel_lissajous_source2_z_txt,'visible','on');
+            set(handles.panel_lissajous_source2_z_edt,'visible','on');
+            set(handles.panel_lissajous_source2_z_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_z));
+        end
+        if datasets_header(k).header.datasize(5)==1
+            set(handles.panel_lissajous_source2_y_txt,'visible','off');
+            set(handles.panel_lissajous_source2_y_edt,'visible','off');
+        else
+            set(handles.panel_lissajous_source2_y_txt,'visible','on');
+            set(handles.panel_lissajous_source2_y_edt,'visible','on');
+            set(handles.panel_lissajous_source2_y_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_y));
+        end
     end
-
+    function lissajous_update()
+        if ~strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.type,'lissajous')
+            return;
+        end
+        
+        k=option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_dataset;
+        header=datasets_header(k).header;
+        i_pos=1;
+        y_pos=1;
+        z_pos=1;
+        if header.datasize(5)~=1
+            y_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_y-header.ystart)/header.ystep)+1);
+            if y_pos<1
+                y_pos=1;
+            end
+            if y_pos>header.datasize(5)
+                y_pos=header.datasize(5);
+            end
+        end
+        if header.datasize(4)~=1
+            z_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_z-header.zstart)/header.zstep)+1);
+            if z_pos<1
+                z_pos=1;
+            end
+            if z_pos>header.datasize(4)
+                z_pos=header.datasize(4);
+            end
+        end
+        
+        if header.datasize(3)~=1
+            i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx;
+        end
+        ch_idx=1;
+        for l=1:length({datasets_header(k).header.chanlocs.labels})
+            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch,...
+                    datasets_header(k).header.chanlocs(l).labels)
+                ch_idx=l;
+                break;
+            end
+        end
+        x=squeeze(datasets_data(k).data(...
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ep,...
+            ch_idx,i_pos,z_pos,y_pos,:));
+        
+        
+        k=option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_dataset;
+        header=datasets_header(k).header;
+        i_pos=1;
+        y_pos=1;
+        z_pos=1;
+        if header.datasize(5)~=1
+            y_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_y-header.ystart)/header.ystep)+1);
+            if y_pos<1
+                y_pos=1;
+            end
+            if y_pos>header.datasize(5)
+                y_pos=header.datasize(5);
+            end
+        end
+        if header.datasize(4)~=1
+            z_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_z-header.zstart)/header.zstep)+1);
+            if z_pos<1
+                z_pos=1;
+            end
+            if z_pos>header.datasize(4)
+                z_pos=header.datasize(4);
+            end
+        end
+        
+        if header.datasize(3)~=1
+            i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx;
+        end
+        ch_idx=1;
+        for l=1:length({datasets_header(k).header.chanlocs.labels})
+            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch,...
+                    datasets_header(k).header.chanlocs(l).labels)
+                ch_idx=l;
+                break;
+            end
+        end
+        y=squeeze(datasets_data(k).data(...
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ep,...
+            ch_idx,i_pos,z_pos,y_pos,:));
+        len=min(length(x),length(y));
+        
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line,...
+            'XData',x(1:len),'YData',y(1:len),...
+            'linewidth',option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth,...
+            'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
+            'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker,...
+            'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
+        if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
+            temp=get(handles.ax(option.cnt_subfig),'xlim');
+            set(handles.xaxis_limit1_edt,'string',num2str(temp(1)));
+            set(handles.xaxis_limit2_edt,'string',num2str(temp(2)));
+        end
+        if  strcmp(option.ax{option.cnt_subfig}.YlimMode,'auto')
+            temp=get(handles.ax(option.cnt_subfig),'ylim');
+            set(handles.yaxis_limit1_edt,'string',num2str(temp(1)));
+            set(handles.yaxis_limit2_edt,'string',num2str(temp(2)));
+        end
+    end
+    function lissajous_color_btn_callback(~,~)
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.color = uisetcolor(option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
+        lissajous_callback();
+    end
+    function lissajous_width_edt_callback(~,~)
+        c=str2num(get(handles.panel_lissajous_width_edt,'string'));
+        if ~isempty(c) && isfinite(c) &&c>0
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth=c;
+        end
+        lissajous_callback();
+    end
+    function lissajous_style_pop_callback(~,~)
+        c=get(handles.panel_lissajous_style_pop,'value');
+        switch c
+            case 1
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-';
+            case 2
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='--';
+            case 3
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style=':';
+            case 4
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='-.';
+            case 5
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.style='none';
+        end
+        lissajous_callback();
+    end
+    function lissajous_marker_pop_callback(~,~)
+        c=get(handles.panel_lissajous_marker_pop,'value');
+        switch c
+            case 1
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
+            case 2
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='o';
+            case 3
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='+';
+            case 4
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='*';
+            case 5
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='.';
+            case 6
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='x';
+            case 7
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='s';
+            case 8
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='d';
+            case 9
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='^';
+            case 10
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='v';
+            case 11
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='>';
+            case 12
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='<';
+            case 13
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='p';
+            case 14
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='h';
+        end
+        lissajous_callback();
+    end
+    function lissajous_source1_pop_callback(~,~)
+        % dataset
+        k=get(handles.panel_lissajous_source1_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_dataset=k;
+        header=datasets_header(k).header;
+        
+        % epoch
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ep=...
+            min(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ep,header.datasize(1));
+        
+        % channel
+        set(handles.panel_lissajous_source1_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
+        ch_idx=1;
+        for l=1:length({datasets_header(k).header.chanlocs.labels})
+            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch,...
+                    datasets_header(k).header.chanlocs(l).labels)
+                ch_idx=l;
+                break;
+            end
+        end
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch=datasets_header(k).header.chanlocs(ch_idx).labels;
+                 
+        % index
+        if datasets_header(k).header.datasize(3)==1
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=1;
+        else
+           option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=...
+                min(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx,header.datasize(3));
+        end
+        lissajous_update();
+    end
+    function lissajous_source1_epoch_pop_callback(~,~)
+        k=get(handles.panel_lissajous_source1_epoch_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ep=k;
+        lissajous_update();
+    end
+    function lissajous_source1_channel_pop_callback(~,~)
+        k=get(handles.panel_lissajous_source1_channel_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch=...
+            datasets_header(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_dataset).header.chanlocs(k).labels;
+        lissajous_update();
+    end
+    function lissajous_source1_index_pop_callback(~,~)
+        k=get(handles.panel_lissajous_source1_index_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=k;
+        lissajous_update();
+    end
+    function lissajous_source1_z_edt_callback(~,~)
+        temp=str2double(get(handles.panel_lissajous_source1_z_edt,'String'));
+        if isfinite(temp)
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_z=temp;
+        end
+        lissajous_update();
+    end
+    function lissajous_source1_y_edt_callback(~,~)
+        temp=str2double(get(handles.panel_lissajous_source1_y_edt,'String'));
+        if isfinite(temp)
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_y=temp;
+        end
+        lissajous_update();
+    end
+    function lissajous_source2_pop_callback(~,~)
+        % dataset
+        k=get(handles.panel_lissajous_source2_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_dataset=k;
+        header=datasets_header(k).header;
+        
+        % epoch
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ep=...
+            min(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ep,header.datasize(1));
+        
+        % channel
+        set(handles.panel_lissajous_source2_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
+        ch_idx=1;
+        for l=1:length({datasets_header(k).header.chanlocs.labels})
+            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch,...
+                    datasets_header(k).header.chanlocs(l).labels)
+                ch_idx=l;
+                break;
+            end
+        end
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch=datasets_header(k).header.chanlocs(ch_idx).labels;
+                 
+        % index
+        if datasets_header(k).header.datasize(3)==1
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=1;
+        else
+           option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=...
+                min(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx,header.datasize(3));
+        end
+        lissajous_update();
+    end
+    function lissajous_source2_epoch_pop_callback(~,~)
+        k=get(handles.panel_lissajous_source2_epoch_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ep=k;
+        lissajous_update();
+    end
+    function lissajous_source2_channel_pop_callback(~,~)
+        k=get(handles.panel_lissajous_source2_channel_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch=...
+            datasets_header(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_dataset).header.chanlocs(k).labels;
+        lissajous_update();
+    end
+    function lissajous_source2_index_pop_callback(~,~)
+        k=get(handles.panel_lissajous_source2_index_pop,'value');
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=k;
+        lissajous_update();
+    end
+    function lissajous_source2_z_edt_callback(~,~)
+        temp=str2double(get(handles.panel_lissajous_source2_z_edt,'String'));
+        if isfinite(temp)
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_z=temp;
+        end
+        lissajous_update();
+    end
+    function lissajous_source2_y_edt_callback(~,~)
+        temp=str2double(get(handles.panel_lissajous_source2_y_edt,'String'));
+        if isfinite(temp)
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_y=temp;
+        end
+        lissajous_update();
+    end
 %% other function
     function Set_position(obj,position)
         set(obj,'Units','pixels');
