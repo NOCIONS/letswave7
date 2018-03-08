@@ -8,7 +8,7 @@ ElectDFac  = 1.06;
 transmat   = [0 -10 0 -0.1000 0 -1.600 1100 1100 1100]; % arno
 
 eloc_file=header.chanlocs;
-indices = find(~cellfun('isempty', { eloc_file.X }));
+indices = find(~cellfun('isempty', { eloc_file.X }) & [header.chanlocs.topo_enabled]==1);
 Xeori = [ eloc_file(indices).X ]';
 Yeori = [ eloc_file(indices).Y ]';
 Zeori = [ eloc_file(indices).Z ]';

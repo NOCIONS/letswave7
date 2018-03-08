@@ -8,6 +8,12 @@ option=[];
 icon=load('icon.mat');
 datasets_header={};
 datasets_data={};
+
+S=load('headmodel.mat');
+POS=S.POS;
+TRI=S.TRI;
+NORM=S.NORM;
+clear S;
 GLW_figure_openingFcn;
 
 %% init figure
@@ -56,11 +62,11 @@ GLW_figure_openingFcn;
         handles.fig1=figure('name','Config','Color',0.94*[1,1,1]);
         handles.toolbar= uitoolbar(handles.fig1);
         
-        handles.open_btn=uitoggletool(handles.toolbar,'CData',icon.icon_open,'TooltipString','open a file');
-        handles.save_btn=uitoggletool(handles.toolbar,'CData',icon.icon_save,'TooltipString','save the file');
-        handles.data_btn=uitoggletool(handles.toolbar,'CData',icon.icon_data_manage,'TooltipString','data management');
-        handles.export_btn=uitoggletool(handles.toolbar,'CData',icon.icon_figure_save,'TooltipString','export the figure');
-        handles.script_btn=uitoggletool(handles.toolbar,'CData',icon.icon_script,'TooltipString','script');
+        handles.open_btn=uipushtool(handles.toolbar,'CData',icon.icon_open,'TooltipString','open a file');
+        handles.save_btn=uipushtool(handles.toolbar,'CData',icon.icon_save,'TooltipString','save the file');
+        handles.data_btn=uipushtool(handles.toolbar,'CData',icon.icon_data_manage,'TooltipString','data management');
+        handles.export_btn=uipushtool(handles.toolbar,'CData',icon.icon_figure_save,'TooltipString','export the figure');
+        handles.script_btn=uipushtool(handles.toolbar,'CData',icon.icon_script,'TooltipString','script');
         handles.fig_btn=uitoggletool(handles.toolbar,'CData',icon.icon_figure,'TooltipString','figure','separator','on');
         handles.axis_btn=uitoggletool(handles.toolbar,'CData',icon.icon_axis,'TooltipString','axis');
         handles.content_btn=uitoggletool(handles.toolbar,'CData',icon.icon_content,'TooltipString','conent');
@@ -210,6 +216,7 @@ GLW_figure_openingFcn;
         handles.axis_reverse_chk=uicontrol(handles.panel_axis,'style','checkbox','string','XY-axis reverse');
         handles.axis_box_chk=uicontrol(handles.panel_axis,'style','checkbox','string','Box');
         handles.axis_legend_chk=uicontrol(handles.panel_axis,'style','checkbox','string','Legend');
+        handles.axis_legend_edt=uicontrol(handles.panel_axis,'style','edit');
         
         handles.xaxis_txt=uicontrol(handles.panel_axis,'style','text','String','X axis:');
         handles.xaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','x-limit:');
@@ -261,6 +268,7 @@ GLW_figure_openingFcn;
         Set_position(handles.axis_reverse_chk,      [5,490,120,20]);
         Set_position(handles.axis_box_chk,          [5,470,80,20]);
         Set_position(handles.axis_legend_chk,       [5,450,80,20]);
+        Set_position(handles.axis_legend_edt,       [85,450,135,20]);
         
         Set_position(handles.xaxis_txt,             [3,420,120,20]);
         Set_position(handles.xaxis_limit_chk,       [5,400,55,20]);
@@ -790,34 +798,61 @@ GLW_figure_openingFcn;
         
         handles.panel_topo_source_txt=uicontrol(handles.panel_topo,'style','text','String','Data Source:');
         handles.panel_topo_source_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_topo_source_epoch_txt=uicontrol(handles.panel_topo,'style','text','String','epoch: ');
+        handles.panel_topo_source_epoch_txt=uicontrol(handles.panel_topo,'style','text','String','epoch:');
         handles.panel_topo_source_epoch_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_topo_source_index_txt=uicontrol(handles.panel_topo,'style','text','String','index: ');
+        handles.panel_topo_source_index_txt=uicontrol(handles.panel_topo,'style','text','String','index:');
         handles.panel_topo_source_index_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',{'1','2','3'});
         handles.panel_topo_source_x_txt=uicontrol(handles.panel_topo,'style','text','String','x: ');
-        handles.panel_topo_source_x_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_x1_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_x2_edt=uicontrol(handles.panel_topo,'style','edit');
         handles.panel_topo_source_y_txt=uicontrol(handles.panel_topo,'style','text','String','y: ');
-        handles.panel_topo_source_y_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_y1_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_y2_edt=uicontrol(handles.panel_topo,'style','edit');
         handles.panel_topo_source_z_txt=uicontrol(handles.panel_topo,'style','text','String','z: ');
-        handles.panel_topo_source_z_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_z1_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_z2_edt=uicontrol(handles.panel_topo,'style','edit');
         
         handles.panel_topo_property_txt=uicontrol(handles.panel_topo,'style','text','String','Property: ');
         handles.panel_topo_dim_bg=uibuttongroup(handles.panel_topo,'BorderType','none');
         handles.panel_topo_dim_2D=uicontrol(handles.panel_topo_dim_bg,...
-                    'Style','radiobutton','String','2D');
+            'Style','radiobutton','String','2D');
         handles.panel_topo_dim_3D=uicontrol(handles.panel_topo_dim_bg,...
-                    'Style','radiobutton','String','3D');
+            'Style','radiobutton','String','3D');
+        
+        handles.panel_topo_headrad_txt=uicontrol(handles.panel_topo,'style','text','String','head radius:');
+        handles.panel_topo_headrad_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_shrink_txt=uicontrol(handles.panel_topo,'style','text','String','shrink:');
+        handles.panel_topo_shrink_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_clim_chk=uicontrol(handles.panel_topo,...
+            'style','checkbox','String','range: ');
+        handles.panel_topo_clim1_edt=uicontrol(handles.panel_topo,...
+            'style','edit','String','0');
+        handles.panel_topo_clim2_edt=uicontrol(handles.panel_topo,...
+            'style','edit','String','1');
+        handles.panel_topo_clim1_txt=uicontrol(handles.panel_topo,...
+            'style','text','String','from');
+        handles.panel_topo_clim2_txt=uicontrol(handles.panel_topo,...
+            'style','text','String','to');
+        
+        handles.panel_topo_view_txt=uicontrol(handles.panel_topo,...
+            'style','text','String','view:');
+        handles.panel_topo_view_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',...
+            {'custom','front','back','left','right','frontright','backright','frontleft','backleft','top'});
+        handles.panel_topo_view_az_txt=uicontrol(handles.panel_topo,...
+            'style','text','String','azimuth:');
+        handles.panel_topo_view_az_edt=uicontrol(handles.panel_topo,...
+            'style','edit','String','0');
+        handles.panel_topo_view_el_txt=uicontrol(handles.panel_topo,...
+            'style','text','String','vertical elevation:');
+        handles.panel_topo_view_el_edt=uicontrol(handles.panel_topo,...
+            'style','edit','String','0');
+        
         handles.panel_topo_surface_chk=uicontrol(handles.panel_topo,'style','checkbox','String','surface');
         handles.panel_topo_contour_chk=uicontrol(handles.panel_topo,'style','checkbox','String','contour');
-        handles.panel_topo_contour_color_txt=uicontrol(handles.panel_topo,'style','text','String','contour color:');
         handles.panel_topo_contour_color_btn=uicontrol(handles.panel_topo,...
             'style','pushbutton','String','color','FontWeight','bold');
         c=get(handles.panel_topo_contour_color_btn,'fontsize');
         set(handles.panel_topo_contour_color_btn,'fontsize',c+2);
-        handles.panel_topo_shrink_txt=uicontrol(handles.panel_topo,'style','text','String','shrink:');
-        handles.panel_topo_shrink_edt=uicontrol(handles.panel_topo,'style','edit');
-        handles.panel_topo_headrad_txt=uicontrol(handles.panel_topo,'style','text','String','head radius:');
-        handles.panel_topo_headrad_edt=uicontrol(handles.panel_topo,'style','edit');
         
         handles.panel_topo_elec_txt=uicontrol(handles.panel_topo,'style','text','String','Electrodes:');
         handles.panel_topo_elec_chk=uicontrol(handles.panel_topo,'style','checkbox','String','deisplay');
@@ -828,7 +863,6 @@ GLW_figure_openingFcn;
         handles.panel_topo_elec_marker_listbox=uicontrol(handles.panel_topo,'style','listbox','Min',0,'Max',10);
         handles.panel_topo_elec_markersize_txt=uicontrol(handles.panel_topo,'style','text','String','size:');
         handles.panel_topo_elec_markersize_edt=uicontrol(handles.panel_topo,'style','edit');
-        
         
         handles.panel_topo_colorbar_chk=uicontrol(handles.panel_topo,...
             'style','checkbox','String','colorbar');
@@ -845,15 +879,6 @@ GLW_figure_openingFcn;
                 'spring','summer','autumn','winter','gray','bone','copper',...
                 'pink'},'Value',1);
         end
-        handles.panel_topo_clim_chk=uicontrol(handles.panel_topo,...
-            'style','checkbox','String','range: ');
-        handles.panel_topo_clim1_edt=uicontrol(handles.panel_topo,...
-            'style','edit','String','0');
-        handles.panel_topo_clim2_edt=uicontrol(handles.panel_topo,...
-            'style','edit','String','1');
-        handles.panel_topo_clim3_txt=uicontrol(handles.panel_topo,...
-            'style','text','String','-');
-           
         
         set(handles.panel_topo_source_pop,'String',{'1','2','3'});
         set(handles.panel_topo_source_txt,'HorizontalAlignment','left','fontweight','bold');
@@ -865,58 +890,74 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_property_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_topo_shrink_txt,'HorizontalAlignment','left');
         set(handles.panel_topo_headrad_txt,'HorizontalAlignment','left');
-        set(handles.panel_topo_contour_color_txt,'HorizontalAlignment','left');
         set(handles.panel_topo_elec_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_topo_elec_exclude_txt,'HorizontalAlignment','left');
         set(handles.panel_topo_elec_marker_txt,'HorizontalAlignment','left');
         set(handles.panel_topo_elec_markersize_txt,'HorizontalAlignment','left');
         set(handles.panel_topo_colormap_txt,'HorizontalAlignment','left');
+        set(handles.panel_topo_view_txt,'HorizontalAlignment','left');
+        set(handles.panel_topo_view_az_txt,'HorizontalAlignment','left');
+        set(handles.panel_topo_view_el_txt,'HorizontalAlignment','left');
+        set(handles.panel_topo_clim1_txt,'HorizontalAlignment','left');
+        set(handles.panel_topo_clim2_txt,'HorizontalAlignment','left');
         
-        Set_position(handles.panel_topo,[0,0,224,450]);
-        Set_position(handles.panel_topo_source_txt,[5,425,150,20]);
-        Set_position(handles.panel_topo_source_pop,[5,405,220,20]);
-        Set_position(handles.panel_topo_source_epoch_txt,[5,378,35,20]);
-        Set_position(handles.panel_topo_source_epoch_pop,[40,378,75,20]);
-        Set_position(handles.panel_topo_source_index_txt,[120,378,35,20]);
-        Set_position(handles.panel_topo_source_index_pop,[150,378,75,20]);
-        Set_position(handles.panel_topo_source_x_txt,[5,351,10,20]);
-        Set_position(handles.panel_topo_source_x_edt,[15,351,55,20]);
-        Set_position(handles.panel_topo_source_y_txt,[80,351,10,20]);
-        Set_position(handles.panel_topo_source_y_edt,[90,351,55,20]);
-        Set_position(handles.panel_topo_source_z_txt,[155,351,10,20]);
-        Set_position(handles.panel_topo_source_z_edt,[165,351,55,20]);
+        Set_position(handles.panel_topo,[0,0,224,520]);
+        Set_position(handles.panel_topo_source_txt,[5,495,150,20]);
+        Set_position(handles.panel_topo_source_pop,[5,475,220,20]);
+        Set_position(handles.panel_topo_source_epoch_txt,[5,448,30,20]);
+        Set_position(handles.panel_topo_source_epoch_pop,[35,448,70,20]);
+        Set_position(handles.panel_topo_source_index_txt,[5,421,30,20]);
+        Set_position(handles.panel_topo_source_index_pop,[35,421,70,20]);
+        Set_position(handles.panel_topo_source_x_txt,[108,448,10,20]);
+        Set_position(handles.panel_topo_source_x1_edt,[123,448,45,20]);
+        Set_position(handles.panel_topo_source_x2_edt,[175,448,45,20]);
+        Set_position(handles.panel_topo_source_y_txt,[108,421,10,20]);
+        Set_position(handles.panel_topo_source_y1_edt,[123,421,45,20]);
+        Set_position(handles.panel_topo_source_y2_edt,[175,421,45,20]);
+        Set_position(handles.panel_topo_source_z_txt,[108,395,10,20]);
+        Set_position(handles.panel_topo_source_z1_edt,[123,395,45,20]);
+        Set_position(handles.panel_topo_source_z2_edt,[175,395,45,20]);
         
-        Set_position(handles.panel_topo_elec_txt,[90,325,100,20]);
-        Set_position(handles.panel_topo_elec_chk,[90,310,75,20]);
-        Set_position(handles.panel_topo_elec_label_chk,[165,310,75,20]);
-        Set_position(handles.panel_topo_elec_markersize_txt,[90,290,40,20]);
-        Set_position(handles.panel_topo_elec_markersize_edt,[130,290,90,20]);
-        Set_position(handles.panel_topo_elec_exclude_txt,[90,270,62,20]);
-        Set_position(handles.panel_topo_elec_marker_txt,[158,270,62,20]);
-        Set_position(handles.panel_topo_elec_exclude_listbox,[90,2,62,270]);
-        Set_position(handles.panel_topo_elec_marker_listbox,[158,2,62,270]);
+        Set_position(handles.panel_topo_elec_txt,[90,375,100,20]);
+        Set_position(handles.panel_topo_elec_chk,[90,360,75,20]);
+        Set_position(handles.panel_topo_elec_label_chk,[165,360,75,20]);
+        Set_position(handles.panel_topo_elec_markersize_txt,[90,340,40,20]);
+        Set_position(handles.panel_topo_elec_markersize_edt,[130,340,90,20]);
+        Set_position(handles.panel_topo_elec_exclude_txt,[90,320,62,20]);
+        Set_position(handles.panel_topo_elec_marker_txt,[158,320,62,20]);
+        Set_position(handles.panel_topo_elec_exclude_listbox,[90,2,62,320]);
+        Set_position(handles.panel_topo_elec_marker_listbox,[158,2,62,320]);
         
-        Set_position(handles.panel_topo_property_txt,[5,325,80,20]);
-        Set_position(handles.panel_topo_dim_bg,[2,307,80,20]);
+        Set_position(handles.panel_topo_property_txt,[5,375,80,20]);
+        Set_position(handles.panel_topo_dim_bg,[2,357,80,20]);
         Set_position(handles.panel_topo_dim_2D,[0,0,40,20]);
         Set_position(handles.panel_topo_dim_3D,[40,0,40,20]);
-        Set_position(handles.panel_topo_headrad_txt,[5,280,75,20]);
-        Set_position(handles.panel_topo_headrad_edt,[5,263,75,20]);
-        Set_position(handles.panel_topo_shrink_txt,[5,240,75,20]);
-        Set_position(handles.panel_topo_shrink_edt,[5,223,75,20]);
-        Set_position(handles.panel_topo_clim_chk,[1,200,85,20]);
-        Set_position(handles.panel_topo_clim1_edt,[5,180,38,20]);
-        Set_position(handles.panel_topo_clim2_edt,[47,180,38,20]);
-        Set_position(handles.panel_topo_clim3_txt,[43,180,4,20]);
         
-        Set_position(handles.panel_topo_surface_chk,[1,145,80,20]);
-        Set_position(handles.panel_topo_colorbar_chk,[1,125,80,20]);
-        Set_position(handles.panel_topo_colormap_txt,[5,105,80,20]);
-        Set_position(handles.panel_topo_colormap_pop,[5,85,80,20]);
+        Set_position(handles.panel_topo_view_txt,[5,330,80,20]);
+        Set_position(handles.panel_topo_view_pop,[5,313,75,20]);
+        Set_position(handles.panel_topo_view_az_txt,[5,290,80,20]);
+        Set_position(handles.panel_topo_view_az_edt,[5,273,75,20]);
+        Set_position(handles.panel_topo_view_el_txt,[5,250,80,20]);
+        Set_position(handles.panel_topo_view_el_edt,[5,233,80,20]);
         
-        Set_position(handles.panel_topo_contour_chk,[5,48,75,20]);
-        Set_position(handles.panel_topo_contour_color_txt,[5,28,80,20]);
-        Set_position(handles.panel_topo_contour_color_btn,[5,1,80,30]);
+        Set_position(handles.panel_topo_headrad_txt,[5,330,75,20]);
+        Set_position(handles.panel_topo_headrad_edt,[5,313,75,20]);
+        Set_position(handles.panel_topo_shrink_txt,[5,290,75,20]);
+        Set_position(handles.panel_topo_shrink_edt,[5,273,75,20]);
+        Set_position(handles.panel_topo_contour_chk,[5,250,75,20]);
+        Set_position(handles.panel_topo_contour_color_btn,[5,220,80,30]);
+        
+        Set_position(handles.panel_topo_clim_chk,[1,190,85,20]);
+        Set_position(handles.panel_topo_clim1_txt,[5,170,85,20]);
+        Set_position(handles.panel_topo_clim1_edt,[5,150,85,20]);
+        Set_position(handles.panel_topo_clim2_txt,[5,130,85,20]);
+        Set_position(handles.panel_topo_clim2_edt,[5,110,85,20]);
+        
+        Set_position(handles.panel_topo_surface_chk,[1,80,80,20]);
+        Set_position(handles.panel_topo_colorbar_chk,[1,60,80,20]);
+        Set_position(handles.panel_topo_colormap_txt,[5,40,80,20]);
+        Set_position(handles.panel_topo_colormap_pop,[5,20,80,20]);
+        
     end
     function init_panel_lissajous()
         handles.panel_lissajous=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -1041,11 +1082,18 @@ GLW_figure_openingFcn;
     function init_function()
         set(handles.fig1,'CloseRequestFcn',@fig1_closeReq_callback);
         set(handles.fig2,'CloseRequestFcn',@fig2_closeReq_callback);
+        set(handles.fig2,'WindowButtonMotionFcn',@get_fig_pos);
         try
             set(handles.fig2,'SizeChangedFcn',@get_fig_pos);
         catch
             set(handles.fig2,'resizefcn',@get_fig_pos);
         end
+        
+        set(handles.open_btn,'ClickedCallback',{@open_btn_callback});
+        set(handles.save_btn,'ClickedCallback',{@save_btn_callback});
+        set(handles.data_btn,'ClickedCallback',{@data_btn_callback});
+        set(handles.export_btn,'ClickedCallback',{@export_btn_callback});
+        set(handles.script_btn,'ClickedCallback',{@script_btn_callback});
         set(handles.fig_btn,'ClickedCallback',{@fig1_callback,1});
         set(handles.axis_btn,'ClickedCallback',{@fig1_callback,2});
         set(handles.content_btn,'ClickedCallback',{@fig1_callback,3});
@@ -1082,6 +1130,8 @@ GLW_figure_openingFcn;
         set(handles.axis_reverse_chk,'callback',@axis_reverse_chk_callback);
         set(handles.axis_box_chk,'callback',@axis_box_chk_callback);
         set(handles.axis_legend_chk,'callback',@axis_legend_chk_callback);
+        set(handles.axis_legend_edt,'callback',@axis_legend_edt_callback);
+        
         set(handles.xaxis_limit_chk,'callback',@xaxis_limit_chk_callback);
         set(handles.xaxis_limit1_edt,'callback',@xaxis_limit_edt_callback);
         set(handles.xaxis_limit2_edt,'callback',@xaxis_limit_edt_callback);
@@ -1112,9 +1162,9 @@ GLW_figure_openingFcn;
         
         %panel_content
         set(handles.content_add, 'callback',@content_add_callback);
-%                 set(handles.content_del, 'callback',@content_del_callback);
-        %         set(handles.content_up,  'callback',@content_up_callback);
-        %         set(handles.content_down,'callback',@content_down_callback);
+        set(handles.content_del, 'callback',@content_del_callback);
+        set(handles.content_up,  'callback',@content_up_callback);
+        set(handles.content_down,'callback',@content_down_callback);
         
         %panel_curve
         set(handles.panel_curve_source_pop,'callback',@curve_source_pop_callback);
@@ -1185,14 +1235,25 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_source_pop,'callback',@topo_source_pop_callback);
         set(handles.panel_topo_source_epoch_pop,'callback',@topo_source_epoch_pop_callback);
         set(handles.panel_topo_source_index_pop,'callback',@topo_source_index_pop_callback);
-        set(handles.panel_topo_source_z_edt,'callback',@topo_source_z_edt_callback);
-        set(handles.panel_topo_source_y_edt,'callback',@topo_source_y_edt_callback);
-        set(handles.panel_topo_source_x_edt,'callback',@topo_source_x_edt_callback);
+        set(handles.panel_topo_source_z1_edt,'callback',@topo_source_z_edt_callback);
+        set(handles.panel_topo_source_y1_edt,'callback',@topo_source_y_edt_callback);
+        set(handles.panel_topo_source_x1_edt,'callback',@topo_source_x_edt_callback);
+        set(handles.panel_topo_source_z2_edt,'callback',@topo_source_z_edt_callback);
+        set(handles.panel_topo_source_y2_edt,'callback',@topo_source_y_edt_callback);
+        set(handles.panel_topo_source_x2_edt,'callback',@topo_source_x_edt_callback);
         set(handles.panel_topo_elec_chk,'callback',@topo_elec_chk_callback);
         set(handles.panel_topo_elec_label_chk,'callback',@topo_elec_label_chk_callback);
         set(handles.panel_topo_elec_markersize_edt,'callback',@topo_elec_markersize_edt_callback);
         set(handles.panel_topo_elec_exclude_listbox,'callback',@topo_elec_exclude_listbox_callback);
         set(handles.panel_topo_elec_marker_listbox,'callback',@topo_elec_marker_listbox_callback);
+        if verLessThan('matlab','8.4')
+            set(handles.panel_topo_dim_bg,'SelectionChangeFcn',@topo_dim_bg_callback);
+        else
+            set(handles.panel_topo_dim_bg,'SelectionChangedFcn',@topo_dim_bg_callback);
+        end
+        set(handles.panel_topo_view_pop,'callback',@topo_view_pop_callback);
+        set(handles.panel_topo_view_az_edt,'callback',@topo_view_az_edt_callback);
+        set(handles.panel_topo_view_el_edt,'callback',@topo_view_el_edt_callback);
         set(handles.panel_topo_headrad_edt,'callback',@topo_headrad_edt_callback);
         set(handles.panel_topo_shrink_edt,'callback',@topo_shrink_edt_callback);
         set(handles.panel_topo_clim_chk,'callback',@topo_clim_chk_callback);
@@ -1281,7 +1342,6 @@ GLW_figure_openingFcn;
             case 3
                 set(handles.content_btn,'State','on');
                 if ~isempty(option.ax)
-                    set(handles.panel_content_manager,'visible','on');
                     content_callback();
                     if ~isempty( option.ax{option.cnt_subfig}.content)
                         switch option.ax{option.cnt_subfig}.content{option.cnt_content}.type
@@ -1323,9 +1383,56 @@ GLW_figure_openingFcn;
             close(handles.fig1);
         end
     end
+    function open_btn_callback(~,~)
+    end
+    function save_btn_callback(~,~)
+    end
+    function data_btn_callback(~,~)
+    end
+    function export_btn_callback(~,~)
+        [FileName,PathName,FilterIndex] = uiputfile(...
+            {'*.fig','Figure (*.fig)';...
+            '*.tif','TIFF image (*.tif)';...
+            '*.jpg','JPEG image (*.jpg)';...
+            '*.bmp','Bitmap file (*.bmp)';...
+            '*.png','Protable Network Graphics file (*.png)';...
+            '*.eps','EPS file (*.eps)';...
+            '*.pdf','Portable Document Format (*.pdf)'},...
+            'Save As','new figure');
+        if FilterIndex==0
+            return;
+        end
+        if (FilterIndex==6)
+            saveas(handles.fig2,fullfile(PathName,FileName),'epsc');
+            return;
+        end
+        if (FilterIndex==1)
+            set(handles.fig2,'CloseRequestFcn','');
+            try
+                set(handles.fig2,'SizeChangedFcn','');
+            catch
+                set(handles.fig2,'resizefcn','');
+            end
+            set(handles.fig2,'numbertitle','on','MenuBar','figure','DockControls','on');
+            savefig(handles.fig2,fullfile(PathName,FileName));
+            
+            set(handles.fig2,'CloseRequestFcn',@fig2_closeReq_callback);
+            try
+                set(handles.fig2,'SizeChangedFcn',@get_fig_pos);
+            catch
+                set(handles.fig2,'resizefcn',@get_fig_pos);
+            end
+            set(handles.fig2,'numbertitle','off','MenuBar','none','DockControls','off');
+            
+            return;
+        end
+        saveas(handles.fig2,fullfile(PathName,FileName));
+    end
+    function script_btn_callback(~,~)
+    end
     function panel_fig_sub_callback(~,~)
         set(handles.sub_title_edt,'string',option.ax{option.cnt_subfig}.name);
-         if strcmp(option.ax{option.cnt_subfig}.title_visible,'on')
+        if strcmp(option.ax{option.cnt_subfig}.title_visible,'on')
             set(handles.sub_title_chx,'value',1);
         else
             set(handles.sub_title_chx,'value',0);
@@ -1449,9 +1556,9 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.type='topo';
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.ep=1;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=1;
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.z=datasets_header(1).header.zstart;
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.y=datasets_header(1).header.ystart;
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.x=datasets_header(1).header.xstart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z(1:2)=datasets_header(1).header.zstart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y(1:2)=datasets_header(1).header.ystart;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.x(1:2)=datasets_header(1).header.xstart;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset=1;
                 option.ax{option.cnt_subfig}.content_order=option.ax{option.cnt_subfig}.content_order+1;
                 
@@ -1465,11 +1572,12 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize=5;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.mark={'C1','C2','C3','C4','Cz'};
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.exclude=[];
-                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[];
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[0,90];
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.shrink=1;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.headrad=[];
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.surface='on';
                 
+                %2D
                 radiuscircle = 0.5;
                 pnts   = linspace(0,2*pi,200);
                 xc     = sin(pnts)*radiuscircle;
@@ -1483,20 +1591,29 @@ GLW_figure_openingFcn;
                 EarX  = [.497-.005  .510  .518  .5299 .5419  .54    .547   .532   .510   .489-.005];
                 EarY  = [q+.0555 q+.0775 q+.0783 q+.0746 q+.0555 -.0055 -.0932 -.1313 -.1384 -.1199];
                 top=1;
-                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).topo=surf('Parent',handles.ax(option.cnt_subfig),'edgecolor', 'none');
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D=surf('Parent',handles.ax(option.cnt_subfig),'edgecolor', 'none');
                 [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour3(handles.ax(option.cnt_subfig),'LineColor','k','visible','off');
-                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode=plot3(handles.ax(option.cnt_subfig), 0,0,-1, 'k.', 'markersize', 0.001);
-                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker1=plot3(handles.ax(option.cnt_subfig), 0,0,-1, 'y.', 'markersize', 4,'visible','off');
-                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker2=plot3(handles.ax(option.cnt_subfig), 0,0,-1, 'r.', 'markersize', 2,'visible','off');
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1=plot3(handles.ax(option.cnt_subfig),xc,yc,ones(size(xc))*top, 'k', 'linewidth', 2);
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2=plot3(handles.ax(option.cnt_subfig),EarX,EarY,ones(size(EarX))*top,'color','k','LineWidth',2);
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3=plot3(handles.ax(option.cnt_subfig),-EarX,EarY,ones(size(EarY))*top,'color','k','LineWidth',2);
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line4=plot3(handles.ax(option.cnt_subfig),...
                     [basex;tiphw;0;-tiphw;-basex],[base;tip-tipr;tip;tip-tipr;base],...
                     top*ones(size([basex;tiphw;0;-tiphw;-basex])),'color','k','LineWidth',2);
+                
+                %3D
+                P=linspace(1,64,length(POS))';
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_3D=patch('Parent',handles.ax(option.cnt_subfig),...
+                    'Vertices',POS,'Faces',TRI,'FaceVertexCdata',P,'FaceColor','interp','EdgeColor','none','DiffuseStrength',.6,...
+                    'SpecularStrength',0,'AmbientStrength',.3,'SpecularExponent',5,'vertexnormals', NORM);
+                
+                %for all
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode=plot3(handles.ax(option.cnt_subfig), 0,0,-1, 'k.', 'markersize', 0.001);
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker1=plot3(handles.ax(option.cnt_subfig), 0,0,-1, 'y.', 'markersize', 4,'visible','off');
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker2=plot3(handles.ax(option.cnt_subfig), 0,0,-1, 'r.', 'markersize', 2,'visible','off');
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=[];
+                
                 view(handles.ax(option.cnt_subfig),[0 0 1]);
-                axis(handles.ax(option.cnt_subfig),'off','equal');
+                axis(handles.ax(option.cnt_subfig),'off','image');
                 set(handles.ax(option.cnt_subfig), 'ydir', 'normal');
                 colormap(handles.ax(option.cnt_subfig),'jet');
         end
@@ -1701,16 +1818,29 @@ GLW_figure_openingFcn;
 
 %% panel_axis function
     function axis_callback()
-        set (handles.axis_reverse_chk,'value',option.ax{option.cnt_subfig}.axis_reverse);
-        if strcmpi(option.ax{option.cnt_subfig}.box,'on')
-            set (handles.axis_box_chk,'value',1);
+        if ~strcmpi(option.ax{option.cnt_subfig}.style,'Curve')
+            set(handles.axis_reverse_chk,'visible','off');
+            set(handles.axis_box_chk,'visible','off');
+            set(handles.axis_legend_chk,'visible','off');
+            set(handles.axis_legend_edt,'visible','off');
         else
-            set (handles.axis_box_chk,'value',0);
-        end
-        if strcmpi(option.ax{option.cnt_subfig}.is_legend,'on')
-            set (handles.axis_legend_chk,'value',1);
-        else
-            set (handles.axis_legend_chk,'value',0);
+            set(handles.axis_reverse_chk,'visible','on');
+            set(handles.axis_box_chk,'visible','on');
+            set(handles.axis_legend_chk,'visible','on');
+            set(handles.axis_reverse_chk,'value',option.ax{option.cnt_subfig}.axis_reverse);
+            if strcmpi(option.ax{option.cnt_subfig}.box,'on')
+                set (handles.axis_box_chk,'value',1);
+            else
+                set (handles.axis_box_chk,'value',0);
+            end
+            if strcmpi(option.ax{option.cnt_subfig}.is_legend,'on')
+                set (handles.axis_legend_chk,'value',1);
+                set(handles.axis_legend_edt,'visible','on',...
+                    'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
+            else
+                set(handles.axis_legend_chk,'value',0);
+                set(handles.axis_legend_edt,'visible','off');
+            end
         end
         
         %x-axis
@@ -1738,7 +1868,7 @@ GLW_figure_openingFcn;
             set(handles.xaxis_minor_tick_chk,'value',1);
         else
             set(handles.xaxis_minor_tick_chk,'value',0);
-        end 
+        end
         if isempty(option.ax{option.cnt_subfig}.xaxis_tick_anchor)
             temp=get(handles.ax(option.cnt_subfig),'XTick');
             option.ax{option.cnt_subfig}.xaxis_tick_interval=temp(2)-temp(1);
@@ -1821,7 +1951,7 @@ GLW_figure_openingFcn;
             set(handles.yaxis_minor_tick_chk,'value',1);
         else
             set(handles.yaxis_minor_tick_chk,'value',0);
-        end 
+        end
         if isempty(option.ax{option.cnt_subfig}.yaxis_tick_anchor)
             temp=get(handles.ax(option.cnt_subfig),'YTick');
             option.ax{option.cnt_subfig}.yaxis_tick_interval=temp(2)-temp(1);
@@ -1909,7 +2039,9 @@ GLW_figure_openingFcn;
         end
     end
     function axis_legend_chk_callback(~,~)
-        if get(handles.axis_legend_chk,'value')==1 
+        if get(handles.axis_legend_chk,'value')==1
+            set(handles.axis_legend_edt,'visible','on',...
+                'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
             option.ax{option.cnt_subfig}.is_legend='on';
             idx=[];
             name={};
@@ -1928,8 +2060,33 @@ GLW_figure_openingFcn;
         else
             option.ax{option.cnt_subfig}.is_legend='off';
             legend(handles.ax(option.cnt_subfig),'off');
+            set(handles.axis_legend_edt,'visible','off');
         end
     end
+    function axis_legend_edt_callback(~,~)
+        option.ax{option.cnt_subfig}.content{option.cnt_content}.name=get(handles.axis_legend_edt,'string');
+        content_str=cell(length(option.ax{option.cnt_subfig}.content),1);
+        for k=1:length(option.ax{option.cnt_subfig}.content)
+            content_str{k}=option.ax{option.cnt_subfig}.content{k}.name;
+        end
+        set(handles.content_listbox,'string',content_str);
+        
+        idx=[];
+        name={};
+        for k=1:length(option.ax{option.cnt_subfig}.content)
+            if strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'curve')...
+                    ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajour')
+                idx=[idx,k];
+                name=[name,option.ax{option.cnt_subfig}.content{k}.name];
+            end
+        end
+        if isempty(idx)
+            legend(handles.ax(option.cnt_subfig),'off');
+        else
+            legend([handles.ax_child{option.cnt_subfig}.handle(idx).line],name);
+        end
+    end
+
     function xaxis_limit_chk_callback(~,~)
         if get(handles.xaxis_limit_chk,'value')==1
             option.ax{option.cnt_subfig}.XlimMode='manual';
@@ -2253,6 +2410,11 @@ GLW_figure_openingFcn;
 
 %% panel_content function
     function content_callback(~,~)
+        if strcmpi(option.ax{option.cnt_subfig}.style,'Topograph')
+            set(handles.panel_content_manager,'visible','off');
+        else
+            set(handles.panel_content_manager,'visible','on');
+        end
         value_content=get(handles.content_add_pop,'value');
         str_content=get(handles.content_add_pop,'string');
         str_content=str_content{value_content};
@@ -2262,7 +2424,6 @@ GLW_figure_openingFcn;
             case 'Image'
                 set(handles.content_add_pop,'String',{'line','rect','text'});
             case 'Topograph'
-                set(handles.content_add_pop,'String',{'line','rect','text'});
         end
         str=get(handles.content_add_pop,'String');
         [~,~,value_content]=intersect(str_content,str,'stable');
@@ -2398,6 +2559,48 @@ GLW_figure_openingFcn;
         option.ax{option.cnt_subfig}.content_order=option.ax{option.cnt_subfig}.content_order+1;
         fig1_callback();
     end
+    function content_del_callback(~,~)
+    end
+    function content_up_callback(~,~)
+        if option.cnt_content==1
+            return;
+        end
+        if ~strcmpi(option.ax{option.cnt_subfig}.style,'Curve') && option.cnt_content==2
+            return;
+        end
+        
+        value_curve=option.cnt_content;
+        index=[1:value_curve-2,value_curve,value_curve-1,value_curve+1:length(option.ax{option.cnt_subfig}.content)];
+        option.ax{option.cnt_subfig}.content=option.ax{option.cnt_subfig}.content(index);
+        handles.ax_child{option.cnt_subfig}.handle=handles.ax_child{option.cnt_subfig}.handle(index);
+        temp=get(handles.ax(option.cnt_subfig),'Children');
+        value_curve=length(option.ax{option.cnt_subfig}.content)-value_curve;
+        temp=temp([1:value_curve,value_curve+2,value_curve+1,value_curve+3:end]);
+        set(handles.ax(option.cnt_subfig),'Children',temp);
+        
+        option.cnt_content=option.cnt_content-1;
+        fig1_callback();
+    end
+    function content_down_callback(~,~)
+        if option.cnt_content==length(option.ax{option.cnt_subfig}.content)
+            return;
+        end
+        if ~strcmpi(option.ax{option.cnt_subfig}.style,'Curve') && option.cnt_content==1
+            return;
+        end
+        
+        value_curve=option.cnt_content;
+        index=[1:value_curve-1,value_curve+1,value_curve,value_curve+2:length(option.ax{option.cnt_subfig}.content)];
+        option.ax{option.cnt_subfig}.content=option.ax{option.cnt_subfig}.content(index);
+        handles.ax_child{option.cnt_subfig}.handle=handles.ax_child{option.cnt_subfig}.handle(index);
+        temp=get(handles.ax(option.cnt_subfig),'Children');
+        value_curve=length(option.ax{option.cnt_subfig}.content)-value_curve;
+        temp=temp([1:value_curve-1,value_curve+1,value_curve,value_curve+2:end]);
+        set(handles.ax(option.cnt_subfig),'Children',temp);
+        
+        option.cnt_content=option.cnt_content+1;
+        fig1_callback();
+    end
 
 %% panel_curve function
     function curve_callback()
@@ -2451,18 +2654,35 @@ GLW_figure_openingFcn;
         
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
         set(handles.panel_curve_source_pop,'value',k);
-        set(handles.panel_curve_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
-        set(handles.panel_curve_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
-        set(handles.panel_curve_source_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
-        ch_idx=1;
-        for l=1:length({datasets_header(k).header.chanlocs.labels})
-            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.ch,...
-                    datasets_header(k).header.chanlocs(l).labels)
-                ch_idx=l;
-                break;
-            end
+        
+        if datasets_header(k).header.datasize(1)==1
+            set(handles.panel_curve_source_epoch_txt,'visible','off');
+            set(handles.panel_curve_source_epoch_pop,'visible','off');
+        else
+            set(handles.panel_curve_source_epoch_txt,'visible','on');
+            set(handles.panel_curve_source_epoch_pop,'visible','on');
+            set(handles.panel_curve_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
+            set(handles.panel_curve_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
         end
-        set(handles.panel_curve_source_channel_pop,'value',ch_idx);
+        
+        if datasets_header(k).header.datasize(2)==1
+            set(handles.panel_curve_source_channel_txt,'visible','off');
+            set(handles.panel_curve_source_channel_pop,'visible','off');
+        else
+            set(handles.panel_curve_source_channel_txt,'visible','on');
+            set(handles.panel_curve_source_channel_pop,'visible','on');
+            set(handles.panel_curve_source_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
+            ch_idx=1;
+            for l=1:length({datasets_header(k).header.chanlocs.labels})
+                if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.ch,...
+                        datasets_header(k).header.chanlocs(l).labels)
+                    ch_idx=l;
+                    break;
+                end
+            end
+            set(handles.panel_curve_source_channel_pop,'value',ch_idx);
+        end
+        
         if datasets_header(k).header.datasize(3)==1
             set(handles.panel_curve_source_index_txt,'visible','off');
             set(handles.panel_curve_source_index_pop,'visible','off');
@@ -2503,18 +2723,22 @@ GLW_figure_openingFcn;
             y_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.y-header.ystart)/header.ystep)+1);
             if y_pos<1
                 y_pos=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y=header.ystart;
             end
             if y_pos>header.datasize(5)
                 y_pos=header.datasize(5);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y=header.ystart+(header.datasize(5)-1)*header.ystep;
             end
         end
         if header.datasize(4)~=1
             z_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.z-header.zstart)/header.zstep)+1);
             if z_pos<1
                 z_pos=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z=header.zstart;
             end
             if z_pos>header.datasize(4)
                 z_pos=header.datasize(4);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
         
@@ -2537,16 +2761,7 @@ GLW_figure_openingFcn;
             'XData',x,'YData',y,...
             'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
             'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker);
-        if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
-            temp=get(handles.ax(option.cnt_subfig),'xlim');
-            set(handles.xaxis_limit1_edt,'string',num2str(temp(1)));
-            set(handles.xaxis_limit2_edt,'string',num2str(temp(2)));
-        end
-        if  strcmp(option.ax{option.cnt_subfig}.YlimMode,'auto')
-            temp=get(handles.ax(option.cnt_subfig),'ylim');
-            set(handles.yaxis_limit1_edt,'string',num2str(temp(1)));
-            set(handles.yaxis_limit2_edt,'string',num2str(temp(2)));
-        end
+        content_xyaxis_update();
     end
     function curve_color_btn_callback(~,~)
         c = uisetcolor(option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
@@ -2635,12 +2850,12 @@ GLW_figure_openingFcn;
             end
         end
         option.ax{option.cnt_subfig}.content{option.cnt_content}.ch=datasets_header(k).header.chanlocs(ch_idx).labels;
-                 
+        
         % index
         if datasets_header(k).header.datasize(3)==1
             option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=1;
         else
-           option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=...
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=...
                 min(option.ax{option.cnt_subfig}.content{option.cnt_content}.idx,header.datasize(3));
         end
         curve_update();
@@ -2741,16 +2956,7 @@ GLW_figure_openingFcn;
             'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color,...
             'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
             'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker);
-        if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
-            temp=get(handles.ax(option.cnt_subfig),'xlim');
-            set(handles.xaxis_limit1_edt,'string',num2str(temp(1)));
-            set(handles.xaxis_limit2_edt,'string',num2str(temp(2)));
-        end
-        if  strcmp(option.ax{option.cnt_subfig}.YlimMode,'auto')
-            temp=get(handles.ax(option.cnt_subfig),'ylim');
-            set(handles.yaxis_limit1_edt,'string',num2str(temp(1)));
-            set(handles.yaxis_limit2_edt,'string',num2str(temp(2)));
-        end
+        content_xyaxis_update();
     end
     function line_color_btn_callback(~,~)
         option.ax{option.cnt_subfig}.content{option.cnt_content}.color=...
@@ -2902,7 +3108,7 @@ GLW_figure_openingFcn;
         else
             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).rect,'EdgeAlpha',c);
         end
-        set(handles.panel_rect_alpha_edt,'string',num2str(c));
+        set(handles.panel_rect_edgealpha_edt,'string',num2str(c));
         
     end
     function rect_xy_edt_callback(~,~)
@@ -3010,18 +3216,36 @@ GLW_figure_openingFcn;
         image_update();
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
         set(handles.panel_image_source_pop,'value',k);
-        set(handles.panel_image_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
-        set(handles.panel_image_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
-        set(handles.panel_image_source_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
-        ch_idx=1;
-        for l=1:length({datasets_header(k).header.chanlocs.labels})
-            if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.ch,...
-                    datasets_header(k).header.chanlocs(l).labels)
-                ch_idx=l;
-                break;
-            end
+        
+        if datasets_header(k).header.datasize(1)==1
+            set(handles.panel_image_source_epoch_txt,'visible','off');
+            set(handles.panel_image_source_epoch_pop,'visible','off');
+        else
+            set(handles.panel_image_source_epoch_txt,'visible','on');
+            set(handles.panel_image_source_epoch_pop,'visible','on');
+            set(handles.panel_image_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
+            set(handles.panel_image_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
         end
-        set(handles.panel_image_source_channel_pop,'value',ch_idx);
+        
+        if datasets_header(k).header.datasize(2)==1
+            set(handles.panel_image_source_channel_txt,'visible','off');
+            set(handles.panel_image_source_channel_pop,'visible','off');
+        else
+            set(handles.panel_image_source_channel_txt,'visible','on');
+            set(handles.panel_image_source_channel_pop,'visible','on');
+            set(handles.panel_image_source_channel_pop,'string',{datasets_header(k).header.chanlocs.labels});
+            ch_idx=1;
+            for l=1:length({datasets_header(k).header.chanlocs.labels})
+                if strcmp(option.ax{option.cnt_subfig}.content{option.cnt_content}.ch,...
+                        datasets_header(k).header.chanlocs(l).labels)
+                    ch_idx=l;
+                    break;
+                end
+            end
+            set(handles.panel_image_source_channel_pop,'value',ch_idx);
+        end
+        
+        
         if datasets_header(k).header.datasize(3)==1
             set(handles.panel_image_source_index_txt,'visible','off');
             set(handles.panel_image_source_index_pop,'visible','off');
@@ -3157,9 +3381,11 @@ GLW_figure_openingFcn;
             z_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.z-header.zstart)/header.zstep)+1);
             if z_pos<1
                 z_pos=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z=header.zstart;
             end
             if z_pos>header.datasize(4)
                 z_pos=header.datasize(4);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
         if header.datasize(3)~=1
@@ -3255,7 +3481,7 @@ GLW_figure_openingFcn;
         if datasets_header(k).header.datasize(3)==1
             option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=1;
         else
-           option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=...
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=...
                 min(option.ax{option.cnt_subfig}.content{option.cnt_content}.idx,header.datasize(3));
         end
         image_callback();
@@ -3355,14 +3581,14 @@ GLW_figure_openingFcn;
     end
     function image_contour_start_edt_callback(~,~)
         c=str2num(get(handles.panel_image_contour_start_edt,'string'));
-        if ~isempty(c) && isfinite(c) 
+        if ~isempty(c) && isfinite(c)
             option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_level_start=c;
         end
         image_callback();
     end
     function image_contour_end_edt_callback(~,~)
         c=str2num(get(handles.panel_image_contour_end_edt,'string'));
-        if ~isempty(c) && isfinite(c) 
+        if ~isempty(c) && isfinite(c)
             option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_level_end=c;
         end
         image_callback();
@@ -3381,8 +3607,15 @@ GLW_figure_openingFcn;
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
         set(handles.panel_topo_source_pop,'value',k);
         
-        set(handles.panel_topo_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
-        set(handles.panel_topo_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
+        if datasets_header(k).header.datasize(1)==1
+            set(handles.panel_topo_source_epoch_txt,'visible','off');
+            set(handles.panel_topo_source_epoch_pop,'visible','off');
+        else
+            set(handles.panel_topo_source_epoch_txt,'visible','on');
+            set(handles.panel_topo_source_epoch_pop,'visible','on');
+            set(handles.panel_topo_source_epoch_pop,'string',cellstr(num2str([1:datasets_header(k).header.datasize(1)]')));
+            set(handles.panel_topo_source_epoch_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.ep);
+        end
         
         if datasets_header(k).header.datasize(3)==1
             set(handles.panel_topo_source_index_txt,'visible','off');
@@ -3396,29 +3629,38 @@ GLW_figure_openingFcn;
         
         if datasets_header(k).header.datasize(4)==1
             set(handles.panel_topo_source_z_txt,'visible','off');
-            set(handles.panel_topo_source_z_edt,'visible','off');
+            set(handles.panel_topo_source_z1_edt,'visible','off');
+            set(handles.panel_topo_source_z2_edt,'visible','off');
         else
             set(handles.panel_topo_source_z_txt,'visible','on');
-            set(handles.panel_topo_source_z_edt,'visible','on');
-            set(handles.panel_topo_source_z_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.z));
+            set(handles.panel_topo_source_z1_edt,'visible','on');
+            set(handles.panel_topo_source_z2_edt,'visible','on');
+            set(handles.panel_topo_source_z1_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.z(1)));
+            set(handles.panel_topo_source_z2_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.z(2)));
         end
         
         if datasets_header(k).header.datasize(5)==1
             set(handles.panel_topo_source_y_txt,'visible','off');
-            set(handles.panel_topo_source_y_edt,'visible','off');
+            set(handles.panel_topo_source_y1_edt,'visible','off');
+            set(handles.panel_topo_source_y2_edt,'visible','off');
         else
             set(handles.panel_topo_source_y_txt,'visible','on');
-            set(handles.panel_topo_source_y_edt,'visible','on');
-            set(handles.panel_topo_source_y_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.y));
+            set(handles.panel_topo_source_y1_edt,'visible','on');
+            set(handles.panel_topo_source_y2_edt,'visible','on');
+            set(handles.panel_topo_source_y1_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.y(1)));
+            set(handles.panel_topo_source_y2_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.y(2)));
         end
         
         if datasets_header(k).header.datasize(6)==1
             set(handles.panel_topo_source_x_txt,'visible','off');
-            set(handles.panel_topo_source_x_edt,'visible','off');
+            set(handles.panel_topo_source_x1_edt,'visible','off');
+            set(handles.panel_topo_source_x2_edt,'visible','off');
         else
             set(handles.panel_topo_source_x_txt,'visible','on');
-            set(handles.panel_topo_source_x_edt,'visible','on');
-            set(handles.panel_topo_source_x_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.x));
+            set(handles.panel_topo_source_x1_edt,'visible','on');
+            set(handles.panel_topo_source_x2_edt,'visible','on');
+            set(handles.panel_topo_source_x1_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.x(1)));
+            set(handles.panel_topo_source_x2_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.x(2)));
         end
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.electrodes,'off')
@@ -3452,25 +3694,103 @@ GLW_figure_openingFcn;
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.dim,'2D')
             set(handles.panel_topo_dim_2D,'value',1);
+            
+            set(handles.panel_topo_view_txt,'visible','off');
+            set(handles.panel_topo_view_pop,'visible','off');
+            set(handles.panel_topo_view_az_txt,'visible','off');
+            set(handles.panel_topo_view_az_edt,'visible','off');
+            set(handles.panel_topo_view_el_txt,'visible','off');
+            set(handles.panel_topo_view_el_edt,'visible','off');
+            
+            set(handles.panel_topo_headrad_txt,'visible','on');
+            set(handles.panel_topo_headrad_edt,'visible','on');
+            set(handles.panel_topo_shrink_txt,'visible','on');
+            set(handles.panel_topo_shrink_edt,'visible','on');
+            set(handles.panel_topo_contour_chk,'visible','on');
+            set(handles.panel_topo_contour_color_btn,'visible','on');
+            
+            if ~isempty(option.ax{option.cnt_subfig}.content{option.cnt_content}.headrad)
+            set(handles.panel_topo_headrad_edt,'string',...
+                num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.headrad));
+            end
+            set(handles.panel_topo_shrink_edt,'string',...
+                num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.shrink));
+            if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.contour,'on')
+                set(handles.panel_topo_contour_chk,'value',1);
+                set(handles.panel_topo_contour_color_btn,'enable','on');
+            else
+                set(handles.panel_topo_contour_chk,'value',0);
+                set(handles.panel_topo_contour_color_btn,'enable','off');
+            end
+            set(handles.panel_topo_elec_markersize_edt,...
+                'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize));
+            
+            c=option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor;
+            set(handles.panel_topo_contour_color_btn,'foregroundcolor',c);
+            set(handles.panel_topo_contour_color_btn,'string',['[',num2str(c(1),'%0.2g'),',',num2str(c(2),'%0.2g'),',',num2str(c(3),'%0.2g'),']']);
+            
         else
             set(handles.panel_topo_dim_3D,'value',1);
+            set(handles.panel_topo_headrad_txt,'visible','off');
+            set(handles.panel_topo_headrad_edt,'visible','off');
+            set(handles.panel_topo_shrink_txt,'visible','off');
+            set(handles.panel_topo_shrink_edt,'visible','off');
+            set(handles.panel_topo_contour_chk,'visible','off');
+            set(handles.panel_topo_contour_color_btn,'visible','off');
+            
+            set(handles.panel_topo_view_txt,'visible','on');
+            set(handles.panel_topo_view_pop,'visible','on');
+            set(handles.panel_topo_view_az_txt,'visible','on');
+            set(handles.panel_topo_view_az_edt,'visible','on');
+            set(handles.panel_topo_view_el_txt,'visible','on');
+            set(handles.panel_topo_view_el_edt,'visible','on');
+            
+            set(handles.panel_topo_view_az_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.view(1)));
+            set(handles.panel_topo_view_el_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.view(2)));
+            set(handles.panel_topo_view_pop,'value',1);
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[-180,30]
+                set(handles.panel_topo_view_pop,'value',2);%front
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[0,30]
+                set(handles.panel_topo_view_pop,'value',3);%back
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[-90,30]
+                set(handles.panel_topo_view_pop,'value',4);%left
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[90,30]
+                set(handles.panel_topo_view_pop,'value',5);%right
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[135,30]
+                set(handles.panel_topo_view_pop,'value',6);%frontright
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[45,30]
+                set(handles.panel_topo_view_pop,'value',7);%backright
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[-135,30]
+                set(handles.panel_topo_view_pop,'value',8);%frontleft
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[-45,30]
+                set(handles.panel_topo_view_pop,'value',9);%backleft
+            end
+            if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[0,90]
+                set(handles.panel_topo_view_pop,'value',10);%top
+            end
         end
-        set(handles.panel_topo_headrad_edt,'string',...
-            num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.headrad));
-        set(handles.panel_topo_shrink_edt,'string',...
-            num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.shrink));
+        
         if isempty(option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits)
             set(handles.panel_topo_clim_chk,'value',0);
             set(handles.panel_topo_clim1_edt,'enable','off');
             set(handles.panel_topo_clim2_edt,'enable','off');
-            set(handles.panel_topo_clim3_txt,'enable','off');
+            set(handles.panel_topo_clim1_txt,'enable','off');
+            set(handles.panel_topo_clim2_txt,'enable','off');
         else
             set(handles.panel_topo_clim_chk,'value',1);
             set(handles.panel_topo_clim1_edt,'enable','on',...
                 'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits(1));
             set(handles.panel_topo_clim2_edt,'enable','on',...
                 'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits(2));
-            set(handles.panel_topo_clim3_txt,'enable','on');
+            set(handles.panel_topo_clim1_txt,'enable','on');
+            set(handles.panel_topo_clim2_txt,'enable','on');
         end
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on')
@@ -3507,21 +3827,6 @@ GLW_figure_openingFcn;
         end
         set(handles.panel_topo_colormap_pop,'value',color_idx);
         
-        if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.contour,'on')
-            set(handles.panel_topo_contour_chk,'value',1);
-            set(handles.panel_topo_contour_color_txt,'enable','on');
-            set(handles.panel_topo_contour_color_btn,'enable','on');
-        else
-            set(handles.panel_topo_contour_chk,'value',0);
-            set(handles.panel_topo_contour_color_txt,'enable','off');
-            set(handles.panel_topo_contour_color_btn,'enable','off');
-        end
-        set(handles.panel_topo_elec_markersize_edt,...
-            'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize));
-        
-        c=option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor;
-        set(handles.panel_topo_contour_color_btn,'foregroundcolor',c);
-        set(handles.panel_topo_contour_color_btn,'string',['[',num2str(c(1),'%0.2g'),',',num2str(c(2),'%0.2g'),',',num2str(c(3),'%0.2g'),']']);
     end
     function topo_update()
         if ~strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.type,'topo')
@@ -3529,48 +3834,97 @@ GLW_figure_openingFcn;
         end
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
         header=datasets_header(k).header;
-        
         i_pos=1;
-        x_pos=1;
-        y_pos=1;
-        z_pos=1;
+        x_pos=[1,1];
+        y_pos=[1,1];
+        z_pos=[1,1];
         
         if header.datasize(6)~=1
-            x_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.x-header.xstart)/header.xstep)+1);
-            if x_pos<1
-                x_pos=1;
+            x_pos(1)=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.x(1)-header.xstart)/header.xstep)+1);
+            if x_pos(1)<1
+                x_pos(1)=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.x(1)=header.xstart;
             end
-            if x_pos>header.datasize(6)
-                x_pos=header.datasize(6);
+            if x_pos(1)>header.datasize(6)
+                x_pos(1)=header.datasize(6);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.x(1)=header.xstart+(header.datasize(6)-1)*header.xstep;
+            end
+            x_pos(2)=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.x(2)-header.xstart)/header.xstep)+1);
+            if x_pos(2)<1
+                x_pos(2)=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.x(2)=header.xstart;
+            end
+            if x_pos(2)>header.datasize(6)
+                x_pos(2)=header.datasize(6);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.x(2)=header.xstart+(header.datasize(6)-1)*header.xstep;
             end
         end
         if header.datasize(5)~=1
-            y_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.y-header.ystart)/header.ystep)+1);
-            if y_pos<1
-                y_pos=1;
+            y_pos(1)=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.y(1)-header.ystart)/header.ystep)+1);
+            if y_pos(1)<1
+                y_pos(1)=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y(1)=header.ystart;
             end
-            if y_pos>header.datasize(5)
-                y_pos=header.datasize(5);
+            if y_pos(1)>header.datasize(5)
+                y_pos(1)=header.datasize(5);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y(1)=header.ystart+(header.datasize(5)-1)*header.ystep;
+            end
+            y_pos(2)=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.y(2)-header.ystart)/header.ystep)+1);
+            if y_pos(2)<1
+                y_pos(2)=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y(2)=header.ystart;
+            end
+            if y_pos(2)>header.datasize(5)
+                y_pos(2)=header.datasize(5);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.y(2)=header.ystart+(header.datasize(5)-1)*header.ystep;
             end
         end
         if header.datasize(4)~=1
-            z_pos=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.z-header.zstart)/header.zstep)+1);
-            if z_pos<1
-                z_pos=1;
+            z_pos(1)=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.z(1)-header.zstart)/header.zstep)+1);
+            if z_pos(1)<1
+                z_pos(1)=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z(1)=header.zstart;
             end
-            if z_pos>header.datasize(4)
-                z_pos=header.datasize(4);
+            if z_pos(1)>header.datasize(4)
+                z_pos(1)=header.datasize(4);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z(1)=header.zstart+(header.datasize(4)-1)*header.zstep;
+            end
+            z_pos(2)=round(((option.ax{option.cnt_subfig}.content{option.cnt_content}.z(2)-header.zstart)/header.zstep)+1);
+            if z_pos(2)<1
+                z_pos(2)=1;
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z(2)=header.zstart;
+            end
+            if z_pos(2)>header.datasize(4)
+                z_pos(2)=header.datasize(4);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.z(2)=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
         values=double(datasets_data(k).data(option.ax{option.cnt_subfig}.content{option.cnt_content}.ep,:,i_pos,z_pos,y_pos,x_pos));
+        values=mean(mean(mean(values,6),5),4);
+        
+        
+        if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.dim,'2D')
+            topo2D_update(values);
+        else
+            topo3D_update(values);
+        end
+    end
+    function topo2D_update(values)
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_3D,'visible','off');
+        view(handles.ax(option.cnt_subfig),[0 0 1]);
+        delete(findall(handles.ax(option.cnt_subfig),'Type','light'));
+        
+        k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
+        header=datasets_header(k).header;
         chanlocs=header.chanlocs;
+        
         gridres = 40;
         headrad=option.ax{option.cnt_subfig}.content{option.cnt_content}.headrad;
         shrink=option.ax{option.cnt_subfig}.content{option.cnt_content}.shrink;
         
         %% not understand
         if any(values == 0) || ~isempty( [ chanlocs(values == 0).theta ])
-            option.contour = 'off';
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.contour = 'off';
         end
         
         %% remove the excluded channels
@@ -3586,10 +3940,11 @@ GLW_figure_openingFcn;
         chan_labels(ia)=[];
         
         if isempty(values)
-             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).topo,'visible','off');
-             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,'visible','off');
-             return;
+            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D,'visible','off');
+            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,'visible','off');
+            return;
         end
+        
         [y,x]= pol2cart(pi/180.*[chanlocs.theta],[chanlocs.radius]);
         x=-x;
         x = x*shrink;
@@ -3600,6 +3955,7 @@ GLW_figure_openingFcn;
         end
         ylimtmp = max(headrad, 0.58);
         set(handles.ax(option.cnt_subfig),'ylim',[-ylimtmp ylimtmp]);
+        set(handles.ax(option.cnt_subfig),'xlim',[-ylimtmp ylimtmp]);
         
         % data points for 2-D data plot
         pnts = linspace(0,2*pi,200/0.25*(headrad.^2));
@@ -3627,23 +3983,23 @@ GLW_figure_openingFcn;
         a(aradius(:) > headrad+0.01) = NaN;
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on')
-            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).topo,...
+            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D,...
                 'Xdata',ay,'Ydata',ax,'Zdata',a,'visible','on');
             shading(handles.ax(option.cnt_subfig),'interp');
         else
-           set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).topo,...
+            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D,...
                 'Xdata',ay,'Ydata',ax,'Zdata',a,'visible','off');
         end
         
         top = double(max(a(:))*1.05);
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.contour, 'on')
             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,...
-            'XData',ay, 'YData',ax,'ZData', a,'visible','on',...
-            'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+                'XData',ay, 'YData',ax,'ZData', a,'visible','on',...
+                'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
         else
             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,...
-            'XData',ay, 'YData',ax,'ZData', a,'visible','off',...
-            'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+                'XData',ay, 'YData',ax,'ZData', a,'visible','off',...
+                'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
         end
         
         delete(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text);
@@ -3682,7 +4038,7 @@ GLW_figure_openingFcn;
             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode,...
                 'XData',-x(1),'YData', y(1), 'ZData',-top,'markersize', 0.001);
         end
-        colormap(option.ax{option.cnt_subfig}.colormap);
+        colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
         if isempty(option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits)
             set(handles.ax(option.cnt_subfig),'CLimMode','auto');
         else
@@ -3698,10 +4054,83 @@ GLW_figure_openingFcn;
             colorbar(handles.ax(option.cnt_subfig),'off');
         end
         colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
-        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top);
-        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top);
-        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3,'ZData',ones(1,10)*top);
-        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line4,'ZData',ones(5,1)*top);
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top,'visible','on');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top,'visible','on');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3,'ZData',ones(1,10)*top,'visible','on');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line4,'ZData',ones(5,1)*top,'visible','on');
+        
+    end
+    function topo3D_update(values)
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line4,'visible','off');
+        
+        k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
+        header=datasets_header(k).header;
+        chanlocs=header.chanlocs;
+        
+        %colornum=64;
+        chan_labels={chanlocs.labels};
+        for l=1:length(chanlocs)
+        header.chanlocs(l).topo_enabled=1;
+        end
+        if ~isempty(option.ax{option.cnt_subfig}.content{option.cnt_content}.exclude)
+            [~,ia] = intersect(chan_labels,option.ax{option.cnt_subfig}.content{option.cnt_content}.exclude);
+           for l=ia'
+                header.chanlocs(l).topo_enabled=0;
+            end
+        end
+        header=CLW_make_spl(header);
+        chan_labels  =   chan_labels(header.spl.indices);
+        chanlocs     =   chanlocs(header.spl.indices);
+        values       =   values(header.spl.indices);
+        
+        meanval = mean(values);
+        P=header.spl.GG*[values(:)- meanval;0]+meanval;
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_3D,...
+            'FaceVertexCdata',P,'visible','on');
+        axis(handles.ax(option.cnt_subfig),[-125 125 -125 125 -125 125]);
+        colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
+        delete(findall(handles.ax(option.cnt_subfig),'Type','light'));
+        light('parent',handles.ax(option.cnt_subfig),'Position',[-125  125  80],'Style','infinite');
+        light('parent',handles.ax(option.cnt_subfig),'Position',[125  125  80],'Style','infinite');
+        light('parent',handles.ax(option.cnt_subfig),'Position',[125 -125 80],'Style','infinite');
+        light('parent',handles.ax(option.cnt_subfig),'Position',[-125 -125 80],'Style','infinite');
+        lighting(handles.ax(option.cnt_subfig),'phong');
+        view(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.content{option.cnt_content}.view);
+        
+        
+        delete(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text);
+        handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=[];
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker1,'visible','off');
+        set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker2,'visible','off');
+        if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.electrodes, 'on') ||...
+                strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.electrodes, 'labels')
+            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode,...
+                'XData',header.spl.newElect(:,1),'YData', header.spl.newElect(:,2), 'ZData',header.spl.newElect(:,3),'visible','on', ...
+                'markersize', option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize);
+            if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.electrodes, 'labels')
+                for index = 1:length(chan_labels)
+                    handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text(index)=...
+                        text(header.spl.newElect(index,1),header.spl.newElect(index,2),header.spl.newElect(index,3),...
+                        chan_labels{index},'parent',handles.ax(option.cnt_subfig),...
+                        'FontWeight','bold','HorizontalAlignment','center');
+                end
+            end
+            [~,ia] = intersect(chan_labels,option.ax{option.cnt_subfig}.content{option.cnt_content}.mark);
+            if ~isempty(ia)
+                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker1,...
+                    'XData',header.spl.newElect(ia,1),'YData',  header.spl.newElect(ia,2), 'ZData',header.spl.newElect(ia,3),'visible','on',...
+                    'markersize', 4*option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize);
+                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).electrode_marker2,...
+                    'XData',header.spl.newElect(ia,1),'YData',  header.spl.newElect(ia,2), 'ZData',header.spl.newElect(ia,3),'visible','on',...
+                    'markersize', 2*option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize);
+            end
+        end
     end
     function topo_source_pop_callback(~,~)
         % dataset
@@ -3712,7 +4141,7 @@ GLW_figure_openingFcn;
         % epoch
         option.ax{option.cnt_subfig}.content{option.cnt_content}.ep=...
             min(option.ax{option.cnt_subfig}.content{option.cnt_content}.ep,header.datasize(1));
-       
+        
         % index
         if datasets_header(k).header.datasize(3)==1
             option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=1;
@@ -3733,22 +4162,34 @@ GLW_figure_openingFcn;
         topo_callback();
     end
     function topo_source_z_edt_callback(~,~)
-        temp=str2double(get(handles.panel_topo_source_z_edt,'String'));
+        temp(1)=str2double(get(handles.panel_topo_source_z1_edt,'String'));
+        temp(2)=str2double(get(handles.panel_topo_source_z2_edt,'String'));
         if isfinite(temp)
+            if temp(1)>temp(2)
+                temp=temp([2,1]);
+            end
             option.ax{option.cnt_subfig}.content{option.cnt_content}.z=temp;
         end
         topo_callback();
     end
     function topo_source_y_edt_callback(~,~)
-        temp=str2double(get(handles.panel_topo_source_y_edt,'String'));
+        temp(1)=str2double(get(handles.panel_topo_source_y1_edt,'String'));
+        temp(2)=str2double(get(handles.panel_topo_source_y2_edt,'String'));
         if isfinite(temp)
+            if temp(1)>temp(2)
+                temp=temp([2,1]);
+            end
             option.ax{option.cnt_subfig}.content{option.cnt_content}.y=temp;
         end
         topo_callback();
     end
     function topo_source_x_edt_callback(~,~)
-        temp=str2double(get(handles.panel_topo_source_x_edt,'String'));
+        temp(1)=str2double(get(handles.panel_topo_source_x1_edt,'String'));
+        temp(2)=str2double(get(handles.panel_topo_source_x2_edt,'String'));
         if isfinite(temp)
+            if temp(1)>temp(2)
+                temp=temp([2,1]);
+            end
             option.ax{option.cnt_subfig}.content{option.cnt_content}.x=temp;
         end
         topo_callback();
@@ -3774,7 +4215,7 @@ GLW_figure_openingFcn;
         topo_callback();
     end
     function topo_elec_markersize_edt_callback(~,~)
-        temp=get(handles.panel_topo_elec_exclude_listbox,'value');
+        temp=str2num(get(handles.panel_topo_elec_markersize_edt,'string'));
         if isfinite(temp)
             option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize=temp;
         end
@@ -3795,6 +4236,54 @@ GLW_figure_openingFcn;
         [~,ia] = intersect(option.ax{option.cnt_subfig}.content{option.cnt_content}.mark,option.ax{option.cnt_subfig}.content{option.cnt_content}.exclude);
         option.ax{option.cnt_subfig}.content{option.cnt_content}.mark(ia)=[];
         topo_callback();
+    end
+    function topo_dim_bg_callback(~,~)
+        if get(handles.panel_topo_dim_2D,'value')==1
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.dim='2D';
+        else
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.dim='3D';
+        end
+        topo_callback();
+    end
+    function topo_view_pop_callback(~,~)
+        n=get(handles.panel_topo_view_pop,'value');
+        switch n
+            case 2%front
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[-180,30];
+            case 3%back
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[0,30];
+            case 4%left
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[-90,30];
+            case 5%right
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[90,30];
+            case 6%frontright
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[135,30];
+            case 7%backright
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[45,30];
+            case 8%frontleft
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[-135,30];
+            case 9%backleft
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[-45,30];
+            case 10%top
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.view=[0,90];
+        end
+        topo_callback();
+    end
+    function topo_view_az_edt_callback(~,~)
+        c=str2num(get(handles.panel_topo_view_az_edt,'string'));
+        if ~isempty(c) && isfinite(c)
+            c=mod(c+180,360)-180;
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.view(1)=c;
+            topo_callback();
+        end
+    end
+    function topo_view_el_edt_callback(~,~)
+        c=str2num(get(handles.panel_topo_view_el_edt,'string'));
+        if ~isempty(c) && isfinite(c)
+            c=mod(c+90,360)-90;
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.view(2)=c;
+            topo_callback();
+        end
     end
     function topo_headrad_edt_callback(~,~)
         temp=str2num(get(handles.panel_topo_headrad_edt,'string'));
@@ -4091,16 +4580,7 @@ GLW_figure_openingFcn;
             'linestyle',option.ax{option.cnt_subfig}.content{option.cnt_content}.style,...
             'marker',option.ax{option.cnt_subfig}.content{option.cnt_content}.marker,...
             'color',option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
-        if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
-            temp=get(handles.ax(option.cnt_subfig),'xlim');
-            set(handles.xaxis_limit1_edt,'string',num2str(temp(1)));
-            set(handles.xaxis_limit2_edt,'string',num2str(temp(2)));
-        end
-        if  strcmp(option.ax{option.cnt_subfig}.YlimMode,'auto')
-            temp=get(handles.ax(option.cnt_subfig),'ylim');
-            set(handles.yaxis_limit1_edt,'string',num2str(temp(1)));
-            set(handles.yaxis_limit2_edt,'string',num2str(temp(2)));
-        end
+        content_xyaxis_update();
     end
     function lissajous_color_btn_callback(~,~)
         option.ax{option.cnt_subfig}.content{option.cnt_content}.color = uisetcolor(option.ax{option.cnt_subfig}.content{option.cnt_content}.color);
@@ -4184,12 +4664,12 @@ GLW_figure_openingFcn;
             end
         end
         option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_ch=datasets_header(k).header.chanlocs(ch_idx).labels;
-                 
+        
         % index
         if datasets_header(k).header.datasize(3)==1
             option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=1;
         else
-           option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=...
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=...
                 min(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx,header.datasize(3));
         end
         lissajous_update();
@@ -4245,12 +4725,12 @@ GLW_figure_openingFcn;
             end
         end
         option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_ch=datasets_header(k).header.chanlocs(ch_idx).labels;
-                 
+        
         % index
         if datasets_header(k).header.datasize(3)==1
             option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=1;
         else
-           option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=...
+            option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=...
                 min(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx,header.datasize(3));
         end
         lissajous_update();
@@ -4285,6 +4765,7 @@ GLW_figure_openingFcn;
         end
         lissajous_update();
     end
+
 %% other function
     function Set_position(obj,position)
         set(obj,'Units','pixels');
