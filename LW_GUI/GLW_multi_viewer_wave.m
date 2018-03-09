@@ -2182,7 +2182,6 @@ GLW_my_view_OpeningFcn;
                     table_data{table_idx,11}=num2str(x2);
                     table_data{table_idx,12}=num2str(y2);
                     table_idx=table_idx+1;
-                    
                 end
             end
         end
@@ -2202,9 +2201,10 @@ GLW_my_view_OpeningFcn;
         set(h,'MenuBar','none');
         set(h,'DockControls','off');
         pos=get(h,'position');
-        uitable(h,'position',[1,40,pos(3),pos(4)-40],'Data',table_data,'ColumnName',col_headers,'Units','normalized','Position', [0 0 1 1]);
-        btn=uicontrol('style','pushbutton','position',[1,1,pos(3),39],...
-            'string','send the table to workspace');
+        tab=uitable(h,'position',[1,40,pos(3),pos(4)-40],'Data',table_data,'ColumnName',col_headers);
+        btn=uicontrol('style','pushbutton','position',[1,1,pos(3),39],'string','send the table to workspace');
+        set(tab,'Units','normalized');
+        set(btn,'Units','normalized');
         set(btn,'callback',@(src,eventdata)assignin('base','lw_table',table_data));
     end
 
