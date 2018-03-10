@@ -388,6 +388,17 @@ Manager_Init();
             return;
         end
         
+        
+        if strcmp(fun_name,'GLW_figure')
+            file_list=get_selectfile();
+            option=[];
+            for k=1:length(file_list.file_str)
+                option.inputfiles{k,1}=fullfile(file_list.file_path,file_list.file_str{k});
+            end
+            GLW_figure(option);
+            return;
+        end
+        
         if ~isempty(strfind(fun_name,'FLW_import_'))
             %if fun_name is  FLW_import
             %execute the function with handles.fig

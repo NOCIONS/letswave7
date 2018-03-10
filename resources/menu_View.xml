@@ -4,6 +4,7 @@
     <menu Label="Multiviewer Time-Frequency map" callback="GLW_multi_viewer_map"/>
     <menu Label="Continuous Data Viewer" callback="GLW_multi_viewer_continuous"/>
     <menu Label="Generate figures">
+        <submenu Label="Figure creator"  callback="GLW_figure"/>
         <submenu Label="Waveforms figure creator" />
         <submenu Label="Waveforms average figure creator" />
         <submenu Label="Maps figure creator" />

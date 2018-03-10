@@ -87,7 +87,11 @@ uiwait(fig);
         end
     end
     function btn_OK_callback(~,~)
-        closereq;
+        if isempty(inputfiles_new)
+            warndlg('No datasets selected!','Warning','modal');
+        else
+            closereq;
+        end
     end
     function btn_Cancel_callback(~,~)
         inputfiles_new=[];

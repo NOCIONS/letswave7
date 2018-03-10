@@ -1,10 +1,6 @@
-function GLW_figure(inputfiles)
-clc;clear;close all;
-inputfiles.file_path='/Users/huanggan/Documents/MATLAB/letswave_bank/test';
-inputfiles.file_str={'bl cwt butt avg ep_s1 continuous EEG LEPs S06.lw6','bl cwt butt avg ep_s4 continuous EEG LEPs S06.lw6'};
+function GLW_figure(option)
 
 handles=[];
-option=[];
 icon=load('icon.mat');
 datasets_header={};
 datasets_data={};
@@ -34,19 +30,14 @@ GLW_figure_openingFcn;
         drawnow();
         init_function();
         init_data();
+        fig_redraw();
+        
         fig1_callback();
     end
     function init_parameter()
         handles.ax=[];
         handles.ax_child=struct([]);
-        
-        if isempty(option)
-            for k=1:length(inputfiles.file_str)
-                [p, n, e]=fileparts(fullfile(inputfiles.file_path,inputfiles.file_str{k}));
-                option.inputfiles{k,1}=fullfile(p,[n,e]);
-            end
-            get_fig_default();
-        end
+        get_fig_default();
     end
     function init_framework()
         handles.fig2=figure('name','Figure','PaperPositionMode','auto','Color',[1,1,1]);
@@ -1051,7 +1042,6 @@ GLW_figure_openingFcn;
         Set_position(handles.panel_lissajous_source2_z_txt,[150,40,10,20]);
         Set_position(handles.panel_lissajous_source2_z_edt,[165,40,55,20]);
     end
-
     function init_data()
         name=cell(length(option.inputfiles),1);
         for k=1:length(option.inputfiles)
@@ -1299,6 +1289,7 @@ GLW_figure_openingFcn;
         option.cnt_content=temp_cnt_content;
     end
     function axis_redraw()
+        get_axis_default();
         handles.ax(option.cnt_subfig)=axes(handles.fig2);
         Set_position(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.pos);
         hold(handles.ax(option.cnt_subfig),'on');
@@ -1364,7 +1355,7 @@ GLW_figure_openingFcn;
             name={};
             for k=1:length(option.ax{option.cnt_subfig}.content)
                 if strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'curve')...
-                        ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajour')
+                        ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajous')
                     idx=[idx,k];
                     name=[name,option.ax{option.cnt_subfig}.content{k}.name];
                 end
@@ -1395,26 +1386,31 @@ GLW_figure_openingFcn;
         end
     end
     function content_curve_redraw()
+        get_content_curve_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=...
             line('Parent',handles.ax(option.cnt_subfig));
         curve_update();
     end
     function content_lissajous_redraw()
+        get_content_lissajous_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=...
             line('Parent',handles.ax(option.cnt_subfig));
         lissajous_update();
     end
     function content_line_redraw()
+        get_content_line_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=...
             line('Parent',handles.ax(option.cnt_subfig));
         line_update();
     end
     function content_rect_redraw()
+        get_content_rect_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).rect=...
             fill(handles.ax(option.cnt_subfig),[0,0],[1,1],[1,1,1]);
         rect_update();
     end
     function content_image_redraw()
+        get_content_image_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).img=...
             imagesc('Parent',handles.ax(option.cnt_subfig));
         [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=...
@@ -1422,6 +1418,7 @@ GLW_figure_openingFcn;
         image_update();
     end
     function content_topo_redraw()
+        get_content_topo_default();
         content_topo2D_redraw();
         content_topo3D_redraw();
         topo_update();
@@ -1615,7 +1612,7 @@ GLW_figure_openingFcn;
         opt=option_setup(opt,'contour_edgecolor',[0,0,0]);
         opt=option_setup(opt,'view',[0,90]);
         
-        opt=option_setup(opt,'electrodes','off');
+        opt=option_setup(opt,'electrodes','on');
         opt=option_setup(opt,'maplimits',[]);
         opt=option_setup(opt,'dotsize',5);
         opt=option_setup(opt,'mark',[]);
@@ -1684,6 +1681,8 @@ GLW_figure_openingFcn;
                 end
             end
         end
+        script{end+1}='GLW_figure(option);';
+        
     end
     function script=get_fig_script(script)
         script{end+1}='% option for figure';
@@ -1997,8 +1996,9 @@ GLW_figure_openingFcn;
         if ~isempty(option.ax{idx_s}.content{idx_c}.maplimits)
             script{end+1}=[str1,'maplimits=',num2str_array(option.ax{idx_s}.content{idx_c}.maplimits),';'];
         end
-        if ~strcmpi(option.ax{idx_s}.content{idx_c}.electrodes,'off')
-            script{end+1}=[str1,'electrodes=''on'';'];
+        if ~strcmpi(option.ax{idx_s}.content{idx_c}.electrodes,'on')
+            script{end+1}=[str1,'electrodes=''off'';'];
+        else
             if option.ax{idx_s}.content{idx_c}.dotsize~=5
                 script{end+1}=[str1,'dotsize=',num2str(option.ax{idx_s}.content{idx_c}.dotsize),';'];
             end
@@ -2098,6 +2098,7 @@ GLW_figure_openingFcn;
             subfig_str{k}=option.ax{k}.name;
         end
         if ~isempty(option.ax)
+            option.cnt_subfig=max(length(option.ax),1);
             set(handles.subfig_listbox,'string',subfig_str,'value',option.cnt_subfig);
             content_str=cell(length(option.ax{option.cnt_subfig}.content),1);
             for k=1:length(option.ax{option.cnt_subfig}.content)
@@ -2594,12 +2595,13 @@ GLW_figure_openingFcn;
                 set (handles.axis_visible_chk,'value',0);
             end
             
-            
             if strcmpi(option.ax{option.cnt_subfig}.legend,'on')
                 set (handles.axis_legend_chk,'value',1);
-                set(handles.axis_legend_edt,'visible','on',...
-                    'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
-            else
+                if ~isempty(option.ax{option.cnt_subfig}.content)
+                    set(handles.axis_legend_edt,'visible','on',...
+                        'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
+                end
+           else
                 set(handles.axis_legend_chk,'value',0);
                 set(handles.axis_legend_edt,'visible','off');
             end
@@ -2816,17 +2818,16 @@ GLW_figure_openingFcn;
     end
     function axis_legend_chk_callback(~,~)
         if get(handles.axis_legend_chk,'value')==1
-            if isempty(option.ax{option.cnt_subfig}.content)
-                return;
-            end
+            if ~isempty(option.ax{option.cnt_subfig}.content)
             set(handles.axis_legend_edt,'visible','on',...
                 'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
+            end
             option.ax{option.cnt_subfig}.legend='on';
             idx=[];
             name={};
             for k=1:length(option.ax{option.cnt_subfig}.content)
                 if strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'curve')...
-                        ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajour')
+                        ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajous')
                     idx=[idx,k];
                     name=[name,option.ax{option.cnt_subfig}.content{k}.name];
                 end
@@ -2854,7 +2855,7 @@ GLW_figure_openingFcn;
         name={};
         for k=1:length(option.ax{option.cnt_subfig}.content)
             if strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'curve')...
-                    ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajour')
+                    ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajous')
                 idx=[idx,k];
                 name=[name,option.ax{option.cnt_subfig}.content{k}.name];
             end
@@ -3239,6 +3240,23 @@ GLW_figure_openingFcn;
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=text('parent',handles.ax(option.cnt_subfig));
         end
         option.ax{option.cnt_subfig}.content_order=option.ax{option.cnt_subfig}.content_order+1;
+        
+        if strcmpi(option.ax{option.cnt_subfig}.legend,'on')
+            idx=[];
+            name={};
+            for k=1:length(option.ax{option.cnt_subfig}.content)
+                if strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'curve')...
+                        ||strcmpi(option.ax{option.cnt_subfig}.content{k}.type,'lissajous')
+                    idx=[idx,k];
+                    name=[name,option.ax{option.cnt_subfig}.content{k}.name];
+                end
+            end
+            if isempty(idx)
+                legend(handles.ax(option.cnt_subfig),'off');
+            else
+                legend([handles.ax_child{option.cnt_subfig}.handle(idx).line],name);
+            end
+        end
         fig1_callback();
     end
     function content_del_callback(~,~)
@@ -4495,6 +4513,24 @@ GLW_figure_openingFcn;
             set(handles.panel_topo_contour_color_btn,'foregroundcolor',c);
             set(handles.panel_topo_contour_color_btn,'string',['[',num2str(c(1),'%0.2g'),',',num2str(c(2),'%0.2g'),',',num2str(c(3),'%0.2g'),']']);
             
+            set(handles.panel_topo_surface_chk,'visible','on');
+            if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on')
+                set(handles.panel_topo_surface_chk,'value',1);
+                set(handles.panel_topo_colorbar_chk,'enable','on');
+                set(handles.panel_topo_colormap_txt,'enable','on');
+                set(handles.panel_topo_colormap_pop,'enable','on');
+                if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
+                    set(handles.panel_topo_colorbar_chk,'value',1);
+                else
+                    set(handles.panel_topo_colorbar_chk,'value',0);
+                end
+            else
+                set(handles.panel_topo_surface_chk,'value',0);
+                set(handles.panel_topo_colorbar_chk,'enable','off');
+                set(handles.panel_topo_colormap_txt,'enable','off');
+                set(handles.panel_topo_colormap_pop,'enable','off');
+            end
+            
         else
             set(handles.panel_topo_dim_3D,'value',1);
             set(handles.panel_topo_headrad_txt,'visible','off');
@@ -4541,6 +4577,18 @@ GLW_figure_openingFcn;
             if option.ax{option.cnt_subfig}.content{option.cnt_content}.view==[0,90]
                 set(handles.panel_topo_view_pop,'value',10);%top
             end
+            
+            set(handles.panel_topo_surface_chk,'visible','off');
+            set(handles.panel_topo_colorbar_chk,'enable','on');
+            set(handles.panel_topo_colormap_txt,'enable','on');
+            set(handles.panel_topo_colormap_pop,'enable','on');
+        end
+        
+        
+        if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
+            set(handles.panel_topo_colorbar_chk,'value',1);
+        else
+            set(handles.panel_topo_colorbar_chk,'value',0);
         end
         
         if isempty(option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits)
@@ -4557,23 +4605,6 @@ GLW_figure_openingFcn;
                 'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits(2));
             set(handles.panel_topo_clim1_txt,'enable','on');
             set(handles.panel_topo_clim2_txt,'enable','on');
-        end
-        
-        if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on')
-            set(handles.panel_topo_surface_chk,'value',1);
-            set(handles.panel_topo_colorbar_chk,'enable','on');
-            set(handles.panel_topo_colormap_txt,'enable','on');
-            set(handles.panel_topo_colormap_pop,'enable','on');
-        else
-            set(handles.panel_topo_surface_chk,'value',0);
-            set(handles.panel_topo_colorbar_chk,'enable','off');
-            set(handles.panel_topo_colormap_txt,'enable','off');
-            set(handles.panel_topo_colormap_pop,'enable','off');
-        end
-        if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            set(handles.panel_topo_colorbar_chk,'value',1);
-        else
-            set(handles.panel_topo_colorbar_chk,'value',0);
         end
         
         if verLessThan('matlab','8.4')
@@ -4817,12 +4848,11 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_clim1_edt,'string',num2str(temp(1)));
         set(handles.panel_topo_clim2_edt,'string',num2str(temp(2)));
         
-        if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
+        if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on') && strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
             colorbar(handles.ax(option.cnt_subfig));
         else
             colorbar(handles.ax(option.cnt_subfig),'off');
         end
-        colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3,'ZData',ones(1,10)*top,'visible','on');
@@ -4863,6 +4893,15 @@ GLW_figure_openingFcn;
             'FaceVertexCdata',P,'visible','on');
         axis(handles.ax(option.cnt_subfig),[-125 125 -125 125 -125 125]);
         colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
+        if isempty(option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits)
+            set(handles.ax(option.cnt_subfig),'CLimMode','auto');
+        else
+            set(handles.ax(option.cnt_subfig),'CLim',option.ax{option.cnt_subfig}.content{option.cnt_content}.maplimits);
+        end
+        temp=get(handles.ax(option.cnt_subfig),'CLim');
+        set(handles.panel_topo_clim1_edt,'string',num2str(temp(1)));
+        set(handles.panel_topo_clim2_edt,'string',num2str(temp(2)));
+        
         delete(findall(handles.ax(option.cnt_subfig),'Type','light'));
         light('parent',handles.ax(option.cnt_subfig),'Position',[-125  125  80],'Style','infinite');
         light('parent',handles.ax(option.cnt_subfig),'Position',[125  125  80],'Style','infinite');
@@ -4899,6 +4938,12 @@ GLW_figure_openingFcn;
                     'XData',header.spl.newElect(ia,1),'YData',  header.spl.newElect(ia,2), 'ZData',header.spl.newElect(ia,3),'visible','on',...
                     'markersize', 2*option.ax{option.cnt_subfig}.content{option.cnt_content}.dotsize);
             end
+        end
+        
+        if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
+            colorbar(handles.ax(option.cnt_subfig));
+        else
+            colorbar(handles.ax(option.cnt_subfig),'off');
         end
     end
     function topo_source_pop_callback(~,~)
