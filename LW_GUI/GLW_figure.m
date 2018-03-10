@@ -27,6 +27,9 @@ GLW_figure_openingFcn;
         init_panel_image();
         init_panel_topo();
         init_panel_lissajous();
+        
+        set(handles.fig2,'visible','on');
+        set(handles.fig1,'visible','on');
         drawnow();
         init_function();
         init_data();
@@ -40,8 +43,8 @@ GLW_figure_openingFcn;
         get_fig_default();
     end
     function init_framework()
-        handles.fig2=figure('name','Figure','PaperPositionMode','auto','Color',[1,1,1]);
-        handles.fig1=figure('name','Config','Color',0.94*[1,1,1]);
+        handles.fig2=figure('name','Figure','PaperPositionMode','auto','Color',[1,1,1],'visible','off');
+        handles.fig1=figure('name','Config','Color',0.94*[1,1,1],'visible','off');
         handles.toolbar= uitoolbar(handles.fig1);
         
         handles.open_btn=uipushtool(handles.toolbar,'CData',icon.icon_open,'TooltipString','open a file');
@@ -54,9 +57,9 @@ GLW_figure_openingFcn;
         handles.content_btn=uitoggletool(handles.toolbar,'CData',icon.icon_content,'TooltipString','conent');
         
         handles.subfig_listbox_txt=uicontrol(handles.fig1,'style','text','String','Subfigure:');
-        handles.subfig_listbox=uicontrol(handles.fig1,'style','listbox','Min',1,'Max',1);
+        handles.subfig_listbox=uicontrol(handles.fig1,'style','listbox','Min',1,'Max',1,'backgroundcolor',[1,1,1]);
         handles.content_listbox_txt=uicontrol(handles.fig1,'style','text','String','Conent:');
-        handles.content_listbox=uicontrol(handles.fig1,'style','listbox','Min',1,'Max',1);
+        handles.content_listbox=uicontrol(handles.fig1,'style','listbox','Min',1,'Max',1,'backgroundcolor',[1,1,1]);
         
         set(handles.fig1,'numbertitle','off','MenuBar','none','DockControls','off');
         set(handles.fig2,'numbertitle','off','MenuBar','none','DockControls','off');
@@ -86,14 +89,14 @@ GLW_figure_openingFcn;
         handles.fig_y_txt=uicontrol(handles.panel_fig,'style','text','String','y: ');
         handles.fig_w_txt=uicontrol(handles.panel_fig,'style','text','String','width: ');
         handles.fig_h_txt=uicontrol(handles.panel_fig,'style','text','String','height: ');
-        handles.fig_x_edt=uicontrol(handles.panel_fig,'style','edit','String','1');
-        handles.fig_y_edt=uicontrol(handles.panel_fig,'style','edit','String','1');
-        handles.fig_w_edt=uicontrol(handles.panel_fig,'style','edit','String','200');
-        handles.fig_h_edt=uicontrol(handles.panel_fig,'style','edit','String','200');
+        handles.fig_x_edt=uicontrol(handles.panel_fig,'style','edit','String','1','backgroundcolor',[1,1,1]);
+        handles.fig_y_edt=uicontrol(handles.panel_fig,'style','edit','String','1','backgroundcolor',[1,1,1]);
+        handles.fig_w_edt=uicontrol(handles.panel_fig,'style','edit','String','200','backgroundcolor',[1,1,1]);
+        handles.fig_h_edt=uicontrol(handles.panel_fig,'style','edit','String','200','backgroundcolor',[1,1,1]);
         
         handles.fig_sub_txt=uicontrol(handles.panel_fig,'style','text','String','Subfigure:');
         handles.sub_add_txt=uicontrol(handles.panel_fig,'style','text','String','Type:');
-        handles.sub_add_pop=uicontrol(handles.panel_fig,'style','popupmenu','String',{'Curve','Image','Topograph'},'value',1);
+        handles.sub_add_pop=uicontrol(handles.panel_fig,'style','popupmenu','String',{'Curve','Image','Topograph'},'value',1,'backgroundcolor',[1,1,1]);
         handles.sub_add=uicontrol(handles.panel_fig,'style','pushbutton');
         handles.sub_del=uicontrol(handles.panel_fig,'style','pushbutton');
         handles.sub_up=uicontrol(handles.panel_fig,'style','pushbutton');
@@ -135,26 +138,26 @@ GLW_figure_openingFcn;
     function init_panel_fig_sub()
         handles.panel_fig_sub=uipanel(handles.panel_fig,'bordertype','none','visible','off');
         handles.sub_title_chx=uicontrol(handles.panel_fig_sub,'style','checkbox','String','Title:');
-        handles.sub_title_edt=uicontrol(handles.panel_fig_sub,'style','edit');
+        handles.sub_title_edt=uicontrol(handles.panel_fig_sub,'style','edit','backgroundcolor',[1,1,1]);
         handles.sub_font_txt=uicontrol(handles.panel_fig_sub,'style','text','String','Font:');
-        handles.sub_font_pop=uicontrol(handles.panel_fig_sub,'style','popupmenu');
+        handles.sub_font_pop=uicontrol(handles.panel_fig_sub,'style','popupmenu','backgroundcolor',[1,1,1]);
         handles.sub_size_txt=uicontrol(handles.panel_fig_sub,'style','text','String','Font size:');
-        handles.sub_size_edt=uicontrol(handles.panel_fig_sub,'style','edit');
+        handles.sub_size_edt=uicontrol(handles.panel_fig_sub,'style','edit','backgroundcolor',[1,1,1]);
         handles.sub_position_txt=uicontrol(handles.panel_fig_sub,'style','text','String','Position:');
         handles.sub_position_chk=uicontrol(handles.panel_fig_sub,'style','checkbox','String','auto');
         handles.sub_col_txt=uicontrol(handles.panel_fig_sub,'style','text','String','Col:');
         handles.sub_row_txt=uicontrol(handles.panel_fig_sub,'style','text','String','Row:');
-        handles.sub_col_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1');
-        handles.sub_row_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1');
+        handles.sub_col_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1','backgroundcolor',[1,1,1]);
+        handles.sub_row_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.sub_update_btn=uicontrol(handles.panel_fig_sub,'style','pushbutton','String','Update');
         handles.sub_x_txt=uicontrol(handles.panel_fig_sub,'style','text','String','x: ');
         handles.sub_y_txt=uicontrol(handles.panel_fig_sub,'style','text','String','y: ');
         handles.sub_w_txt=uicontrol(handles.panel_fig_sub,'style','text','String','width: ');
         handles.sub_h_txt=uicontrol(handles.panel_fig_sub,'style','text','String','height: ');
-        handles.sub_x_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1');
-        handles.sub_y_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1');
-        handles.sub_w_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','200');
-        handles.sub_h_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','200');
+        handles.sub_x_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1','backgroundcolor',[1,1,1]);
+        handles.sub_y_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1','backgroundcolor',[1,1,1]);
+        handles.sub_w_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','200','backgroundcolor',[1,1,1]);
+        handles.sub_h_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','200','backgroundcolor',[1,1,1]);
         
         a=find(strcmpi(listfonts,'Arial')==1);
         set(handles.sub_font_pop,'String',listfonts,'value',a(1));
@@ -199,45 +202,49 @@ GLW_figure_openingFcn;
         handles.axis_visible_chk=uicontrol(handles.panel_axis,'style','checkbox','string','visible');
         handles.axis_box_chk=uicontrol(handles.panel_axis,'style','checkbox','string','Box');
         handles.axis_legend_chk=uicontrol(handles.panel_axis,'style','checkbox','string','Legend');
-        handles.axis_legend_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.axis_legend_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.xaxis_txt=uicontrol(handles.panel_axis,'style','text','String','X axis:');
         handles.xaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','x-limit:');
-        handles.xaxis_limit1_edt=uicontrol(handles.panel_axis,'style','edit');
-        handles.xaxis_limit2_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.xaxis_limit1_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
+        handles.xaxis_limit2_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.xaxis_location_txt=uicontrol(handles.panel_axis,'style','text','string','Location:');
         handles.xaxis_hide_chx=uicontrol(handles.panel_axis,'style','checkbox','string','hide');
-        handles.xaxis_location_pop=uicontrol(handles.panel_axis,'style','popupmenu','string',{'bottom','top','origin'});
+        handles.xaxis_location_pop=uicontrol(handles.panel_axis,'style','popupmenu','backgroundcolor',[1,1,1],'string',{'bottom','top','origin'});
         handles.xaxis_tick_chk=uicontrol(handles.panel_axis,'style','checkbox','string','auto ticks');
         handles.xaxis_tick_interval_txt=uicontrol(handles.panel_axis,'style','text','string','interval:');
-        handles.xaxis_tick_interval_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.xaxis_tick_interval_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.xaxis_tick_anchor_txt=uicontrol(handles.panel_axis,'style','text','string','anchor:');
-        handles.xaxis_tick_anchor_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.xaxis_tick_anchor_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.xaxis_minor_tick_chk=uicontrol(handles.panel_axis,'style','checkbox','string','minor tick');
         handles.xaxis_grid_chk=uicontrol(handles.panel_axis,'style','checkbox','string','grid');
         handles.xaxis_minor_grid_chk=uicontrol(handles.panel_axis,'style','checkbox','string','minor grid');
         handles.xaxis_label_chk=uicontrol(handles.panel_axis,'style','checkbox','string','label:');
-        handles.xaxis_label_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.xaxis_label_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.yaxis_txt=uicontrol(handles.panel_axis,'style','text','String','Y axis:');
         handles.yaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','y-limit:');
-        handles.yaxis_limit1_edt=uicontrol(handles.panel_axis,'style','edit');
-        handles.yaxis_limit2_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.yaxis_limit1_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
+        handles.yaxis_limit2_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_location_txt=uicontrol(handles.panel_axis,'style','text','string','Location:');
         handles.yaxis_hide_chx=uicontrol(handles.panel_axis,'style','checkbox','string','hide');
-        handles.yaxis_location_pop=uicontrol(handles.panel_axis,'style','popupmenu','string',{'left','right','origin'});
+        handles.yaxis_location_pop=uicontrol(handles.panel_axis,'style','popupmenu','backgroundcolor',[1,1,1],'string',{'left','right','origin'});
         handles.yaxis_tick_chk=uicontrol(handles.panel_axis,'style','checkbox','string','auto ticks');
         handles.yaxis_tick_interval_txt=uicontrol(handles.panel_axis,'style','text','string','interval:');
-        handles.yaxis_tick_interval_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.yaxis_tick_interval_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_tick_anchor_txt=uicontrol(handles.panel_axis,'style','text','string','anchor:');
-        handles.yaxis_tick_anchor_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.yaxis_tick_anchor_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_minor_tick_chk=uicontrol(handles.panel_axis,'style','checkbox','string','minor tick');
         handles.yaxis_grid_chk=uicontrol(handles.panel_axis,'style','checkbox','string','grid');
         handles.yaxis_minor_grid_chk=uicontrol(handles.panel_axis,'style','checkbox','string','minor grid');
         handles.yaxis_label_chk=uicontrol(handles.panel_axis,'style','checkbox','string','label:');
-        handles.yaxis_label_edt=uicontrol(handles.panel_axis,'style','edit');
+        handles.yaxis_label_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_reverse_chk=uicontrol(handles.panel_axis,'style','checkbox','string','reverse');
         
+        if verLessThan('matlab','8.4') 
+             set(handles.xaxis_location_pop,'string',{'bottom','top'});
+             set(handles.yaxis_location_pop,'string',{'left','right'});
+        end
         set(handles.xaxis_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.xaxis_location_txt,'HorizontalAlignment','left');
         set(handles.xaxis_tick_interval_txt,'HorizontalAlignment','left');
@@ -294,7 +301,7 @@ GLW_figure_openingFcn;
     function init_panel_content_manager()
         handles.panel_content_manager=uipanel(handles.fig1,'bordertype','none','visible','off');
         handles.content_add_txt=uicontrol(handles.panel_content_manager,'style','text','String','Content type:');
-        handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','String',{'curve','line','rect','text'},'value',1);
+        handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'curve','line','rect','text'},'value',1);
         handles.content_add=uicontrol(handles.panel_content_manager,'style','pushbutton');
         handles.content_del=uicontrol(handles.panel_content_manager,'style','pushbutton');
         handles.content_up=uicontrol(handles.panel_content_manager,'style','pushbutton');
@@ -320,22 +327,22 @@ GLW_figure_openingFcn;
         handles.panel_curve_color_btn=uicontrol(handles.panel_curve,'style','pushbutton','String','color','FontWeight','bold');
         handles.panel_curve_color_txt=uicontrol(handles.panel_curve,'style','text','String','Color: ');
         handles.panel_curve_width_txt=uicontrol(handles.panel_curve,'style','text','String','Width: ');
-        handles.panel_curve_width_edt=uicontrol(handles.panel_curve,'style','edit','String','2');
+        handles.panel_curve_width_edt=uicontrol(handles.panel_curve,'style','edit','String','2','backgroundcolor',[1,1,1]);
         handles.panel_curve_style_txt=uicontrol(handles.panel_curve,'style','text','String','Line Style: ');
-        handles.panel_curve_style_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
+        handles.panel_curve_style_pop=uicontrol(handles.panel_curve,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
         handles.panel_curve_marker_txt=uicontrol(handles.panel_curve,'style','text','String','Marker: ');
-        handles.panel_curve_marker_pop=uicontrol(handles.panel_curve,'style','popupmenu',...
+        handles.panel_curve_marker_pop=uicontrol(handles.panel_curve,'style','popupmenu','backgroundcolor',[1,1,1],...
             'String',{'No Marker','Circle','Plus sign','Asterisk','Point','Cross','Square','Cross','Diamond',...
             'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
             'Pentagram','Hexagram'},'value',1);
         
         handles.panel_curve_source_txt=uicontrol(handles.panel_curve,'style','text','String','Data Source:');
-        handles.panel_curve_source_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_curve_source_epoch_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_curve_source_channel_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_curve_source_index_pop=uicontrol(handles.panel_curve,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_curve_source_y_edt=uicontrol(handles.panel_curve,'style','edit');
-        handles.panel_curve_source_z_edt=uicontrol(handles.panel_curve,'style','edit');
+        handles.panel_curve_source_pop=uicontrol(handles.panel_curve,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_curve_source_epoch_pop=uicontrol(handles.panel_curve,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_curve_source_channel_pop=uicontrol(handles.panel_curve,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_curve_source_index_pop=uicontrol(handles.panel_curve,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_curve_source_y_edt=uicontrol(handles.panel_curve,'style','edit','backgroundcolor',[1,1,1]);
+        handles.panel_curve_source_z_edt=uicontrol(handles.panel_curve,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_curve_source_epoch_txt=uicontrol(handles.panel_curve,'style','text','String','epoch: ');
         handles.panel_curve_source_channel_txt=uicontrol(handles.panel_curve,'style','text','String','channel: ');
@@ -403,24 +410,24 @@ GLW_figure_openingFcn;
             'style','text','String','y2: ');
         
         handles.panel_line_x1_edt=uicontrol(handles.panel_line,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_line_y1_edt=uicontrol(handles.panel_line,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_line_x2_edt=uicontrol(handles.panel_line,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_line_y2_edt=uicontrol(handles.panel_line,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_line_color_txt=uicontrol(handles.panel_line,...
             'style','text','String','Color: ');
         handles.panel_line_width_txt=uicontrol(handles.panel_line,...
             'style','text','String','Width: ');
         handles.panel_line_width_edt=uicontrol(handles.panel_line,...
-            'style','edit','String','2');
+            'style','edit','String','2','backgroundcolor',[1,1,1]);
         handles.panel_line_style_txt=uicontrol(handles.panel_line,'style','text','String','Line Style: ');
-        handles.panel_line_style_pop=uicontrol(handles.panel_line,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
+        handles.panel_line_style_pop=uicontrol(handles.panel_line,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
         handles.panel_line_marker_txt=uicontrol(handles.panel_line,'style','text','String','Marker: ');
-        handles.panel_line_marker_pop=uicontrol(handles.panel_line,'style','popupmenu',...
+        handles.panel_line_marker_pop=uicontrol(handles.panel_line,'style','popupmenu','backgroundcolor',[1,1,1],...
             'String',{'No Marker','Circle','Plus sign','Asterisk','Point','Cross','Square','Cross','Diamond',...
             'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
             'Pentagram','Hexagram'},'value',1);
@@ -492,26 +499,26 @@ GLW_figure_openingFcn;
             'style','text','String','height: ');
         
         handles.panel_rect_x_edt=uicontrol(handles.panel_rect,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_rect_y_edt=uicontrol(handles.panel_rect,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_rect_w_edt=uicontrol(handles.panel_rect,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_rect_h_edt=uicontrol(handles.panel_rect,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_rect_width_txt=uicontrol(handles.panel_rect,...
             'style','text','String','Edge Width : ');
         handles.panel_rect_width_edt=uicontrol(handles.panel_rect,...
-            'style','edit','String','2');
+            'style','edit','String','2','backgroundcolor',[1,1,1]);
         handles.panel_rect_facealpha_txt=uicontrol(handles.panel_rect,...
             'style','text','String','Face Opacity: ');
         handles.panel_rect_facealpha_edt=uicontrol(handles.panel_rect,...
-            'style','edit','String','1');
+            'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.panel_rect_edgealpha_txt=uicontrol(handles.panel_rect,...
             'style','text','String','Edge Opacity: ');
         handles.panel_rect_edgealpha_edt=uicontrol(handles.panel_rect,...
-            'style','edit','String','1');
+            'style','edit','String','1','backgroundcolor',[1,1,1]);
         
         set(handles.panel_rect_config_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_rect_facecolor_txt,'HorizontalAlignment','left');
@@ -558,7 +565,7 @@ GLW_figure_openingFcn;
         handles.panel_text_text_txt=uicontrol(handles.panel_text,...
             'style','text','String','text:');
         handles.panel_text_text_edt=uicontrol(handles.panel_text,...
-            'style','edit','String','some text','max',100,'min',1);
+            'style','edit','String','some text','max',100,'min',1,'backgroundcolor',[1,1,1]);
         
         % bold & italic
         handles.panel_text_bold_chk=uicontrol(handles.panel_text,...
@@ -577,7 +584,7 @@ GLW_figure_openingFcn;
         % font
         handles.panel_text_font_txt=uicontrol(handles.panel_text,...
             'style','text','String','Font:');
-        handles.panel_text_font_pop=uicontrol(handles.panel_text,'style','popupmenu');
+        handles.panel_text_font_pop=uicontrol(handles.panel_text,'style','popupmenu','backgroundcolor',[1,1,1]);
         a=find(strcmpi(listfonts,'Arial')==1);
         set(handles.panel_text_font_pop,'String',listfonts,'value',a(1));
         
@@ -585,7 +592,7 @@ GLW_figure_openingFcn;
         handles.panel_text_size_txt=uicontrol(handles.panel_text,...
             'style','text','String','Size: ');
         handles.panel_text_size_edt=uicontrol(handles.panel_text,...
-            'style','edit','String','10');
+            'style','edit','String','10','backgroundcolor',[1,1,1]);
         
         % position
         handles.panel_text_x_txt=uicontrol(handles.panel_text,...
@@ -594,9 +601,9 @@ GLW_figure_openingFcn;
             'style','text','String','y: ');
         
         handles.panel_text_x_edt=uicontrol(handles.panel_text,...
-            'style','edit','String','0');
+            'style','edit','String','0','backgroundcolor',[1,1,1]);
         handles.panel_text_y_edt=uicontrol(handles.panel_text,...
-            'style','edit','String','0');
+            'style','edit','String','0','backgroundcolor',[1,1,1]);
         
         set(handles.panel_text_config_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_text_text_txt,'HorizontalAlignment','left');
@@ -631,15 +638,15 @@ GLW_figure_openingFcn;
         handles.panel_image_source_txt=uicontrol(handles.panel_image,...
             'style','text','String','Source:','Fontweight','bold');
         handles.panel_image_source_pop=uicontrol(handles.panel_image,...
-            'style','popupmenu','String',{'1','2','3'});
+            'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_image_source_epoch_pop=uicontrol(handles.panel_image,...
-            'style','popupmenu','String',{'1','2','3'});
+            'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_image_source_channel_pop=uicontrol(handles.panel_image,...
-            'style','popupmenu','String',{'1','2','3'});
+            'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_image_source_index_pop=uicontrol(handles.panel_image,...
-            'style','popupmenu','String',{'1','2','3'});
+            'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_image_source_z_edt=uicontrol(handles.panel_image,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_image_source_epoch_txt=uicontrol(handles.panel_image,...
             'style','text','String','epoch: ');
@@ -661,19 +668,19 @@ GLW_figure_openingFcn;
             handles.panel_image_colormap_pop=uicontrol(handles.panel_image,...
                 'style','popupmenu','String',{'jet','hsv','hot','cool',...
                 'spring','summer','autumn','winter','gray','bone','copper',...
-                'pink'},'value',1);
+                'pink'},'value',1,'backgroundcolor',[1,1,1]);
         else
             handles.panel_image_colormap_pop=uicontrol(handles.panel_image,...
                 'style','popupmenu','String',{'parula','jet','hsv','hot','cool',...
                 'spring','summer','autumn','winter','gray','bone','copper',...
-                'pink'},'Value',1);
+                'pink'},'Value',1,'backgroundcolor',[1,1,1]);
         end
         handles.panel_image_clim_chk=uicontrol(handles.panel_image,...
             'style','checkbox','String','range: ');
         handles.panel_image_clim1_edt=uicontrol(handles.panel_image,...
-            'style','edit','String','0');
+            'style','edit','String','0','backgroundcolor',[1,1,1]);
         handles.panel_image_clim2_edt=uicontrol(handles.panel_image,...
-            'style','edit','String','1');
+            'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.panel_image_clim3_txt=uicontrol(handles.panel_image,...
             'style','text','String','-');
         
@@ -703,18 +710,18 @@ GLW_figure_openingFcn;
         handles.panel_image_contour_start_edt=uicontrol(handles.panel_image,...
             'style','edit');
         handles.panel_image_contour_end_edt=uicontrol(handles.panel_image,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_image_contour_step_edt=uicontrol(handles.panel_image,...
-            'style','edit');
+            'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_image_contour_width_txt=uicontrol(handles.panel_image,...
             'style','text','String','width: ');
         handles.panel_image_contour_style_txt=uicontrol(handles.panel_image,...
             'style','text','String','style: ');
         handles.panel_image_contour_width_edt=uicontrol(handles.panel_image,...
-            'style','edit','String','2');
+            'style','edit','String','2','backgroundcolor',[1,1,1]);
         handles.panel_image_contour_style_pop=uicontrol(handles.panel_image,...
-            'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted'},'value',1);
+            'style','popupmenu','backgroundcolor',[1,1,1],'String',{'Solid','Dshed','Dotted','Dash-dotted'},'value',1);
         
         set(handles.panel_image_source_txt,'HorizontalAlignment','left');
         set(handles.panel_image_source_epoch_txt,'HorizontalAlignment','left');
@@ -781,20 +788,20 @@ GLW_figure_openingFcn;
         handles.panel_topo=uipanel(handles.fig1,'bordertype','none','visible','off');
         
         handles.panel_topo_source_txt=uicontrol(handles.panel_topo,'style','text','String','Data Source:');
-        handles.panel_topo_source_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_topo_source_pop=uicontrol(handles.panel_topo,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_topo_source_epoch_txt=uicontrol(handles.panel_topo,'style','text','String','epoch:');
-        handles.panel_topo_source_epoch_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_topo_source_epoch_pop=uicontrol(handles.panel_topo,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_topo_source_index_txt=uicontrol(handles.panel_topo,'style','text','String','index:');
-        handles.panel_topo_source_index_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',{'1','2','3'});
+        handles.panel_topo_source_index_pop=uicontrol(handles.panel_topo,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
         handles.panel_topo_source_x_txt=uicontrol(handles.panel_topo,'style','text','String','x: ');
-        handles.panel_topo_source_x1_edt=uicontrol(handles.panel_topo,'style','edit');
-        handles.panel_topo_source_x2_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_x1_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
+        handles.panel_topo_source_x2_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_topo_source_y_txt=uicontrol(handles.panel_topo,'style','text','String','y: ');
-        handles.panel_topo_source_y1_edt=uicontrol(handles.panel_topo,'style','edit');
-        handles.panel_topo_source_y2_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_y1_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
+        handles.panel_topo_source_y2_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_topo_source_z_txt=uicontrol(handles.panel_topo,'style','text','String','z: ');
-        handles.panel_topo_source_z1_edt=uicontrol(handles.panel_topo,'style','edit');
-        handles.panel_topo_source_z2_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_source_z1_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
+        handles.panel_topo_source_z2_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_topo_property_txt=uicontrol(handles.panel_topo,'style','text','String','Property: ');
         handles.panel_topo_dim_bg=uibuttongroup(handles.panel_topo,'BorderType','none');
@@ -804,15 +811,15 @@ GLW_figure_openingFcn;
             'Style','radiobutton','String','3D');
         
         handles.panel_topo_headrad_txt=uicontrol(handles.panel_topo,'style','text','String','head radius:');
-        handles.panel_topo_headrad_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_headrad_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_topo_shrink_txt=uicontrol(handles.panel_topo,'style','text','String','shrink:');
-        handles.panel_topo_shrink_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_shrink_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_topo_clim_chk=uicontrol(handles.panel_topo,...
             'style','checkbox','String','range: ');
         handles.panel_topo_clim1_edt=uicontrol(handles.panel_topo,...
-            'style','edit','String','0');
+            'style','edit','String','0','backgroundcolor',[1,1,1]);
         handles.panel_topo_clim2_edt=uicontrol(handles.panel_topo,...
-            'style','edit','String','1');
+            'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.panel_topo_clim1_txt=uicontrol(handles.panel_topo,...
             'style','text','String','from:');
         handles.panel_topo_clim2_txt=uicontrol(handles.panel_topo,...
@@ -820,16 +827,16 @@ GLW_figure_openingFcn;
         
         handles.panel_topo_view_txt=uicontrol(handles.panel_topo,...
             'style','text','String','view:');
-        handles.panel_topo_view_pop=uicontrol(handles.panel_topo,'style','popupmenu','String',...
+        handles.panel_topo_view_pop=uicontrol(handles.panel_topo,'style','popupmenu','backgroundcolor',[1,1,1],'String',...
             {'custom','front','back','left','right','frontright','backright','frontleft','backleft','top'});
         handles.panel_topo_view_az_txt=uicontrol(handles.panel_topo,...
             'style','text','String','azimuth:');
         handles.panel_topo_view_az_edt=uicontrol(handles.panel_topo,...
-            'style','edit','String','0');
+            'style','edit','String','0','backgroundcolor',[1,1,1]);
         handles.panel_topo_view_el_txt=uicontrol(handles.panel_topo,...
             'style','text','String','vertical elevation:');
         handles.panel_topo_view_el_edt=uicontrol(handles.panel_topo,...
-            'style','edit','String','0');
+            'style','edit','String','0','backgroundcolor',[1,1,1]);
         
         handles.panel_topo_surface_chk=uicontrol(handles.panel_topo,'style','checkbox','String','surface');
         handles.panel_topo_contour_chk=uicontrol(handles.panel_topo,'style','checkbox','String','contour');
@@ -839,14 +846,14 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_contour_color_btn,'fontsize',c+2);
         
         handles.panel_topo_elec_txt=uicontrol(handles.panel_topo,'style','text','String','Electrodes:');
-        handles.panel_topo_elec_chk=uicontrol(handles.panel_topo,'style','checkbox','String','deisplay');
+        handles.panel_topo_elec_chk=uicontrol(handles.panel_topo,'style','checkbox','String','display');
         handles.panel_topo_elec_label_chk=uicontrol(handles.panel_topo,'style','checkbox','String','label');
         handles.panel_topo_elec_exclude_txt=uicontrol(handles.panel_topo,'style','text','String','exclude:');
-        handles.panel_topo_elec_exclude_listbox=uicontrol(handles.panel_topo,'style','listbox','Min',1,'Max',10);
+        handles.panel_topo_elec_exclude_listbox=uicontrol(handles.panel_topo,'style','listbox','Min',1,'Max',10,'backgroundcolor',[1,1,1]);
         handles.panel_topo_elec_marker_txt=uicontrol(handles.panel_topo,'style','text','String','marker:');
-        handles.panel_topo_elec_marker_listbox=uicontrol(handles.panel_topo,'style','listbox','Min',0,'Max',10);
+        handles.panel_topo_elec_marker_listbox=uicontrol(handles.panel_topo,'style','listbox','Min',0,'Max',10,'backgroundcolor',[1,1,1]);
         handles.panel_topo_elec_markersize_txt=uicontrol(handles.panel_topo,'style','text','String','size:');
-        handles.panel_topo_elec_markersize_edt=uicontrol(handles.panel_topo,'style','edit');
+        handles.panel_topo_elec_markersize_edt=uicontrol(handles.panel_topo,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.panel_topo_colorbar_chk=uicontrol(handles.panel_topo,...
             'style','checkbox','String','colorbar');
@@ -856,12 +863,12 @@ GLW_figure_openingFcn;
             handles.panel_topo_colormap_pop=uicontrol(handles.panel_topo,...
                 'style','popupmenu','String',{'jet','hsv','hot','cool',...
                 'spring','summer','autumn','winter','gray','bone','copper',...
-                'pink'},'value',1);
+                'pink'},'value',1,'backgroundcolor',[1,1,1]);
         else
             handles.panel_topo_colormap_pop=uicontrol(handles.panel_topo,...
                 'style','popupmenu','String',{'parula','jet','hsv','hot','cool',...
                 'spring','summer','autumn','winter','gray','bone','copper',...
-                'pink'},'Value',1);
+                'pink'},'Value',1,'backgroundcolor',[1,1,1]);
         end
         
         set(handles.panel_topo_source_pop,'String',{'1','2','3'});
@@ -949,22 +956,22 @@ GLW_figure_openingFcn;
         handles.panel_lissajous_color_btn=uicontrol(handles.panel_lissajous,'style','pushbutton','String','color','FontWeight','bold');
         handles.panel_lissajous_color_txt=uicontrol(handles.panel_lissajous,'style','text','String','Color: ');
         handles.panel_lissajous_width_txt=uicontrol(handles.panel_lissajous,'style','text','String','Width: ');
-        handles.panel_lissajous_width_edt=uicontrol(handles.panel_lissajous,'style','edit','String','2');
+        handles.panel_lissajous_width_edt=uicontrol(handles.panel_lissajous,'style','edit','String','2','backgroundcolor',[1,1,1]);
         handles.panel_lissajous_style_txt=uicontrol(handles.panel_lissajous,'style','text','String','Line Style: ');
-        handles.panel_lissajous_style_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
+        handles.panel_lissajous_style_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'Solid','Dshed','Dotted','Dash-dotted','No Line'},'value',1);
         handles.panel_lissajous_marker_txt=uicontrol(handles.panel_lissajous,'style','text','String','Marker: ');
-        handles.panel_lissajous_marker_pop=uicontrol(handles.panel_lissajous,'style','popupmenu',...
+        handles.panel_lissajous_marker_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],...
             'String',{'No Marker','Circle','Plus sign','Asterisk','Point','Cross','Square','Cross','Diamond',...
             'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
             'Pentagram','Hexagram'},'value',1);
         
         handles.panel_lissajous_source1_txt=uicontrol(handles.panel_lissajous,'style','text','String','X Axis Data Source:');
-        handles.panel_lissajous_source1_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source1_epoch_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source1_channel_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source1_index_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source1_y_edt=uicontrol(handles.panel_lissajous,'style','edit');
-        handles.panel_lissajous_source1_z_edt=uicontrol(handles.panel_lissajous,'style','edit');
+        handles.panel_lissajous_source1_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source1_epoch_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source1_channel_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source1_index_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source1_y_edt=uicontrol(handles.panel_lissajous,'style','edit','backgroundcolor',[1,1,1]);
+        handles.panel_lissajous_source1_z_edt=uicontrol(handles.panel_lissajous,'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_lissajous_source1_epoch_txt=uicontrol(handles.panel_lissajous,'style','text','String','epoch: ');
         handles.panel_lissajous_source1_channel_txt=uicontrol(handles.panel_lissajous,'style','text','String','channel: ');
         handles.panel_lissajous_source1_index_txt=uicontrol(handles.panel_lissajous,'style','text','String','index: ');
@@ -973,12 +980,12 @@ GLW_figure_openingFcn;
         
         
         handles.panel_lissajous_source2_txt=uicontrol(handles.panel_lissajous,'style','text','String','Y Axis Data Source:');
-        handles.panel_lissajous_source2_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source2_epoch_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source2_channel_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source2_index_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','String',{'1','2','3'});
-        handles.panel_lissajous_source2_y_edt=uicontrol(handles.panel_lissajous,'style','edit');
-        handles.panel_lissajous_source2_z_edt=uicontrol(handles.panel_lissajous,'style','edit');
+        handles.panel_lissajous_source2_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source2_epoch_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source2_channel_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source2_index_pop=uicontrol(handles.panel_lissajous,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'1','2','3'});
+        handles.panel_lissajous_source2_y_edt=uicontrol(handles.panel_lissajous,'style','edit','backgroundcolor',[1,1,1]);
+        handles.panel_lissajous_source2_z_edt=uicontrol(handles.panel_lissajous,'style','edit','backgroundcolor',[1,1,1]);
         handles.panel_lissajous_source2_epoch_txt=uicontrol(handles.panel_lissajous,'style','text','String','epoch: ');
         handles.panel_lissajous_source2_channel_txt=uicontrol(handles.panel_lissajous,'style','text','String','channel: ');
         handles.panel_lissajous_source2_index_txt=uicontrol(handles.panel_lissajous,'style','text','String','index: ');
@@ -1290,7 +1297,7 @@ GLW_figure_openingFcn;
     end
     function axis_redraw()
         get_axis_default();
-        handles.ax(option.cnt_subfig)=axes(handles.fig2);
+        handles.ax(option.cnt_subfig)=axes('parent',handles.fig2);
         Set_position(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.pos);
         hold(handles.ax(option.cnt_subfig),'on');
         t=get(handles.ax(option.cnt_subfig),'title');
@@ -1310,13 +1317,18 @@ GLW_figure_openingFcn;
                 'YMinorTick',option.ax{option.cnt_subfig}.YMinorTick,...
                 'YGrid',option.ax{option.cnt_subfig}.YGrid,...
                 'YMinorGrid',option.ax{option.cnt_subfig}.YMinorGrid);
-            l=get(handles.ax(option.cnt_subfig),'xaxis');
-            set(l,'visible',option.ax{option.cnt_subfig}.xaxis_visible);
+            
+            
+            if verLessThan('matlab','8.4')
+            else
+                l=get(handles.ax(option.cnt_subfig),'xaxis');
+                set(l,'visible',option.ax{option.cnt_subfig}.xaxis_visible);
+                l=get(handles.ax(option.cnt_subfig),'yaxis');
+                set(l,'visible',option.ax{option.cnt_subfig}.yaxis_visible);
+            end
             l=get(handles.ax(option.cnt_subfig),'xlabel');
             set(l,'visible',option.ax{option.cnt_subfig}.xlabel_visible);
             set(l,'string',option.ax{option.cnt_subfig}.xlabel);
-            l=get(handles.ax(option.cnt_subfig),'yaxis');
-            set(l,'visible',option.ax{option.cnt_subfig}.yaxis_visible);
             l=get(handles.ax(option.cnt_subfig),'ylabel');
             set(l,'visible',option.ax{option.cnt_subfig}.ylabel_visible);
             set(l,'string',option.ax{option.cnt_subfig}.ylabel);
@@ -1378,7 +1390,7 @@ GLW_figure_openingFcn;
             case 'rect'
                 content_rect_redraw();
             case 'text'
-                text_redraw();
+                content_text_redraw();
             case 'image'
                 content_image_redraw();
             case 'topo'
@@ -1406,15 +1418,20 @@ GLW_figure_openingFcn;
     function content_rect_redraw()
         get_content_rect_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).rect=...
-            fill(handles.ax(option.cnt_subfig),[0,0],[1,1],[1,1,1]);
+            fill([0,0],[1,1],[1,1,1],'Parent',handles.ax(option.cnt_subfig));
         rect_update();
+    end
+    function content_text_redraw()
+        get_content_text_default(); 
+        handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=text('parent',handles.ax(option.cnt_subfig));
+        text_update();
     end
     function content_image_redraw()
         get_content_image_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).img=...
             imagesc('Parent',handles.ax(option.cnt_subfig));
         [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=...
-            contour(handles.ax(option.cnt_subfig));
+            contour(handles.ax(option.cnt_subfig),randn(2,2));
         image_update();
     end
     function content_topo_redraw()
@@ -1439,7 +1456,7 @@ GLW_figure_openingFcn;
         EarY  = [q+.0555 q+.0775 q+.0783 q+.0746 q+.0555 -.0055 -.0932 -.1313 -.1384 -.1199];
         top=1;
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D=surf('Parent',handles.ax(option.cnt_subfig),'edgecolor', 'none');
-        [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour3(handles.ax(option.cnt_subfig),'LineColor','k','visible','off');
+        [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour3(handles.ax(option.cnt_subfig),randn(2,2));
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1=plot3(handles.ax(option.cnt_subfig),xc,yc,ones(size(xc))*top, 'k', 'linewidth', 2);
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2=plot3(handles.ax(option.cnt_subfig),EarX,EarY,ones(size(EarX))*top,'color','k','LineWidth',2);
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3=plot3(handles.ax(option.cnt_subfig),-EarX,EarY,ones(size(EarY))*top,'color','k','LineWidth',2);
@@ -1520,6 +1537,11 @@ GLW_figure_openingFcn;
         opt=option_setup(opt,'content',[]);
         opt=option_setup(opt,'content_order',1);
         option.ax{option.cnt_subfig}=opt;
+        
+        if verLessThan('matlab','8.4')
+            option.ax{option.cnt_subfig}.xaxis_visible='on';
+            option.ax{option.cnt_subfig}.yaxis_visible='on';
+        end
     end
     function get_content_curve_default()
         c=[     0    0.4470    0.7410
@@ -1658,7 +1680,7 @@ GLW_figure_openingFcn;
 
     function script=get_script()
         script={};
-        script{end+1}='LW_init();';
+        script{end+1}='LW_init();option=[];';
         script=get_fig_script(script);
         for idx_s=1:length(option.ax)
             script=get_axis_script(script,idx_s);
@@ -2078,9 +2100,9 @@ GLW_figure_openingFcn;
     end
     function str=str_array2str(data)
         str='{';
-        for k=1:length(data)
-            str=[str,'''',data{k},''''];
-            if k~=length(data)
+        for k=1:size(data,1)
+            str=[str,'''',data(k,:),''''];
+            if k~=size(data,1)
                 str=[str,','];
             else
                 str=[str,'}'];
@@ -2098,7 +2120,7 @@ GLW_figure_openingFcn;
             subfig_str{k}=option.ax{k}.name;
         end
         if ~isempty(option.ax)
-            option.cnt_subfig=max(length(option.ax),1);
+            option.cnt_subfig=min(length(option.ax),max(1,option.cnt_subfig));
             set(handles.subfig_listbox,'string',subfig_str,'value',option.cnt_subfig);
             content_str=cell(length(option.ax{option.cnt_subfig}.content),1);
             for k=1:length(option.ax{option.cnt_subfig}.content)
@@ -2303,11 +2325,11 @@ GLW_figure_openingFcn;
         option.cnt_subfig=option.cnt_subfig+1;
         option.ax{option.cnt_subfig}.name=[sub_style_str,num2str(option.subfig_order)];
         option.subfig_order=option.subfig_order+1;
-        option.ax{option.cnt_subfig}.pos=pos;
         option.ax{option.cnt_subfig}.style=sub_style_str;
         get_axis_default();
         
-        handles.ax(option.cnt_subfig)=axes(handles.fig2,'position',pos);
+        handles.ax(option.cnt_subfig)=axes('parent',handles.fig2,'position',pos);
+        get_sub_pos();
         handles.ax_child{option.cnt_subfig}=[];
         handles.ax_child{option.cnt_subfig}.handle=cell(0,1);
         hold(handles.ax(option.cnt_subfig),'on');
@@ -2323,7 +2345,7 @@ GLW_figure_openingFcn;
                 get_content_image_default();
                 
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).img=imagesc('Parent',handles.ax(option.cnt_subfig));
-                [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour(handles.ax(option.cnt_subfig),'LineColor','k','visible','off');
+                [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour(handles.ax(option.cnt_subfig),randn(2,2),randn(2,2),randn(2,2),'LineColor','k','visible','off');
                 
             case 'Topograph'
                 option.cnt_content=1;
@@ -2347,7 +2369,7 @@ GLW_figure_openingFcn;
                 EarY  = [q+.0555 q+.0775 q+.0783 q+.0746 q+.0555 -.0055 -.0932 -.1313 -.1384 -.1199];
                 top=1;
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D=surf('Parent',handles.ax(option.cnt_subfig),'edgecolor', 'none');
-                [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour3(handles.ax(option.cnt_subfig),'LineColor','k','visible','off');
+                [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=contour3(handles.ax(option.cnt_subfig),randn(2,2));
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1=plot3(handles.ax(option.cnt_subfig),xc,yc,ones(size(xc))*top, 'k', 'linewidth', 2);
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2=plot3(handles.ax(option.cnt_subfig),EarX,EarY,ones(size(EarX))*top,'color','k','LineWidth',2);
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3=plot3(handles.ax(option.cnt_subfig),-EarX,EarY,ones(size(EarY))*top,'color','k','LineWidth',2);
@@ -2372,8 +2394,6 @@ GLW_figure_openingFcn;
         end
         fig1_callback();
         switch(sub_style_str)
-            case 'Curve'
-                %curve_update();
             case 'Image'
                 image_update();
             case 'Topograph'
@@ -2626,7 +2646,11 @@ GLW_figure_openingFcn;
             case 'top'
                 set (handles.xaxis_location_pop,'value',2);
             case 'origin'
-                set (handles.xaxis_location_pop,'value',3);
+                if verLessThan('matlab','8.4')
+                    set (handles.xaxis_location_pop,'value',1);
+                else
+                    set (handles.xaxis_location_pop,'value',3);
+                end
         end
         if strcmp(option.ax{option.cnt_subfig}.XMinorTick,'on')
             set(handles.xaxis_minor_tick_chk,'value',1);
@@ -2672,6 +2696,10 @@ GLW_figure_openingFcn;
             set(handles.xaxis_tick_interval_txt,'enable','off');
             set(handles.xaxis_tick_anchor_txt,'enable','off');
         end
+        
+         if verLessThan('matlab','8.4') 
+             set(handles.xaxis_hide_chx,'visible','off');
+        end
         if strcmp(option.ax{option.cnt_subfig}.XGrid,'on')
             set(handles.xaxis_grid_chk,'value',1);
         else
@@ -2714,7 +2742,11 @@ GLW_figure_openingFcn;
             case 'top'
                 set (handles.yaxis_location_pop,'value',2);
             case 'origin'
-                set (handles.yaxis_location_pop,'value',3);
+                if verLessThan('matlab','8.4')
+                    set (handles.yaxis_location_pop,'value',1);
+                else
+                    set (handles.yaxis_location_pop,'value',3);
+                end
         end
         if strcmp(option.ax{option.cnt_subfig}.YMinorTick,'on')
             set(handles.yaxis_minor_tick_chk,'value',1);
@@ -2729,6 +2761,7 @@ GLW_figure_openingFcn;
         set(handles.yaxis_tick_interval_edt,'String',num2str(option.ax{option.cnt_subfig}.yaxis_tick_interval));
         set(handles.yaxis_tick_anchor_edt,'String',num2str(option.ax{option.cnt_subfig}.yaxis_tick_anchor));
         l=get(handles.ax(option.cnt_subfig),'yaxis');
+        
         if strcmp(option.ax{option.cnt_subfig}.yaxis_visible,'on')
             set(handles.yaxis_hide_chx,'value',0);
             set(handles.yaxis_location_txt,'enable','on');
@@ -2760,6 +2793,9 @@ GLW_figure_openingFcn;
             set(handles.yaxis_tick_interval_txt,'enable','off');
             set(handles.yaxis_tick_anchor_txt,'enable','off');
         end
+        if verLessThan('matlab','8.4') 
+             set(handles.yaxis_hide_chx,'visible','off');
+        end
         if strcmp(option.ax{option.cnt_subfig}.YGrid,'on')
             set(handles.yaxis_grid_chk,'value',1);
         else
@@ -2780,6 +2816,7 @@ GLW_figure_openingFcn;
         set(handles.yaxis_label_edt,'string',option.ax{option.cnt_subfig}.ylabel);
         l=get(handles.ax(option.cnt_subfig),'ylabel');
         set(l,'string',option.ax{option.cnt_subfig}.ylabel);
+       
         if strcmp(option.ax{option.cnt_subfig}.ylabel_visible,'on')
             set(l,'visible','on');
             set(handles.yaxis_label_chk,'value',1);
@@ -2957,9 +2994,17 @@ GLW_figure_openingFcn;
         if get(handles.xaxis_tick_chk,'value')==0
             set(handles.ax(option.cnt_subfig),'XTickMode','Manual');
             option.ax{option.cnt_subfig}.XTickMode='Manual';
-            option.ax{option.cnt_subfig}.xaxis_tick_interval=str2num(get(handles.xaxis_tick_interval_edt,'string'));
-            option.ax{option.cnt_subfig}.xaxis_tick_anchor=str2num(get(handles.xaxis_tick_anchor_edt,'string'));
-            xaxis_limit_edt_callback();
+
+            interval=str2num(get(handles.xaxis_tick_interval_edt,'string'));
+            anchor=str2num(get(handles.xaxis_tick_anchor_edt,'string'));
+            if ~isempty(interval)&& isfinite(interval)&& interval>0 && ~isempty(anchor) && isfinite(anchor)
+                option.ax{option.cnt_subfig}.xaxis_tick_interval=interval;
+                option.ax{option.cnt_subfig}.xaxis_tick_anchor=anchor;
+                xaxis_limit_edt_callback();
+            else
+                set(handles.xaxis_tick_interval_edt,'string',num2str(option.ax{option.cnt_subfig}.xaxis_tick_interval));
+                set(handles.xaxis_tick_anchor_edt,'string',num2str(option.ax{option.cnt_subfig}.xaxis_tick_anchor));
+            end
             set(handles.xaxis_tick_interval_edt,'enable','on');
             set(handles.xaxis_tick_anchor_edt,'enable','on');
             set(handles.xaxis_tick_interval_txt,'enable','on');
@@ -3233,8 +3278,8 @@ GLW_figure_openingFcn;
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=line('Parent',handles.ax(option.cnt_subfig));
             case 'rect'
                 get_content_rect_default();
-                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).rect=fill(handles.ax(option.cnt_subfig),...
-                    [0,1,0],[0,1,0],[0.5,0.5,0.5]);
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).rect=fill(...
+                    [0,1,0],[0,1,0],[0.5,0.5,0.5],'Parent',handles.ax(option.cnt_subfig));
             case 'text'
                 get_content_text_default();
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=text('parent',handles.ax(option.cnt_subfig));
@@ -3941,7 +3986,7 @@ GLW_figure_openingFcn;
         c=get(handles.panel_text_text_edt,'string');
         str={};
         for k=1:size(c,1)
-            str(k)=c(k,:);
+            str(k)={c(k,:)};
         end
         option.ax{option.cnt_subfig}.content{option.cnt_content}.string=str;
         text_callback();
@@ -4186,9 +4231,9 @@ GLW_figure_openingFcn;
             'XData',x,'YData',y,'CData',z);
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar(handles.ax(option.cnt_subfig));
+            colorbar('peer',handles.ax(option.cnt_subfig));
         else
-            colorbar(handles.ax(option.cnt_subfig),'off');
+            colorbar('off','peer',handles.ax(option.cnt_subfig));
         end
         colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
         
@@ -4305,6 +4350,13 @@ GLW_figure_openingFcn;
         str=get(handles.panel_image_colormap_pop,'string');
         value=get(handles.panel_image_colormap_pop,'value');
         option.ax{option.cnt_subfig}.colormap=str{value};
+        if verLessThan('matlab','8.4')
+            for k=1:length(option.ax)
+                if ~strcmpi(option.ax{k}.style,'Curve')
+                    option.ax{k}.colormap=str{value};
+                end
+            end
+        end
         image_callback();
     end
     function image_clim_chk_callback(~,~)
@@ -4792,14 +4844,35 @@ GLW_figure_openingFcn;
         end
         
         top = double(max(a(:))*1.05);
-        if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.contour, 'on')
-            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,...
-                'XData',ay, 'YData',ax,'ZData', a,'visible','on',...
-                'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+        if verLessThan('matlab','8.4')
+            if ishandle(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour)
+                delete(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour);
+            end
+            [~,handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour]=...
+                contour3(handles.ax(option.cnt_subfig),ay,ax,a);
+            for k = 1:length(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour)
+                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour(k),...
+                    'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+            end
+            if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.contour, 'on')
+                for k = 1:length(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour)
+                    set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour(k),'visible','on');
+                end
+            else
+                for k = 1:length(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour)
+                    set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour(k),'visible','off');
+                end
+            end
         else
-            set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,...
-                'XData',ay, 'YData',ax,'ZData', a,'visible','off',...
-                'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+            if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.contour, 'on')
+                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,...
+                    'XData',ay, 'YData',ax,'ZData', a,'visible','on',...
+                    'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+            else
+                set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour,...
+                    'XData',ay, 'YData',ax,'ZData', a,'visible','off',...
+                    'edgecolor', option.ax{option.cnt_subfig}.content{option.cnt_content}.contour_edgecolor);
+            end
         end
         
         delete(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text);
@@ -4849,9 +4922,9 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_clim2_edt,'string',num2str(temp(2)));
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on') && strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar(handles.ax(option.cnt_subfig));
+            colorbar('peer',handles.ax(option.cnt_subfig));
         else
-            colorbar(handles.ax(option.cnt_subfig),'off');
+            colorbar('off','peer',handles.ax(option.cnt_subfig));
         end
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top,'visible','on');
@@ -4941,9 +5014,9 @@ GLW_figure_openingFcn;
         end
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar(handles.ax(option.cnt_subfig));
+            colorbar('peer',handles.ax(option.cnt_subfig));
         else
-            colorbar(handles.ax(option.cnt_subfig),'off');
+            colorbar('off','peer',handles.ax(option.cnt_subfig));
         end
     end
     function topo_source_pop_callback(~,~)
@@ -4978,7 +5051,7 @@ GLW_figure_openingFcn;
     function topo_source_z_edt_callback(~,~)
         temp(1)=str2double(get(handles.panel_topo_source_z1_edt,'String'));
         temp(2)=str2double(get(handles.panel_topo_source_z2_edt,'String'));
-        if ~isempty(temp) && isfinite(temp)
+        if ~isempty(temp) && isfinite(temp(1))&& isfinite(temp(2))
             if temp(1)>temp(2)
                 temp=temp([2,1]);
             end
@@ -4989,7 +5062,7 @@ GLW_figure_openingFcn;
     function topo_source_y_edt_callback(~,~)
         temp(1)=str2double(get(handles.panel_topo_source_y1_edt,'String'));
         temp(2)=str2double(get(handles.panel_topo_source_y2_edt,'String'));
-        if ~isempty(temp) && isfinite(temp)
+        if ~isempty(temp) && isfinite(temp(1))&& isfinite(temp(2))
             if temp(1)>temp(2)
                 temp=temp([2,1]);
             end
@@ -5000,7 +5073,7 @@ GLW_figure_openingFcn;
     function topo_source_x_edt_callback(~,~)
         temp(1)=str2double(get(handles.panel_topo_source_x1_edt,'String'));
         temp(2)=str2double(get(handles.panel_topo_source_x2_edt,'String'));
-        if ~isempty(temp) && isfinite(temp)
+        if ~isempty(temp) && isfinite(temp(1))&& isfinite(temp(2))
             if temp(1)>temp(2)
                 temp=temp([2,1]);
             end
@@ -5157,6 +5230,14 @@ GLW_figure_openingFcn;
         str=get(handles.panel_topo_colormap_pop,'string');
         value=get(handles.panel_topo_colormap_pop,'value');
         option.ax{option.cnt_subfig}.colormap=str{value};
+        
+        if verLessThan('matlab','8.4')
+            for k=1:length(option.ax)
+                if ~strcmpi(option.ax{k}.style,'Curve')
+                    option.ax{k}.colormap=str{value};
+                end
+            end
+        end
         topo_callback();
     end
     function topo_contour_chk_callback(~,~)
