@@ -4,7 +4,7 @@ function inputfiles_new=CLW_figure_data(inputfiles)
 %     '/Users/huanggan/Documents/MATLAB/letswave_bank/test/bl cwt butt avg ep_s4 continuous EEG LEPs S06.lw6'};
 inputfiles_new=inputfiles;
 icon=load('icon.mat');
-scrsz = get(0,'ScreenSize');
+scrsz = get(0,'MonitorPositions');
 w=min(scrsz(3),1000);
 h=min(length(inputfiles)*24+160,scrsz(4)*2/3);
 pos=[(scrsz(3)-w)/2,(scrsz(4)-h)/2,w,h];

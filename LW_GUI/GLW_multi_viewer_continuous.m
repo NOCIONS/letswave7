@@ -35,7 +35,7 @@ GLW_view_OpeningFcn;
         userdata.t=header.xstart+(0:userdata.N-1)*header.xstep;
         
         userdata.Fs=1/header.xstep;
-        temp=get(0,'Screensize');
+        temp=get(0,'MonitorPositions');
         userdata.fig_pos=[(temp(3)-1350)/2,(temp(4)-680)/2,1350,680];
         userdata.yscale_lock=1;
         userdata.is_filter=0;

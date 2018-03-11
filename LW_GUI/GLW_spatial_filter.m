@@ -22,7 +22,7 @@ uiwait(handles.fig);
             end
         end
             
-        temp=get(0,'Screensize');
+        temp=get(0,'MonitorPositions');
         userdata.fig_pos=[(temp(3)-1350)/2,(temp(4)-680)/2,1350,680];
         userdata.unmix_matrix=option.unmix_matrix;
         userdata.mix_matrix=option.mix_matrix;

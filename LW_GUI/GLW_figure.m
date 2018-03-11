@@ -69,11 +69,19 @@ GLW_figure_openingFcn;
         set(handles.fig2,'position',option.fig2_pos);
         if (option.fig2_pos(4)==650)
             fig1_pos=get(handles.fig2,'outerposition');
-            fig1_pos(1:3)=[option.fig2_pos(1)+option.fig2_pos(3)+5,100,224];
+            if ispc
+                fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)-5,224+20];
+            else
+                fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)+5,224];
+            end
             set(handles.fig1,'outerposition',fig1_pos);
             fig1_pos=get(handles.fig1,'position');
         else
-            fig1_pos=[option.fig2_pos(1)+option.fig2_pos(3)+5,100,224,623];
+            if ispc
+                fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)-5,224+5];
+            else
+                fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)+5,224];
+            end
             set(handles.fig1,'position',fig1_pos);
         end
         Set_position(handles.subfig_listbox_txt,[3,fig1_pos(4)-20,80,20]);
@@ -1484,6 +1492,7 @@ GLW_figure_openingFcn;
 %% script_function
     function get_fig_default()
         option=option_setup(option,'inputfiles',[]);
+        
         option=option_setup(option,'fig2_pos',[5,100,700,650]);
         option=option_setup(option,'ax',[]);
         option=option_setup(option,'ax_auto_position',0);

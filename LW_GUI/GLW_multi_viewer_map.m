@@ -647,8 +647,14 @@ GLW_view_OpeningFcn;
         set(handles.axes,'TickLength',[0.005 0.005]);
         set(handles.axes(1:userdata.num_cols*userdata.num_rows),'Visible','on');
         set(handles.axes(userdata.num_cols*userdata.num_rows+1:end),'Visible','off');
-        colormap(handles.fig1,userdata.color_style);
-        colormap(handles.fig2,userdata.color_style);
+        a=findall(handles.fig1,'Type','axes');
+        for k=1:length(a)
+        colormap(a(k),userdata.color_style);
+        end
+        a=findall(handles.fig2,'Type','axes');
+        for k=1:length(a)
+        colormap(a(k),userdata.color_style);
+        end
 %         for k=userdata.num_cols*userdata.num_rows+1:length(handles.axes)
 %             set(get(handles.axes(k),'Children'),'Visible','off');
 %         end
@@ -1374,7 +1380,7 @@ GLW_view_OpeningFcn;
         col_headers{9}='cmin';
         col_headers{10}='cmean';
         
-        temp=get(0,'Screensize');
+        temp=get(0,'MonitorPositions');
         pos=[(temp(3)-800)/2,(temp(4)-400)/2-50,800,400];
         h = figure('name','LW_Table','numbertitle','off','position',pos);
         set(h,'MenuBar','none');
