@@ -95,8 +95,8 @@ GLW_figure_openingFcn;
         handles.fig_pos_refresh_btn=uicontrol(handles.panel_fig,'style','pushbutton');
         handles.fig_x_txt=uicontrol(handles.panel_fig,'style','text','String','x: ');
         handles.fig_y_txt=uicontrol(handles.panel_fig,'style','text','String','y: ');
-        handles.fig_w_txt=uicontrol(handles.panel_fig,'style','text','String','width: ');
-        handles.fig_h_txt=uicontrol(handles.panel_fig,'style','text','String','height: ');
+        handles.fig_w_txt=uicontrol(handles.panel_fig,'style','text','String','w: ');
+        handles.fig_h_txt=uicontrol(handles.panel_fig,'style','text','String','h: ');
         handles.fig_x_edt=uicontrol(handles.panel_fig,'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.fig_y_edt=uicontrol(handles.panel_fig,'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.fig_w_edt=uicontrol(handles.panel_fig,'style','edit','String','200','backgroundcolor',[1,1,1]);
@@ -136,12 +136,19 @@ GLW_figure_openingFcn;
         Set_position(handles.fig_h_edt,[151,420,70,20]);
         
         Set_position(handles.fig_sub_txt,[3,380,220,20]);
-        Set_position(handles.sub_add_txt,[5,350,40,20]);
+        Set_position(handles.sub_add_txt,[5,347,40,20]);
         Set_position(handles.sub_add_pop,[45,350,180,20]);
-        Set_position(handles.sub_add,[4,300,50,40]);
-        Set_position(handles.sub_del,[59,300,50,40]);
-        Set_position(handles.sub_up,[114,300,50,40]);
-        Set_position(handles.sub_down,[169,300,50,40]);
+        if ispc
+            Set_position(handles.sub_add,[5,295,50,40]);
+            Set_position(handles.sub_del,[62,295,50,40]);
+            Set_position(handles.sub_up,[118,295,50,40]);
+            Set_position(handles.sub_down,[175,295,50,40]);
+        else
+            Set_position(handles.sub_add,[4,300,50,40]);
+            Set_position(handles.sub_del,[59,300,50,40]);
+            Set_position(handles.sub_up,[114,300,50,40]);
+            Set_position(handles.sub_down,[169,300,50,40]);
+        end
     end
     function init_panel_fig_sub()
         handles.panel_fig_sub=uipanel(handles.panel_fig,'bordertype','none','visible','off');
@@ -160,8 +167,8 @@ GLW_figure_openingFcn;
         handles.sub_update_btn=uicontrol(handles.panel_fig_sub,'style','pushbutton','String','Update');
         handles.sub_x_txt=uicontrol(handles.panel_fig_sub,'style','text','String','x: ');
         handles.sub_y_txt=uicontrol(handles.panel_fig_sub,'style','text','String','y: ');
-        handles.sub_w_txt=uicontrol(handles.panel_fig_sub,'style','text','String','width: ');
-        handles.sub_h_txt=uicontrol(handles.panel_fig_sub,'style','text','String','height: ');
+        handles.sub_w_txt=uicontrol(handles.panel_fig_sub,'style','text','String','w: ');
+        handles.sub_h_txt=uicontrol(handles.panel_fig_sub,'style','text','String','h: ');
         handles.sub_x_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.sub_y_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','1','backgroundcolor',[1,1,1]);
         handles.sub_w_edt=uicontrol(handles.panel_fig_sub,'style','edit','String','200','backgroundcolor',[1,1,1]);
@@ -180,29 +187,53 @@ GLW_figure_openingFcn;
         set(handles.sub_size_txt,'HorizontalAlignment','left');
         set(handles.sub_col_txt,'HorizontalAlignment','right');
         set(handles.sub_row_txt,'HorizontalAlignment','right');
-        
-        Set_position(handles.panel_fig_sub,[0,0,224,280]);
-        Set_position(handles.sub_title_chx,[13,250,70,20]);
-        Set_position(handles.sub_title_edt,[73,250,146,20]);
-        Set_position(handles.sub_font_txt,[13,220,146,20]);
-        Set_position(handles.sub_font_pop,[73,220,146,20]);
-        Set_position(handles.sub_size_txt,[13,190,146,20]);
-        Set_position(handles.sub_size_edt,[73,190,146,20]);
-        Set_position(handles.sub_position_txt,[13,160,146,20]);
-        Set_position(handles.sub_position_chk,[73,160,146,20]);
-        Set_position(handles.sub_x_txt,[1,130,40,20]);
-        Set_position(handles.sub_x_edt,[41,130,70,20]);
-        Set_position(handles.sub_y_txt,[111,130,40,20]);
-        Set_position(handles.sub_y_edt,[151,130,70,20]);
-        Set_position(handles.sub_w_txt,[1,100,40,20]);
-        Set_position(handles.sub_w_edt,[41,100,70,20]);
-        Set_position(handles.sub_h_txt,[111,100,40,20]);
-        Set_position(handles.sub_h_edt,[151,100,70,20]);
-        Set_position(handles.sub_col_txt,[1,70,40,20]);
-        Set_position(handles.sub_col_edt,[41,70,70,20]);
-        Set_position(handles.sub_row_txt,[111,70,40,20]);
-        Set_position(handles.sub_row_edt,[151,70,70,20]);
-        Set_position(handles.sub_update_btn,[13,30,208,30]);
+        if ispc
+            Set_position(handles.panel_fig_sub,[0,0,224,280]);
+            Set_position(handles.sub_title_chx,[5,250,70,20]);
+            Set_position(handles.sub_title_edt,[75,250,150,20]);
+            Set_position(handles.sub_font_txt,[5,220,146,20]);
+            Set_position(handles.sub_font_pop,[75,220,150,20]);
+            Set_position(handles.sub_size_txt,[5,185,146,20]);
+            Set_position(handles.sub_size_edt,[75,185,150,20]);
+            Set_position(handles.sub_position_txt,[5,155,146,20]);
+            Set_position(handles.sub_position_chk,[75,155,150,20]);
+            Set_position(handles.sub_x_txt,[1,125,40,20]);
+            Set_position(handles.sub_x_edt,[41,125,70,20]);
+            Set_position(handles.sub_y_txt,[111,125,40,20]);
+            Set_position(handles.sub_y_edt,[151,125,70,20]);
+            Set_position(handles.sub_w_txt,[1,95,40,20]);
+            Set_position(handles.sub_w_edt,[41,95,70,20]);
+            Set_position(handles.sub_h_txt,[111,95,40,20]);
+            Set_position(handles.sub_h_edt,[151,95,70,20]);
+            Set_position(handles.sub_col_txt,[1,65,40,20]);
+            Set_position(handles.sub_col_edt,[41,65,70,20]);
+            Set_position(handles.sub_row_txt,[111,65,40,20]);
+            Set_position(handles.sub_row_edt,[151,65,70,20]);
+            Set_position(handles.sub_update_btn,[5,25,220,30]);
+        else
+            Set_position(handles.panel_fig_sub,[0,0,224,280]);
+            Set_position(handles.sub_title_chx,[5,250,70,20]);
+            Set_position(handles.sub_title_edt,[73,250,146,20]);
+            Set_position(handles.sub_font_txt,[5,220,146,20]);
+            Set_position(handles.sub_font_pop,[73,220,146,20]);
+            Set_position(handles.sub_size_txt,[5,190,146,20]);
+            Set_position(handles.sub_size_edt,[73,190,146,20]);
+            Set_position(handles.sub_position_txt,[5,160,146,20]);
+            Set_position(handles.sub_position_chk,[73,160,146,20]);
+            Set_position(handles.sub_x_txt,[1,130,40,20]);
+            Set_position(handles.sub_x_edt,[41,130,70,20]);
+            Set_position(handles.sub_y_txt,[111,130,40,20]);
+            Set_position(handles.sub_y_edt,[151,130,70,20]);
+            Set_position(handles.sub_w_txt,[1,100,40,20]);
+            Set_position(handles.sub_w_edt,[41,100,70,20]);
+            Set_position(handles.sub_h_txt,[111,100,40,20]);
+            Set_position(handles.sub_h_edt,[151,100,70,20]);
+            Set_position(handles.sub_col_txt,[1,70,40,20]);
+            Set_position(handles.sub_col_edt,[41,70,70,20]);
+            Set_position(handles.sub_row_txt,[111,70,40,20]);
+            Set_position(handles.sub_row_edt,[151,70,70,20]);
+            Set_position(handles.sub_update_btn,[5,30,220,30]);
+        end
     end
     function init_panel_axis()
         handles.panel_axis=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -213,7 +244,7 @@ GLW_figure_openingFcn;
         handles.axis_legend_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.xaxis_txt=uicontrol(handles.panel_axis,'style','text','String','X axis:');
-        handles.xaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','x-limit:');
+        handles.xaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','x-lim:');
         handles.xaxis_limit1_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.xaxis_limit2_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.xaxis_location_txt=uicontrol(handles.panel_axis,'style','text','string','Location:');
@@ -231,7 +262,7 @@ GLW_figure_openingFcn;
         handles.xaxis_label_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         
         handles.yaxis_txt=uicontrol(handles.panel_axis,'style','text','String','Y axis:');
-        handles.yaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','y-limit:');
+        handles.yaxis_limit_chk=uicontrol(handles.panel_axis,'style','checkbox','string','y-lim:');
         handles.yaxis_limit1_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_limit2_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_location_txt=uicontrol(handles.panel_axis,'style','text','string','Location:');
@@ -249,9 +280,9 @@ GLW_figure_openingFcn;
         handles.yaxis_label_edt=uicontrol(handles.panel_axis,'style','edit','backgroundcolor',[1,1,1]);
         handles.yaxis_reverse_chk=uicontrol(handles.panel_axis,'style','checkbox','string','reverse');
         
-        if verLessThan('matlab','8.4') 
-             set(handles.xaxis_location_pop,'string',{'bottom','top'});
-             set(handles.yaxis_location_pop,'string',{'left','right'});
+        if verLessThan('matlab','8.4')
+            set(handles.xaxis_location_pop,'string',{'bottom','top'});
+            set(handles.yaxis_location_pop,'string',{'left','right'});
         end
         set(handles.xaxis_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.xaxis_location_txt,'HorizontalAlignment','left');
@@ -273,15 +304,25 @@ GLW_figure_openingFcn;
         Set_position(handles.xaxis_limit_chk,       [5,400,55,20]);
         Set_position(handles.xaxis_limit1_edt,      [60,400,75,20]);
         Set_position(handles.xaxis_limit2_edt,      [145,400,75,20]);
-        Set_position(handles.xaxis_location_txt,    [5,370,50,20]);
-        Set_position(handles.xaxis_location_pop,    [55,370,120,20]);
+        if ispc
+            Set_position(handles.xaxis_location_txt,    [5,367,60,20]);
+            Set_position(handles.xaxis_location_pop,    [65,370,100,20]);
+        else
+            Set_position(handles.xaxis_location_txt,    [5,367,50,20]);
+            Set_position(handles.xaxis_location_pop,    [55,370,120,20]);
+        end
         Set_position(handles.xaxis_hide_chx,        [175,370,50,20]);
         Set_position(handles.xaxis_tick_chk,        [5,340,90,20]);
         Set_position(handles.xaxis_minor_tick_chk,  [110,340,80,20]);
         Set_position(handles.xaxis_tick_interval_txt,[5,310,90,20]);
-        Set_position(handles.xaxis_tick_interval_edt,[45,310,60,20]);
         Set_position(handles.xaxis_tick_anchor_txt, [120,310,90,20]);
-        Set_position(handles.xaxis_tick_anchor_edt, [160,310,60,20]);
+        if ispc
+            Set_position(handles.xaxis_tick_interval_edt,[50,310,60,20]);
+            Set_position(handles.xaxis_tick_anchor_edt, [165,310,60,20]);
+        else
+            Set_position(handles.xaxis_tick_interval_edt,[45,310,60,20]);
+            Set_position(handles.xaxis_tick_anchor_edt, [160,310,60,20]);
+        end
         Set_position(handles.xaxis_grid_chk,        [5,280,80,20]);
         Set_position(handles.xaxis_minor_grid_chk,  [100,280,80,20]);
         Set_position(handles.xaxis_label_chk,       [5,250,55,20]);
@@ -291,15 +332,27 @@ GLW_figure_openingFcn;
         Set_position(handles.yaxis_limit_chk,       [5,170,55,20]);
         Set_position(handles.yaxis_limit1_edt,      [60,170,75,20]);
         Set_position(handles.yaxis_limit2_edt,      [145,170,75,20]);
-        Set_position(handles.yaxis_location_txt,    [5,140,50,20]);
-        Set_position(handles.yaxis_location_pop,    [55,140,120,20]);
+        
+        if ispc
+            Set_position(handles.yaxis_location_txt,    [5,137,60,20]);
+            Set_position(handles.yaxis_location_pop,    [65,140,100,20]);
+        else
+            Set_position(handles.yaxis_location_txt,    [5,137,50,20]);
+            Set_position(handles.yaxis_location_pop,    [55,140,120,20]);
+        end
         Set_position(handles.yaxis_hide_chx,        [175,140,50,20]);
         Set_position(handles.yaxis_tick_chk,        [5,110,90,20]);
         Set_position(handles.yaxis_minor_tick_chk,  [110,110,80,20]);
         Set_position(handles.yaxis_tick_interval_txt,[5,80,90,20]);
-        Set_position(handles.yaxis_tick_interval_edt,[45,80,60,20]);
         Set_position(handles.yaxis_tick_anchor_txt, [120,80,90,20]);
-        Set_position(handles.yaxis_tick_anchor_edt, [160,80,60,20]);
+        
+        if ispc
+            Set_position(handles.yaxis_tick_interval_edt,[50,80,60,20]);
+            Set_position(handles.yaxis_tick_anchor_edt, [165,80,60,20]);
+        else
+            Set_position(handles.yaxis_tick_interval_edt,[45,80,60,20]);
+            Set_position(handles.yaxis_tick_anchor_edt, [160,80,60,20]);
+        end
         Set_position(handles.yaxis_grid_chk,        [5,50,60,20]);
         Set_position(handles.yaxis_minor_grid_chk,  [70,50,90,20]);
         Set_position(handles.yaxis_reverse_chk,     [160,50,60,20]);
@@ -319,15 +372,25 @@ GLW_figure_openingFcn;
         set(handles.content_del,'CData',icon.icon_dataset_del,'TooltipString','remove');
         set(handles.content_up,'CData',icon.icon_dataset_up,'TooltipString','up');
         set(handles.content_down,'CData',icon.icon_dataset_down,'TooltipString','down');
-        set(handles.content_add_txt,'HorizontalAlignment','right');
+        set(handles.content_add_txt,'HorizontalAlignment','left');
         
-        Set_position(handles.panel_content_manager,     [0,450,224,70]);
-        Set_position(handles.content_add_txt,           [5,44,70,20]);
-        Set_position(handles.content_add_pop,           [75,44,149,20]);
-        Set_position(handles.content_add,               [4,1,50,40]);
-        Set_position(handles.content_del,               [59,1,50,40]);
-        Set_position(handles.content_up,                [114,1,50,40]);
-        Set_position(handles.content_down,              [169,1,50,40]);
+        if ispc
+            Set_position(handles.panel_content_manager,     [0,440,224,80]);
+            Set_position(handles.content_add_txt,           [5,47,90,20]);
+            Set_position(handles.content_add_pop,           [95,52,129,20]);
+            Set_position(handles.content_add,               [5,1,50,40]);
+            Set_position(handles.content_del,               [62,1,50,40]);
+            Set_position(handles.content_up,                [118,1,50,40]);
+            Set_position(handles.content_down,              [175,1,50,40]);
+        else
+            Set_position(handles.panel_content_manager,     [0,450,224,70]);
+            Set_position(handles.content_add_txt,           [5,44,70,20]);
+            Set_position(handles.content_add_pop,           [75,44,149,20]);
+            Set_position(handles.content_add,               [4,1,50,40]);
+            Set_position(handles.content_del,               [59,1,50,40]);
+            Set_position(handles.content_up,                [114,1,50,40]);
+            Set_position(handles.content_down,              [169,1,50,40]);
+        end
     end
     function init_panel_curve()
         handles.panel_curve=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -372,29 +435,54 @@ GLW_figure_openingFcn;
         set(handles.panel_curve_source_y_txt,'HorizontalAlignment','left');
         set(handles.panel_curve_source_z_txt,'HorizontalAlignment','left');
         
-        Set_position(handles.panel_curve,[0,0,224,450]);
-        Set_position(handles.panel_curve_config_txt,[13,400,55,20]);
-        Set_position(handles.panel_curve_color_txt,[13,370,55,20]);
-        Set_position(handles.panel_curve_color_btn,[70,370,110,30]);
-        Set_position(handles.panel_curve_width_txt,[13,340,55,20]);
-        Set_position(handles.panel_curve_width_edt,[70,340,110,20]);
-        Set_position(handles.panel_curve_style_txt,[13,310,80,20]);
-        Set_position(handles.panel_curve_style_pop,[70,310,110,20]);
-        Set_position(handles.panel_curve_marker_txt,[13,280,80,20]);
-        Set_position(handles.panel_curve_marker_pop,[70,280,110,20]);
-        
-        Set_position(handles.panel_curve_source_txt,[13,220,150,20]);
-        Set_position(handles.panel_curve_source_pop,[5,200,220,20]);
-        Set_position(handles.panel_curve_source_epoch_txt,[13,170,50,20]);
-        Set_position(handles.panel_curve_source_epoch_pop,[70,170,110,20]);
-        Set_position(handles.panel_curve_source_channel_txt,[13,140,50,20]);
-        Set_position(handles.panel_curve_source_channel_pop,[70,140,110,20]);
-        Set_position(handles.panel_curve_source_index_txt,[13,110,50,20]);
-        Set_position(handles.panel_curve_source_index_pop,[70,110,110,20]);
-        Set_position(handles.panel_curve_source_y_txt,[13,80,30,20]);
-        Set_position(handles.panel_curve_source_y_edt,[70,80,110,20]);
-        Set_position(handles.panel_curve_source_z_txt,[13,50,30,20]);
-        Set_position(handles.panel_curve_source_z_edt,[70,50,110,20]);
+        Set_position(handles.panel_curve,[0,0,224,440]);
+        if ispc
+            Set_position(handles.panel_curve_config_txt,[5,400,80,20]);
+            Set_position(handles.panel_curve_color_txt,[5,370,75,20]);
+            Set_position(handles.panel_curve_color_btn,[80,370,145,30]);
+            Set_position(handles.panel_curve_width_txt,[5,338,75,20]);
+            Set_position(handles.panel_curve_width_edt,[80,340,145,25]);
+            Set_position(handles.panel_curve_style_txt,[5,305,75,20]);
+            Set_position(handles.panel_curve_style_pop,[80,310,145,25]);
+            Set_position(handles.panel_curve_marker_txt,[5,277,75,20]);
+            Set_position(handles.panel_curve_marker_pop,[80,280,145,25]);
+            
+            Set_position(handles.panel_curve_source_txt,[5,220,150,20]);
+            Set_position(handles.panel_curve_source_pop,[5,200,220,20]);
+            Set_position(handles.panel_curve_source_epoch_txt,[5,165,75,20]);
+            Set_position(handles.panel_curve_source_epoch_pop,[80,167,145,20]);
+            Set_position(handles.panel_curve_source_channel_txt,[5,135,75,20]);
+            Set_position(handles.panel_curve_source_channel_pop,[80,137,145,20]);
+            Set_position(handles.panel_curve_source_index_txt,[5,105,75,20]);
+            Set_position(handles.panel_curve_source_index_pop,[80,107,145,20]);
+            Set_position(handles.panel_curve_source_y_txt,[5,73,75,20]);
+            Set_position(handles.panel_curve_source_y_edt,[80,70,145,25]);
+            Set_position(handles.panel_curve_source_z_txt,[5,40,75,20]);
+            Set_position(handles.panel_curve_source_z_edt,[80,42,145,25]);
+        else
+            Set_position(handles.panel_curve_config_txt,[5,400,80,20]);
+            Set_position(handles.panel_curve_color_txt,[5,370,80,20]);
+            Set_position(handles.panel_curve_color_btn,[85,370,130,30]);
+            Set_position(handles.panel_curve_width_txt,[5,337,80,20]);
+            Set_position(handles.panel_curve_width_edt,[85,340,130,20]);
+            Set_position(handles.panel_curve_style_txt,[5,305,80,20]);
+            Set_position(handles.panel_curve_style_pop,[85,310,130,20]);
+            Set_position(handles.panel_curve_marker_txt,[5,277,80,20]);
+            Set_position(handles.panel_curve_marker_pop,[85,280,130,20]);
+            
+            Set_position(handles.panel_curve_source_txt,[5,220,150,20]);
+            Set_position(handles.panel_curve_source_pop,[5,200,220,20]);
+            Set_position(handles.panel_curve_source_epoch_txt,[5,170,50,20]);
+            Set_position(handles.panel_curve_source_epoch_pop,[70,170,110,20]);
+            Set_position(handles.panel_curve_source_channel_txt,[5,140,50,20]);
+            Set_position(handles.panel_curve_source_channel_pop,[70,140,110,20]);
+            Set_position(handles.panel_curve_source_index_txt,[5,110,50,20]);
+            Set_position(handles.panel_curve_source_index_pop,[70,110,110,20]);
+            Set_position(handles.panel_curve_source_y_txt,[5,80,30,20]);
+            Set_position(handles.panel_curve_source_y_edt,[70,80,110,20]);
+            Set_position(handles.panel_curve_source_z_txt,[5,50,30,20]);
+            Set_position(handles.panel_curve_source_z_edt,[70,50,110,20]);
+        end
     end
     function init_panel_line()
         handles.panel_line=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -440,8 +528,6 @@ GLW_figure_openingFcn;
             'Upward-pointing triangle','Downward-pointing triangle','Right-pointing triangle','Right-pointing triangle',...
             'Pentagram','Hexagram'},'value',1);
         
-        
-        
         set(handles.panel_line_config_txt,'HorizontalAlignment','left','fontweight','bold');
         set(handles.panel_line_color_txt,'HorizontalAlignment','left');
         set(handles.panel_line_width_txt,'HorizontalAlignment','left');
@@ -455,28 +541,52 @@ GLW_figure_openingFcn;
         set(handles.panel_line_y1_txt,'HorizontalAlignment','left');
         set(handles.panel_line_y2_txt,'HorizontalAlignment','left');
         
-        Set_position(handles.panel_line,[0,0,224,450]);
-        Set_position(handles.panel_line_config_txt,[13,400,55,20]);
-        Set_position(handles.panel_line_color_txt,[13,370,55,20]);
-        Set_position(handles.panel_line_color_btn,[70,370,110,30]);
-        Set_position(handles.panel_line_width_txt,[13,340,55,20]);
-        Set_position(handles.panel_line_width_edt,[70,340,110,20]);
-        Set_position(handles.panel_line_style_txt,[13,310,80,20]);
-        Set_position(handles.panel_line_style_pop,[70,310,110,20]);
-        Set_position(handles.panel_line_marker_txt,[13,280,80,20]);
-        Set_position(handles.panel_line_marker_pop,[70,280,110,20]);
-        
-        Set_position(handles.panel_line_from_txt,[13,245,110,20]);
-        Set_position(handles.panel_line_x1_txt,[13,220,20,20]);
-        Set_position(handles.panel_line_x1_edt,[35,220,80,20]);
-        Set_position(handles.panel_line_y1_txt,[120,220,20,20]);
-        Set_position(handles.panel_line_y1_edt,[140,220,80,20]);
-        
-        Set_position(handles.panel_line_to_txt,[13,185,110,20]);
-        Set_position(handles.panel_line_x2_txt,[13,160,20,20]);
-        Set_position(handles.panel_line_x2_edt,[35,160,80,20]);
-        Set_position(handles.panel_line_y2_txt,[120,160,20,20]);
-        Set_position(handles.panel_line_y2_edt,[140,160,80,20]);
+        Set_position(handles.panel_line,[0,0,224,440]);
+        if ispc
+            Set_position(handles.panel_line_config_txt,[5,400,55,20]);
+            Set_position(handles.panel_line_color_txt,[5,370,75,20]);
+            Set_position(handles.panel_line_color_btn,[80,370,145,30]);
+            Set_position(handles.panel_line_width_txt,[5,335,75,20]);
+            Set_position(handles.panel_line_width_edt,[80,335,145,25]);
+            Set_position(handles.panel_line_style_txt,[5,305,75,20]);
+            Set_position(handles.panel_line_style_pop,[80,310,145,20]);
+            Set_position(handles.panel_line_marker_txt,[5,275,75,20]);
+            Set_position(handles.panel_line_marker_pop,[80,280,145,20]);
+            
+            Set_position(handles.panel_line_from_txt,[5,245,110,20]);
+            Set_position(handles.panel_line_x1_txt,[13,220,20,20]);
+            Set_position(handles.panel_line_x1_edt,[35,220,80,20]);
+            Set_position(handles.panel_line_y1_txt,[125,220,20,20]);
+            Set_position(handles.panel_line_y1_edt,[145,220,80,20]);
+            
+            Set_position(handles.panel_line_to_txt,[5,185,110,20]);
+            Set_position(handles.panel_line_x2_txt,[13,160,20,20]);
+            Set_position(handles.panel_line_x2_edt,[35,160,80,20]);
+            Set_position(handles.panel_line_y2_txt,[125,160,20,20]);
+            Set_position(handles.panel_line_y2_edt,[145,160,80,20]);
+        else
+            Set_position(handles.panel_line_config_txt,[13,400,55,20]);
+            Set_position(handles.panel_line_color_txt,[13,370,55,20]);
+            Set_position(handles.panel_line_color_btn,[70,370,110,30]);
+            Set_position(handles.panel_line_width_txt,[13,340,55,20]);
+            Set_position(handles.panel_line_width_edt,[70,340,110,20]);
+            Set_position(handles.panel_line_style_txt,[13,310,80,20]);
+            Set_position(handles.panel_line_style_pop,[70,310,110,20]);
+            Set_position(handles.panel_line_marker_txt,[13,280,80,20]);
+            Set_position(handles.panel_line_marker_pop,[70,280,110,20]);
+            
+            Set_position(handles.panel_line_from_txt,[13,245,110,20]);
+            Set_position(handles.panel_line_x1_txt,[13,220,20,20]);
+            Set_position(handles.panel_line_x1_edt,[35,220,80,20]);
+            Set_position(handles.panel_line_y1_txt,[125,220,20,20]);
+            Set_position(handles.panel_line_y1_edt,[145,220,80,20]);
+            Set_position(handles.panel_line_to_txt,[5,185,110,20]);
+            Set_position(handles.panel_line_x2_txt,[13,160,20,20]);
+            Set_position(handles.panel_line_x2_edt,[35,160,80,20]);
+            Set_position(handles.panel_line_y2_txt,[120,160,20,20]);
+            Set_position(handles.panel_line_y2_edt,[140,160,80,20]);
+            
+        end
     end
     function init_panel_rect()
         handles.panel_rect=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -502,9 +612,9 @@ GLW_figure_openingFcn;
         handles.panel_rect_y_txt=uicontrol(handles.panel_rect,...
             'style','text','String','y: ');
         handles.panel_rect_w_txt=uicontrol(handles.panel_rect,...
-            'style','text','String','width: ');
+            'style','text','String','w: ');
         handles.panel_rect_h_txt=uicontrol(handles.panel_rect,...
-            'style','text','String','height: ');
+            'style','text','String','h: ');
         
         handles.panel_rect_x_edt=uicontrol(handles.panel_rect,...
             'style','edit','backgroundcolor',[1,1,1]);
@@ -540,30 +650,53 @@ GLW_figure_openingFcn;
         set(handles.panel_rect_y_txt,'HorizontalAlignment','right');
         set(handles.panel_rect_w_txt,'HorizontalAlignment','right');
         set(handles.panel_rect_h_txt,'HorizontalAlignment','right');
-        
-        Set_position(handles.panel_rect,[0,0,224,450]);
-        Set_position(handles.panel_rect_config_txt,[13,400,55,20]);
-        
-        Set_position(handles.panel_rect_facecolor_txt,[13,370,55,20]);
-        Set_position(handles.panel_rect_facecolor_btn,[70,370,110,30]);
-        Set_position(handles.panel_rect_facealpha_txt,[13,340,80,20]);
-        Set_position(handles.panel_rect_facealpha_edt,[70,340,110,20]);
-        Set_position(handles.panel_rect_edgecolor_txt,[13,300,55,20]);
-        Set_position(handles.panel_rect_edgecolor_btn,[70,300,110,30]);
-        Set_position(handles.panel_rect_edgealpha_txt,[13,270,80,20]);
-        Set_position(handles.panel_rect_edgealpha_edt,[70,270,110,20]);
-        Set_position(handles.panel_rect_width_txt,[13,240,55,20]);
-        Set_position(handles.panel_rect_width_edt,[70,240,110,20]);
-        
-        Set_position(handles.panel_rect_pos_txt,[13,205,110,20]);
-        Set_position(handles.panel_rect_x_txt,[3,175,40,20]);
-        Set_position(handles.panel_rect_x_edt,[45,175,60,20]);
-        Set_position(handles.panel_rect_y_txt,[110,175,45,20]);
-        Set_position(handles.panel_rect_y_edt,[160,175,60,20]);
-        Set_position(handles.panel_rect_w_txt,[3,150,40,20]);
-        Set_position(handles.panel_rect_w_edt,[45,150,60,20]);
-        Set_position(handles.panel_rect_h_txt,[110,150,45,20]);
-        Set_position(handles.panel_rect_h_edt,[160,150,60,20]);
+        if ispc
+            Set_position(handles.panel_rect,[0,0,224,440]);
+            Set_position(handles.panel_rect_config_txt,[5,400,80,20]);
+            Set_position(handles.panel_rect_facecolor_txt,[5,370,85,20]);
+            Set_position(handles.panel_rect_facecolor_btn,[95,370,130,30]);
+            Set_position(handles.panel_rect_facealpha_txt,[5,340,90,20]);
+            Set_position(handles.panel_rect_facealpha_edt,[95,337,130,25]);
+            Set_position(handles.panel_rect_edgecolor_txt,[5,305,80,20]);
+            Set_position(handles.panel_rect_edgecolor_btn,[95,300,130,30]);
+            Set_position(handles.panel_rect_edgealpha_txt,[5,270,90,20]);
+            Set_position(handles.panel_rect_edgealpha_edt,[95,270,130,25]);
+            Set_position(handles.panel_rect_width_txt,[5,240,80,20]);
+            Set_position(handles.panel_rect_width_edt,[95,240,130,25]);
+            
+            Set_position(handles.panel_rect_pos_txt,[5,205,110,20]);
+            Set_position(handles.panel_rect_x_txt,[3,175,40,20]);
+            Set_position(handles.panel_rect_x_edt,[45,175,65,20]);
+            Set_position(handles.panel_rect_y_txt,[110,175,45,20]);
+            Set_position(handles.panel_rect_y_edt,[160,175,65,20]);
+            Set_position(handles.panel_rect_w_txt,[3,150,40,20]);
+            Set_position(handles.panel_rect_w_edt,[45,150,65,20]);
+            Set_position(handles.panel_rect_h_txt,[110,150,45,20]);
+            Set_position(handles.panel_rect_h_edt,[160,150,65,20]);
+        else
+            Set_position(handles.panel_rect,[0,0,224,440]);
+            Set_position(handles.panel_rect_config_txt,[5,400,80,20]);
+            Set_position(handles.panel_rect_facecolor_txt,[5,370,85,20]);
+            Set_position(handles.panel_rect_facecolor_btn,[90,370,135,30]);
+            Set_position(handles.panel_rect_facealpha_txt,[5,340,90,20]);
+            Set_position(handles.panel_rect_facealpha_edt,[90,340,135,25]);
+            Set_position(handles.panel_rect_edgecolor_txt,[5,300,80,20]);
+            Set_position(handles.panel_rect_edgecolor_btn,[90,300,135,30]);
+            Set_position(handles.panel_rect_edgealpha_txt,[5,270,90,20]);
+            Set_position(handles.panel_rect_edgealpha_edt,[90,270,135,25]);
+            Set_position(handles.panel_rect_width_txt,[5,240,80,20]);
+            Set_position(handles.panel_rect_width_edt,[90,240,1352523]);
+            
+            Set_position(handles.panel_rect_pos_txt,[13,205,110,20]);
+            Set_position(handles.panel_rect_x_txt,[3,175,40,20]);
+            Set_position(handles.panel_rect_x_edt,[45,175,60,20]);
+            Set_position(handles.panel_rect_y_txt,[110,175,45,20]);
+            Set_position(handles.panel_rect_y_edt,[160,175,60,20]);
+            Set_position(handles.panel_rect_w_txt,[3,150,40,20]);
+            Set_position(handles.panel_rect_w_edt,[45,150,60,20]);
+            Set_position(handles.panel_rect_h_txt,[110,150,45,20]);
+            Set_position(handles.panel_rect_h_edt,[160,150,60,20]);
+        end
     end
     function init_panel_text()
         handles.panel_text=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -622,22 +755,41 @@ GLW_figure_openingFcn;
         set(handles.panel_text_x_txt,'HorizontalAlignment','left');
         set(handles.panel_text_y_txt,'HorizontalAlignment','left');
         
-        Set_position(handles.panel_text,[0,0,224,450]);
-        Set_position(handles.panel_text_config_txt,[13,400,55,20]);
-        Set_position(handles.panel_text_text_txt,[13,380,30,20]);
-        Set_position(handles.panel_text_text_edt,[13,270,210,110]);
-        Set_position(handles.panel_text_x_txt,[13,240,55,20]);
-        Set_position(handles.panel_text_x_edt,[70,240,110,20]);
-        Set_position(handles.panel_text_y_txt,[13,210,55,20]);
-        Set_position(handles.panel_text_y_edt,[70,210,110,20]);
-        Set_position(handles.panel_text_color_txt,[13,170,55,20]);
-        Set_position(handles.panel_text_color_btn,[70,170,110,30]);
-        Set_position(handles.panel_text_font_txt,[13,140,55,20]);
-        Set_position(handles.panel_text_font_pop,[70,140,110,20]);
-        Set_position(handles.panel_text_size_txt,[13,110,55,20]);
-        Set_position(handles.panel_text_size_edt,[70,110,110,20]);
-        Set_position(handles.panel_text_bold_chk,[13,80,50,20]);
-        Set_position(handles.panel_text_italic_chk,[110,80,50,20]);
+        if ispc
+            Set_position(handles.panel_text,[0,0,224,440]);
+            Set_position(handles.panel_text_config_txt,[5,400,55,20]);
+            Set_position(handles.panel_text_text_txt,[5,380,30,20]);
+            Set_position(handles.panel_text_text_edt,[5,270,220,110]);
+            Set_position(handles.panel_text_x_txt,[5,240,65,20]);
+            Set_position(handles.panel_text_x_edt,[70,240,155,23]);
+            Set_position(handles.panel_text_y_txt,[5,210,55,20]);
+            Set_position(handles.panel_text_y_edt,[70,210,155,23]);
+            Set_position(handles.panel_text_color_txt,[5,170,55,20]);
+            Set_position(handles.panel_text_color_btn,[70,170,155,30]);
+            Set_position(handles.panel_text_font_txt,[5,140,55,20]);
+            Set_position(handles.panel_text_font_pop,[70,140,155,20]);
+            Set_position(handles.panel_text_size_txt,[5,105,55,20]);
+            Set_position(handles.panel_text_size_edt,[70,105,155,23]);
+            Set_position(handles.panel_text_bold_chk,[5,75,50,20]);
+            Set_position(handles.panel_text_italic_chk,[110,75,50,20]);
+        else
+            Set_position(handles.panel_text,[0,0,224,440]);
+            Set_position(handles.panel_text_config_txt,[13,400,55,20]);
+            Set_position(handles.panel_text_text_txt,[13,380,30,20]);
+            Set_position(handles.panel_text_text_edt,[13,270,210,110]);
+            Set_position(handles.panel_text_x_txt,[13,240,55,20]);
+            Set_position(handles.panel_text_x_edt,[70,240,110,20]);
+            Set_position(handles.panel_text_y_txt,[13,210,55,20]);
+            Set_position(handles.panel_text_y_edt,[70,210,110,20]);
+            Set_position(handles.panel_text_color_txt,[13,170,55,20]);
+            Set_position(handles.panel_text_color_btn,[70,170,110,30]);
+            Set_position(handles.panel_text_font_txt,[13,140,55,20]);
+            Set_position(handles.panel_text_font_pop,[70,140,110,20]);
+            Set_position(handles.panel_text_size_txt,[13,110,55,20]);
+            Set_position(handles.panel_text_size_edt,[70,110,110,20]);
+            Set_position(handles.panel_text_bold_chk,[13,80,50,20]);
+            Set_position(handles.panel_text_italic_chk,[110,80,50,20]);
+        end
     end
     function init_panel_image()
         handles.panel_image=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -752,45 +904,86 @@ GLW_figure_openingFcn;
         set(handles.panel_image_contour_end_txt,'HorizontalAlignment','right');
         set(handles.panel_image_contour_step_txt,'HorizontalAlignment','left');
         
-        
-        Set_position(handles.panel_image,[0,0,224,450]);
-        Set_position(handles.panel_image_source_txt,        [5,425,55,20]);
-        Set_position(handles.panel_image_source_pop,        [3,405,220,20]);
-        Set_position(handles.panel_image_source_epoch_txt,  [13,375,55,20]);
-        Set_position(handles.panel_image_source_epoch_pop,  [70,375,110,20]);
-        Set_position(handles.panel_image_source_channel_txt,[13,345,55,20]);
-        Set_position(handles.panel_image_source_channel_pop,[70,345,110,20]);
-        Set_position(handles.panel_image_source_index_txt,  [13,315,55,20]);
-        Set_position(handles.panel_image_source_index_pop,  [70,315,110,20]);
-        Set_position(handles.panel_image_source_z_txt,      [13,285,55,20]);
-        Set_position(handles.panel_image_source_z_edt,      [70,285,110,20]);
-        
-        Set_position(handles.panel_image_color_txt,         [5,255,50,20]);
-        Set_position(handles.panel_image_colorbar_chk,      [60,255,100,20]);
-        Set_position(handles.panel_image_colormap_txt,      [5,235,50,20]);
-        Set_position(handles.panel_image_colormap_pop,      [60,235,110,20]);
-        Set_position(handles.panel_image_clim_chk,          [2,205,58,20]);
-        Set_position(handles.panel_image_clim1_edt,        [60,205,70,20]);
-        Set_position(handles.panel_image_clim3_txt,        [135,205,10,20]);
-        Set_position(handles.panel_image_clim2_edt,        [150,205,70,20]);
-        
-        Set_position(handles.panel_image_contour_txt,      [5,175,55,20]);
-        Set_position(handles.panel_image_contour_chk,      [60,175,110,20]);
-        Set_position(handles.panel_image_contour_color_txt,[13,150,45,20]);
-        Set_position(handles.panel_image_contour_color_btn,[60,150,110,30]);
-        Set_position(handles.panel_image_contour_width_txt,[13,120,45,20]);
-        Set_position(handles.panel_image_contour_width_edt,[60,120,110,20]);
-        Set_position(handles.panel_image_contour_style_txt,[13,90,45,20]);
-        Set_position(handles.panel_image_contour_style_pop,[60,90,110,20]);
-        
-        Set_position(handles.panel_image_contour_level_txt,[13,60,45,20]);
-        Set_position(handles.panel_image_contour_level_chk,[60,60,110,20]);
-        Set_position(handles.panel_image_contour_start_txt,[13,32,35,20]);
-        Set_position(handles.panel_image_contour_start_edt,[45,32,70,20]);
-        Set_position(handles.panel_image_contour_end_txt,  [115,32,35,20]);
-        Set_position(handles.panel_image_contour_end_edt,  [150,32,70,20]);
-        Set_position(handles.panel_image_contour_step_txt, [13,5,35,20]);
-        Set_position(handles.panel_image_contour_step_edt, [45,5,70,20]);
+        if ispc
+            Set_position(handles.panel_image,[0,0,224,440]);
+            Set_position(handles.panel_image_source_txt,        [5,410,55,20]);
+            Set_position(handles.panel_image_source_pop,        [5,390,220,20]);
+            
+            Set_position(handles.panel_image_source_epoch_txt,  [5,357,54,20]);
+            Set_position(handles.panel_image_source_epoch_pop,  [60,360,60,20]);
+            Set_position(handles.panel_image_source_channel_txt,[5,327,54,20]);
+            Set_position(handles.panel_image_source_channel_pop,[60,330,60,20]);
+            Set_position(handles.panel_image_source_index_txt,  [125,357,39,20]);
+            Set_position(handles.panel_image_source_index_pop,  [165,360,60,20]);
+            Set_position(handles.panel_image_source_z_txt,      [125,325,39,20]);
+            Set_position(handles.panel_image_source_z_edt,      [165,325,60,23]);
+            
+            Set_position(handles.panel_image_color_txt,         [5,290,60,20]);
+            Set_position(handles.panel_image_colorbar_chk,      [70,290,100,20]);
+            Set_position(handles.panel_image_colormap_txt,      [5,263,65,20]);
+            Set_position(handles.panel_image_colormap_pop,      [70,265,155,20]);
+            Set_position(handles.panel_image_clim_chk,          [5,230,64,20]);
+            Set_position(handles.panel_image_clim1_edt,        [70,230,72,20]);
+            Set_position(handles.panel_image_clim3_txt,        [143,230,8,20]);
+            Set_position(handles.panel_image_clim2_edt,        [153,230,72,20]);
+            
+            Set_position(handles.panel_image_contour_txt,      [5,190,60,20]);
+            Set_position(handles.panel_image_contour_chk,      [70,190,155,20]);
+            Set_position(handles.panel_image_contour_color_txt,[5,157,45,20]);
+            Set_position(handles.panel_image_contour_color_btn,[70,155,155,30]);
+            Set_position(handles.panel_image_contour_width_txt,[5,125,45,20]);
+            Set_position(handles.panel_image_contour_width_edt,[70,125,155,23]);
+            Set_position(handles.panel_image_contour_style_txt,[5,95,45,20]);
+            Set_position(handles.panel_image_contour_style_pop,[70,95,155,20]);
+            
+            Set_position(handles.panel_image_contour_level_txt,[5,65,45,20]);
+            Set_position(handles.panel_image_contour_level_chk,[70,65,110,20]);
+            Set_position(handles.panel_image_contour_start_txt,[5,35,35,20]);
+            Set_position(handles.panel_image_contour_start_edt,[45,35,70,20]);
+            Set_position(handles.panel_image_contour_end_txt,  [115,35,35,20]);
+            Set_position(handles.panel_image_contour_end_edt,  [150,35,70,20]);
+            Set_position(handles.panel_image_contour_step_txt, [5,5,35,20]);
+            Set_position(handles.panel_image_contour_step_edt, [45,5,70,20]);
+        else
+            Set_position(handles.panel_image,[0,0,224,440]);
+            Set_position(handles.panel_image_source_txt,        [5,425,55,20]);
+            Set_position(handles.panel_image_source_pop,        [3,405,220,20]);
+            Set_position(handles.panel_image_source_epoch_txt,  [13,375,55,20]);
+            Set_position(handles.panel_image_source_epoch_pop,  [70,375,110,20]);
+            Set_position(handles.panel_image_source_channel_txt,[13,345,55,20]);
+            Set_position(handles.panel_image_source_channel_pop,[70,345,110,20]);
+            Set_position(handles.panel_image_source_index_txt,  [13,315,55,20]);
+            Set_position(handles.panel_image_source_index_pop,  [70,315,110,20]);
+            Set_position(handles.panel_image_source_z_txt,      [13,285,55,20]);
+            Set_position(handles.panel_image_source_z_edt,      [70,285,110,20]);
+            
+            Set_position(handles.panel_image_color_txt,         [5,255,50,20]);
+            Set_position(handles.panel_image_colorbar_chk,      [60,255,100,20]);
+            Set_position(handles.panel_image_colormap_txt,      [5,235,50,20]);
+            Set_position(handles.panel_image_colormap_pop,      [60,235,110,20]);
+            Set_position(handles.panel_image_clim_chk,          [2,205,58,20]);
+            Set_position(handles.panel_image_clim1_edt,        [60,205,70,20]);
+            Set_position(handles.panel_image_clim3_txt,        [135,205,10,20]);
+            Set_position(handles.panel_image_clim2_edt,        [150,205,70,20]);
+            
+            Set_position(handles.panel_image_contour_txt,      [5,175,55,20]);
+            Set_position(handles.panel_image_contour_chk,      [60,175,110,20]);
+            Set_position(handles.panel_image_contour_color_txt,[13,150,45,20]);
+            Set_position(handles.panel_image_contour_color_btn,[60,150,110,30]);
+            Set_position(handles.panel_image_contour_width_txt,[13,120,45,20]);
+            Set_position(handles.panel_image_contour_width_edt,[60,120,110,20]);
+            Set_position(handles.panel_image_contour_style_txt,[13,90,45,20]);
+            Set_position(handles.panel_image_contour_style_pop,[60,90,110,20]);
+            
+            Set_position(handles.panel_image_contour_level_txt,[13,60,45,20]);
+            Set_position(handles.panel_image_contour_level_chk,[60,60,110,20]);
+            Set_position(handles.panel_image_contour_start_txt,[13,32,35,20]);
+            Set_position(handles.panel_image_contour_start_edt,[45,32,70,20]);
+            Set_position(handles.panel_image_contour_end_txt,  [115,32,35,20]);
+            Set_position(handles.panel_image_contour_end_edt,  [150,32,70,20]);
+            Set_position(handles.panel_image_contour_step_txt, [13,5,35,20]);
+            Set_position(handles.panel_image_contour_step_edt, [45,5,70,20]);
+        end
     end
     function init_panel_topo()
         handles.panel_topo=uipanel(handles.fig1,'bordertype','none','visible','off');
@@ -903,16 +1096,25 @@ GLW_figure_openingFcn;
         Set_position(handles.panel_topo,[0,0,224,520]);
         Set_position(handles.panel_topo_source_txt,[5,495,150,20]);
         Set_position(handles.panel_topo_source_pop,[5,475,220,20]);
-        Set_position(handles.panel_topo_source_epoch_txt,[5,448,30,20]);
-        Set_position(handles.panel_topo_source_epoch_pop,[35,448,70,20]);
-        Set_position(handles.panel_topo_source_index_txt,[5,421,30,20]);
-        Set_position(handles.panel_topo_source_index_pop,[35,421,70,20]);
-        Set_position(handles.panel_topo_source_x_txt,[108,448,10,20]);
-        Set_position(handles.panel_topo_source_x1_edt,[123,448,45,20]);
-        Set_position(handles.panel_topo_source_x2_edt,[175,448,45,20]);
-        Set_position(handles.panel_topo_source_y_txt,[108,421,10,20]);
-        Set_position(handles.panel_topo_source_y1_edt,[123,421,45,20]);
-        Set_position(handles.panel_topo_source_y2_edt,[175,421,45,20]);
+        Set_position(handles.panel_topo_source_epoch_txt,[5,444,30,20]);
+        Set_position(handles.panel_topo_source_epoch_pop,[35,444,70,20]);
+        Set_position(handles.panel_topo_source_index_txt,[5,419,30,20]);
+        Set_position(handles.panel_topo_source_index_pop,[35,419,70,20]);
+        if ispc
+            Set_position(handles.panel_topo_source_x_txt,[108,444,10,20]);
+            Set_position(handles.panel_topo_source_x1_edt,[123,444,45,20]);
+            Set_position(handles.panel_topo_source_x2_edt,[175,444,45,20]);
+            Set_position(handles.panel_topo_source_y_txt,[108,419,10,20]);
+            Set_position(handles.panel_topo_source_y1_edt,[123,419,45,20]);
+            Set_position(handles.panel_topo_source_y2_edt,[175,419,45,20]);
+        else
+            Set_position(handles.panel_topo_source_x_txt,[108,448,10,20]);
+            Set_position(handles.panel_topo_source_x1_edt,[123,448,45,20]);
+            Set_position(handles.panel_topo_source_x2_edt,[175,448,45,20]);
+            Set_position(handles.panel_topo_source_y_txt,[108,421,10,20]);
+            Set_position(handles.panel_topo_source_y1_edt,[123,421,45,20]);
+            Set_position(handles.panel_topo_source_y2_edt,[175,421,45,20]);
+        end
         Set_position(handles.panel_topo_source_z_txt,[108,395,10,20]);
         Set_position(handles.panel_topo_source_z1_edt,[123,395,45,20]);
         Set_position(handles.panel_topo_source_z2_edt,[175,395,45,20]);
@@ -946,14 +1148,14 @@ GLW_figure_openingFcn;
         Set_position(handles.panel_topo_contour_chk,[5,250,75,20]);
         Set_position(handles.panel_topo_contour_color_btn,[5,220,80,30]);
         
-        Set_position(handles.panel_topo_clim_chk,[1,195,75,20]);
+        Set_position(handles.panel_topo_clim_chk,[5,195,75,20]);
         Set_position(handles.panel_topo_clim1_txt,[5,175,75,20]);
         Set_position(handles.panel_topo_clim1_edt,[5,155,75,20]);
         Set_position(handles.panel_topo_clim2_txt,[5,135,75,20]);
         Set_position(handles.panel_topo_clim2_edt,[5,115,75,20]);
         
-        Set_position(handles.panel_topo_surface_chk,[1,80,80,20]);
-        Set_position(handles.panel_topo_colorbar_chk,[1,60,80,20]);
+        Set_position(handles.panel_topo_surface_chk,[5,80,80,20]);
+        Set_position(handles.panel_topo_colorbar_chk,[5,60,80,20]);
         Set_position(handles.panel_topo_colormap_txt,[5,40,80,20]);
         Set_position(handles.panel_topo_colormap_pop,[5,20,80,20]);
         
@@ -1020,42 +1222,81 @@ GLW_figure_openingFcn;
         set(handles.panel_lissajous_source2_y_txt,'HorizontalAlignment','left');
         set(handles.panel_lissajous_source2_z_txt,'HorizontalAlignment','left');
         
-        Set_position(handles.panel_lissajous,[0,0,224,450]);
-        Set_position(handles.panel_lissajous_config_txt,[13,420,55,20]);
-        Set_position(handles.panel_lissajous_color_txt,[13,390,55,20]);
-        Set_position(handles.panel_lissajous_color_btn,[70,390,110,30]);
-        Set_position(handles.panel_lissajous_width_txt,[13,360,55,20]);
-        Set_position(handles.panel_lissajous_width_edt,[70,360,110,20]);
-        Set_position(handles.panel_lissajous_style_txt,[13,330,80,20]);
-        Set_position(handles.panel_lissajous_style_pop,[70,330,110,20]);
-        Set_position(handles.panel_lissajous_marker_txt,[13,300,80,20]);
-        Set_position(handles.panel_lissajous_marker_pop,[70,300,110,20]);
-        
-        Set_position(handles.panel_lissajous_source1_txt,[5,260,150,20]);
-        Set_position(handles.panel_lissajous_source1_pop,[5,240,220,20]);
-        Set_position(handles.panel_lissajous_source1_epoch_txt,[5,210,40,20]);
-        Set_position(handles.panel_lissajous_source1_epoch_pop,[45,210,85,20]);
-        Set_position(handles.panel_lissajous_source1_channel_txt,[5,180,40,20]);
-        Set_position(handles.panel_lissajous_source1_channel_pop,[45,180,85,20]);
-        Set_position(handles.panel_lissajous_source1_index_txt,[5,150,40,20]);
-        Set_position(handles.panel_lissajous_source1_index_pop,[45,150,85,20]);
-        Set_position(handles.panel_lissajous_source1_y_txt,[150,210,10,20]);
-        Set_position(handles.panel_lissajous_source1_y_edt,[165,210,55,20]);
-        Set_position(handles.panel_lissajous_source1_z_txt,[150,180,10,20]);
-        Set_position(handles.panel_lissajous_source1_z_edt,[165,180,55,20]);
-        
-        Set_position(handles.panel_lissajous_source2_txt,[5,120,150,20]);
-        Set_position(handles.panel_lissajous_source2_pop,[5,100,220,20]);
-        Set_position(handles.panel_lissajous_source2_epoch_txt,[5,70,40,20]);
-        Set_position(handles.panel_lissajous_source2_epoch_pop,[45,70,85,20]);
-        Set_position(handles.panel_lissajous_source2_channel_txt,[5,40,40,20]);
-        Set_position(handles.panel_lissajous_source2_channel_pop,[45,40,85,20]);
-        Set_position(handles.panel_lissajous_source2_index_txt,[5,10,40,20]);
-        Set_position(handles.panel_lissajous_source2_index_pop,[45,10,85,20]);
-        Set_position(handles.panel_lissajous_source2_y_txt,[150,70,10,20]);
-        Set_position(handles.panel_lissajous_source2_y_edt,[165,70,55,20]);
-        Set_position(handles.panel_lissajous_source2_z_txt,[150,40,10,20]);
-        Set_position(handles.panel_lissajous_source2_z_edt,[165,40,55,20]);
+        if ispc
+            Set_position(handles.panel_lissajous,[0,0,224,440]);
+            Set_position(handles.panel_lissajous_config_txt,[5,420,65,20]);
+            Set_position(handles.panel_lissajous_color_txt,[5,390,65,20]);
+            Set_position(handles.panel_lissajous_color_btn,[70,390,145,30]);
+            Set_position(handles.panel_lissajous_width_txt,[5,360,65,20]);
+            Set_position(handles.panel_lissajous_width_edt,[70,360,145,23]);
+            Set_position(handles.panel_lissajous_style_txt,[5,327,65,20]);
+            Set_position(handles.panel_lissajous_style_pop,[70,330,145,20]);
+            Set_position(handles.panel_lissajous_marker_txt,[5,297,65,20]);
+            Set_position(handles.panel_lissajous_marker_pop,[70,300,145,20]);
+            
+            Set_position(handles.panel_lissajous_source1_txt,[5,257,150,20]);
+            Set_position(handles.panel_lissajous_source1_pop,[5,240,220,20]);
+            Set_position(handles.panel_lissajous_source1_epoch_txt,[5,207,54,20]);
+            Set_position(handles.panel_lissajous_source1_epoch_pop,[60,210,75,20]);
+            Set_position(handles.panel_lissajous_source1_channel_txt,[5,177,54,20]);
+            Set_position(handles.panel_lissajous_source1_channel_pop,[60,180,75,20]);
+            Set_position(handles.panel_lissajous_source1_index_txt,[5,147,54,20]);
+            Set_position(handles.panel_lissajous_source1_index_pop,[60,150,75,20]);
+            Set_position(handles.panel_lissajous_source1_y_txt,[150,205,20,20]);
+            Set_position(handles.panel_lissajous_source1_y_edt,[170,205,55,23]);
+            Set_position(handles.panel_lissajous_source1_z_txt,[150,175,20,20]);
+            Set_position(handles.panel_lissajous_source1_z_edt,[170,175,55,23]);
+            
+            Set_position(handles.panel_lissajous_source2_txt,[5,120,150,20]);
+            Set_position(handles.panel_lissajous_source2_pop,[5,100,220,20]);
+            Set_position(handles.panel_lissajous_source2_epoch_txt,[5,67,54,20]);
+            Set_position(handles.panel_lissajous_source2_epoch_pop,[60,70,75,20]);
+            Set_position(handles.panel_lissajous_source2_channel_txt,[5,37,54,20]);
+            Set_position(handles.panel_lissajous_source2_channel_pop,[60,40,75,20]);
+            Set_position(handles.panel_lissajous_source2_index_txt,[5,7,54,20]);
+            Set_position(handles.panel_lissajous_source2_index_pop,[60,10,75,20]);
+            Set_position(handles.panel_lissajous_source2_y_txt,[150,65,20,20]);
+            Set_position(handles.panel_lissajous_source2_y_edt,[170,65,55,23]);
+            Set_position(handles.panel_lissajous_source2_z_txt,[150,35,20,20]);
+            Set_position(handles.panel_lissajous_source2_z_edt,[170,35,55,23]);
+        else
+            Set_position(handles.panel_lissajous,[0,0,224,450]);
+            Set_position(handles.panel_lissajous_config_txt,[13,420,55,20]);
+            Set_position(handles.panel_lissajous_color_txt,[13,390,55,20]);
+            Set_position(handles.panel_lissajous_color_btn,[70,390,110,30]);
+            Set_position(handles.panel_lissajous_width_txt,[13,360,55,20]);
+            Set_position(handles.panel_lissajous_width_edt,[70,360,110,20]);
+            Set_position(handles.panel_lissajous_style_txt,[13,330,80,20]);
+            Set_position(handles.panel_lissajous_style_pop,[70,330,110,20]);
+            Set_position(handles.panel_lissajous_marker_txt,[13,300,80,20]);
+            Set_position(handles.panel_lissajous_marker_pop,[70,300,110,20]);
+            
+            Set_position(handles.panel_lissajous_source1_txt,[5,260,150,20]);
+            Set_position(handles.panel_lissajous_source1_pop,[5,240,220,20]);
+            Set_position(handles.panel_lissajous_source1_epoch_txt,[5,210,40,20]);
+            Set_position(handles.panel_lissajous_source1_epoch_pop,[45,210,85,20]);
+            Set_position(handles.panel_lissajous_source1_channel_txt,[5,180,40,20]);
+            Set_position(handles.panel_lissajous_source1_channel_pop,[45,180,85,20]);
+            Set_position(handles.panel_lissajous_source1_index_txt,[5,150,40,20]);
+            Set_position(handles.panel_lissajous_source1_index_pop,[45,150,85,20]);
+            Set_position(handles.panel_lissajous_source1_y_txt,[150,210,10,20]);
+            Set_position(handles.panel_lissajous_source1_y_edt,[165,210,55,20]);
+            Set_position(handles.panel_lissajous_source1_z_txt,[150,180,10,20]);
+            Set_position(handles.panel_lissajous_source1_z_edt,[165,180,55,20]);
+            
+            Set_position(handles.panel_lissajous_source2_txt,[5,120,150,20]);
+            Set_position(handles.panel_lissajous_source2_pop,[5,100,220,20]);
+            Set_position(handles.panel_lissajous_source2_epoch_txt,[5,70,40,20]);
+            Set_position(handles.panel_lissajous_source2_epoch_pop,[45,70,85,20]);
+            Set_position(handles.panel_lissajous_source2_channel_txt,[5,40,40,20]);
+            Set_position(handles.panel_lissajous_source2_channel_pop,[45,40,85,20]);
+            Set_position(handles.panel_lissajous_source2_index_txt,[5,10,40,20]);
+            Set_position(handles.panel_lissajous_source2_index_pop,[45,10,85,20]);
+            Set_position(handles.panel_lissajous_source2_y_txt,[150,70,10,20]);
+            Set_position(handles.panel_lissajous_source2_y_edt,[165,70,55,20]);
+            Set_position(handles.panel_lissajous_source2_z_txt,[150,40,10,20]);
+            Set_position(handles.panel_lissajous_source2_z_edt,[165,40,55,20]);
+        end
     end
     function init_data()
         name=cell(length(option.inputfiles),1);
@@ -1430,7 +1671,7 @@ GLW_figure_openingFcn;
         rect_update();
     end
     function content_text_redraw()
-        get_content_text_default(); 
+        get_content_text_default();
         handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=text('parent',handles.ax(option.cnt_subfig));
         text_update();
     end
@@ -1492,8 +1733,10 @@ GLW_figure_openingFcn;
 %% script_function
     function get_fig_default()
         option=option_setup(option,'inputfiles',[]);
-        
-        option=option_setup(option,'fig2_pos',[5,100,700,650]);
+        scrsz = get(0,'MonitorPositions');
+        %pos=[(scrsz(3)-950)/2,max((scrsz(4)-650-200)/2,100),700,650];
+        pos=[100,200,700,650];
+        option=option_setup(option,'fig2_pos',pos);
         option=option_setup(option,'ax',[]);
         option=option_setup(option,'ax_auto_position',0);
         option=option_setup(option,'ax_auto_col',1);
@@ -1695,19 +1938,19 @@ GLW_figure_openingFcn;
             script=get_axis_script(script,idx_s);
             for idx_c=1:length(option.ax{idx_s}.content)
                 switch(option.ax{idx_s}.content{idx_c}.type)
-                     case 'curve'
+                    case 'curve'
                         script=get_curve_script(script,idx_s,idx_c);
-                     case 'line'
+                    case 'line'
                         script=get_line_script(script,idx_s,idx_c);
-                     case 'rect'
+                    case 'rect'
                         script=get_rect_script(script,idx_s,idx_c);
-                     case 'text'
+                    case 'text'
                         script=get_text_script(script,idx_s,idx_c);
-                     case 'image'
+                    case 'image'
                         script=get_image_script(script,idx_s,idx_c);
-                     case 'topo'
+                    case 'topo'
                         script=get_topo_script(script,idx_s,idx_c);
-                     case 'lissajous'
+                    case 'lissajous'
                         script=get_lissajous_script(script,idx_s,idx_c);
                 end
             end
@@ -1972,8 +2215,8 @@ GLW_figure_openingFcn;
             script{end+1}=[str1,'contour_LevelListMode=''Manual'';'];
             script{end+1}=[str1,'contour_level_start=',num2str(option.ax{idx_s}.content{idx_c}.contour_level_start),';'];
             script{end+1}=[str1,'contour_level_end=',num2str(option.ax{idx_s}.content{idx_c}.contour_level_end),';'];
-           script{end+1}=[str1,'contour_level_step=',num2str(option.ax{idx_s}.content{idx_c}.contour_level_step),';'];
-       end
+            script{end+1}=[str1,'contour_level_step=',num2str(option.ax{idx_s}.content{idx_c}.contour_level_step),';'];
+        end
     end
     function script=get_topo_script(script,idx_s,idx_c)
         str1=['option.ax{',num2str(idx_s),'}.content{',num2str(idx_c),'}.'];
@@ -2331,7 +2574,7 @@ GLW_figure_openingFcn;
         sub_style_value=get(handles.sub_add_pop,'value');
         sub_style_str=get(handles.sub_add_pop,'string');
         sub_style_str=sub_style_str{sub_style_value};
-        option.cnt_subfig=option.cnt_subfig+1;
+        option.cnt_subfig=length(option.ax)+1;
         option.ax{option.cnt_subfig}.name=[sub_style_str,num2str(option.subfig_order)];
         option.subfig_order=option.subfig_order+1;
         option.ax{option.cnt_subfig}.style=sub_style_str;
@@ -2632,7 +2875,7 @@ GLW_figure_openingFcn;
                     set(handles.axis_legend_edt,'visible','on',...
                         'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
                 end
-           else
+            else
                 set(handles.axis_legend_chk,'value',0);
                 set(handles.axis_legend_edt,'visible','off');
             end
@@ -2708,8 +2951,8 @@ GLW_figure_openingFcn;
             set(handles.xaxis_tick_anchor_txt,'enable','off');
         end
         
-         if verLessThan('matlab','8.4') 
-             set(handles.xaxis_hide_chx,'visible','off');
+        if verLessThan('matlab','8.4')
+            set(handles.xaxis_hide_chx,'visible','off');
         end
         if strcmp(option.ax{option.cnt_subfig}.XGrid,'on')
             set(handles.xaxis_grid_chk,'value',1);
@@ -2804,8 +3047,8 @@ GLW_figure_openingFcn;
             set(handles.yaxis_tick_interval_txt,'enable','off');
             set(handles.yaxis_tick_anchor_txt,'enable','off');
         end
-        if verLessThan('matlab','8.4') 
-             set(handles.yaxis_hide_chx,'visible','off');
+        if verLessThan('matlab','8.4')
+            set(handles.yaxis_hide_chx,'visible','off');
         end
         if strcmp(option.ax{option.cnt_subfig}.YGrid,'on')
             set(handles.yaxis_grid_chk,'value',1);
@@ -2827,7 +3070,7 @@ GLW_figure_openingFcn;
         set(handles.yaxis_label_edt,'string',option.ax{option.cnt_subfig}.ylabel);
         l=get(handles.ax(option.cnt_subfig),'ylabel');
         set(l,'string',option.ax{option.cnt_subfig}.ylabel);
-       
+        
         if strcmp(option.ax{option.cnt_subfig}.ylabel_visible,'on')
             set(l,'visible','on');
             set(handles.yaxis_label_chk,'value',1);
@@ -2867,8 +3110,8 @@ GLW_figure_openingFcn;
     function axis_legend_chk_callback(~,~)
         if get(handles.axis_legend_chk,'value')==1
             if ~isempty(option.ax{option.cnt_subfig}.content)
-            set(handles.axis_legend_edt,'visible','on',...
-                'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
+                set(handles.axis_legend_edt,'visible','on',...
+                    'string',option.ax{option.cnt_subfig}.content{option.cnt_content}.name);
             end
             option.ax{option.cnt_subfig}.legend='on';
             idx=[];
@@ -3005,7 +3248,7 @@ GLW_figure_openingFcn;
         if get(handles.xaxis_tick_chk,'value')==0
             set(handles.ax(option.cnt_subfig),'XTickMode','Manual');
             option.ax{option.cnt_subfig}.XTickMode='Manual';
-
+            
             interval=str2num(get(handles.xaxis_tick_interval_edt,'string'));
             anchor=str2num(get(handles.xaxis_tick_anchor_edt,'string'));
             if ~isempty(interval)&& isfinite(interval)&& interval>0 && ~isempty(anchor) && isfinite(anchor)
@@ -3435,8 +3678,8 @@ GLW_figure_openingFcn;
         set(handles.panel_curve_source_pop,'value',k);
         
         if datasets_header(k).header.datasize(1)==1
-            set(handles.panel_curve_source_epoch_txt,'visible','off');
-            set(handles.panel_curve_source_epoch_pop,'visible','off');
+            %set(handles.panel_curve_source_epoch_txt,'visible','off');
+            %set(handles.panel_curve_source_epoch_pop,'visible','off');
         else
             set(handles.panel_curve_source_epoch_txt,'visible','on');
             set(handles.panel_curve_source_epoch_pop,'visible','on');
@@ -3445,8 +3688,8 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(2)==1
-            set(handles.panel_curve_source_channel_txt,'visible','off');
-            set(handles.panel_curve_source_channel_pop,'visible','off');
+            %set(handles.panel_curve_source_channel_txt,'visible','off');
+            %set(handles.panel_curve_source_channel_pop,'visible','off');
         else
             set(handles.panel_curve_source_channel_txt,'visible','on');
             set(handles.panel_curve_source_channel_pop,'visible','on');
@@ -3463,8 +3706,8 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(3)==1
-            set(handles.panel_curve_source_index_txt,'visible','off');
-            set(handles.panel_curve_source_index_pop,'visible','off');
+            % set(handles.panel_curve_source_index_txt,'visible','off');
+            % set(handles.panel_curve_source_index_pop,'visible','off');
         else
             set(handles.panel_curve_source_index_txt,'visible','on');
             set(handles.panel_curve_source_index_pop,'visible','on');
@@ -3472,8 +3715,8 @@ GLW_figure_openingFcn;
             set(handles.panel_curve_source_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.idx);
         end
         if datasets_header(k).header.datasize(4)==1
-            set(handles.panel_curve_source_z_txt,'visible','off');
-            set(handles.panel_curve_source_z_edt,'visible','off');
+            %set(handles.panel_curve_source_z_txt,'visible','off');
+            %set(handles.panel_curve_source_z_edt,'visible','off');
         else
             set(handles.panel_curve_source_z_txt,'visible','on');
             set(handles.panel_curve_source_z_edt,'visible','on');
@@ -3481,8 +3724,8 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(5)==1
-            set(handles.panel_curve_source_y_txt,'visible','off');
-            set(handles.panel_curve_source_y_edt,'visible','off');
+            % set(handles.panel_curve_source_y_txt,'visible','off');
+            % set(handles.panel_curve_source_y_edt,'visible','off');
         else
             set(handles.panel_curve_source_y_txt,'visible','on');
             set(handles.panel_curve_source_y_edt,'visible','on');
@@ -3554,9 +3797,9 @@ GLW_figure_openingFcn;
     end
     function curve_width_edt_callback(~,~)
         c=str2num(get(handles.panel_curve_width_edt,'string'));
-         if ~isempty(c) && isfinite(c) && c>0
+        if ~isempty(c) && isfinite(c) && c>0
             option.ax{option.cnt_subfig}.content{option.cnt_content}.linewidth=c;
-         end
+        end
         curve_callback();
     end
     function curve_style_pop_callback(~,~)
@@ -3872,7 +4115,7 @@ GLW_figure_openingFcn;
             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).rect,'LineWidth',c,...
                 'EdgeAlpha',option.ax{option.cnt_subfig}.content{option.cnt_content}.EdgeAlpha);
         end
-         content_xyaxis_update();
+        content_xyaxis_update();
     end
     function rect_facecolor_btn_callback(~,~)
         option.ax{option.cnt_subfig}.content{option.cnt_content}.FaceColor= ...
@@ -3907,7 +4150,7 @@ GLW_figure_openingFcn;
     end
     function rect_edgealpha_edt_callback(~,~)
         c=str2num(get(handles.panel_rect_edgealpha_edt,'string'));
-         if ~isempty(c) && isfinite(c)
+        if ~isempty(c) && isfinite(c)
             if c>1
                 c=1;
             else
@@ -4049,8 +4292,8 @@ GLW_figure_openingFcn;
         set(handles.panel_image_source_pop,'value',k);
         
         if datasets_header(k).header.datasize(1)==1
-            set(handles.panel_image_source_epoch_txt,'visible','off');
-            set(handles.panel_image_source_epoch_pop,'visible','off');
+%             set(handles.panel_image_source_epoch_txt,'visible','off');
+%             set(handles.panel_image_source_epoch_pop,'visible','off');
         else
             set(handles.panel_image_source_epoch_txt,'visible','on');
             set(handles.panel_image_source_epoch_pop,'visible','on');
@@ -4059,8 +4302,8 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(2)==1
-            set(handles.panel_image_source_channel_txt,'visible','off');
-            set(handles.panel_image_source_channel_pop,'visible','off');
+%             set(handles.panel_image_source_channel_txt,'visible','off');
+%             set(handles.panel_image_source_channel_pop,'visible','off');
         else
             set(handles.panel_image_source_channel_txt,'visible','on');
             set(handles.panel_image_source_channel_pop,'visible','on');
@@ -4078,8 +4321,8 @@ GLW_figure_openingFcn;
         
         
         if datasets_header(k).header.datasize(3)==1
-            set(handles.panel_image_source_index_txt,'visible','off');
-            set(handles.panel_image_source_index_pop,'visible','off');
+%             set(handles.panel_image_source_index_txt,'visible','off');
+%             set(handles.panel_image_source_index_pop,'visible','off');
         else
             set(handles.panel_image_source_index_txt,'visible','on');
             set(handles.panel_image_source_index_pop,'visible','on');
@@ -4087,8 +4330,8 @@ GLW_figure_openingFcn;
             set(handles.panel_image_source_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.idx);
         end
         if datasets_header(k).header.datasize(4)==1
-            set(handles.panel_image_source_z_txt,'visible','off');
-            set(handles.panel_image_source_z_edt,'visible','off');
+%             set(handles.panel_image_source_z_txt,'visible','off');
+%             set(handles.panel_image_source_z_edt,'visible','off');
         else
             set(handles.panel_image_source_z_txt,'visible','on');
             set(handles.panel_image_source_z_edt,'visible','on');
@@ -4455,8 +4698,8 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_source_pop,'value',k);
         
         if datasets_header(k).header.datasize(1)==1
-            set(handles.panel_topo_source_epoch_txt,'visible','off');
-            set(handles.panel_topo_source_epoch_pop,'visible','off');
+%             set(handles.panel_topo_source_epoch_txt,'visible','off');
+%             set(handles.panel_topo_source_epoch_pop,'visible','off');
         else
             set(handles.panel_topo_source_epoch_txt,'visible','on');
             set(handles.panel_topo_source_epoch_pop,'visible','on');
@@ -4465,8 +4708,8 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(3)==1
-            set(handles.panel_topo_source_index_txt,'visible','off');
-            set(handles.panel_topo_source_index_pop,'visible','off');
+%             set(handles.panel_topo_source_index_txt,'visible','off');
+%             set(handles.panel_topo_source_index_pop,'visible','off');
         else
             set(handles.panel_topo_source_index_txt,'visible','on');
             set(handles.panel_topo_source_index_pop,'visible','on');
@@ -4475,9 +4718,9 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(4)==1
-            set(handles.panel_topo_source_z_txt,'visible','off');
-            set(handles.panel_topo_source_z1_edt,'visible','off');
-            set(handles.panel_topo_source_z2_edt,'visible','off');
+%             set(handles.panel_topo_source_z_txt,'visible','off');
+%             set(handles.panel_topo_source_z1_edt,'visible','off');
+%             set(handles.panel_topo_source_z2_edt,'visible','off');
         else
             set(handles.panel_topo_source_z_txt,'visible','on');
             set(handles.panel_topo_source_z1_edt,'visible','on');
@@ -4487,9 +4730,9 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(5)==1
-            set(handles.panel_topo_source_y_txt,'visible','off');
-            set(handles.panel_topo_source_y1_edt,'visible','off');
-            set(handles.panel_topo_source_y2_edt,'visible','off');
+%             set(handles.panel_topo_source_y_txt,'visible','off');
+%             set(handles.panel_topo_source_y1_edt,'visible','off');
+%             set(handles.panel_topo_source_y2_edt,'visible','off');
         else
             set(handles.panel_topo_source_y_txt,'visible','on');
             set(handles.panel_topo_source_y1_edt,'visible','on');
@@ -4499,9 +4742,9 @@ GLW_figure_openingFcn;
         end
         
         if datasets_header(k).header.datasize(6)==1
-            set(handles.panel_topo_source_x_txt,'visible','off');
-            set(handles.panel_topo_source_x1_edt,'visible','off');
-            set(handles.panel_topo_source_x2_edt,'visible','off');
+%             set(handles.panel_topo_source_x_txt,'visible','off');
+%             set(handles.panel_topo_source_x1_edt,'visible','off');
+%             set(handles.panel_topo_source_x2_edt,'visible','off');
         else
             set(handles.panel_topo_source_x_txt,'visible','on');
             set(handles.panel_topo_source_x1_edt,'visible','on');
@@ -5330,8 +5573,8 @@ GLW_figure_openingFcn;
         end
         set(handles.panel_lissajous_source1_channel_pop,'value',ch_idx);
         if datasets_header(k).header.datasize(3)==1
-            set(handles.panel_lissajous_source1_index_txt,'visible','off');
-            set(handles.panel_lissajous_source1_index_pop,'visible','off');
+%             set(handles.panel_lissajous_source1_index_txt,'visible','off');
+%             set(handles.panel_lissajous_source1_index_pop,'visible','off');
         else
             set(handles.panel_lissajous_source1_index_txt,'visible','on');
             set(handles.panel_lissajous_source1_index_pop,'visible','on');
@@ -5339,16 +5582,16 @@ GLW_figure_openingFcn;
             set(handles.panel_lissajous_source1_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx);
         end
         if datasets_header(k).header.datasize(4)==1
-            set(handles.panel_lissajous_source1_z_txt,'visible','off');
-            set(handles.panel_lissajous_source1_z_edt,'visible','off');
+%             set(handles.panel_lissajous_source1_z_txt,'visible','off');
+%             set(handles.panel_lissajous_source1_z_edt,'visible','off');
         else
             set(handles.panel_lissajous_source1_z_txt,'visible','on');
             set(handles.panel_lissajous_source1_z_edt,'visible','on');
             set(handles.panel_lissajous_source1_z_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_z));
         end
         if datasets_header(k).header.datasize(5)==1
-            set(handles.panel_lissajous_source1_y_txt,'visible','off');
-            set(handles.panel_lissajous_source1_y_edt,'visible','off');
+%             set(handles.panel_lissajous_source1_y_txt,'visible','off');
+%             set(handles.panel_lissajous_source1_y_edt,'visible','off');
         else
             set(handles.panel_lissajous_source1_y_txt,'visible','on');
             set(handles.panel_lissajous_source1_y_edt,'visible','on');
@@ -5370,8 +5613,8 @@ GLW_figure_openingFcn;
         end
         set(handles.panel_lissajous_source2_channel_pop,'value',ch_idx);
         if datasets_header(k).header.datasize(3)==1
-            set(handles.panel_lissajous_source2_index_txt,'visible','off');
-            set(handles.panel_lissajous_source2_index_pop,'visible','off');
+%             set(handles.panel_lissajous_source2_index_txt,'visible','off');
+%             set(handles.panel_lissajous_source2_index_pop,'visible','off');
         else
             set(handles.panel_lissajous_source2_index_txt,'visible','on');
             set(handles.panel_lissajous_source2_index_pop,'visible','on');
@@ -5379,16 +5622,16 @@ GLW_figure_openingFcn;
             set(handles.panel_lissajous_source2_index_pop,'value',option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx);
         end
         if datasets_header(k).header.datasize(4)==1
-            set(handles.panel_lissajous_source2_z_txt,'visible','off');
-            set(handles.panel_lissajous_source2_z_edt,'visible','off');
+%             set(handles.panel_lissajous_source2_z_txt,'visible','off');
+%             set(handles.panel_lissajous_source2_z_edt,'visible','off');
         else
             set(handles.panel_lissajous_source2_z_txt,'visible','on');
             set(handles.panel_lissajous_source2_z_edt,'visible','on');
             set(handles.panel_lissajous_source2_z_edt,'string',num2str(option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_z));
         end
         if datasets_header(k).header.datasize(5)==1
-            set(handles.panel_lissajous_source2_y_txt,'visible','off');
-            set(handles.panel_lissajous_source2_y_edt,'visible','off');
+%             set(handles.panel_lissajous_source2_y_txt,'visible','off');
+%             set(handles.panel_lissajous_source2_y_edt,'visible','off');
         else
             set(handles.panel_lissajous_source2_y_txt,'visible','on');
             set(handles.panel_lissajous_source2_y_edt,'visible','on');
@@ -5418,7 +5661,7 @@ GLW_figure_openingFcn;
             if y_pos>header.datasize(5)
                 y_pos=header.datasize(5);
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_y=header.ystart+(header.datasize(5)-1)*header.ystep;
-
+                
             end
         end
         if header.datasize(4)~=1

@@ -26,7 +26,7 @@ GLW_view_OpeningFcn;
     end
 
     function Init_parameter()
-        temp=get(0,'Screensize');
+        temp=get(0,'MonitorPositions');
         userdata.fig1_pos=[(temp(3)-1350)/2,(temp(4)-680)/2-20,1350,680];
         userdata.fig2_pos=[(temp(3)-1350)/2+465,(temp(4)-680)/2-20,900,680];
         userdata.auto_x=1;
