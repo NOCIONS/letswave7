@@ -2546,7 +2546,9 @@ GLW_figure_openingFcn;
         option.ax_auto_row=n_row;
         for k=1:n
             subplot(n_row,n_col,k,handles.ax(k));
-            option.ax{k}.pos=get(handles.ax(k),'position');
+            set(handles.ax(k),'unit','pixels');
+            option.ax{k}.pos=get(handles.ax(k),'Position');
+            set(handles.ax(k),'unit','normalized');
         end
     end
 

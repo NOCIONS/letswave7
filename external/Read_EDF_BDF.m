@@ -1,4 +1,4 @@
-function [data, header] = readEDF(filename)
+function [data, header] = Read_EDF_BDF(filename)
 
 % ?thor:  Shapkin Andrey,
 % 15-OCT-2012
@@ -7,6 +7,10 @@ function [data, header] = readEDF(filename)
 % filename - File name
 % data - Contains a signals in structure of cells
 % header  - Contains header
+
+% Updated by Gan Huang
+% 12-NOV-2017
+% to support the BDF format loading
 
 fid = fopen(filename,'r','ieee-le');
 
@@ -50,14 +54,17 @@ f=[f1(:); f2(:)];
 % [(d seconds of 1 channel) (d seconds of 2 channel) ... (d seconds of ? channel)], Where ? - quantity of channels, d - duration of the block
 % Ch = header.channels
 % d = header.duration
-
-Ch_data = fread(fid,'int16'); % Loading of signals
+if strcmpi(filename(end-2),'B')
+    Ch_data = fread(fid,'bit24');
+else
+    Ch_data = fread(fid,'int16'); % Loading of signals
+end
 
 
 fclose(fid); % close a file
 
 %%%%% PART 4: Transformation of the data
-if header.records<0, % If the quantity of blocks is not known
+if header.records<0 % If the quantity of blocks is not known
     R=sum(header.duration*header.samplerate); % Length of one block
     header.records=fix(length(Ch_data)./R); % Quantity of written down blocks
 end
@@ -80,7 +87,6 @@ Rs=cumsum([1; header.duration*header.samplerate]); % строка индексов подблоко?ка
 % and recording of signals in structure of cells
 
 for k=1:header.channels
-    
     data{k}=reshape(Ch_data(Rs(k):Rs(k+1)-1, :), [], 1);
     if sum(k==f)==0 % non ?notation
         % Calibration of the data
@@ -95,11 +101,51 @@ header.annotation.duration=[];
 header.annotation.data={};
 
 if sum(f)>0
-    
     try
-        
         for p1=1:length(f)
-            Annt=char(typecast(int16(data{f(p1)}), 'uint8'))';
+            fid=fopen('test.bin','w');
+            fwrite(fid,data{f(p1)},'bit24');
+            fclose(fid);
+            
+            fid=fopen('test.bin','r');
+            Annt = (fread(fid,'uint8'));
+            fclose(fid);
+            
+            ANNONS = reshape(double(data{f(p1)}),3,length(data{f(p1)})/3)'*2.^[0;8;16];
+            
+            eventVector = bitand(ANNONS, hex2dec('00ffff'));
+            disp(eventVector(1:100));
+            % in principle the following bits could also be used, but it would require looking at both flanks for the epoch, cmrange and battery
+            % if this code ever needs to be enabled, then it should be done consistently with the biosemi_bdf section in ft_read_event
+            % epoch   = int8(bitget(dat, 16+1));
+            % cmrange = int8(bitget(dat, 20+1));
+            % battery = int8(bitget(dat, 22+1));
+           
+            
+            
+%             temp=typecast(int16(data{f(p1)}), 'uint8')';
+%             for k=4:4:length(temp)
+%                 if temp(k)==255
+%                     temp((1:4)+k-4)=255-temp((1:4)+k-4);
+%                 end
+%             end
+%             idx=setdiff(1:length(temp),[4:4:length(temp),3:4:length(temp)]);
+%             temp1=temp(idx);
+%             temp2=typecast(int16(data{f(p1)}), 'uint8')';
+%             Annt=char(temp1); 
+
+%             if strcmpi(filename(end-2),'B')
+%                 temp=typecast(int32(data{f(p1)}), 'uint8')';
+%                 for k=4:4:length(temp)
+%                     if temp(k)==255
+%                         temp((1:3)+k-4)=255-temp((1:3)+k-4);
+%                     end
+%                 end
+%                 Annt=char(temp(setdiff(1:length(temp),4:4:length(temp))));
+%             else
+%                 Annt=char(typecast(int16(data{f(p1)}), 'uint8'))';
+%             end
+            
             
             % separate of annotation on blocks
             Annt=buffer(Annt, header.samplerate(f(p1)).*2, 0)';

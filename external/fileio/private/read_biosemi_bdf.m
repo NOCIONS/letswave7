@@ -277,12 +277,12 @@ end
 % SUBFUNCTION for reading the 24 bit values
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function buf = readLowLevel(filename, offset, numwords)
-if offset < 2*1024^3
+%if offset < 2*1024^3
   % use the external mex file, only works for <2GB
-  buf = read_24bit(filename, offset, numwords);
+  %buf = read_24bit(filename, offset, numwords);
   % this would be the only difference between the bdf and edf implementation
   % buf = read_16bit(filename, offset, numwords);
-else
+%else
   % use plain matlab, thanks to Philip van der Broek
   fp = fopen(filename,'r','ieee-le');
   status = fseek(fp, offset, 'bof');
@@ -295,5 +295,5 @@ else
     error(['failed opening ' filename]);
     return
   end
-end
+%end
 
