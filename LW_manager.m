@@ -647,9 +647,6 @@ Manager_Init();
             set(handles.suffix_exclude_listbox,'string',suffix);
             set(handles.file_listbox,'string',filelist);
             set(handles.file_listbox,'userdata',filename);
-            if verLessThan('matlab','8.4')
-                warning('off','MATLAB:CELL:INTERSECT:RowsFlagIgnored');
-            end
             [~,idx]=intersect(filelist,file_str,'stable');
             set(handles.file_listbox,'value',idx);
         end

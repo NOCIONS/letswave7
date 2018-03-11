@@ -2159,7 +2159,7 @@ GLW_figure_openingFcn;
         script{end+1}=[str1,'name=''',option.ax{idx_s}.content{idx_c}.name,''';'];
         script{end+1}=[str1,'type=''',option.ax{idx_s}.content{idx_c}.type,''';'];
         
-        script{end+1}=['option.pos=',num2str_array(option.ax{idx_s}.content{idx_c}.pos),';'];
+        script{end+1}=[str1,'pos=',num2str_array(option.ax{idx_s}.content{idx_c}.pos),';'];
         script{end+1}=[str1,'string=',str_array2str(option.ax{idx_s}.content{idx_c}.string),';'];
         if sum(option.ax{idx_s}.content{idx_c}.Color~=[0,0,0])
             script{end+1}=[str1,'Color=',num2str_array(option.ax{idx_s}.content{idx_c}.Color),';'];
@@ -2352,9 +2352,13 @@ GLW_figure_openingFcn;
     end
     function str=str_array2str(data)
         str='{';
-        for k=1:size(data,1)
-            str=[str,'''',data(k,:),''''];
-            if k~=size(data,1)
+        for k=1:length(data)
+            if iscell(data)
+                str=[str,'''',data{k},''''];
+            else
+                str=[str,'''',data(k,:),''''];
+            end
+            if k~=length(data)
                 str=[str,','];
             else
                 str=[str,'}'];
@@ -4240,7 +4244,11 @@ GLW_figure_openingFcn;
         c=get(handles.panel_text_text_edt,'string');
         str={};
         for k=1:size(c,1)
-            str(k)={c(k,:)};
+            if iscell(c(k))
+                str(k)=c(k,:);
+            else
+                str(k)={c(k,:)};
+            end
         end
         option.ax{option.cnt_subfig}.content{option.cnt_content}.string=str;
         text_callback();

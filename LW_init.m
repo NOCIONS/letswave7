@@ -1,6 +1,10 @@
 function LW_init()
 set(0,'DefaultUicontrolFontSize',10);
 
+if verLessThan('matlab','8.4')
+    warning('off','MATLAB:CELL:INTERSECT:RowsFlagIgnored');
+end
+
 % find the path of letswave7
 str=which('letswave7');
 p=fileparts(str);
