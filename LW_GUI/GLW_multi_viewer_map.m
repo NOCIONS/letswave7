@@ -24,7 +24,6 @@ GLW_view_OpeningFcn;
         
         set(handles.fig1,'Visible','on');
     end
-
     function Init_parameter()
         temp=get(0,'MonitorPositions');
         userdata.fig1_pos=[(temp(3)-1350)/2,(temp(4)-680)/2-20,1350,680];
@@ -105,7 +104,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig1_init()
         icon=load('icon.mat');
         handles.fig1=figure('Visible','off','Color',0.94*[1,1,1],...
@@ -304,7 +302,6 @@ GLW_view_OpeningFcn;
         set(handles.interval2_edit_y,'backgroundcolor',[1,1,1]);
         set(handles.caxis_style_popup,'backgroundcolor',[1,1,1]);
     end
-
     function Fig2_init()
         icon=load('icon.mat');
         handles.fig2=figure('Visible','off','position',userdata.fig2_pos,...
@@ -380,7 +377,6 @@ GLW_view_OpeningFcn;
         handles.panel_fig=uipanel(handles.fig1,'BorderType','none');
         set(handles.fig2,'MenuBar','none');
     end
-
     function Init_function()
         set(handles.fig1,'WindowButtonDownFcn',@Fig_BtnDown);
         set(handles.fig1,'WindowButtonMotionFcn',@Fig_BtnMotion);
@@ -390,9 +386,9 @@ GLW_view_OpeningFcn;
         
         set(handles.toolbar1_split,'ClickedCallback',{@Fig_split});
         set(handles.dataset_add,'Units','normalized','Callback',@Edit_dataset_Add);
-        set(handles.dataset_del,'Units','normalized','Callback',@edit_dataset_Del);
-        set(handles.dataset_up,'Units','normalized','Callback',@edit_dataset_Up);
-        set(handles.dataset_down,'Units','normalized','Callback',@edit_dataset_Down);
+        set(handles.dataset_del,'Units','normalized','Callback',@Edit_dataset_Del);
+        set(handles.dataset_up,'Units','normalized','Callback',@Edit_dataset_Up);
+        set(handles.dataset_down,'Units','normalized','Callback',@Edit_dataset_Down);
         set(handles.dataset_listbox,'Callback',@GLW_view_UpdataFcn);
         set(handles.epoch_listbox,'Callback',@GLW_view_UpdataFcn);
         set(handles.channel_listbox,'Callback',@GLW_view_UpdataFcn);
@@ -409,7 +405,7 @@ GLW_view_OpeningFcn;
         set(handles.caxis_auto_checkbox,'Callback',@Edit_caxis_auto_checkbox_Changed);
         set(handles.caxis1_edit,'Callback',@Edit_caxis_Changed);
         set(handles.caxis2_edit,'Callback',@Edit_caxis_Changed);
-        set(handles.caxis_style_popup,'Callback',@Popup_cursor_Changed);
+        set(handles.caxis_style_popup,'Callback',@Popup_colormap_Changed);
         
         set(handles.cursor_edit_x,'Callback',@Edit_cursor_Changed);
         set(handles.cursor_edit_y,'Callback',@Edit_cursor_Changed);
@@ -624,7 +620,6 @@ GLW_view_OpeningFcn;
             Fig2_SizeChangedFcn();
         end
     end
-
     function Fig_ax()
         for col_pos=1:userdata.num_cols
             for row_pos=1:userdata.num_rows
@@ -659,7 +654,6 @@ GLW_view_OpeningFcn;
 %             set(get(handles.axes(k),'Children'),'Visible','off');
 %         end
     end
-
     function Fig_image()
         userdata.minmax_axis=[];
         for dataset_index=1:length(userdata.selected_datasets)
@@ -725,7 +719,6 @@ GLW_view_OpeningFcn;
         set(handles.image(1:userdata.num_rows*userdata.num_cols),'Visible','on');
         set(handles.image(userdata.num_rows*userdata.num_cols+1:end),'Visible','off');
     end
-
     function Fig_title(~, ~)
         userdata.is_title=strcmp(get(handles.toolbar2_title,'State'),'on');
         if userdata.is_title
@@ -802,7 +795,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig_shade(~, ~)
         userdata.is_shade=strcmp(get(handles.toolbar2_shade,'State'),'on');
         if userdata.is_shade
@@ -828,7 +820,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig_cursor(~, ~)
         userdata.is_cursor=strcmp(get(handles.toolbar2_cursor,'State'),'on');
         if userdata.is_cursor
@@ -873,7 +864,6 @@ GLW_view_OpeningFcn;
         set(handles.cursor_edit_x,'String',num2str(userdata.cursor_point(1)));
         set(handles.cursor_edit_y,'String',num2str(userdata.cursor_point(2)));
     end
-
     function Fig_polarity(~, ~)
         userdata.is_polarity=strcmp(get(handles.toolbar2_polarity,'State'),'on');
         if userdata.is_polarity
@@ -882,7 +872,6 @@ GLW_view_OpeningFcn;
             set(handles.axes,'YDir','normal');
         end
     end
-
     function Fig_topo(~,~)
         userdata.is_topo=strcmp(get(handles.toolbar2_topo,'State'),'on');
         if userdata.is_topo
@@ -976,7 +965,6 @@ GLW_view_OpeningFcn;
         end
         Fig2_SizeChangedFcn();
     end
-
     function Fig_headplot(~,~)
         userdata.is_headplot=strcmp(get(handles.toolbar2_headplot,'State'),'on');
         if userdata.is_headplot
@@ -1074,7 +1062,6 @@ GLW_view_OpeningFcn;
         end
         Fig2_SizeChangedFcn();
     end
-
     function Fig_save(~,~)
         [FileName,PathName,FilterIndex] = uiputfile(...
             {'*.tif','TIFF image (*.tif)';...
@@ -1147,7 +1134,6 @@ GLW_view_OpeningFcn;
             Fig_split();
         end
     end
-
     function Edit_xaxis_auto_checkbox_Changed(~, ~)
         userdata.auto_x=get(handles.xaxis_auto_checkbox,'Value');
         if  userdata.auto_x==1
@@ -1161,7 +1147,6 @@ GLW_view_OpeningFcn;
             zoom(handles.axes(k),'reset');
         end
     end
-
     function Edit_yaxis_auto_checkbox_Changed(~, ~)
         userdata.auto_y=get(handles.yaxis_auto_checkbox,'Value');
         if  userdata.auto_y==1
@@ -1175,7 +1160,6 @@ GLW_view_OpeningFcn;
             zoom(handles.axes(k),'reset');
         end
     end
-
     function Edit_caxis_auto_checkbox_Changed(~, ~)
         userdata.auto_c=get(handles.caxis_auto_checkbox,'Value');
         if  userdata.auto_c==1
@@ -1195,11 +1179,9 @@ GLW_view_OpeningFcn;
         end
         set(handles.axes,'CLim',userdata.last_axis(5:6));
     end
-
     function Edit_cursor_auto_checkbox_Changed(~,~)
         userdata.lock_cursor=get(handles.cursor_auto_checkbox,'Value');
     end
-
     function Edit_xaxis_Changed(~, ~)
         x(1) = str2double(get(handles.xaxis1_edit, 'String'));
         x(2) = str2double(get(handles.xaxis2_edit, 'String'));
@@ -1222,7 +1204,6 @@ GLW_view_OpeningFcn;
             zoom(handles.axes(k),'reset');
         end
     end
-
     function Edit_yaxis_Changed(~, ~)
         x(1) = str2double(get(handles.yaxis1_edit, 'String'));
         x(2) = str2double(get(handles.yaxis2_edit, 'String'));
@@ -1246,7 +1227,6 @@ GLW_view_OpeningFcn;
             zoom(handles.axes(k),'reset');
         end
     end
-
     function Edit_caxis_Changed(~, ~)
         x(1) = str2double(get(handles.caxis1_edit, 'String'));
         x(2) = str2double(get(handles.caxis2_edit, 'String'));
@@ -1280,7 +1260,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Edit_cursor_Changed(~,~)
         userdata.lock_cursor=1;
         set(handles.cursor_auto_checkbox,'Value',userdata.lock_cursor);
@@ -1290,15 +1269,19 @@ GLW_view_OpeningFcn;
         Fig_topo_Update();
         Fig_headplot_Update();
     end
-
-    function Popup_cursor_Changed(~,~)
+    function Popup_colormap_Changed(~,~)
         str=get(handles.caxis_style_popup,'string');
         value=get(handles.caxis_style_popup,'value');
         userdata.color_style=str{value};
-        colormap(handles.fig1,str{value});
-        colormap(handles.fig2,str{value});
+        a=findall(handles.fig1,'Type','axes');
+        for k=1:length(a)
+        colormap(a(k),userdata.color_style);
+        end
+        a=findall(handles.fig2,'Type','axes');
+        for k=1:length(a)
+        colormap(a(k),userdata.color_style);
+        end
     end
-
     function Edit_interval_Changed(~, ~)
         x(1) = str2num(get(handles.interval1_edit_x,'String'));
         x(2) = str2num(get(handles.interval2_edit_x,'String'));
@@ -1318,7 +1301,6 @@ GLW_view_OpeningFcn;
         userdata.shade_y=y;
         Fig_shade_Update();
     end
-
     function Edit_interval_table(~,~)
         x1 = str2num(get(handles.interval1_edit_x,'String'));
         x2 = str2num(get(handles.interval2_edit_x,'String'));
@@ -1391,7 +1373,6 @@ GLW_view_OpeningFcn;
             'string','send the table to workspace','Units','normalized');
         set(btn,'callback',@(src,eventdata)assignin('base','lw_table',table_data));
     end
-
     function Edit_interval_plot(~,~)
         x1 = str2num(get(handles.interval1_edit_x,'String'));
         x2 = str2num(get(handles.interval2_edit_x,'String'));
@@ -1481,7 +1462,6 @@ GLW_view_OpeningFcn;
         end
         set(title_topo,'Visible','on');
     end
-
     function Fig_split(~, ~)
         userdata.is_split=~userdata.is_split;
         if userdata.is_split==1
@@ -1519,7 +1499,6 @@ GLW_view_OpeningFcn;
         Fig1_SizeChangedFcn;
         Fig2_SizeChangedFcn;
     end
-
     function Fig_BtnDown(~, ~)
         persistent shade_x_temp;
         persistent shade_y_temp;
@@ -1572,7 +1551,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig_BtnMotion(~, ~)
         is_inaxis=0;
         for ax_id=1:userdata.num_cols*userdata.num_rows
@@ -1635,7 +1613,6 @@ GLW_view_OpeningFcn;
             Fig_headplot_Update();
         end
     end
-
     function Fig_BtnUp(~, ~)
         if userdata.is_shade==1
             if(userdata.mouse_state==1)
@@ -1671,7 +1648,6 @@ GLW_view_OpeningFcn;
             set(handles.interval2_edit_y,'String',num2str(userdata.shade_y(2)));
         end
     end
-
     function Fig1_SizeChangedFcn(~, ~)
         userdata.fig1_pos=get(handles.fig1,'Position');
         p_edit=get(handles.panel_edit,'Position');
@@ -1692,7 +1668,6 @@ GLW_view_OpeningFcn;
         p_edit(4)=userdata.fig1_pos(4);
         set(handles.panel_edit,'Position',p_edit);
     end
-
     function Fig2_SizeChangedFcn(~, ~)
         set(handles.panel_fig,'Units','Pixels');
         userdata.fig_pos=get(handles.panel_fig,'Position');
@@ -1739,7 +1714,6 @@ GLW_view_OpeningFcn;
         end
         Fig_cursor_Update();
     end
-
     function Fig_axis_Changed(~, event)
         if strcmp(get(event.Axes,'Tag'),'image')
             userdata.last_axis(1:2) = get(event.Axes,'XLim');
@@ -1770,7 +1744,6 @@ GLW_view_OpeningFcn;
             set(event.Axes,'YLim',[-0.5,0.6]);
         end
     end
-
     function Fig_cursor_Update()
         if(userdata.is_cursor)
             set(handles.cursor_x,'XData',[userdata.cursor_point(1),userdata.cursor_point(1)]);
@@ -1830,12 +1803,10 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig_shade_Update()
         set(handles.shade,'XData',[userdata.shade_x(1),userdata.shade_x(2),userdata.shade_x(2),userdata.shade_x(1)]);
         set(handles.shade,'YData',[userdata.shade_y(1),userdata.shade_y(1),userdata.shade_y(2),userdata.shade_y(2)]);
     end
-
     function Fig_topo_Update()
         if userdata.is_topo
             ax_num=min(length(userdata.selected_datasets)*length(userdata.selected_epochs),4);
@@ -1878,7 +1849,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig_topo_Popup(~,~)
         if strcmp(get(gcf,'SelectionType'),'open')
             fig_temp=figure();
@@ -1951,7 +1921,6 @@ GLW_view_OpeningFcn;
             set(title_topo,'Visible','on');
         end
     end
-
     function Fig_headplot_Update(~,~)
         if userdata.is_headplot
             ax_num=min(length(userdata.selected_datasets)*length(userdata.selected_epochs),4);
@@ -1992,7 +1961,6 @@ GLW_view_OpeningFcn;
             end
         end
     end
-
     function Fig_headplot_Popup(~,~)
         if strcmp(get(gcf,'SelectionType'),'open')
             fig_temp=figure();
@@ -2074,13 +2042,11 @@ GLW_view_OpeningFcn;
             set(title_headplot,'Visible','on');
         end
     end
-
     function Set_position(obj,position)
         set(obj,'Units','pixels');
         set(obj,'Position',position);
         set(obj,'Units','normalized');
     end
-
     function [index_pos,z_pos]=Get_iz_pos(header)
         if strcmp(get(handles.index_popup,'Visible'),'off')
             index_pos=1;
@@ -2101,7 +2067,6 @@ GLW_view_OpeningFcn;
             set(handles.z_edit,'String',num2str((z_pos-1)*header.zstep+header.zstart));
         end
     end
-
     function Edit_dataset_Add(~, ~)
         [FileName,PathName] = GLW_getfile();
         %[FileName,PathName] = uigetfile({'*.lw6','Select the lw6 file'},'MultiSelect','on');
@@ -2120,8 +2085,7 @@ GLW_view_OpeningFcn;
             set(handles.dataset_listbox,'String',userdata.datasets_filename);
         end
     end
-
-    function edit_dataset_Del(~, ~)
+    function Edit_dataset_Del(~, ~)
         index=get(handles.dataset_listbox,'value');
         if length(index)==length(datasets_header)
             CreateStruct.Interpreter = 'none';
@@ -2139,8 +2103,7 @@ GLW_view_OpeningFcn;
             GLW_view_UpdataFcn();
         end
     end
-
-    function edit_dataset_Up(~, ~)
+    function Edit_dataset_Up(~, ~)
         index=get(handles.dataset_listbox,'value');
         if index(1)==1
             return;
@@ -2162,8 +2125,7 @@ GLW_view_OpeningFcn;
             userdata.selected_datasets=index-1;
         end
     end
-
-    function edit_dataset_Down(~, ~)
+    function Edit_dataset_Down(~, ~)
         index=get(handles.dataset_listbox,'value');
         if index(end)==length(datasets_header)
             return;
@@ -2185,14 +2147,12 @@ GLW_view_OpeningFcn;
             userdata.selected_datasets=index+1;
         end
     end
-
     function Fig1_CloseReq_Callback(~, ~)
         closereq;
         if ishandle(handles.fig2)
             close(handles.fig2);
         end
     end
-
     function Fig2_CloseReq_Callback(~, ~)
         closereq;
         if ishandle(handles.fig1)

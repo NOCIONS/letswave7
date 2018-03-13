@@ -158,6 +158,20 @@ uiwait(handles.fig);
         Set_position(handles.OK_btn,[1175,50,170,45]);
         Set_position(handles.Cancel_btn,[1175,8,170,45]);
         
+        temp=get(0,'MonitorPositions');
+        if temp(3)<1350 ||temp(4)<680-100
+            if  temp(3)/temp(4)<1350/680
+                w=min(1350,temp(3));
+                h=w/1350*680;
+            else
+                h=min(temp(4)-50,680);
+                w=h/680*1350;
+            end
+                x=(temp(3)-w)/2;
+                y=max(50,(temp(4)-h)/2);
+            userdata.fig_pos=[x,y,w,h];
+            set(handles.fig,'position',userdata.fig_pos);
+        end
         str=cell(length(lwdataset_in),1);
         for k=1:length(lwdataset_in)
             str{k}=lwdataset_in(k).header.name;
