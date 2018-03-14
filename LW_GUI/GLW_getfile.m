@@ -94,7 +94,6 @@ PathName=handles.file_path;
         
         update_handles();
     end
-
     function file_listbox_Callback()
         if strcmp(get(gcf,'SelectionType'),'normal')
             file_listbox_select_changed();
@@ -104,7 +103,6 @@ PathName=handles.file_path;
             OK_btn_Callback();
         end
     end
-
     function file_listbox_select_changed()
         str=get(handles.file_listbox,'userdata');
         idx=get(handles.file_listbox,'value');
@@ -136,12 +134,10 @@ PathName=handles.file_path;
             end
         end
     end
-
     function suffix_listbox_Callback()
         set(handles.isfilter_checkbox,'value',1);
         update_handles;
     end
-
     function path_edit_Callback()
         st=get(handles.path_edit,'String');
         if exist(st,'dir')
@@ -151,7 +147,6 @@ PathName=handles.file_path;
             set(handles.path_edit,'String',st);
         end
     end
-
     function path_btn_Callback()
         st=get(handles.path_edit,'String');
         st=uigetdir(st);
@@ -160,12 +155,10 @@ PathName=handles.file_path;
             update_handles;
         end
     end
-
     function fig_Close()
         closereq;
         %close(handles.fig);
     end
-
     function OK_btn_Callback()
         idx=get(handles.file_listbox,'value');
         file_str=[];
@@ -184,7 +177,6 @@ PathName=handles.file_path;
         handles.file_path = file_path;
         closereq;
     end
-
     function update_handles()
         st=get(handles.path_edit,'String');
         if exist(st,'dir')~=7

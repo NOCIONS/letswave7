@@ -5,6 +5,7 @@ function inputfiles_new=CLW_figure_data(inputfiles)
 inputfiles_new=inputfiles;
 icon=load('icon.mat');
 scrsz = get(0,'MonitorPositions');
+scrsz=scrsz(1,:);
 w=min(scrsz(3),1000);
 h=min(length(inputfiles)*24+160,scrsz(4)*2/3);
 pos=[(scrsz(3)-w)/2,(scrsz(4)-h)/2,w,h];

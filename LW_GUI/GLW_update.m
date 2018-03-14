@@ -1,6 +1,7 @@
 function is_updated=GLW_update()
 is_updated=0;
 scrsz = get(0,'MonitorPositions');
+scrsz=scrsz(1,:);
 pos=[scrsz(3)/2,scrsz(4)/2,250,100];
 fig=figure('Position',pos,'color',[0.93,0.93,0.93],...
     'name','Letswave Updating ','NumberTitle','off');

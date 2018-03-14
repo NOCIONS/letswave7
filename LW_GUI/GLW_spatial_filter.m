@@ -23,6 +23,7 @@ uiwait(handles.fig);
         end
             
         temp=get(0,'MonitorPositions');
+        temp=temp(1,:);
         userdata.fig_pos=[(temp(3)-1350)/2,(temp(4)-680)/2,1350,680];
         userdata.unmix_matrix=option.unmix_matrix;
         userdata.mix_matrix=option.mix_matrix;
@@ -159,6 +160,7 @@ uiwait(handles.fig);
         Set_position(handles.Cancel_btn,[1175,8,170,45]);
         
         temp=get(0,'MonitorPositions');
+        temp=temp(1,:);
         if temp(3)<1350 ||temp(4)<680-100
             if  temp(3)/temp(4)<1350/680
                 w=min(1350,temp(3));

@@ -1736,8 +1736,9 @@ GLW_figure_openingFcn;
     function get_fig_default()
         option=option_setup(option,'inputfiles',[]);
         scrsz = get(0,'MonitorPositions');
-        %pos=[(scrsz(3)-950)/2,max((scrsz(4)-650-200)/2,100),700,650];
-        pos=[100,200,700,650];
+        scrsz=scrsz(1,:);
+        pos=[(scrsz(3)-950)/2,max((scrsz(4)-650-200)/2,100),700,650];
+        %pos=[100,200,700,650];
         option=option_setup(option,'fig2_pos',pos);
         option=option_setup(option,'ax',[]);
         option=option_setup(option,'ax_auto_position',0);

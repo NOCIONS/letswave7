@@ -26,6 +26,7 @@ GLW_view_OpeningFcn;
     end
     function Init_parameter()
         temp=get(0,'MonitorPositions');
+        temp=temp(1,:);
         userdata.fig1_pos=[(temp(3)-1350)/2,(temp(4)-680)/2-20,1350,680];
         userdata.fig2_pos=[(temp(3)-1350)/2+465,(temp(4)-680)/2-20,900,680];
         userdata.auto_x=1;
@@ -644,11 +645,11 @@ GLW_view_OpeningFcn;
         set(handles.axes(userdata.num_cols*userdata.num_rows+1:end),'Visible','off');
         a=findall(handles.fig1,'Type','axes');
         for k=1:length(a)
-        colormap(a(k),userdata.color_style);
+            colormap(a(k),userdata.color_style);
         end
         a=findall(handles.fig2,'Type','axes');
         for k=1:length(a)
-        colormap(a(k),userdata.color_style);
+            colormap(a(k),userdata.color_style);
         end
 %         for k=userdata.num_cols*userdata.num_rows+1:length(handles.axes)
 %             set(get(handles.axes(k),'Children'),'Visible','off');
@@ -893,6 +894,7 @@ GLW_view_OpeningFcn;
             for ax_idx=1:ax_num
                 if length(handles.axes_topo)<ax_idx
                     handles.axes_topo(ax_idx)=axes('Parent',handles.panel_fig,'units','pixels');
+                    colormap(handles.axes_topo(ax_idx),userdata.color_style);
                     caxis(handles.axes_topo(ax_idx),userdata.last_axis(5:6));
                     set(handles.axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
                     set(handles.axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
@@ -986,6 +988,7 @@ GLW_view_OpeningFcn;
                 if length(handles.axes_headplot)<ax_idx
                     handles.axes_headplot(ax_idx)=axes('Parent',...
                         handles.panel_fig,'units','pixels');
+                    colormap(handles.axes_headplot(ax_idx),jet(userdata.headplot_colornum));
                     caxis(handles.axes_headplot(ax_idx),userdata.last_axis(5:6));
                     axis(handles.axes_headplot(ax_idx),'image');
                     handles.title_headplot(ax_idx)=title(...
@@ -1018,7 +1021,6 @@ GLW_view_OpeningFcn;
                 set(handles.title_headplot(ax_idx),'String',...
                     [char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']']);
             end
-            %colormap(jet(userdata.headplot_colornum));
             if isempty(handles.colorbar_headplot)
                 handles.colorbar_headplot=colorbar;
                 set(handles.colorbar_headplot,'units','pixels');
@@ -1275,11 +1277,11 @@ GLW_view_OpeningFcn;
         userdata.color_style=str{value};
         a=findall(handles.fig1,'Type','axes');
         for k=1:length(a)
-        colormap(a(k),userdata.color_style);
+            colormap(a(k),userdata.color_style);
         end
         a=findall(handles.fig2,'Type','axes');
         for k=1:length(a)
-        colormap(a(k),userdata.color_style);
+            colormap(a(k),userdata.color_style);
         end
     end
     function Edit_interval_Changed(~, ~)
@@ -1363,6 +1365,7 @@ GLW_view_OpeningFcn;
         col_headers{10}='cmean';
         
         temp=get(0,'MonitorPositions');
+        temp=temp(1,:);
         pos=[(temp(3)-800)/2,(temp(4)-400)/2-50,800,400];
         h = figure('name','LW_Table','numbertitle','off','position',pos);
         set(h,'MenuBar','none');
@@ -1391,6 +1394,8 @@ GLW_view_OpeningFcn;
         end
         for ax_idx=1:ax_num
             axes_topo(ax_idx)=subplot(row_num,col_num,ax_idx);
+            
+            colormap(axes_topo(ax_idx),userdata.color_style);
             set(axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
             set(axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
             caxis(axes_topo(ax_idx),userdata.last_axis(5:6));
@@ -1406,7 +1411,6 @@ GLW_view_OpeningFcn;
             line_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linewidth',2,'parent',axes_topo(ax_idx));
             dot_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linestyle','none','Marker','.','Markersize',8,'parent',axes_topo(ax_idx));
         end
-        colormap(userdata.color_style);
         colorbar_topo=colorbar;
         p=get(fig_temp,'position');
         set(colorbar_topo,'units','pixels');
@@ -1863,6 +1867,7 @@ GLW_view_OpeningFcn;
             end
             for ax_idx=1:ax_num
                 axes_topo(ax_idx)=subplot(row_num,col_num,ax_idx);
+                colormap(axes_topo(ax_idx),userdata.color_style);
                 set(axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
                 set(axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
                 caxis(axes_topo(ax_idx),userdata.last_axis(5:6));
@@ -1878,7 +1883,6 @@ GLW_view_OpeningFcn;
                 line_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linewidth',2,'parent',axes_topo(ax_idx));
                 dot_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linestyle','none','Marker','.','Markersize',8,'parent',axes_topo(ax_idx));
             end
-            colormap(userdata.color_style);
             colorbar_topo=colorbar;
             p=get(fig_temp,'position');
             set(colorbar_topo,'units','pixels');
@@ -1973,6 +1977,7 @@ GLW_view_OpeningFcn;
             end
             for ax_idx=1:ax_num
                 axes_headplot(ax_idx)=subplot(row_num,col_num,ax_idx);
+                colormap(axes_headplot(ax_idx),userdata.color_style);
                 caxis(axes_headplot(ax_idx),userdata.last_axis(5:6));
                 axis(axes_headplot(ax_idx),'image');
                 title_headplot(ax_idx)=title(axes_headplot(ax_idx),'hello',...
@@ -1997,7 +2002,6 @@ GLW_view_OpeningFcn;
                     'Linestyle','none','Marker','.','Markersize',ceil(10/sqrt(ax_num)),...
                     'parent',axes_headplot(ax_idx));
             end
-            colormap(userdata.color_style);
             colorbar_headplot=colorbar;
             p=get(fig_temp,'position');
             set(colorbar_headplot,'units','pixels');

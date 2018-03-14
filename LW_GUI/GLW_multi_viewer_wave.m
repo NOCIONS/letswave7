@@ -512,6 +512,7 @@ GLW_my_view_OpeningFcn;
         end
         
         scrsz = get(0,'MonitorPositions');
+        scrsz=scrsz(1,:);
         pos=get(handles.fig1,'Position');
         if pos(2)+pos(4)>scrsz(4)-60
             pos(2)=scrsz(4)-60-pos(4);
@@ -1442,6 +1443,7 @@ GLW_my_view_OpeningFcn;
             end
             for ax_idx=1:ax_num
                 axes_topo(ax_idx)=subplot(row_num,col_num,ax_idx);
+                colormap(axes_topo(ax_idx),'jet');
                 set(axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
                 set(axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
                 caxis(axes_topo(ax_idx),userdata.last_axis(3:4));
@@ -1457,7 +1459,6 @@ GLW_my_view_OpeningFcn;
                 line_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linewidth',2,'parent',axes_topo(ax_idx));
                 dot_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linestyle','none','Marker','.','Markersize',8,'parent',axes_topo(ax_idx));
             end
-            colormap 'jet';
             colorbar_topo=colorbar;
             p=get(fig_temp,'position');
             set(colorbar_topo,'units','pixels');
@@ -1537,6 +1538,7 @@ GLW_my_view_OpeningFcn;
             for ax_idx=1:ax_num
                 if length(handles.axes_topo)<ax_idx
                     handles.axes_topo(ax_idx)=axes('Parent',handles.panel_fig,'units','pixels');
+                    colormap(handles.axes_topo(ax_idx),'jet');
                     caxis(handles.axes_topo(ax_idx),userdata.last_axis(3:4));
                     set(handles.axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
                     set(handles.axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
@@ -1561,7 +1563,6 @@ GLW_my_view_OpeningFcn;
                 set(handles.title_topo(ax_idx),'String',...
                     [char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']']);
             end
-            colormap 'jet';
             if isempty(handles.colorbar_topo)
                 handles.colorbar_topo=colorbar;
                 set(handles.colorbar_topo,'units','pixels');
@@ -1664,6 +1665,7 @@ GLW_my_view_OpeningFcn;
             end
             for ax_idx=1:ax_num
                 axes_headplot(ax_idx)=subplot(row_num,col_num,ax_idx);
+                colormap(axes_headplot(ax_idx),jet(userdata.headplot_colornum));
                 caxis(axes_headplot(ax_idx),userdata.last_axis(3:4));
                 axis(axes_headplot(ax_idx),'image');
                 title_headplot(ax_idx)=title(axes_headplot(ax_idx),'hello',...
@@ -1688,7 +1690,6 @@ GLW_my_view_OpeningFcn;
                     'Linestyle','none','Marker','.','Markersize',ceil(10/sqrt(ax_num)),...
                     'parent',axes_headplot(ax_idx));
             end
-            colormap(jet(userdata.headplot_colornum));
             colorbar_headplot=colorbar;
             p=get(fig_temp,'position');
             set(colorbar_headplot,'units','pixels');
@@ -1770,6 +1771,7 @@ GLW_my_view_OpeningFcn;
                 if length(handles.axes_headplot)<ax_idx
                     handles.axes_headplot(ax_idx)=axes('Parent',...
                         handles.panel_fig,'units','pixels');
+                    colormap(handles.axes_headplot(ax_idx),jet(userdata.headplot_colornum));
                     caxis(handles.axes_headplot(ax_idx),userdata.last_axis(3:4));
                     axis(handles.axes_headplot(ax_idx),'image');
                     handles.title_headplot(ax_idx)=title(...
@@ -1802,7 +1804,6 @@ GLW_my_view_OpeningFcn;
                 set(handles.title_headplot(ax_idx),'String',...
                     [char(userdata.str_dataset(userdata.selected_datasets(dataset_index))),' [',num2str(epoch_index),']']);
             end
-            colormap(jet(userdata.headplot_colornum));
             if isempty(handles.colorbar_headplot)
                 handles.colorbar_headplot=colorbar;
                 set(handles.colorbar_headplot,'units','pixels');
@@ -2225,6 +2226,7 @@ GLW_my_view_OpeningFcn;
         end
         for ax_idx=1:ax_num
             axes_topo(ax_idx)=subplot(row_num,col_num,ax_idx);
+            colormap( axes_topo(ax_idx),'jet');
             set(axes_topo(ax_idx),'Xlim',[-0.55,0.55]);
             set(axes_topo(ax_idx),'Ylim',[-0.5,0.6]);
             caxis(axes_topo(ax_idx),userdata.last_axis(3:4));
@@ -2240,7 +2242,6 @@ GLW_my_view_OpeningFcn;
             line_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linewidth',2,'parent',axes_topo(ax_idx));
             dot_topo(ax_idx)=line(headx,heady,'Color',[0,0,0],'Linestyle','none','Marker','.','Markersize',8,'parent',axes_topo(ax_idx));
         end
-        colormap 'jet';
         colorbar_topo=colorbar;
         p=get(fig_temp,'position');
         set(colorbar_topo,'units','pixels');

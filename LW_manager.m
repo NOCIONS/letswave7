@@ -13,6 +13,7 @@ Manager_Init();
         handles.fig=figure('Position',[100 50 500 670],'color',0.94*[1,1,1],...
             'name',['Letswave7--Manager (ver.',num2str(temp),')'],'NumberTitle','off','userdata',0);
         scrsz = get(0,'MonitorPositions');
+        scrsz=scrsz(1,:);
         pos=get(handles.fig,'Position');
         if pos(2)+pos(4)>scrsz(4)-60
             pos(2)=scrsz(4)-60-pos(4);

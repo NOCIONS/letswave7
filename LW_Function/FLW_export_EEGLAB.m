@@ -24,7 +24,8 @@ classdef FLW_export_EEGLAB
             obj.h_fig=figure('name','Export Data to EEGLab','NumberTitle','off');
             pos=get(obj.h_fig,'Position');
             pos(3:4)=[300 510];
-            scrsz = get(0,'MonitorPositions'); 
+            scrsz = get(0,'MonitorPositions');
+            scrsz=scrsz(1,:);
             if pos(1)+pos(3)>scrsz(3)
                 pos(1)=(scrsz(3)-pos(3))/2;
             end
