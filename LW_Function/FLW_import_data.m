@@ -274,19 +274,43 @@ classdef FLW_import_data
                 if numevents==0
                     lwdata_out.header.events=[];
                 else
+                    k=0;
                     for eventpos=1:numevents
                         event.code='unknown';
-                        if isempty(trg(eventpos).value)
-                            event.code=trg(eventpos).type;
+                        if strcmpi('.set',ext)
+                            if isempty(trg(eventpos).value)
+                                event.code=trg(eventpos).type;
+                            else
+                                event.code=trg(eventpos).value;
+                            end
+                            if isnumeric(event.code)
+                                event.code=num2str(event.code);
+                            end
+                            if(lwdata_out.header.datasize(1)==1) %if it is continous data or just a single epoch
+                                event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
+                                event.epoch=1;
+                            else %if it is an epoched dataset
+                                if isempty(trg(eventpos).epoch)
+                                    continue;
+                                end
+                                event.epoch = floor(trg(eventpos).sample/lwdata_out.header.datasize(6))+1;
+                                event.latency=((trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart)-...
+                                    (event.epoch-1)*lwdata_out.header.xstep*lwdata_out.header.datasize(6);
+                            end
                         else
-                            event.code=trg(eventpos).value;
+                            if isempty(trg(eventpos).value)
+                                event.code=trg(eventpos).type;
+                            else
+                                event.code=trg(eventpos).value;
+                            end
+                            if isnumeric(event.code)
+                                event.code=num2str(event.code);
+                            end
+                            event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
+                            event.epoch=1;
                         end
-                        if isnumeric(event.code)
-                            event.code=num2str(event.code);
-                        end
-                        event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
-                        event.epoch=1;
-                        lwdata_out.header.events(eventpos)=event;
+                        k=k+1;
+                        lwdata_out.header.events(k)=event;
                     end
                 end
             end
