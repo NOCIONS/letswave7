@@ -34,7 +34,7 @@ Manager_Init();
             %convert xml to struct
             s= xml2struct(str);
             if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
-                continue;                
+                continue;
             end
             
             %build titlebar menu (labels and callback)
@@ -52,16 +52,16 @@ Manager_Init();
                             sss=ss{k2}.subsubmenu;
                             if ~iscell(sss) sss={sss};end
                             for k3=1:length(sss)
-                                if isfield(sss{k3}.Attributes,'callback') 
+                                if isfield(sss{k3}.Attributes,'callback')
                                     uimenu(eh,'Label',sss{k3}.Attributes.Label,...
                                         'callback',@(obj,event)menu_callback(sss{k3}.Attributes.callback));
                                 else
                                     uimenu(eh,'Label',sss{k3}.Attributes.Label,...
                                         'enable', 'off');
                                 end
-                             end
+                            end
                         else
-                            if isfield(ss{k2}.Attributes,'callback') 
+                            if isfield(ss{k2}.Attributes,'callback')
                                 set(eh,'callback',@(obj,event)menu_callback(ss{k2}.Attributes.callback));
                             else
                                 set(eh,'enable', 'off');
@@ -98,7 +98,7 @@ Manager_Init();
             %convert xml to struct
             s= xml2struct(str);
             if ~isfield(s,'LW_Plugins')||~isfield(s.LW_Plugins,'menu')
-                continue;                
+                continue;
             end
             %build titlebar menu (labels and callback)
             root = uimenu(root_plugins,'Label',plugins_list{k});
@@ -115,16 +115,16 @@ Manager_Init();
                             sss=ss{k2}.subsubmenu;
                             if ~iscell(sss) sss={sss};end
                             for k3=1:length(sss)
-                                if isfield(sss{k3}.Attributes,'callback') 
+                                if isfield(sss{k3}.Attributes,'callback')
                                     uimenu(eh,'Label',sss{k3}.Attributes.Label,...
                                         'callback',@(obj,event)menu_callback(sss{k3}.Attributes.callback));
                                 else
                                     uimenu(eh,'Label',sss{k3}.Attributes.Label,...
                                         'enable', 'off');
                                 end
-                             end
+                            end
                         else
-                            if isfield(ss{k2}.Attributes,'callback') 
+                            if isfield(ss{k2}.Attributes,'callback')
                                 set(eh,'callback',@(obj,event)menu_callback(ss{k2}.Attributes.callback));
                             else
                                 set(eh,'enable', 'off');
@@ -140,7 +140,7 @@ Manager_Init();
                 end
             end
         end
-                    
+        
         %build context menu (labels and callbacks)
         hcmenu = uicontextmenu('parent',handles.fig);
         uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
@@ -270,20 +270,20 @@ Manager_Init();
             %will report the size of the first selected dataset
             filename=str{idx(1)};
             try
-            header = CLW_load_header(filename);
-            set(handles.info_text_epoch,'string',['Epochs:',num2str(header.datasize(1))]);
-            set(handles.info_text_channel,'string',['Channels:',num2str(header.datasize(2))]);
-            set(handles.info_text_X,'string',['X:',num2str(header.datasize(6))]);
-            set(handles.info_text_Y,'string',['Y:',num2str(header.datasize(5))]);
-            set(handles.info_text_Z,'string',['Z:',num2str(header.datasize(4))]);
-            set(handles.info_text_Index,'string',['I:',num2str(header.datasize(3))]);
+                header = CLW_load_header(filename);
+                set(handles.info_text_epoch,'string',['Epochs:',num2str(header.datasize(1))]);
+                set(handles.info_text_channel,'string',['Channels:',num2str(header.datasize(2))]);
+                set(handles.info_text_X,'string',['X:',num2str(header.datasize(6))]);
+                set(handles.info_text_Y,'string',['Y:',num2str(header.datasize(5))]);
+                set(handles.info_text_Z,'string',['Z:',num2str(header.datasize(4))]);
+                set(handles.info_text_Index,'string',['I:',num2str(header.datasize(3))]);
             catch
-            set(handles.info_text_epoch,'string',['Epochs:Error']);
-            set(handles.info_text_channel,'string',['Channels:Error']);
-            set(handles.info_text_X,'string',['X:Error']);
-            set(handles.info_text_Y,'string',['Y:Error']);
-            set(handles.info_text_Z,'string',['Z:Error']);
-            set(handles.info_text_Index,'string',['I:Error']);
+                set(handles.info_text_epoch,'string',['Epochs:Error']);
+                set(handles.info_text_channel,'string',['Channels:Error']);
+                set(handles.info_text_X,'string',['X:Error']);
+                set(handles.info_text_Y,'string',['Y:Error']);
+                set(handles.info_text_Z,'string',['Z:Error']);
+                set(handles.info_text_Index,'string',['I:Error']);
             end
         end
     end
@@ -350,7 +350,7 @@ Manager_Init();
         if isempty(option)|| length(option.file_str)>1
             disp('Please select the file to update from workspace');
             return;
-        end      
+        end
         try
             lwdata=evalin('base','lwdata');
         catch
@@ -366,10 +366,10 @@ Manager_Init();
             end
         else
             if ~isfield(lwdata,'header')
-            disp('!!! Header field not found');
+                disp('!!! Header field not found');
             end
             if ~isfield(lwdata,'data')
-            disp('!!! Data field not found');
+                disp('!!! Data field not found');
             end
         end
     end
@@ -390,17 +390,32 @@ Manager_Init();
         end
         
         
-        if strcmp(fun_name,'GLW_figure')
+        if ~isempty(strfind(fun_name,'GLW_figure')) %#ok<STREMP>
+            %strcmp(fun_name,'GLW_figure')
             file_list=get_selectfile();
             option=[];
             for k=1:length(file_list.file_str)
                 option.inputfiles{k,1}=fullfile(file_list.file_path,file_list.file_str{k});
             end
-            GLW_figure(option);
+            if strcmp(fun_name,'GLW_figure')
+                GLW_figure(option);
+            end
+            if strcmp(fun_name,'GLW_figure_curve')
+                GLW_figure_curve(option);
+            end
+            if strcmp(fun_name,'GLW_figure_image')
+                GLW_figure_image(option);
+            end
+            if strcmp(fun_name,'GLW_figure_topo')
+                GLW_figure_topo(option);
+            end
+            if strcmp(fun_name,'GLW_figure_lissajous')
+                GLW_figure_lissajous(option);
+            end
             return;
         end
         
-        if ~isempty(strfind(fun_name,'FLW_import_'))
+        if ~isempty(strfind(fun_name,'FLW_import_'))%#ok<STREMP>
             %if fun_name is  FLW_import
             %execute the function with handles.fig
             eval([fun_name,'(handles.fig);']);
@@ -426,14 +441,14 @@ Manager_Init();
             return;
         end
         
-        if ~isempty(strfind(fun_name,'FLW_export_'))
+        if ~isempty(strfind(fun_name,'FLW_export_'))%#ok<STREMP>
             %if fun_name is FLW_export
             %execute the function without any arguments
             eval([fun_name,'();']);
             update_handles();
             return;
         end
-        if ~isempty(strfind(fun_name,'LW_batch'))
+        if ~isempty(strfind(fun_name,'LW_batch'))%#ok<STREMP>
             option=[];
             str=get(handles.file_listbox,'userdata');
             idx=get(handles.file_listbox,'value');
@@ -451,8 +466,6 @@ Manager_Init();
         %if fun_name is any other function
         %get the selection of files > option
         option=get_selectfile();
-        
-        
         
         if isempty(option)
             return;
@@ -496,15 +509,15 @@ Manager_Init();
             GLW_multi_viewer_map(option);
         else
             GLW_multi_viewer_wave(option);
-%             if length(option.file_str)==1 &&...
-%                     header.datasize(1)==1 &&...
-%                     header.datasize(6)>1000 && ...
-%                     header.datasize(6)*header.xstep>=10 &&...
-%                     strcmpi(header.filetype,'time_amplitude');
-%                 GLW_multi_viewer_continuous(option);
-%             else
-%                 GLW_multi_viewer_wave(option);
-%             end
+            %             if length(option.file_str)==1 &&...
+            %                     header.datasize(1)==1 &&...
+            %                     header.datasize(6)>1000 && ...
+            %                     header.datasize(6)*header.xstep>=10 &&...
+            %                     strcmpi(header.filetype,'time_amplitude');
+            %                 GLW_multi_viewer_continuous(option);
+            %             else
+            %                 GLW_multi_viewer_wave(option);
+            %             end
         end
     end
 
@@ -525,7 +538,7 @@ Manager_Init();
         temp=load('version.txt');
         address = GetAddress();
         url=['http://letswave.applinzi.com/check_update.wigs?',address,'_',computer,'_',num2str(temp)];
-%         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
+        %         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
         try
             lw_version = str2num(urlread(url,'Timeout',0.5));
             % lw_version = str2num(urlread(url));
@@ -537,7 +550,7 @@ Manager_Init();
                 %set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
             end
             %urlread('https://github.com/NOCIONS/letswave7/blob/master/resources/version.txt','Timeout',0.5);
-        catch 
+        catch
             handles.version_checkked=handles.version_checkked+1;
         end
     end

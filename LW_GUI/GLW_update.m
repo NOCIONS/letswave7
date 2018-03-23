@@ -11,7 +11,7 @@ update_btn=uicontrol('style','pushbutton','callback',@updateing,...
     'String','update','position',[25,10,200,50],'enable','off');
 update_txt=uicontrol('style','text','backgroundcolor',[0.93,0.93,0.93],...
     'String','checking...','position',[5,70,240,20]);
-
+pause(0.001);
 url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
 try
     lw_version = str2num(urlread(url));
@@ -25,6 +25,7 @@ try
 catch
     set(update_txt,'string','Unable to access the website.');
 end
+pause(0.001);
 set(fig,'windowstyle','modal');
 uiwait(fig);
 
@@ -41,7 +42,7 @@ uiwait(fig);
         catch
             set(update_txt,'String','Failed to download from server.');
             set(update_btn,'enable','on');
-            pause(0.001);
+            return;
         end
         set(update_txt,'String','File downloaded. Updating Letswave...');
         pause(0.001);
@@ -60,7 +61,7 @@ uiwait(fig);
                 [SUCCESS,~,MESSAGEID]=copyfile(filenames{filepos},filenames2{filepos});
                 if SUCCESS==0
                     if ~strcmp(filenames2{filepos},[p,filesep])
-                    disp(['Could not update : ' filenames2{filepos}]);
+                        disp(['Could not update : ' filenames2{filepos}]);
                     end
                 end
             catch
