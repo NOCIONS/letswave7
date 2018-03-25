@@ -611,6 +611,9 @@ Manager_Init();
             file_str=str(idx);
         end
         %
+        if isempty(suffix)
+            set(handles.isfilter_checkbox,'value',0);
+        end
         is_filter=get(handles.isfilter_checkbox,'value');
         if is_filter==1
             [~,selected_idx]=intersect(suffix,selected_str,'stable');
