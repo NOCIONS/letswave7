@@ -362,7 +362,10 @@ GLW_figure_openingFcn;
     function init_panel_content_manager()
         handles.panel_content_manager=uipanel(handles.fig1,'bordertype','none','visible','off');
         handles.content_add_txt=uicontrol(handles.panel_content_manager,'style','text','String','Content type:');
-        handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],'String',{'curve','line','rect','text'},'value',1);
+%         handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],...
+%             'String',{'curve','lissajous','average','all_epoch','all_channel','std','line','rect','text'},'value',1);
+         handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],...
+            'String',{'curve','lissajous','line','rect','text'},'value',1);
         handles.content_add=uicontrol(handles.panel_content_manager,'style','pushbutton');
         handles.content_del=uicontrol(handles.panel_content_manager,'style','pushbutton');
         handles.content_up=uicontrol(handles.panel_content_manager,'style','pushbutton');
@@ -3506,7 +3509,8 @@ GLW_figure_openingFcn;
         str_content=str_content{value_content};
         switch(option.ax{option.cnt_subfig}.style)
             case 'Curve'
-                set(handles.content_add_pop,'String',{'curve','line','rect','text','lissajous'});
+                %set(handles.content_add_pop,'String',{'curve','lissajous','average','all_epoch','all_channel','std','line','rect','text'});
+                set(handles.content_add_pop,'String',{'curve','lissajous','line','rect','text'});
             case 'Image'
                 set(handles.content_add_pop,'String',{'line','rect','text'});
             case 'Topograph'
@@ -3544,6 +3548,10 @@ GLW_figure_openingFcn;
             case 'text'
                 get_content_text_default();
                 handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).text=text('parent',handles.ax(option.cnt_subfig));
+            case 'average'
+                get_content_average_default();
+                handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line=line(...
+                    'Parent',handles.ax(option.cnt_subfig));
         end
         option.ax{option.cnt_subfig}.content_order=option.ax{option.cnt_subfig}.content_order+1;
         
@@ -3579,6 +3587,8 @@ GLW_figure_openingFcn;
             case 'lissajous'
                 delete(handles.ax_child{option.cnt_subfig}.handle(value_curve).line);
             case 'line'
+                delete(handles.ax_child{option.cnt_subfig}.handle(value_curve).line);
+            case 'average'
                 delete(handles.ax_child{option.cnt_subfig}.handle(value_curve).line);
             case 'rect'
                 delete(handles.ax_child{option.cnt_subfig}.handle(value_curve).rect);
@@ -4496,9 +4506,9 @@ GLW_figure_openingFcn;
             'XData',x,'YData',y,'CData',z);
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar('peer',handles.ax(option.cnt_subfig));
+            colorbar(handles.ax(option.cnt_subfig));
         else
-            colorbar('off','peer',handles.ax(option.cnt_subfig));
+            colorbar(handles.ax(option.cnt_subfig),'off');
         end
         colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
         
@@ -5187,9 +5197,9 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_clim2_edt,'string',num2str(temp(2)));
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on') && strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar('peer',handles.ax(option.cnt_subfig));
+            colorbar(handles.ax(option.cnt_subfig));
         else
-            colorbar('off','peer',handles.ax(option.cnt_subfig));
+            colorbar(handles.ax(option.cnt_subfig),'off');
         end
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top,'visible','on');
@@ -5279,9 +5289,9 @@ GLW_figure_openingFcn;
         end
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar('peer',handles.ax(option.cnt_subfig));
+            colorbar(handles.ax(option.cnt_subfig));
         else
-            colorbar('off','peer',handles.ax(option.cnt_subfig));
+            colorbar(handles.ax(option.cnt_subfig),'off');
         end
     end
     function topo_source_pop_callback(~,~)
