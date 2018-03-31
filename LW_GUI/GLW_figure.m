@@ -5026,7 +5026,7 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.z(2)=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
-        values=double(datasets_data(k).data(option.ax{option.cnt_subfig}.content{option.cnt_content}.ep,:,i_pos,z_pos,y_pos,x_pos));
+        values=double(datasets_data(k).data(option.ax{option.cnt_subfig}.content{option.cnt_content}.ep,:,i_pos,z_pos(1):z_pos(2),y_pos(1):y_pos(2),x_pos(1):x_pos(2)));
         values=mean(mean(mean(values,6),5),4);
         
         
