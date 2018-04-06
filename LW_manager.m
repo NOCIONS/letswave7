@@ -15,6 +15,7 @@ Manager_Init();
         scrsz = get(0,'MonitorPositions');
         scrsz=scrsz(1,:);
         pos=get(handles.fig,'Position');
+        pos(2)=(scrsz(4)-(pos(2)+pos(4)))/2;
         if pos(2)+pos(4)>scrsz(4)-60
             pos(2)=scrsz(4)-60-pos(4);
         end
