@@ -81,6 +81,10 @@ classdef FLW_load<CLW_generic
             if ~isempty(st)
                 index_all=1:length(st);
                 index_selected=get(obj.h_file_list,'value');
+                if isempty(index_selected)
+                    warndlg('No file is selected!');
+                    return;
+                end
                 index_remain=setdiff(index_all,index_selected);
                 set(obj.h_file_list,'value',1);
                 
@@ -92,6 +96,8 @@ classdef FLW_load<CLW_generic
                 set(obj.h_file_list,'String',st(index_remain));
                 st_userdata=get(obj.h_file_list,'userdata');
                 set(obj.h_file_list,'userdata',st_userdata(index_remain));
+            else
+                warndlg('No file is selected!');
             end
         end
         

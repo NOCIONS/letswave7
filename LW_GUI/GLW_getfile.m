@@ -234,6 +234,9 @@ PathName=handles.file_path;
         else
             file_str=str(idx);
         end
+        if isempty(suffix)
+            set(handles.isfilter_checkbox,'value',0);
+        end
         
         is_filter=get(handles.isfilter_checkbox,'value');
         if is_filter==1
@@ -289,8 +292,8 @@ PathName=handles.file_path;
         
         file_listbox_select_changed();
         st=get(handles.path_edit,'userdata');
+        filelist=get(handles.file_listbox,'String');
         if strcmp(fullfile(st,'0'),fullfile(pwd,'0'))
-            filelist=get(handles.file_listbox,'String');
             for k=1:length(filelist)
                 if sum(strcmp(handles.virtual_filelist,filelist{k}))
                     filelist{k}=['<HTML><BODY color="red">',filelist{k}];
