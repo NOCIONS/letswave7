@@ -10,10 +10,16 @@ Manager_Init();
         temp=load('version.txt');
         temp=floor(temp/1000000);
         handles.version_checkked=-3;
-        handles.fig=figure('MenuBar','none','DockControls','off','Position',[100 0 500 600],'color',0.94*[1,1,1],...
+        handles.fig=figure('MenuBar','none','DockControls','off','Position',[100 0 500 670],'color',0.94*[1,1,1],...
             'name',['Letswave7--Manager (ver.',num2str(temp),')'],'NumberTitle','off','userdata',0);
-        
-        
+        scrsz = get(0,'MonitorPositions');
+        scrsz=scrsz(1,:);
+        pos=get(handles.fig,'Position');
+        if pos(2)+pos(4)>scrsz(4)-60
+            pos(2)=scrsz(4)-60-pos(4);
+        end
+        set(handles.fig,'Position',pos);
+        h=670-pos(4);
        %% init menu
         % menu labels
         menu_name={'File','Edit','Process','Statistics','View'};
@@ -145,38 +151,38 @@ Manager_Init();
         icon=load('icon.mat');
         %refresh button
         handles.refresh_btn=uicontrol('style','pushbutton',...
-            'CData',icon.icon_refresh,'position',[3,565,32,32],...
+            'CData',icon.icon_refresh,'position',[3,635-h,32,32],...
             'TooltipString','refresh the folder');
         %browse button
         handles.path_btn=uicontrol('style','pushbutton',...
-            'CData',icon.icon_open_path,'position',[38,565,32,32],...
+            'CData',icon.icon_open_path,'position',[38,635-h,32,32],...
             'TooltipString','browse for folder');
         %filter path edit
         handles.path_edit=uicontrol('style','edit','string',pwd,...
-            'HorizontalAlignment','left','position',[73,567,420,28],'backgroundcolor',[1,1,1]);
+            'HorizontalAlignment','left','position',[73,637-h,420,28],'backgroundcolor',[1,1,1]);
         %label 'Include'
         uicontrol('style','text','string','Include:',...
-            'HorizontalAlignment','left','position',[5,530,80,28]);
+            'HorizontalAlignment','left','position',[5,600-h,80,28]);
         %filter checkbox
         handles.isfilter_checkbox=uicontrol('style','checkbox',...
-            'string','Filter','position',[80,538,100,28]);
+            'string','Filter','position',[80,608-h,100,28]);
         %filter include listbox
         handles.suffix_include_listbox=uicontrol('style','listbox',...
-            'string','Filter','position',[5,252,120,290],'backgroundcolor',[1,1,1]);
+            'string','Filter','position',[5,272,120,340-h],'backgroundcolor',[1,1,1]);
         set(handles.suffix_include_listbox,'max',2,'min',0);
         %label 'Exclude'
         uicontrol('style','text','string','Exclude:',...
-            'HorizontalAlignment','left','position',[5,215,80,28]);
+            'HorizontalAlignment','left','position',[5,235,80,28]);
         %filter exclude listbox
         handles.suffix_exclude_listbox=uicontrol('style','listbox',...
-            'string','Filter','position',[5,20,120,207],'backgroundcolor',[1,1,1]);
+            'string','Filter','position',[5,20,120,227],'backgroundcolor',[1,1,1]);
         set(handles.suffix_exclude_listbox,'max',2,'min',0);
         %label 'Datasets'
         uicontrol('style','text','string','Datasets:',...
-            'HorizontalAlignment','left','position',[140,530,80,28]);
+            'HorizontalAlignment','left','position',[140,600-h,80,28]);
         %file listbox
         handles.file_listbox=uicontrol('style','listbox','string',...
-            'Filter','position',[140,40,355,502],'backgroundcolor',[1,1,1]);
+            'Filter','position',[140,40,355,572-h],'backgroundcolor',[1,1,1]);
         set(handles.file_listbox,'max',2,'min',0);
         set(handles.file_listbox,'uicontextmenu',hcmenu);
         %label epochs
@@ -207,16 +213,7 @@ Manager_Init();
                 set(st(k),'units','normalized');
             end
         end
-        scrsz = get(0,'MonitorPositions');
-        scrsz=scrsz(1,:);
-        pos=get(handles.fig,'Position');
-        if pos(2)+pos(4)>scrsz(4)-60
-            pos(2)=scrsz(4)-60-pos(4);
-        end
-        if pos(4)<670
-            pos(4)=670;
-        end
-        set(handles.fig,'Position',pos);
+        
         
         %set path to pwd
         set(handles.path_edit,'String',pwd);
