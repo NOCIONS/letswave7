@@ -5305,17 +5305,16 @@ GLW_figure_openingFcn;
         end
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-             if verLessThan('matlab','8.4')
+            if verLessThan('matlab','8.4')
                 colorbar('peer',handles.ax(option.cnt_subfig));
             else
                 colorbar(handles.ax(option.cnt_subfig));
             end
-            colorbar(handles.ax(option.cnt_subfig));
         else
-             if verLessThan('matlab','8.4')
+            if verLessThan('matlab','8.4')
                 colorbar('off','peer',handles.ax(option.cnt_subfig));
             else
-            colorbar(handles.ax(option.cnt_subfig),'off');
+                colorbar(handles.ax(option.cnt_subfig),'off');
             end
         end
     end
