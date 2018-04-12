@@ -4506,9 +4506,17 @@ GLW_figure_openingFcn;
             'XData',x,'YData',y,'CData',z);
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar(handles.ax(option.cnt_subfig));
+            if verLessThan('matlab','8.4')
+                colorbar('peer',handles.ax(option.cnt_subfig));
+            else
+                colorbar(handles.ax(option.cnt_subfig));
+            end
         else
-            colorbar(handles.ax(option.cnt_subfig),'off');
+            if verLessThan('matlab','8.4')
+                colorbar('off','peer',handles.ax(option.cnt_subfig));
+            else
+                colorbar(handles.ax(option.cnt_subfig),'off');
+            end
         end
         colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
         
@@ -5197,9 +5205,17 @@ GLW_figure_openingFcn;
         set(handles.panel_topo_clim2_edt,'string',num2str(temp(2)));
         
         if strcmpi(option.ax{option.cnt_subfig}.content{option.cnt_content}.surface,'on') && strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
-            colorbar(handles.ax(option.cnt_subfig));
+            if verLessThan('matlab','8.4')
+                colorbar('peer',handles.ax(option.cnt_subfig));
+            else
+                colorbar(handles.ax(option.cnt_subfig));
+            end
         else
-            colorbar(handles.ax(option.cnt_subfig),'off');
+            if verLessThan('matlab','8.4')
+                colorbar('off','peer',handles.ax(option.cnt_subfig));
+            else
+                colorbar(handles.ax(option.cnt_subfig),'off');
+            end
         end
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top,'visible','on');
@@ -5289,9 +5305,18 @@ GLW_figure_openingFcn;
         end
         
         if strcmpi(option.ax{option.cnt_subfig}.colorbar,'on')
+             if verLessThan('matlab','8.4')
+                colorbar('peer',handles.ax(option.cnt_subfig));
+            else
+                colorbar(handles.ax(option.cnt_subfig));
+            end
             colorbar(handles.ax(option.cnt_subfig));
         else
+             if verLessThan('matlab','8.4')
+                colorbar('off','peer',handles.ax(option.cnt_subfig));
+            else
             colorbar(handles.ax(option.cnt_subfig),'off');
+            end
         end
     end
     function topo_source_pop_callback(~,~)
