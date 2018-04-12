@@ -46,9 +46,9 @@ classdef FLW_segmentation_chunk<CLW_generic
         
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
-            set(obj.h_onset_edt,'String',str2num(option.chunk_onset));
-            set(obj.h_duration_edt,'String',str2num(option.chunk_duration));
-            set(obj.h_interval_edt,'String',str2num(option.chunk_interval));
+            set(obj.h_onset_edt,'String',num2str(option.chunk_onset));
+            set(obj.h_duration_edt,'String',num2str(option.chunk_duration));
+            set(obj.h_interval_edt,'String',num2str(option.chunk_interval));
         end
         
         function str=get_Script(obj)
