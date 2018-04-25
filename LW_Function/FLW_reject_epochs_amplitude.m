@@ -362,6 +362,7 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
                     header.epochdata=header.epochdata(accepted_epochs);
                 end
             end
+            header.history(end).option.accepted_epochs=accepted_epochs;
             %%%
             lwdata_out.header=header;
             lwdata_out.data=data;
