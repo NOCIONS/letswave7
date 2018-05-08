@@ -3782,9 +3782,12 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.z=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
-        
         if header.datasize(3)~=1
             i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.idx;
+            if i_pos>header.datasize(3)
+                i_pos=header.datasize(3);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=i_pos;
+            end
         end
         ch_idx=1;
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
@@ -4488,6 +4491,10 @@ GLW_figure_openingFcn;
         end
         if header.datasize(3)~=1
             i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.idx;
+            if i_pos>header.datasize(3)
+                i_pos=header.datasize(3);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=i_pos;
+            end
         end
         ch_idx=1;
         k=option.ax{option.cnt_subfig}.content{option.cnt_content}.dataset;
@@ -5032,6 +5039,13 @@ GLW_figure_openingFcn;
             if z_pos(2)>header.datasize(4)
                 z_pos(2)=header.datasize(4);
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.z(2)=header.zstart+(header.datasize(4)-1)*header.zstep;
+            end
+        end
+        if header.datasize(3)~=1
+            i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.idx;
+            if i_pos>header.datasize(3)
+                i_pos=header.datasize(3);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.idx=i_pos;
             end
         end
         values=double(datasets_data(k).data(option.ax{option.cnt_subfig}.content{option.cnt_content}.ep,:,i_pos,z_pos(1):z_pos(2),y_pos(1):y_pos(2),x_pos(1):x_pos(2)));
@@ -5720,9 +5734,12 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_z=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
-        
         if header.datasize(3)~=1
             i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx;
+            if i_pos>header.datasize(3)
+                i_pos=header.datasize(3);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source1_idx=i_pos;
+            end
         end
         ch_idx=1;
         for l=1:length({datasets_header(k).header.chanlocs.labels})
@@ -5766,9 +5783,12 @@ GLW_figure_openingFcn;
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_z=header.zstart+(header.datasize(4)-1)*header.zstep;
             end
         end
-        
         if header.datasize(3)~=1
             i_pos=option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx;
+            if i_pos>header.datasize(3)
+                i_pos=header.datasize(3);
+                option.ax{option.cnt_subfig}.content{option.cnt_content}.source2_idx=i_pos;
+            end
         end
         ch_idx=1;
         for l=1:length({datasets_header(k).header.chanlocs.labels})
