@@ -30,7 +30,7 @@
         <submenu Label="Reject epochs (amplitude criterion)" callback="FLW_reject_epochs_amplitude"/>
         <submenu Label="Reject epochs (visual inspection)"/>
     </menu>
-    <menu Label="Frequency ananysis and filters">
+    <menu Label="Frequency analysis and filters">
         <submenu Label="------Frequency analysis------"/>
         <submenu Label="FFT (Fast Fourier Transform)" callback="FLW_FFT"/>
         <submenu Label="iFFT (Inverse FFT)" callback="FLW_iFFT"/>
