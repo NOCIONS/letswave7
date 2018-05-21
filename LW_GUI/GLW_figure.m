@@ -67,7 +67,7 @@ GLW_figure_openingFcn;
         set(handles.content_listbox_txt,'HorizontalAlignment','left');
         
         set(handles.fig2,'position',option.fig2_pos);
-        if (option.fig2_pos(4)==650)
+        if (option.fig2_pos(4)>=650)
             fig1_pos=get(handles.fig2,'outerposition');
             if ispc
                 fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)-5,224+20];
@@ -77,6 +77,10 @@ GLW_figure_openingFcn;
             set(handles.fig1,'outerposition',fig1_pos);
             fig1_pos=get(handles.fig1,'position');
         else
+            fig1_pos=get(handles.fig1,'position');
+            if fig1_pos(4)<600
+                fig1_pos(4)=650;
+            end
             if ispc
                 fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)-5,224+5];
             else
@@ -1988,7 +1992,7 @@ GLW_figure_openingFcn;
             script{end+1}=[str1,'fontname=''',option.ax{idx_s}.fontname,''';'];
         end
         if option.ax{idx_s}.fontsize~=10
-            script{end+1}=[str1,'fontsize=',option.ax{idx_s}.fontsize,';'];
+            script{end+1}=[str1,'fontsize=',num2str(option.ax{idx_s}.fontsize),';'];
         end
         if option.ax{idx_s}.axis_reverse~=0
             script{end+1}=[str1,'axis_reverse=1;'];
@@ -2546,8 +2550,10 @@ GLW_figure_openingFcn;
         set(handles.sub_title_edt,'string',option.ax{option.cnt_subfig}.name);
         if strcmp(option.ax{option.cnt_subfig}.title_visible,'on')
             set(handles.sub_title_chx,'value',1);
+            set(handles.sub_title_edt,'enable','on');
         else
             set(handles.sub_title_chx,'value',0);
+            set(handles.sub_title_edt,'enable','off');
         end
         a=find(strcmpi(listfonts,option.ax{option.cnt_subfig}.fontname)==1);
         set(handles.sub_font_pop,'value',a(1));
@@ -2820,6 +2826,12 @@ GLW_figure_openingFcn;
         set(handles.fig_y_edt,'string',num2str(option.fig2_pos(2)));
         set(handles.fig_w_edt,'string',num2str(option.fig2_pos(3)));
         set(handles.fig_h_edt,'string',num2str(option.fig2_pos(4)));
+        for k=setdiff(1:length(handles.ax),option.cnt_subfig)
+            set(handles.ax(k),'unit','pixels');
+            option.ax{k}.pos=get(handles.ax(k),'Position');
+            set(handles.ax(k),'unit','normalized');
+        end
+        get_sub_pos();
     end
     function set_fig_pos(~,~)
         try
