@@ -13,7 +13,7 @@ fig = figure('name','LW_Table','numbertitle','off','MenuBar','none','DockControl
 row_selected_idx=[];
 col_headers={'old','new'};
 pos=get(fig,'position');
-tab=uitable(fig,'position',[1,40,pos(3),pos(4)-40],'Data',[inputfiles,inputfiles],'ColumnName',col_headers);
+tab=uitable(fig,'position',[1,40,pos(3),pos(4)-40],'Data',[inputfiles(:),inputfiles(:)],'ColumnName',col_headers);
 btn_add=uicontrol(fig,'style','pushbutton','position',[1,1,40,39],'TooltipString','add','CData',icon.icon_dataset_add);
 btn_del=uicontrol(fig,'style','pushbutton','position',[1,1,40,39],'TooltipString','del','CData',icon.icon_dataset_del);
 btn_edit=uicontrol(fig,'style','pushbutton','position',[1,1,40,39],'string','Select');
@@ -40,10 +40,10 @@ uiwait(fig);
     function tab_update()
         table_data=[];
         for k=1:length(inputfiles)
-            table_data{k,1}=inputfiles{k,1};
+            table_data{k,1}=inputfiles{k};
         end
         for k=1:length(inputfiles_new)
-            table_data{k,2}=inputfiles_new{k,1};
+            table_data{k,2}=inputfiles_new{k};
         end
         set(tab,'Data',table_data);
         drawnow;

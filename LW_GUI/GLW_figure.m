@@ -27,14 +27,12 @@ GLW_figure_openingFcn;
         init_panel_image();
         init_panel_topo();
         init_panel_lissajous();
-        
         set(handles.fig2,'visible','on');
         set(handles.fig1,'visible','on');
         drawnow();
         init_function();
         init_data();
         fig_redraw();
-        
         fig1_callback();
     end
     function init_parameter()
@@ -1548,6 +1546,7 @@ GLW_figure_openingFcn;
         for k=1:length(option.ax)
             option.cnt_subfig=k;
             axis_redraw();
+            drawnow;
         end
         
         option.cnt_subfig=temp_cnt_subfig;
@@ -2492,6 +2491,7 @@ GLW_figure_openingFcn;
         if PathName==0
             return;
         end
+        get_fig_pos();
         save(fullfile(PathName,FileName),'option');
     end
     function data_btn_callback(~,~)
@@ -2694,6 +2694,7 @@ GLW_figure_openingFcn;
             set(handles.subfig_listbox,'string',str(index));
             option.cnt_subfig=option.cnt_subfig-1;
             set(handles.subfig_listbox,'value',option.cnt_subfig);
+            fig_redraw;
         end
     end
     function sub_down_callback(~,~)
@@ -2711,6 +2712,7 @@ GLW_figure_openingFcn;
             set(handles.subfig_listbox,'string',str(index));
             option.cnt_subfig=option.cnt_subfig+1;
             set(handles.subfig_listbox,'value',option.cnt_subfig);
+            fig_redraw;
         end
     end
 
@@ -3628,7 +3630,6 @@ GLW_figure_openingFcn;
         value_curve=length(option.ax{option.cnt_subfig}.content)-value_curve;
         temp=temp([1:value_curve,value_curve+2,value_curve+1,value_curve+3:end]);
         set(handles.ax(option.cnt_subfig),'Children',temp);
-        
         option.cnt_content=option.cnt_content-1;
         fig1_callback();
     end
@@ -3648,7 +3649,6 @@ GLW_figure_openingFcn;
         value_curve=length(option.ax{option.cnt_subfig}.content)-value_curve;
         temp=temp([1:value_curve-1,value_curve+1,value_curve,value_curve+2:end]);
         set(handles.ax(option.cnt_subfig),'Children',temp);
-        
         option.cnt_content=option.cnt_content+1;
         fig1_callback();
     end
