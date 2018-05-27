@@ -2521,7 +2521,7 @@ GLW_figure_openingFcn;
             return;
         end
         if (FilterIndex==1)
-            set(handles.fig2,'CloseRequestFcn','');
+            set(handles.fig2,'CloseRequestFcn','closereq');
             try
                 set(handles.fig2,'SizeChangedFcn','');
             catch
@@ -2529,7 +2529,11 @@ GLW_figure_openingFcn;
             end
             set(handles.fig2,'numbertitle','on','MenuBar','figure','DockControls','on');
             set(handles.fig2,'WindowButtonMotionFcn','');
-            savefig(handles.fig2,fullfile(PathName,FileName));
+            try
+                savefig(handles.fig2,fullfile(PathName,FileName));
+            catch
+                saveas(handles.fig2,fullfile(PathName,FileName),'fig')
+            end
             
             set(handles.fig2,'CloseRequestFcn',@fig2_closeReq_callback);
             try
