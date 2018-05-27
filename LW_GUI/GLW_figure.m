@@ -2528,6 +2528,7 @@ GLW_figure_openingFcn;
                 set(handles.fig2,'resizefcn','');
             end
             set(handles.fig2,'numbertitle','on','MenuBar','figure','DockControls','on');
+            set(handles.fig2,'WindowButtonMotionFcn','');
             savefig(handles.fig2,fullfile(PathName,FileName));
             
             set(handles.fig2,'CloseRequestFcn',@fig2_closeReq_callback);
@@ -2537,7 +2538,7 @@ GLW_figure_openingFcn;
                 set(handles.fig2,'resizefcn',@get_fig_pos);
             end
             set(handles.fig2,'numbertitle','off','MenuBar','none','DockControls','off');
-            
+            set(handles.fig2,'WindowButtonMotionFcn',@get_fig_pos);
             return;
         end
         saveas(handles.fig2,fullfile(PathName,FileName));
