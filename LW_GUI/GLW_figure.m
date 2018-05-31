@@ -52,11 +52,11 @@ GLW_figure_openingFcn;
         handles.script_btn=uipushtool(handles.toolbar,'CData',icon.icon_script,'TooltipString','script');
         handles.fig_btn=uitoggletool(handles.toolbar,'CData',icon.icon_figure,'TooltipString','figure','separator','on');
         handles.axis_btn=uitoggletool(handles.toolbar,'CData',icon.icon_axis,'TooltipString','axis');
-        handles.content_btn=uitoggletool(handles.toolbar,'CData',icon.icon_content,'TooltipString','conent');
+        handles.content_btn=uitoggletool(handles.toolbar,'CData',icon.icon_content,'TooltipString','content');
         
         handles.subfig_listbox_txt=uicontrol(handles.fig1,'style','text','String','Subfigure:');
         handles.subfig_listbox=uicontrol(handles.fig1,'style','listbox','Min',1,'Max',1,'backgroundcolor',[1,1,1]);
-        handles.content_listbox_txt=uicontrol(handles.fig1,'style','text','String','Conent:');
+        handles.content_listbox_txt=uicontrol(handles.fig1,'style','text','String','Content:');
         handles.content_listbox=uicontrol(handles.fig1,'style','listbox','Min',1,'Max',1,'backgroundcolor',[1,1,1]);
         
         set(handles.fig1,'numbertitle','off','MenuBar','none','DockControls','off');
