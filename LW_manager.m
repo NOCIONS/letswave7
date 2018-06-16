@@ -23,7 +23,7 @@ Manager_Init();
         h=670-pos(4);
        %% init menu
         % menu labels
-        menu_name={'File','Edit','Process','Statistics','View'};
+        menu_name={'File','Edit','Process','Statistics','View','Figure'};
         for k=1:length(menu_name)
             % find related xml file
             str=['menu_',menu_name{k},'.xml'];

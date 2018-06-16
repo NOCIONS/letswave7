@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LW_Manager Label="Figure">
+    <menu Label="General figure creator"  callback="GLW_figure"/>
+    <menu Label="Waveforms figure creator"  callback="GLW_figure_curve"/>
+    <menu Label="2D Images figure creator" callback="GLW_figure_image"/>
+    <menu Label="Topographies figure creator"  callback="GLW_figure_topo"/>
+    <menu Label="Lissajous figure creator"  callback="GLW_figure_lissajous"/>
+    <menu Label="Waveforms average figure creator" />
+    <menu Label="Scalpmap time series figure creator" />
+    <menu Label="Scalpmap SS-EP series figure creator" />
+</LW_Manager>

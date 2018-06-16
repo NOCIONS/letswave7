@@ -229,7 +229,9 @@ classdef FLW_ttest<CLW_permutation
             dist_temp=squareform(pdist([x;y]'))<option.chan_dist;
             idx=find([temp.chanlocs.topo_enabled]==1);
             dist= false(header.datasize(2),header.datasize(2));
+            if ~isempty(idx)
             dist(idx,idx)=dist_temp;
+            end
             
             
             data_n=size(lwdataset_in(2).data,1);

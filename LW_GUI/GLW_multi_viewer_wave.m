@@ -424,7 +424,7 @@ GLW_my_view_OpeningFcn;
         set(handles.toolbar2_cursor,'ClickedCallback',{@fig_cursor});
         
         handles.toolbar2_legend = uitoggletool(handles.toolbar2);
-        set(handles.toolbar2_legend,'TooltipString','lengend');
+        set(handles.toolbar2_legend,'TooltipString','legend');
         set(handles.toolbar2_legend,'CData',icon.icon_legend);
         if userdata.is_legend
             set(handles.toolbar2_legend,'State','on');
