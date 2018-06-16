@@ -43,6 +43,10 @@ GLW_figure_openingFcn;
     function init_framework()
         handles.fig2=figure('name','Figure','PaperPositionMode','auto','Color',[1,1,1],'visible','off');
         handles.fig1=figure('name','Config','Color',0.94*[1,1,1],'visible','off');
+        % to avoid some display problem only happened in Matlab2016b, strange 
+       if ~verLessThan('matlab','8.4')
+            set(handles.fig1,'visible','on');
+        end
         handles.toolbar= uitoolbar(handles.fig1);
         
         handles.open_btn=uipushtool(handles.toolbar,'CData',icon.icon_open,'TooltipString','open a file');
@@ -364,9 +368,9 @@ GLW_figure_openingFcn;
     function init_panel_content_manager()
         handles.panel_content_manager=uipanel(handles.fig1,'bordertype','none','visible','off');
         handles.content_add_txt=uicontrol(handles.panel_content_manager,'style','text','String','Content type:');
-%         handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],...
-%             'String',{'curve','lissajous','average','all_epoch','all_channel','std','line','rect','text'},'value',1);
-         handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],...
+        %         handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],...
+        %             'String',{'curve','lissajous','average','all_epoch','all_channel','std','line','rect','text'},'value',1);
+        handles.content_add_pop=uicontrol(handles.panel_content_manager,'style','popupmenu','backgroundcolor',[1,1,1],...
             'String',{'curve','lissajous','line','rect','text'},'value',1);
         handles.content_add=uicontrol(handles.panel_content_manager,'style','pushbutton');
         handles.content_del=uicontrol(handles.panel_content_manager,'style','pushbutton');
