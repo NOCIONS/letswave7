@@ -15,7 +15,7 @@ classdef FLW_FFT<CLW_generic
                 'string','Output','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_output_pop=uicontrol('style','popupmenu',...
-                'String',{'amplitude','power','phase angle','real part',...
+                'String',{'power','amplitude','phase angle','real part',...
                 'imagery part','complex'},'value',1,'backgroundcolor',[1,1,1],...
                 'position',[35,440,200,30],'parent',obj.h_panel);
             obj.h_half_spectrum_chx=uicontrol('style','checkbox',...
@@ -34,9 +34,9 @@ classdef FLW_FFT<CLW_generic
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
             switch option.output
-                case 'amplitude'
-                    set(obj.h_output_pop,'value',1);
                 case 'power'
+                    set(obj.h_output_pop,'value',1);
+                case 'amplitude'
                     set(obj.h_output_pop,'value',2);
                 case 'phase angle'
                     set(obj.h_output_pop,'value',3);
@@ -63,7 +63,7 @@ classdef FLW_FFT<CLW_generic
     
     methods (Static = true)
         function header_out= get_header(header_in,option)
-            if ~strcmpi(header_in.filetype,'time_amplitude');
+            if ~strcmpi(header_in.filetype,'time_amplitude')
                 warning('!!! WARNING : input data is not of format time_amplitude!');
             end
             header_out=header_in;
@@ -100,7 +100,7 @@ classdef FLW_FFT<CLW_generic
         end
         
         function lwdata_out=get_lwdata(lwdata_in,varargin)
-            option.output='amplitude';
+            option.output='power';
             option.half_spectrum=1;
             
             option.suffix='fft';
@@ -111,10 +111,10 @@ classdef FLW_FFT<CLW_generic
             option=header.history(end).option;
             data=fft(lwdata_in.data,[],6)/lwdata_in.header.datasize(6);
             switch option.output
-                case 'amplitude'
-                    data=abs(data);
                 case 'power'
                     data=abs(data).^2;
+                case 'amplitude'
+                    data=abs(data);
                 case 'phase angle'
                     data=angle(data);
                 case 'real part'
@@ -125,17 +125,10 @@ classdef FLW_FFT<CLW_generic
             if option.half_spectrum==1
                 data=data(:,:,:,:,:,1:ceil((size(data,6)+1)/2));
                 switch option.output
-                    case 'amplitude'
-                        data(:,:,:,:,:,2:end-1)=data(:,:,:,:,:,2:end-1)*2;
-                        if mod(size(data,6),2)==0
-                            data(:,:,:,:,:,end)=data(:,:,:,:,:,end)*2;
-                        end
                     case 'power'
-                        data=data(:,:,:,:,:,1:ceil((size(data,6)+1)/2));
-                        data(:,:,:,:,:,2:end-1)=data(:,:,:,:,:,2:end-1)*4;
-                        if mod(size(data,6),2)==0
-                            data(:,:,:,:,:,end)=data(:,:,:,:,:,end)*4;
-                        end
+                        data(:,:,:,:,:,2:ceil(size(data,6)/2))=data(:,:,:,:,:,2:ceil(size(data,6)/2))*2;
+                    case 'amplitude'
+                        data(:,:,:,:,:,2:ceil(size(data,6)/2))=data(:,:,:,:,:,2:ceil(size(data,6)/2))*sqrt(2);
                 end
             end
             
