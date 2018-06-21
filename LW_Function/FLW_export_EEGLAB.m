@@ -146,11 +146,13 @@ classdef FLW_export_EEGLAB
             EEG.chanlocs=rmfield(header.chanlocs,'SEEG_enabled');
             EEG.chanlocs=rmfield(header.chanlocs,'topo_enabled');
             EEG.event=header.events;
-            [EEG.event.type] = EEG.event.code;
-            temp=num2cell([EEG.event.latency]/header.xstep);
-            [EEG.event.latency]=deal(temp{:});
+            if ~isempty(EEG.event)
+                [EEG.event.type] = EEG.event.code;
+                temp=num2cell([EEG.event.latency]/header.xstep);
+                [EEG.event.latency]=deal(temp{:});
+                EEG.event = rmfield(EEG.event,'code');
+            end
             
-            EEG.event = rmfield(EEG.event,'code');
             EEG.icawinv=[];
             EEG.icaweights=[];
             EEG.icasphere=[];
