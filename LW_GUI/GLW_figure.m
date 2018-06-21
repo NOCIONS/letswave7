@@ -83,6 +83,7 @@ GLW_figure_openingFcn;
             if fig1_pos(4)<600
                 fig1_pos(4)=650;
             end
+            fig1_pos(2)=max(option.fig2_pos(2)-option.fig2_pos(4)/2,0);
             if ispc
                 fig1_pos([1,3])=[option.fig2_pos(1)+option.fig2_pos(3)-5,224+5];
             else
@@ -1609,6 +1610,7 @@ GLW_figure_openingFcn;
             if strcmpi(option.ax{option.cnt_subfig}.XTickMode,'manual')
                 value1=option.ax{option.cnt_subfig}.xaxis_tick_interval;
                 value2=option.ax{option.cnt_subfig}.xaxis_tick_anchor;
+                option.ax{option.cnt_subfig}.Xlim=get(handles.ax(option.cnt_subfig),'Xlim');
                 idx=ceil((option.ax{option.cnt_subfig}.Xlim(1)-value2)/value1)*value1+value2:value1:option.ax{option.cnt_subfig}.Xlim(2);
                 set(handles.ax(option.cnt_subfig),'XTick',idx);
             end
@@ -1618,8 +1620,9 @@ GLW_figure_openingFcn;
             if strcmpi(option.ax{option.cnt_subfig}.YTickMode,'manual')
                 value1=option.ax{option.cnt_subfig}.yaxis_tick_interval;
                 value2=option.ax{option.cnt_subfig}.yaxis_tick_anchor;
+                option.ax{option.cnt_subfig}.Ylim=get(handles.ax(option.cnt_subfig),'Ylim');
                 idx=ceil((option.ax{option.cnt_subfig}.Ylim(1)-value2)/value1)*value1+value2:value1:option.ax{option.cnt_subfig}.Ylim(2);
-                set(handles.ax(option.cnt_subfig),'XTick',idx);
+                set(handles.ax(option.cnt_subfig),'YTick',idx);
             end
         end
         if strcmpi(option.ax{option.cnt_subfig}.style,'Curve') ...
@@ -2112,9 +2115,9 @@ GLW_figure_openingFcn;
         if ~strcmp(option.ax{idx_s}.content{idx_c}.marker,'none')
             script{end+1}=[str1,'marker=''',option.ax{idx_s}.content{idx_c}.marker,''';'];
         end
-        if sum(option.ax{idx_s}.content{idx_c}.color~=[0,0,0])
+        %if sum(option.ax{idx_s}.content{idx_c}.color~=[0,0,0])
             script{end+1}=[str1,'color=',num2str_array(option.ax{idx_s}.content{idx_c}.color),';'];
-        end
+        %end
     end
     function script=get_line_script(script,idx_s,idx_c)
         str1=['option.ax{',num2str(idx_s),'}.content{',num2str(idx_c),'}.'];
@@ -3297,6 +3300,7 @@ GLW_figure_openingFcn;
             set(handles.xaxis_tick_interval_txt,'enable','on');
             set(handles.xaxis_tick_anchor_txt,'enable','on');
         else
+            option.ax{option.cnt_subfig}.XTickMode='auto';
             set(handles.ax(option.cnt_subfig),'XTickMode','auto');
             set(handles.xaxis_tick_interval_edt,'enable','off');
             set(handles.xaxis_tick_anchor_edt,'enable','off');
@@ -3448,6 +3452,7 @@ GLW_figure_openingFcn;
             set(handles.yaxis_tick_interval_txt,'enable','on');
             set(handles.yaxis_tick_anchor_txt,'enable','on');
         else
+            option.ax{option.cnt_subfig}.XTickMode='auto';
             set(handles.ax(option.cnt_subfig),'YTickMode','auto');
             set(handles.yaxis_tick_interval_edt,'enable','off');
             set(handles.yaxis_tick_anchor_edt,'enable','off');
