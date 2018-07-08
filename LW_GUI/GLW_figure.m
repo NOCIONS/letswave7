@@ -41,10 +41,10 @@ GLW_figure_openingFcn;
         get_fig_default();
     end
     function init_framework()
-        handles.fig2=figure('name','Figure','PaperPositionMode','auto','Color',[1,1,1],'visible','off');
+        handles.fig2=figure('name','Figure','PaperPositionMode','auto','Color',[1,1,1],'visible','off','Renderer','painters');
         handles.fig1=figure('name','Config','Color',0.94*[1,1,1],'visible','off');
-        % to avoid some display problem only happened in Matlab2016b, strange 
-       if ~verLessThan('matlab','8.4')
+        % to avoid some display problem only happened in Matlab2016b, strange
+        if ~verLessThan('matlab','8.4')
             set(handles.fig1,'visible','on');
         end
         handles.toolbar= uitoolbar(handles.fig1);
@@ -2116,7 +2116,7 @@ GLW_figure_openingFcn;
             script{end+1}=[str1,'marker=''',option.ax{idx_s}.content{idx_c}.marker,''';'];
         end
         %if sum(option.ax{idx_s}.content{idx_c}.color~=[0,0,0])
-            script{end+1}=[str1,'color=',num2str_array(option.ax{idx_s}.content{idx_c}.color),';'];
+        script{end+1}=[str1,'color=',num2str_array(option.ax{idx_s}.content{idx_c}.color),';'];
         %end
     end
     function script=get_line_script(script,idx_s,idx_c)
@@ -2859,13 +2859,15 @@ GLW_figure_openingFcn;
         end
     end
     function get_sub_pos(~,~)
-        set(handles.ax(option.cnt_subfig),'unit','pixels');
-        option.ax{option.cnt_subfig}.pos=get(handles.ax(option.cnt_subfig),'Position');
-        set(handles.ax(option.cnt_subfig),'unit','normalized');
-        set(handles.sub_x_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(1)));
-        set(handles.sub_y_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(2)));
-        set(handles.sub_w_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(3)));
-        set(handles.sub_h_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(4)));
+        if ~isempty(handles.ax)
+            set(handles.ax(option.cnt_subfig),'unit','pixels');
+            option.ax{option.cnt_subfig}.pos=get(handles.ax(option.cnt_subfig),'Position');
+            set(handles.ax(option.cnt_subfig),'unit','normalized');
+            set(handles.sub_x_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(1)));
+            set(handles.sub_y_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(2)));
+            set(handles.sub_w_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(3)));
+            set(handles.sub_h_edt,'string',num2str(option.ax{option.cnt_subfig}.pos(4)));
+        end
     end
     function set_sub_pos(~,~)
         try
@@ -3342,7 +3344,7 @@ GLW_figure_openingFcn;
             set(l,'visible','on');
             set(handles.xaxis_label_edt,'enable','on');
         else
-            option.ax{option.cnt_subfig}.off='on';
+            option.ax{option.cnt_subfig}.xlabel_visible='off';
             set(l,'visible','off');
             set(handles.xaxis_label_edt,'enable','off');
         end
@@ -3494,7 +3496,7 @@ GLW_figure_openingFcn;
             set(l,'visible','on');
             set(handles.yaxis_label_edt,'enable','on');
         else
-            option.ax{option.cnt_subfig}.off='on';
+            option.ax{option.cnt_subfig}.ylabel_visible='off';
             set(l,'visible','off');
             set(handles.yaxis_label_edt,'enable','off');
         end
@@ -3600,6 +3602,8 @@ GLW_figure_openingFcn;
             end
         end
         fig1_callback();
+        legend(handles.ax(option.cnt_subfig),'off');
+        axis_legend_chk_callback();
     end
     function content_del_callback(~,~)
         if isempty(option.ax{option.cnt_subfig}.content)
@@ -3627,6 +3631,8 @@ GLW_figure_openingFcn;
         option.ax{option.cnt_subfig}.content(value_curve)=[];
         option.cnt_content=min(option.cnt_content,length(option.ax{option.cnt_subfig}.content));
         fig1_callback();
+        legend(handles.ax(option.cnt_subfig),'off');
+        axis_legend_chk_callback();
     end
     function content_up_callback(~,~)
         if option.cnt_content==1
@@ -3646,6 +3652,8 @@ GLW_figure_openingFcn;
         set(handles.ax(option.cnt_subfig),'Children',temp);
         option.cnt_content=option.cnt_content-1;
         fig1_callback();
+        legend(handles.ax(option.cnt_subfig),'off');
+        axis_legend_chk_callback();
     end
     function content_down_callback(~,~)
         if option.cnt_content==length(option.ax{option.cnt_subfig}.content)
@@ -3665,6 +3673,9 @@ GLW_figure_openingFcn;
         set(handles.ax(option.cnt_subfig),'Children',temp);
         option.cnt_content=option.cnt_content+1;
         fig1_callback();
+        
+        legend(handles.ax(option.cnt_subfig),'off');
+        axis_legend_chk_callback();
     end
 
 %% panel_curve function
