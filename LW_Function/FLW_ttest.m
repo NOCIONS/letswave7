@@ -230,7 +230,11 @@ classdef FLW_ttest<CLW_permutation
             idx=find([temp.chanlocs.topo_enabled]==1);
             dist= false(header.datasize(2),header.datasize(2));
             if ~isempty(idx)
-            dist(idx,idx)=dist_temp;
+                if length(idx)==1
+                    dist(idx,idx)=0;
+                else
+                    dist(idx,idx)=dist_temp;
+                end
             end
             
             
