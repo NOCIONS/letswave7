@@ -79,7 +79,6 @@ classdef FLW_welch<CLW_generic
             win_len=floor(option.window_length/lwdata_in.header.xstep);
             win_step=floor(option.sliding_step/lwdata_in.header.xstep);
             win=hamming(win_len);
-            
             U=sum(win)^2;
 %             Fs=1/lwdata_in.header.xstep;
 %             U=win'*win*Fs;

@@ -139,12 +139,19 @@ PathName=handles.file_path;
         update_handles;
     end
     function path_edit_Callback()
-        st=get(handles.path_edit,'String');
-        if exist(st,'dir')
+        str=get(handles.path_edit,'String');
+        if exist(str,'dir')
+            set(handles.path_edit,'String',str);
+            update_handles;
+            return;
+        end
+        [filepath,~,~] = fileparts(str);
+        if exist(filepath,'dir')
+            set(handles.path_edit,'String',filepath);
             update_handles;
         else
-            st=get(handles.path_edit,'userdata');
-            set(handles.path_edit,'String',st);
+            filepath=get(handles.path_edit,'userdata');
+            set(handles.path_edit,'String',filepath);
         end
     end
     function path_btn_Callback()
