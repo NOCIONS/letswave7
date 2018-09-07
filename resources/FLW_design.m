@@ -10,6 +10,14 @@ end
 
 handle.fig = figure('position',[100,100,520,605],'Resize','off',...
     'name','Letswave Batch','numbertitle','off');
+scrsz = get(0,'MonitorPositions');
+scrsz=scrsz(1,:);
+pos=get(handle.fig,'Position');
+pos(2)=(scrsz(4)-(pos(2)+pos(4)))/2;
+if pos(2)+pos(4)>scrsz(4)-60
+    pos(2)=scrsz(4)-60-pos(4);
+end
+set(handle.fig,'Position',pos);
 set(handle.fig,'MenuBar','none');
 set(handle.fig,'DockControls','off');
 icon=load('icon.mat');

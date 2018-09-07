@@ -512,7 +512,7 @@ GLW_view_OpeningFcn;
             st=cell(header.datasize(1),1);
             for k=1:header.datasize(1)
                 st{k}=num2str(k);
-            end;
+            end
             set(handles.epoch_listbox,'String',st);
             userdata.selected_epochs=intersect(selected_epochs,1:header.datasize(1));
             if isempty(userdata.selected_epochs)
