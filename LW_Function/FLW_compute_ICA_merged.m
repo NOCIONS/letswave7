@@ -57,6 +57,10 @@ classdef FLW_compute_ICA_merged<CLW_generic
             set(obj.h_buttongroup,'SelectionChangeFcn',@obj.bselection);
             %set(obj.h_buttongroup,'SelectionChangedFcn',@obj.bselection);
             
+            if ispc
+                set(obj.h_r2,'position',[115,1,120,20]);
+                set(obj.h_r3,'position',[230,1,120,20]);
+            end
             obj.h_r2_text=uicontrol('style','text','position',[35,350,150,20],...
                 'string','Components Numbers:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);

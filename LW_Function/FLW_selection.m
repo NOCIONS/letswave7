@@ -36,12 +36,12 @@ classdef FLW_selection<CLW_generic
             icon=load('icon.mat');
             obj@CLW_generic(batch_handle,'Selection','sel_chan',...
                 'Selection the signal by channel/epoch/index.');
-            uicontrol('style','text','position',[10,495,150,20],...
+            uicontrol('style','text','position',[20,490,150,20],...
                 'string','Selection Items:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_selection_items_pop=uicontrol('style','popupmenu',...
                 'String',{'epoch','channel','index'},'value',2,...
-                'callback',@obj.item_Changed,'position',[100,487,150,30],...
+                'callback',@obj.item_Changed,'position',[130,485,150,30],...
                 'parent',obj.h_panel);
             
             obj.h_old_list=uicontrol('style','listbox','min',0,'max',2,...
@@ -97,6 +97,22 @@ classdef FLW_selection<CLW_generic
                 'position',[160,131,400,20],'foregroundcolor',[1,0,0],...
                 'string','The datasets share different epoch/channel/index property.',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
+            if ispc
+                set(obj.h_add_top_btn,'position',[159,450,80,28]);
+                set(obj.h_add_bottom_btn,'position',[159,422,80,28]);
+                set(obj.h_add_all_btn,'position',[159,394,80,28]);
+                set(obj.h_insert_btn,'position',[159,366,80,28]);
+                
+                set(obj.h_sort_asc_btn,'position',[159,320,80,28]);
+                set(obj.h_sort_desc_btn,'position',[159,292,80,28]);
+                set(obj.h_sort_up_btn,'position',[159,264,80,28]);
+                set(obj.h_sort_down_btn,'position',[159,236,80,28]);
+                
+                set(obj.h_remove_btn,'position',[159,200,80,28]);
+                set(obj.h_remove_all_btn,'position',[159,172,80,28]);
+                set(obj.h_select_odd_btn,'string','Odd');
+                set(obj.h_select_even_btn,'string','Even');
+            end
         
             set(obj.h_selection_items_pop,'backgroundcolor',[1,1,1]);
             set(obj.h_old_list,'backgroundcolor',[1,1,1]);

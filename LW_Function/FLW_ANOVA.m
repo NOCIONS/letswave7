@@ -31,6 +31,11 @@ classdef FLW_ANOVA<CLW_generic
             
             obj.h_clear=uicontrol('style','pushbutton','string','Clear ALL',...
                 'position',[280,435,130,30],'parent',obj.h_panel);
+            if ispc
+                set(obj.h_add_within,'position',[8,435,140,30]);
+                set(obj.h_add_between,'position',[154,435,140,30]);
+                set(obj.h_clear,'position',[300,435,112,30]);
+            end
             
             uicontrol('style','text','position',[10,400,140,20],...
                 'string','Group:','HorizontalAlignment','left',...
@@ -42,7 +47,7 @@ classdef FLW_ANOVA<CLW_generic
             
             obj.h_show_progress=uicontrol('style','checkbox',...
                 'string','show_process','value',1,...
-                'position',[315,402,130,20],'parent',obj.h_panel);
+                'position',[310,402,130,20],'parent',obj.h_panel);
             
             set(obj.h_add_within,'callback',@(varargin)obj.add_factor_btn(1));
             set(obj.h_add_between,'callback',@(varargin)obj.add_factor_btn(2));
@@ -157,6 +162,44 @@ classdef FLW_ANOVA<CLW_generic
             for k=1:length(lwdataset)
                 RowName=[RowName,lwdataset(k).header.name];
             end
+            
+%             for k=1:length(RowName)
+%                 if length(RowName{k})>25
+%                     RowName{k}=RowName{k}(1:25);
+%                 end
+%             end
+            
+            str_len=0;
+            for k=1:length(RowName)
+                if length(RowName{k})>str_len
+                    str_len=length(RowName{k});
+                end
+            end
+            if str_len>30
+                for k=1:length(RowName)
+                    filelist_suffix{k}=textscan(RowName{k},'%s');
+                    filelist_suffix{k}=filelist_suffix{k}{1}';
+                end
+                suffix=sort(unique([filelist_suffix{:}]));
+                shared=1:length(suffix);
+                for k=1:length(RowName)
+                    [~,selected_idx]=intersect(suffix,filelist_suffix{k},'stable');
+                    [~,temp]=intersect(shared,selected_idx,'stable');
+                    shared=shared(temp);
+                end
+                for k=1:length(RowName)
+                    [~,selected_idx]=intersect(filelist_suffix{k},suffix(shared),'stable');
+                    temp=setdiff(1:length(filelist_suffix{k}),selected_idx);
+                    RowName{k}=char(filelist_suffix{k}(temp(1)));
+                    for l=temp(2:end)
+                        RowName{k}=[RowName{k},' ',char(filelist_suffix{k}(l))];
+                    end
+                    if length(RowName{k})>30
+                        RowName{k}=RowName{k}(1:30);
+                    end
+                end
+            end
+
             set(obj.h_group,'RowName',RowName);
             if  ~isempty(option.factor_label)
                 data=ones(length(RowName),length(option.factor_name));

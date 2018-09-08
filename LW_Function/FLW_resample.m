@@ -26,39 +26,39 @@ classdef FLW_resample<CLW_generic
                 'Resample signals (custom samplingrate)');
             %objects
             %x_resample_chk
-            obj.h_x_resample_chk=uicontrol('style','checkbox','position',[35,480,250,20],...
+            obj.h_x_resample_chk=uicontrol('style','checkbox','position',[38,475,250,20],...
                 'string','Change X-dimension sampling rate : ',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %x_SR_edit
             obj.h_x_SR_edit=uicontrol('style','edit',...
                 'String','',...
                 'value',0,'HorizontalAlignment','left',...
-                'position',[40,460,100,20],'parent',obj.h_panel);
+                'position',[40,450,100,20],'parent',obj.h_panel);
             %y_resample_chk
-            obj.h_y_resample_chk=uicontrol('style','checkbox','position',[35,430,250,20],...
+            obj.h_y_resample_chk=uicontrol('style','checkbox','position',[38,415,250,20],...
                 'string','Change Y-dimension sampling rate : ',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %y_SR_edit
             obj.h_y_SR_edit=uicontrol('style','edit',...
                 'String','',...
                 'value',0,'HorizontalAlignment','left',...
-                'position',[40,410,100,20],'parent',obj.h_panel);
+                'position',[40,390,100,20],'parent',obj.h_panel);
             %z_resample_chk
-            obj.h_z_resample_chk=uicontrol('style','checkbox','position',[35,380,250,20],...
+            obj.h_z_resample_chk=uicontrol('style','checkbox','position',[38,355,250,20],...
                 'string','Change Z-dimension sampling rate : ',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %z_SR_edit
             obj.h_z_SR_edit=uicontrol('style','edit',...
                 'String','',...
                 'value',0,'HorizontalAlignment','left',...
-                'position',[40,360,100,20],'parent',obj.h_panel);
+                'position',[40,330,100,20],'parent',obj.h_panel);
             %interpolation_pop
-            uicontrol('style','text','position',[35,330,200,20],...
+            uicontrol('style','text','position',[35,290,200,20],...
                 'string','Interpolation method : ','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_interpolation_pop=uicontrol('style','popupmenu',...
                 'String',{'nearest','linear','spline','pchip','cubic','v5cubic'},'value',1,...
-                'position',[35,300,200,30],'parent',obj.h_panel);
+                'position',[35,260,200,30],'parent',obj.h_panel);
             
             set(obj.h_x_SR_edit,'backgroundcolor',[1,1,1]);
             set(obj.h_y_SR_edit,'backgroundcolor',[1,1,1]);
@@ -148,19 +148,28 @@ classdef FLW_resample<CLW_generic
                 set(obj.h_x_resample_chk,'Value',0);
                 set(obj.h_x_resample_chk,'Visible','off');
                 set(obj.h_x_SR_edit,'Visible','off');
+            else
+                set(obj.h_x_resample_chk,'Visible','on');
+                set(obj.h_x_SR_edit,'Visible','on');
             end
             if header.datasize(5)==1
                 set(obj.h_y_resample_chk,'Value',0);
                 set(obj.h_y_resample_chk,'Visible','off');
                 set(obj.h_y_SR_edit,'Visible','off');
+            else
+                set(obj.h_y_resample_chk,'Visible','on');
+                set(obj.h_y_SR_edit,'Visible','on');
             end
             if header.datasize(4)==1
                 set(obj.h_z_resample_chk,'Value',0);
                 set(obj.h_z_resample_chk,'Visible','off');
                 set(obj.h_z_SR_edit,'Visible','off');
+            else
+                set(obj.h_z_resample_chk,'Visible','on');
+                set(obj.h_z_SR_edit,'Visible','on');
             end
             
-            %obj.virtual_filelist=batch_pre.virtual_filelist;
+            obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
         end   
     end

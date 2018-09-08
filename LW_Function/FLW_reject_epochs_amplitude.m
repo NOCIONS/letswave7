@@ -32,72 +32,85 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             %objects
             %select channels
             obj.h_select_channels_chk=uicontrol('style','checkbox',...
-                'String','Select channels','value',0,...
-                'position',[35,480,150,30],'parent',obj.h_panel);
+                'String','Judge Selected/All Channel(s):','value',0,...
+                'callback',@obj.channel_check,...
+                'position',[20,480,250,30],'parent',obj.h_panel);
             %channels list_box
             obj.h_channels_listbox=uicontrol('style','listbox',...
                 'String','Select channels','min',0,'max',2,...
-                'backgroundcolor',[1,1,1],...
-                'position',[35,280,145,200],'parent',obj.h_panel);
+                'backgroundcolor',[1,1,1],'enable','off',...
+                'position',[35,160,180,320],'parent',obj.h_panel);
             %channels select_btn
             obj.h_channels_select_btn=uicontrol('style','pushbutton',...
-                'String','All/None','value',0,...
-                'callback',@obj.item_changed,...
-                'position',[35,250,150,30],'parent',obj.h_panel);
+                'String','All/None','value',0,'enable','off',...
+                'callback',@obj.channel_select_all,...
+                'position',[35,130,180,30],'parent',obj.h_panel);
+            
+            uicontrol('style','text',...
+                'String','Judge Selected/Whole Interval',...
+                'HorizontalAlignment','left',...
+                'position',[220,438,200,20],'parent',obj.h_panel);
+            
             %xaxis_chk
             obj.h_xaxis_chk=uicontrol('style','checkbox',...
-                'String','X-axis limits','value',0,...
-                'value',0,...
-                'position',[185,480,150,30],'parent',obj.h_panel);
+                'String','X-axis ','value',0,...
+                 'callback',@obj.item_check,...
+                'position',[220,408,150,30],'parent',obj.h_panel);
             %xstart_edit
             obj.h_xstart_edit=uicontrol('style','edit',...
                 'String','0','HorizontalAlignment','left',...
-                'value',0,'backgroundcolor',[1,1,1],...
-                'position',[190,460,80,20],'parent',obj.h_panel);
+                'value',0,'backgroundcolor',[1,1,1],'enable','off',...
+                'callback',@obj.item_check,...
+                'position',[220,390,80,20],'parent',obj.h_panel);
             %xend_edit
             obj.h_xend_edit=uicontrol('style','edit',...
                 'String','','HorizontalAlignment','left',...
-                'value',0,'backgroundcolor',[1,1,1],...
-                'position',[275,460,80,20],'parent',obj.h_panel);
+                'value',1,'backgroundcolor',[1,1,1],'enable','off',...
+                'callback',@obj.item_check,...
+                'position',[305,390,80,20],'parent',obj.h_panel);
             %yaxis_chk
             obj.h_yaxis_chk=uicontrol('style','checkbox',...
-                'String','Y-axis limits','value',0,...
-                'value',0,...
-                'position',[185,430,150,30],'parent',obj.h_panel);
+                'String','Y-axis','value',0,...
+                'callback',@obj.item_check,...
+                'position',[220,353,150,30],'parent',obj.h_panel);
             %ystart_edit
             obj.h_ystart_edit=uicontrol('style','edit',...
                 'String','0','HorizontalAlignment','left',...
-                'value',0,'backgroundcolor',[1,1,1],...
-                'position',[190,410,80,20],'parent',obj.h_panel);
+                'value',0,'backgroundcolor',[1,1,1],'enable','off',...
+                'callback',@obj.item_check,...
+                'position',[220,335,80,20],'parent',obj.h_panel);
             %yend_edit
             obj.h_yend_edit=uicontrol('style','edit',...
                 'String','','HorizontalAlignment','left',...
-                'value',0,'backgroundcolor',[1,1,1],...
-                'position',[275,410,80,20],'parent',obj.h_panel);
+                'value',1,'backgroundcolor',[1,1,1],'enable','off',...
+                'callback',@obj.item_check,...
+                'position',[305,335,80,20],'parent',obj.h_panel);
             %zaxis_chk
             obj.h_zaxis_chk=uicontrol('style','checkbox',...
-                'String','Z-axis limits','value',0,...
-                'value',0,...
-                'position',[185,380,150,30],'parent',obj.h_panel);
+                'String','Z-axis','value',0,...
+                'callback',@obj.item_check,...
+                'position',[220,298,150,30],'parent',obj.h_panel);
             %zstart_edit
             obj.h_zstart_edit=uicontrol('style','edit',...
                 'String','0','HorizontalAlignment','left',...
-                'value',0,'backgroundcolor',[1,1,1],...
-                'position',[190,360,80,20],'parent',obj.h_panel);
+                'value',0,'backgroundcolor',[1,1,1],'enable','off',...
+                'callback',@obj.item_check,...
+                'position',[220,280,80,20],'parent',obj.h_panel);
             %zend_edit
             obj.h_zend_edit=uicontrol('style','edit',...
                 'String','','HorizontalAlignment','left',...
-                'value',0,'backgroundcolor',[1,1,1],...
-                'position',[275,360,80,20],'parent',obj.h_panel);
+                'value',1,'backgroundcolor',[1,1,1],'enable','off',...
+                'callback',@obj.item_check,...
+                'position',[305,280,80,20],'parent',obj.h_panel);
             %amplitude_criterion_label
-            uicontrol('style','text','position',[190,330,150,20],...
+            uicontrol('style','text','position',[220,220,150,20],...
                 'string','Amplitude criterion:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %amplitude_criterion_edit
             obj.h_amplitude_criterion_edit=uicontrol('style','edit',...
                 'String','100','HorizontalAlignment','left',...
                 'value',0,'backgroundcolor',[1,1,1],...
-                'position',[190,310,80,20],'parent',obj.h_panel);
+                'position',[220,200,80,20],'parent',obj.h_panel);
         end
         
         %get the parameters setting from the GUI
@@ -191,7 +204,17 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             str=get_Script@CLW_generic(obj,frag_code,option);
         end
         
-        function item_changed(obj,varargin)
+        function channel_check(obj,varargin)
+            v=get(obj.h_select_channels_chk,'value');
+            if v==1
+                set(obj.h_channels_listbox,'enable','on');
+                set(obj.h_channels_select_btn,'enable','on');
+            else
+                set(obj.h_channels_listbox,'enable','off');
+                set(obj.h_channels_select_btn,'enable','off');
+            end
+        end
+        function channel_select_all(obj,varargin)
             v=get(obj.h_channels_listbox,'Value');
             if isempty(v)
                 str=get(obj.h_channels_listbox,'String');
@@ -201,14 +224,133 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             end
             set(obj.h_channels_listbox,'Value',v);
         end
-
+        function item_check(obj,varargin)
+            header=obj.lwdataset(1).header;
+            v=get(obj.h_xaxis_chk,'value');
+            if v==1
+                set(obj.h_xstart_edit,'enable','on');
+                set(obj.h_xend_edit,'enable','on');
+                v_start=str2num(get(obj.h_xstart_edit,'string'));
+                v_end=str2num(get(obj.h_xend_edit,'string'));
+                if isempty(v_start)
+                    v_start=get(obj.h_xstart_edit,'value');
+                end
+                if isempty(v_end)
+                    v_end=get(obj.h_xend_edit,'value');
+                end
+                temp1=header.xstart;
+                temp2=header.xstart+header.datasize(6)*header.xstep;
+                if v_start<temp1
+                    v_start=temp1;
+                end
+                if v_end<temp1
+                    v_end=temp1;
+                end
+                if v_start>temp2
+                    v_start=temp2;
+                end
+                if v_end>temp2
+                    v_end=temp2;
+                end
+                if v_start>v_end
+                    temp=v_start;
+                    v_start=v_end;
+                    v_end=temp;
+                end
+                set(obj.h_xstart_edit,'string',num2str(v_start));
+                set(obj.h_xend_edit,'string',num2str(v_end));
+                set(obj.h_xstart_edit,'value',v_start);
+                set(obj.h_xend_edit,'value',v_end);
+            else
+                set(obj.h_xstart_edit,'enable','off');
+                set(obj.h_xend_edit,'enable','off');
+            end
+            v=get(obj.h_yaxis_chk,'value');
+            if v==1
+                set(obj.h_ystart_edit,'enable','on');
+                set(obj.h_yend_edit,'enable','on');
+                v_start=str2num(get(obj.h_ystart_edit,'string'));
+                v_end=str2num(get(obj.h_yend_edit,'string'));
+                if isempty(v_start)
+                    v_start=get(obj.h_ystart_edit,'value');
+                end
+                if isempty(v_end)
+                    v_end=get(obj.h_yend_edit,'value');
+                end
+                temp1=header.ystart;
+                temp2=header.ystart+header.datasize(5)*header.ystep;
+                if v_start<temp1
+                    v_start=temp1;
+                end
+                if v_end<temp1
+                    v_end=temp1;
+                end
+                if v_start>temp2
+                    v_start=temp2;
+                end
+                if v_end>temp2
+                    v_end=temp2;
+                end
+                if v_start>v_end
+                    temp=v_start;
+                    v_start=v_end;
+                    v_end=temp;
+                end
+                set(obj.h_ystart_edit,'string',num2str(v_start));
+                set(obj.h_yend_edit,'string',num2str(v_end));
+                set(obj.h_ystart_edit,'value',v_start);
+                set(obj.h_yend_edit,'value',v_end);
+            else
+                set(obj.h_ystart_edit,'enable','off');
+                set(obj.h_yend_edit,'enable','off');
+            end
+            v=get(obj.h_zaxis_chk,'value');
+            if v==1
+                set(obj.h_zstart_edit,'enable','on');
+                set(obj.h_zend_edit,'enable','on');
+                v_start=str2num(get(obj.h_zstart_edit,'string'));
+                v_end=str2num(get(obj.h_zend_edit,'string'));
+                if isempty(v_start)
+                    v_start=get(obj.h_zstart_edit,'value');
+                end
+                if isempty(v_end)
+                    v_end=get(obj.h_zend_edit,'value');
+                end
+                temp1=header.zstart;
+                temp2=header.zstart+header.datasize(4)*header.zstep;
+                if v_start<temp1
+                    v_start=temp1;
+                end
+                if v_end<temp1
+                    v_end=temp1;
+                end
+                if v_start>temp2
+                    v_start=temp2;
+                end
+                if v_end>temp2
+                    v_end=temp2;
+                end
+                if v_start>v_end
+                    temp=v_start;
+                    v_start=v_end;
+                    v_end=temp;
+                end
+                set(obj.h_zstart_edit,'string',num2str(v_start));
+                set(obj.h_zend_edit,'string',num2str(v_end));
+                set(obj.h_zstart_edit,'value',v_start);
+                set(obj.h_zend_edit,'value',v_end);
+            else
+                set(obj.h_zstart_edit,'enable','off');
+                set(obj.h_zend_edit,'enable','off');
+            end
+        end
         
         function GUI_update(obj,batch_pre)
-            lwdataset=batch_pre.lwdataset;
-            channel_labels={lwdataset(1).header.chanlocs.labels};
-            if length(lwdataset)>1;
+            obj.lwdataset=batch_pre.lwdataset;
+            channel_labels={ obj.lwdataset(1).header.chanlocs.labels};
+            if length(obj.lwdataset)>1
                 for dataset_pos=2:length(lwdataset)
-                    channel_labels1={lwdataset(dataset_pos).header.chanlocs.labels};
+                    channel_labels1={obj.lwdataset(dataset_pos).header.chanlocs.labels};
                     channel_labels2= intersect(channel_labels,channel_labels1,'stable');
                     channel_labels=channel_labels2;
                 end
@@ -218,7 +360,7 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             end
             set(obj.h_channels_listbox,'String',channel_labels);
             %xend, yend, zend
-            header=lwdataset(1).header;
+            header=obj.lwdataset(1).header;
             if isempty(get(obj.h_xend_edit,'String'))
                 set(obj.h_xend_edit,'String',num2str(header.xstart+((header.datasize(6))*header.xstep)));
             end
@@ -228,6 +370,37 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             if isempty(get(obj.h_zend_edit,'String'))
                 set(obj.h_zend_edit,'String',num2str(header.zstart+((header.datasize(4))*header.zstep)));
             end
+            header=batch_pre.lwdataset(1).header;
+            if header.datasize(6)==1
+                set(obj.h_xaxis_chk,'Visible','off');
+                set(obj.h_xstart_edit,'Visible','off');
+                set(obj.h_xend_edit,'Visible','off');
+            else
+                set(obj.h_xaxis_chk,'Visible','on');
+                set(obj.h_xstart_edit,'Visible','on');
+                set(obj.h_xend_edit,'Visible','on');
+            end
+            if header.datasize(5)==1
+                set(obj.h_yaxis_chk,'Visible','off');
+                set(obj.h_ystart_edit,'Visible','off');
+                set(obj.h_yend_edit,'Visible','off');
+            else
+                set(obj.h_yaxis_chk,'Visible','on');
+                set(obj.h_ystart_edit,'Visible','on');
+                set(obj.h_yend_edit,'Visible','on');
+            end
+            if header.datasize(4)==1
+                set(obj.h_zaxis_chk,'Visible','off');
+                set(obj.h_zstart_edit,'Visible','off');
+                set(obj.h_zend_edit,'Visible','off');
+            else
+                set(obj.h_zaxis_chk,'Visible','on');
+                set(obj.h_zstart_edit,'Visible','on');
+                set(obj.h_zend_edit,'Visible','on');
+            end
+            
+            obj.channel_check();
+            obj.item_check();
         end
     end
     

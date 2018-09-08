@@ -17,10 +17,15 @@ classdef FLW_new_channel_averaged<CLW_generic
                 'string',{'Cz'},'Value',1,'min',0,'max',2,...
                 'position',[30,145,170,350],'parent',obj.h_panel);
             
-            
+            if ispc
+            uicontrol('style','text','position',[230,425,160,30],...
+                'string','Name of the new channel:',...
+                'HorizontalAlignment','left','parent',obj.h_panel);
+            else
             uicontrol('style','text','position',[230,430,140,30],...
                 'string','Name of the new channel:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
+            end
             obj.h_channel_name_edt=uicontrol('style','edit',...
                 'string','Avg','position',[230,400,140,30],'parent',obj.h_panel);
             
@@ -104,9 +109,6 @@ classdef FLW_new_channel_averaged<CLW_generic
             header_out=header_in;
             channel_labels={header_in.chanlocs.labels};
             [~,idx] = intersect(channel_labels, option.channels,'stable');
-            if isempty(idx)
-                error('No corresponding channel is found');
-            end
             option.channels_idx=idx;
             header_out.datasize(2)=header_out.datasize(2)+1;
             header_out.chanlocs(end+1).labels=option.name;
@@ -129,7 +131,11 @@ classdef FLW_new_channel_averaged<CLW_generic
             header=FLW_new_channel_averaged.get_header(lwdata_in.header,option);
             data=lwdata_in.data;
             idx=header.history(end).option.channels_idx;
-            data(:,end+1,:,:,:,:)=mean(data(:,idx,:,:,:,:),2);
+            if isempty(idx)
+                data(:,end+1,:,:,:,:)=0;
+            else
+                data(:,end+1,:,:,:,:)=mean(data(:,idx,:,:,:,:),2);
+            end
             try
                 rmfield(header.history(end).option,'channels_idx');
             end

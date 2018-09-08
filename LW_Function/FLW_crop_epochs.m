@@ -9,14 +9,23 @@ classdef FLW_crop_epochs<CLW_generic
         FLW_TYPE=1;
         %properties
         h_xcrop_chk;
+        h_xstart_txt;
+        h_xend_txt;
+        h_xsize_txt;
         h_xstart_edit;
         h_xend_edit;
         h_xsize_edit;
         h_ycrop_chk;
+        h_ystart_txt;
+        h_yend_txt;
+        h_ysize_txt;
         h_ystart_edit;
         h_yend_edit;
         h_ysize_edit;
         h_zcrop_chk;
+        h_zstart_txt;
+        h_zend_txt;
+        h_zsize_txt;
         h_zstart_edit;
         h_zend_edit;
         h_zsize_edit;
@@ -36,13 +45,13 @@ classdef FLW_crop_epochs<CLW_generic
                 'String','Crop X dimension','value',0,...
                 'position',[35,480,150,30],'parent',obj.h_panel);
             %labels
-            uicontrol('style','text','position',[35,460,100,20],...
+            obj.h_xstart_txt=uicontrol('style','text','position',[35,460,100,20],...
                 'string','Start:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            uicontrol('style','text','position',[140,460,100,20],...
+            obj.h_xend_txt=uicontrol('style','text','position',[140,460,100,20],...
                 'string','End:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            uicontrol('style','text','position',[245,460,100,20],...
+            obj.h_xsize_txt=uicontrol('style','text','position',[245,460,100,20],...
                 'string','Size:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %xstart_edit
@@ -69,13 +78,13 @@ classdef FLW_crop_epochs<CLW_generic
                 'String','Crop Y dimension','value',0,...
                 'position',[35,400,150,30],'parent',obj.h_panel);
             %labels
-            uicontrol('style','text','position',[35,380,100,20],...
+            obj.h_ystart_txt=uicontrol('style','text','position',[35,380,100,20],...
                 'string','Start:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            uicontrol('style','text','position',[140,380,100,20],...
+            obj.h_yend_txt=uicontrol('style','text','position',[140,380,100,20],...
                 'string','End:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            uicontrol('style','text','position',[245,380,100,20],...
+            obj.h_ysize_txt=uicontrol('style','text','position',[245,380,100,20],...
                 'string','Size:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %ystart_edit
@@ -90,7 +99,7 @@ classdef FLW_crop_epochs<CLW_generic
                 'String','0','HorizontalAlignment','left',...
                 'position',[140,360,100,20],'parent',obj.h_panel);
             %ysize_edit
-            obj.h_ysize_edit=uicontrol('style','edit',...
+           obj.h_ysize_edit=uicontrol('style','edit',...
                  'backgroundcolor',[1,1,1],...
                 'String','','HorizontalAlignment','left',...
                 'callback',@(varargin)obj.item_size_changed(2),...
@@ -101,13 +110,13 @@ classdef FLW_crop_epochs<CLW_generic
                 'String','Crop Z dimension','value',0,...
                 'position',[35,320,150,30],'parent',obj.h_panel);
             %labels
-            uicontrol('style','text','position',[35,300,100,20],...
+            obj.h_zstart_txt=uicontrol('style','text','position',[35,300,100,20],...
                 'string','Start:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            uicontrol('style','text','position',[140,300,100,20],...
+            obj.h_zend_txt=uicontrol('style','text','position',[140,300,100,20],...
                 'string','End:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
-            uicontrol('style','text','position',[245,300,100,20],...
+            obj.h_zsize_txt=uicontrol('style','text','position',[245,300,100,20],...
                 'string','Size:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             %zstart_edit
@@ -174,7 +183,7 @@ classdef FLW_crop_epochs<CLW_generic
             option=get_option(obj);
             frag_code=[];
             %%%
-            if option.xcrop_chk==1;
+            if option.xcrop_chk==1
                 frag_code=[frag_code,'''xcrop_chk'',',...
                     num2str(option.xcrop_chk),','];
                 frag_code=[frag_code,'''xstart'',',...
@@ -182,7 +191,7 @@ classdef FLW_crop_epochs<CLW_generic
                 frag_code=[frag_code,'''xend'',',...
                     num2str(option.xend),','];
             end
-            if option.ycrop_chk==1;
+            if option.ycrop_chk==1
                 frag_code=[frag_code,'''ycrop_chk'',',...
                     num2str(option.ycrop_chk),','];
                 frag_code=[frag_code,'''ystart'',',...
@@ -190,7 +199,7 @@ classdef FLW_crop_epochs<CLW_generic
                 frag_code=[frag_code,'''yend'',',...
                     num2str(option.yend),','];
             end
-            if option.zcrop_chk==1;
+            if option.zcrop_chk==1
                 frag_code=[frag_code,'''zcrop_chk'',',...
                     num2str(option.zcrop_chk),','];
                 frag_code=[frag_code,'''zstart'',',...
@@ -210,7 +219,6 @@ classdef FLW_crop_epochs<CLW_generic
                     xend=xstart+(xsize*obj.lwdataset(1).header.xstep);
                     set(obj.h_xend_edit,'string',num2str(xend));
                     set(obj.h_xcrop_chk,'value',1);
-                    
                 case 2
                     ystart=str2num(get(obj.h_ystart_edit,'string'));
                     ysize=str2num(get(obj.h_ysize_edit,'string'));
@@ -301,6 +309,62 @@ classdef FLW_crop_epochs<CLW_generic
             if isempty(get(obj.h_xsize_edit,'String'))
                 obj.reset_Callback();
             end
+            header=batch_pre.lwdataset(1).header;
+            if header.datasize(6)==1
+                set(obj.h_xcrop_chk,'Value',0);
+                set(obj.h_xcrop_chk,'Visible','off');
+                set(obj.h_xstart_txt,'Visible','off');
+                set(obj.h_xsize_txt,'Visible','off');
+                set(obj.h_xend_txt,'Visible','off');
+                set(obj.h_xstart_edit,'Visible','off');
+                set(obj.h_xend_edit,'Visible','off');
+                set(obj.h_xsize_edit,'Visible','off');
+            else
+                set(obj.h_xcrop_chk,'Visible','on');
+                set(obj.h_xstart_txt,'Visible','on');
+                set(obj.h_xsize_txt,'Visible','on');
+                set(obj.h_xend_txt,'Visible','on');
+                set(obj.h_xstart_edit,'Visible','on');
+                set(obj.h_xend_edit,'Visible','on');
+                set(obj.h_xsize_edit,'Visible','on');
+            end
+            if header.datasize(5)==1
+                set(obj.h_ycrop_chk,'Value',0);
+                set(obj.h_ycrop_chk,'Visible','off');
+                set(obj.h_ystart_txt,'Visible','off');
+                set(obj.h_ysize_txt,'Visible','off');
+                set(obj.h_yend_txt,'Visible','off');
+                set(obj.h_ystart_edit,'Visible','off');
+                set(obj.h_yend_edit,'Visible','off');
+                set(obj.h_ysize_edit,'Visible','off');
+            else
+                set(obj.h_ycrop_chk,'Visible','on');
+                set(obj.h_ystart_txt,'Visible','on');
+                set(obj.h_ysize_txt,'Visible','on');
+                set(obj.h_yend_txt,'Visible','on');
+                set(obj.h_ystart_edit,'Visible','on');
+                set(obj.h_yend_edit,'Visible','on');
+                set(obj.h_ysize_edit,'Visible','on');
+            end
+            if header.datasize(4)==1
+                set(obj.h_zcrop_chk,'Value',0);
+                set(obj.h_zcrop_chk,'Visible','off');
+                set(obj.h_zstart_txt,'Visible','off');
+                set(obj.h_zsize_txt,'Visible','off');
+                set(obj.h_zend_txt,'Visible','off');
+                set(obj.h_zstart_edit,'Visible','off');
+                set(obj.h_zend_edit,'Visible','off');
+                set(obj.h_zsize_edit,'Visible','off');
+            else
+                set(obj.h_zcrop_chk,'Visible','on');
+                set(obj.h_zstart_txt,'Visible','on');
+                set(obj.h_zsize_txt,'Visible','on');
+                set(obj.h_zend_txt,'Visible','on');
+                set(obj.h_zstart_edit,'Visible','on');
+                set(obj.h_zend_edit,'Visible','on');
+                set(obj.h_zsize_edit,'Visible','on');
+            end
+            
             obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
         end

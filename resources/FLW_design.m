@@ -1,6 +1,6 @@
 function FLW_design()
 close all;
-FLW_name='FLW_new_channel_averaged';
+FLW_name='FLW_ANOVA';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

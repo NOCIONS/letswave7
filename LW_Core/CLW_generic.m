@@ -19,7 +19,11 @@ classdef CLW_generic<handle
     
     methods
         function obj = CLW_generic(batch_handle,fun_name,suffix_name,help_str)
+            if ispc
+            obj.h_title_str=['=======',class(obj),'======='];
+            else
             obj.h_title_str=['==========',class(obj),'=========='];
+            end
             obj.h_help_str=help_str;
             
             obj.h_tab = uicontrol(batch_handle.tab_panel,'style','pushbutton',...

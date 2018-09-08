@@ -4,6 +4,7 @@ classdef FLW_segmentation<CLW_generic
         h_code_list;
         h_code_btn;
         h_x_start_edit;
+        h_x_end_edit;
         h_x_duration_edit;
     end
     methods
@@ -12,7 +13,7 @@ classdef FLW_segmentation<CLW_generic
                 'Segment a continuous dataset into a series of epochs of a given length, relative to the latencies of events. One file for all selected event codes');            
             
             uicontrol('style','text','position',[5,490,200,20],...
-                'string','Event codes','HorizontalAlignment','left',...
+                'string','Event codes:','HorizontalAlignment','left',...
                 'parent',obj.h_panel);
             obj.h_code_list=uicontrol('style','listbox','string',{},...
                 'value',[],'max',2,'position',[5,190,200,300],...
@@ -21,21 +22,30 @@ classdef FLW_segmentation<CLW_generic
                 'String','Select All','position',[5,130,200,50],...
                 'parent',obj.h_panel,'callback',@obj.select_All);
             
-            uicontrol('style','text','position',[225,430,200,20],...
-                'string','Epoch start (relative to event onset) :',...
+            uicontrol('style','text','position',[230,430,200,20],...
+                'string','Epoch start:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             obj.h_x_start_edit=uicontrol('style','edit',...
                 'position',[230,400,180,30],'HorizontalAlignment','left',...
-                'string','0','parent',obj.h_panel);
-            uicontrol('style','text','position',[225,350,200,20],...
-                'string','Epoch duration (units) :',...
+                'string','0','parent',obj.h_panel,'callback',@obj.item_start_changed);
+            
+            uicontrol('style','text','position',[230,350,200,20],...
+                'string','Epoch end:',...
+                'HorizontalAlignment','left','parent',obj.h_panel);
+            obj.h_x_end_edit=uicontrol('style','edit',...
+                'position',[230,320,180,30],'HorizontalAlignment','left',...
+                'string','1','parent',obj.h_panel,'callback',@obj.item_start_changed);
+            
+            uicontrol('style','text','position',[230,270,200,20],...
+                'string','Epoch duration:',...
                 'HorizontalAlignment','left','parent',obj.h_panel);
             obj.h_x_duration_edit=uicontrol('style','edit',...
-                'position',[230,320,180,30],'HorizontalAlignment','left',...
-                'string','1','parent',obj.h_panel);
+                'position',[230,240,180,30],'HorizontalAlignment','left',...
+                'string','1','parent',obj.h_panel,'callback',@obj.item_dur_changed);
             
             set(obj.h_code_list,'backgroundcolor',[1,1,1]);
             set(obj.h_x_start_edit,'backgroundcolor',[1,1,1]);
+            set(obj.h_x_end_edit,'backgroundcolor',[1,1,1]);
             set(obj.h_x_duration_edit,'backgroundcolor',[1,1,1]);
         end
         
@@ -52,6 +62,7 @@ classdef FLW_segmentation<CLW_generic
             str_value=get(obj.h_code_list,'value');
             option.event_labels=str(str_value);
             option.x_start=str2num(get(obj.h_x_start_edit,'string'));
+            option.x_end=str2num(get(obj.h_x_end_edit,'string'));
             option.x_duration=str2num(get(obj.h_x_duration_edit,'string'));
         end
         
@@ -61,6 +72,7 @@ classdef FLW_segmentation<CLW_generic
             set(obj.h_code_list,'String',event_labels);
             set(obj.h_code_list,'value',1:length(event_labels));
             set(obj.h_x_start_edit,'string',num2str(option.x_start));
+            set(obj.h_x_end_edit,'string',num2str(option.x_end));
             set(obj.h_x_duration_edit,'string',num2str(option.x_duration));
         end
         
@@ -76,9 +88,22 @@ classdef FLW_segmentation<CLW_generic
             end
             frag_code=[frag_code,'}},'];
             frag_code=[frag_code,'''x_start'',',num2str(option.x_start),','];
+            frag_code=[frag_code,'''x_end'',',num2str(option.x_end),','];
             frag_code=[frag_code,'''x_duration'',',num2str(option.x_duration),','];
             
             str=get_Script@CLW_generic(obj,frag_code,option);
+        end
+        
+        function item_start_changed(obj,varargin)
+            xstart=str2num(get(obj.h_x_start_edit,'string'));
+            xend=str2num(get(obj.h_x_end_edit,'string'));
+            set(obj.h_x_duration_edit,'string',num2str(xend-xstart));
+        end
+        
+        function item_dur_changed(obj,varargin)
+            x_duration=str2num(get(obj.h_x_duration_edit,'string'));
+            xstart=str2num(get(obj.h_x_start_edit,'string'));
+            set(obj.h_x_end_edit,'string',num2str(xstart+x_duration));
         end
         
         function GUI_update(obj,batch_pre)
@@ -110,8 +135,7 @@ classdef FLW_segmentation<CLW_generic
             end
             obj.virtual_filelist=batch_pre.virtual_filelist;
             set(obj.h_txt_cmt,'String',{obj.h_title_str,obj.h_help_str},'ForegroundColor','black');
-        end
-                
+        end   
     end
     
     methods (Static = true)
@@ -192,10 +216,14 @@ classdef FLW_segmentation<CLW_generic
         function lwdata_out= get_lwdata(lwdata_in,varargin)
             option.event_labels=[];
             option.x_start=0;
-            option.x_duration=1;
+            option.x_end=1;
             option.suffix='ep';
             option.is_save=0;
-            option=CLW_check_input(option,{'event_labels','x_start','x_duration','suffix','is_save'},varargin);
+            option=CLW_check_input(option,{'event_labels','x_start','x_end','x_duration','suffix','is_save'},varargin);
+            
+            if ~isfield(option,'x_duration')
+                option.x_end=option.x_end-option.x_end;
+            end
             
             if isempty(option.event_labels)
                 error('***No event codes selected!***');
