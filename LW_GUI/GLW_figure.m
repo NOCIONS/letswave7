@@ -4562,6 +4562,7 @@ GLW_figure_openingFcn;
                 colorbar(handles.ax(option.cnt_subfig),'off');
             end
         end
+        Set_position(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.pos);
         colormap(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.colormap);
         
         if  strcmp(option.ax{option.cnt_subfig}.XlimMode,'auto')
@@ -5268,6 +5269,7 @@ GLW_figure_openingFcn;
                 colorbar(handles.ax(option.cnt_subfig),'off');
             end
         end
+        Set_position(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.pos);
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line1,'ZData',ones(1,200)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line2,'ZData',ones(1,10)*top,'visible','on');
         set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).line3,'ZData',ones(1,10)*top,'visible','on');
@@ -5368,6 +5370,7 @@ GLW_figure_openingFcn;
                 colorbar(handles.ax(option.cnt_subfig),'off');
             end
         end
+        Set_position(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.pos);
     end
     function topo_source_pop_callback(~,~)
         % dataset
