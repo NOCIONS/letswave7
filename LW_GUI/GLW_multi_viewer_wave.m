@@ -1874,10 +1874,17 @@ GLW_my_view_OpeningFcn;
             fig_split();
         end
         set(handles.panel_fig,'background',[1,1,1]);
+        
         switch  FilterIndex
             case 1 %tiff compressed
                 saveas(handles.fig2,fullfile(PathName,FileName));
-            case 2 %EPS file
+            case 2 %JPEG image
+                saveas(handles.fig2,fullfile(PathName,FileName));
+            case 3 %Bitmap file
+                saveas(handles.fig2,fullfile(PathName,FileName));
+            case 4 %Protable Network Graphics
+                saveas(handles.fig2,fullfile(PathName,FileName));
+            case 5 %EPS file
                 is_headplot=userdata.is_headplot;
                 is_shade=userdata.is_shade;
                 if is_headplot
@@ -1897,11 +1904,7 @@ GLW_my_view_OpeningFcn;
                     set(handles.toolbar2_headplot,'State','on');
                     fig_headplot();
                 end
-            case 3 %JPEG image
-                saveas(handles.fig2,fullfile(PathName,FileName));
-            case 4 %Bitmap file
-                saveas(handles.fig2,fullfile(PathName,FileName));
-            case 5 %Portable Document Format
+            case 6 %Portable Document Format
                 is_headplot=userdata.is_headplot;
                 if is_headplot
                     set(handles.toolbar2_headplot,'State','off');
@@ -1912,8 +1915,6 @@ GLW_my_view_OpeningFcn;
                     set(handles.toolbar2_headplot,'State','on');
                     fig_headplot();
                 end
-            case 6 %Protable Network Graphics
-                saveas(handles.fig2,fullfile(PathName,FileName));
         end
         set(handles.panel_fig,'background',0.94*[1,1,1]);
         if ~is_split
