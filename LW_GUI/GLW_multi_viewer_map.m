@@ -163,14 +163,14 @@ GLW_view_OpeningFcn;
         
         handles.graph_row_text=uicontrol(handles.panel_edit,...
             'style','text','String','Separate graphs (rows) :','HorizontalAlignment','left');
-        Set_position(handles.graph_row_text,[5,80,150,20]);
+        Set_position(handles.graph_row_text,[5,80,200,20]);
         handles.graph_row_popup=uicontrol(handles.panel_edit,...
             'style','popup','String',{'datasets','epochs','channels'});
         Set_position(handles.graph_row_popup,[5,58,175,22]);
         
         handles.graph_col_text=uicontrol(handles.panel_edit,...
             'style','text','String','Separate graphs (columns) :','HorizontalAlignment','left');
-        Set_position(handles.graph_col_text,[5,32,150,20]);
+        Set_position(handles.graph_col_text,[5,32,200,20]);
         handles.graph_col_popup=uicontrol(handles.panel_edit,...
             'style','popup','String',{'datasets','epochs','channels'});
         Set_position(handles.graph_col_popup,[5,10,175,22]);
@@ -199,8 +199,8 @@ GLW_view_OpeningFcn;
         handles.xaxis2_edit=uicontrol(handles.axis_panel,'style','edit');
         Set_position(handles.xaxis2_edit,[80,133,60,20]);
         handles.xaxis_auto_checkbox=uicontrol(handles.axis_panel,...
-            'style','checkbox','String','full range','Value',userdata.auto_x);
-        Set_position(handles.xaxis_auto_checkbox,[65,154,80,20]);
+            'style','checkbox','String','auto','Value',userdata.auto_x);
+        Set_position(handles.xaxis_auto_checkbox,[85,154,80,20]);
         
         handles.axis_text_y=uicontrol(handles.axis_panel,...
             'style','text','string','y range:','HorizontalAlignment','left');
@@ -210,8 +210,8 @@ GLW_view_OpeningFcn;
         handles.yaxis2_edit=uicontrol(handles.axis_panel,'style','edit');
         Set_position(handles.yaxis2_edit,[80,83,60,20]);
         handles.yaxis_auto_checkbox=uicontrol(handles.axis_panel,...
-            'style','checkbox','String','full range','Value',userdata.auto_y);
-        Set_position(handles.yaxis_auto_checkbox,[65,104,80,20]);
+            'style','checkbox','String','auto','Value',userdata.auto_y);
+        Set_position(handles.yaxis_auto_checkbox,[85,104,80,20]);
         
         handles.axis_text_c=uicontrol(handles.axis_panel,...
             'style','text','string','color range:','HorizontalAlignment','left');
@@ -221,8 +221,8 @@ GLW_view_OpeningFcn;
         handles.caxis2_edit=uicontrol(handles.axis_panel,'style','edit');
         Set_position(handles.caxis2_edit,[80,30,60,20]);
         handles.caxis_auto_checkbox=uicontrol(handles.axis_panel,...
-            'style','checkbox','String','full range','Value',userdata.auto_y);
-        Set_position(handles.caxis_auto_checkbox,[65,52,80,20]);
+            'style','checkbox','String','auto','Value',userdata.auto_y);
+        Set_position(handles.caxis_auto_checkbox,[85,52,80,20]);
         
         if verLessThan('matlab','8.4')
             handles.caxis_style_popup=uicontrol(handles.axis_panel,...
