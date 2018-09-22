@@ -349,7 +349,7 @@ classdef FLW_reject_epochs_amplitude<CLW_generic
             obj.lwdataset=batch_pre.lwdataset;
             channel_labels={ obj.lwdataset(1).header.chanlocs.labels};
             if length(obj.lwdataset)>1
-                for dataset_pos=2:length(lwdataset)
+                for dataset_pos=2:length(obj.lwdataset)
                     channel_labels1={obj.lwdataset(dataset_pos).header.chanlocs.labels};
                     channel_labels2= intersect(channel_labels,channel_labels1,'stable');
                     channel_labels=channel_labels2;
