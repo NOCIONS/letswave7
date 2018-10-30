@@ -4074,7 +4074,7 @@ GLW_figure_openingFcn;
         line_callback();
     end
     function line_marker_pop_callback(~,~)
-        c=get(handles.panel_line_style_pop,'value');
+        c=get(handles.panel_line_marker_pop,'value');
         switch c
             case 1
                 option.ax{option.cnt_subfig}.content{option.cnt_content}.marker='none';
