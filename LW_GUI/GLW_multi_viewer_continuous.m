@@ -83,7 +83,7 @@ GLW_view_OpeningFcn;
         if length(events.code_all)<=events.max
             events.color=jet((length(events.code_all)-1)*10+1);
             events.color=events.color(1:10:end,:);
-            if length(events.code_all)==1
+            if length(events.code_all)<=1
                 events.color=[0,0,1];
             end
         else
