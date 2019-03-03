@@ -195,7 +195,7 @@ classdef FLW_selection<CLW_generic
                 case 'index'
                     set(obj.h_selection_items_pop,'value',3);
             end
-            get(set(obj.h_new_list,'String',option.items));
+            set(obj.h_new_list,'String',option.items);
         end
         
         function str=get_Script(obj)
