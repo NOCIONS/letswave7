@@ -3,7 +3,7 @@ if isempty(header.chanlocs)
     return;
 end
 load('mat_chanlocs.mat');
-%addpath('/Users/huanggan/Documents/MATLAB/letswave6/resources/electrodes/spherical_locations');
+%addpath('/Users/huanggan/Documents/MATLAB/letswave6/res/electrodes/spherical_locations');
 %chanlocs=readlocs('biosemi_locations_256.xyz');
 chanloc_labels={chanlocs.labels};
 channel_labels={header.chanlocs.labels};

@@ -12,7 +12,7 @@ update_btn=uicontrol('style','pushbutton','callback',@updateing,...
 update_txt=uicontrol('style','text','backgroundcolor',[0.93,0.93,0.93],...
     'String','checking...','position',[5,70,240,20]);
 pause(0.001);
-url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
+url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
 try
     lw_version = str2num(urlread(url));
     temp=load('version.txt');

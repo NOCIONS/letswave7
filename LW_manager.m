@@ -545,7 +545,7 @@ Manager_Init();
         temp=load('version.txt');
         address = GetAddress();
         url=['http://letswave.applinzi.com/check_update.wigs?',address,'_',computer,'_',num2str(temp)];
-        %         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/resources/version.txt';
+        %         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
         try
             lw_version = str2num(urlread(url,'Timeout',0.5));
             % lw_version = str2num(urlread(url));
@@ -556,7 +556,7 @@ Manager_Init();
             else
                 %set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
             end
-            %urlread('https://github.com/NOCIONS/letswave7/blob/master/resources/version.txt','Timeout',0.5);
+            %urlread('https://github.com/NOCIONS/letswave7/blob/master/res/version.txt','Timeout',0.5);
         catch
             handles.version_checkked=handles.version_checkked+1;
         end

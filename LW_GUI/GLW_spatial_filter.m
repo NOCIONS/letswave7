@@ -223,7 +223,7 @@ uiwait(handles.fig);
 
     function Assgin_electrode(~,~)
         [p,~,~] = fileparts(which('letswave7'));
-        DefaultName=fullfile(p,'resources','electrodes','spherical_locations','Standard-10-20-Cap81.locs');
+        DefaultName=fullfile(p,'res','electrodes','spherical_locations','Standard-10-20-Cap81.locs');
         [filename,pathname] = uigetfile({'*.*'},'Select the electrode assgin file',DefaultName);
         if isequal(filename,0)
         else

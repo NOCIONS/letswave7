@@ -15,7 +15,7 @@ classdef FLW_electrode_location_assign<CLW_generic
                 'HorizontalAlignment','left','parent',obj.h_panel);
             filepath=which('letswave7');
             [filepath,~,~]=fileparts(filepath);
-            filepath=fullfile(filepath,'resources','electrodes','spherical_locations','Standard-10-20-Cap81.locs');
+            filepath=fullfile(filepath,'res','electrodes','spherical_locations','Standard-10-20-Cap81.locs');
             obj.h_file_edt=uicontrol('style','edit','position',[35,450,290,30],...
                 'string','Standard-10-20-Cap81.locs','enable','off',...
                 'userdata',filepath,'parent',obj.h_panel);
@@ -33,7 +33,7 @@ classdef FLW_electrode_location_assign<CLW_generic
         function set_default(obj,varargin)
             filepath=which('letswave7');
             [filepath,~,~]=fileparts(filepath);
-            filepath=fullfile(filepath,'resources','electrodes','spherical_locations','Standard-10-20-Cap81.locs');
+            filepath=fullfile(filepath,'res','electrodes','spherical_locations','Standard-10-20-Cap81.locs');
             set(obj.h_file_edt,'string','Standard-10-20-Cap81.locs','userdata',filepath);
         end
         
