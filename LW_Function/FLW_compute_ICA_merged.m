@@ -177,10 +177,6 @@ classdef FLW_compute_ICA_merged<CLW_generic
                     set(obj.h_r3,'value',1);
             end
             
-            option.num_ICs=str2num(get(obj.h_r2_num_ICs,'string'));
-            option.percentage_PICA=str2num(get(obj.h_r3_percentage,'string'));
-            option.criterion_PICA=get(obj.h_r3_method,'value');
-            
             set(obj.h_r2_num_ICs,'String',num2str(option.num_ICs));
             set(obj.h_r3_percentage,'String',num2str(option.percentage_PICA));
             switch(option.criterion_PICA)

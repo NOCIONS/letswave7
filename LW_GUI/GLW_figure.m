@@ -1562,8 +1562,6 @@ GLW_figure_openingFcn;
         handles.ax(option.cnt_subfig)=axes('parent',handles.fig2);
         Set_position(handles.ax(option.cnt_subfig),option.ax{option.cnt_subfig}.pos);
         hold(handles.ax(option.cnt_subfig),'on');
-        t=get(handles.ax(option.cnt_subfig),'title');
-        set(t,'string',option.ax{option.cnt_subfig}.name,'visible',option.ax{option.cnt_subfig}.title_visible);
         
         if ~strcmpi(option.ax{option.cnt_subfig}.style,'Topograph')
             set(handles.ax(option.cnt_subfig),...
@@ -1578,9 +1576,7 @@ GLW_figure_openingFcn;
                 'YAxisLocation',option.ax{option.cnt_subfig}.YAxisLocation,...
                 'YMinorTick',option.ax{option.cnt_subfig}.YMinorTick,...
                 'YGrid',option.ax{option.cnt_subfig}.YGrid,...
-                'YMinorGrid',option.ax{option.cnt_subfig}.YMinorGrid);
-            
-            
+                'YMinorGrid',option.ax{option.cnt_subfig}.YMinorGrid);            
             if verLessThan('matlab','8.4')
             else
                 l=get(handles.ax(option.cnt_subfig),'xaxis');
@@ -1597,12 +1593,16 @@ GLW_figure_openingFcn;
             set(handles.ax(option.cnt_subfig),'YDir',option.ax{option.cnt_subfig}.YDir);
         end
         
+        
         handles.ax_child{option.cnt_subfig}=[];
         handles.ax_child{option.cnt_subfig}.handle=cell(0,1);
         for k=1:length(option.ax{option.cnt_subfig}.content)
             option.cnt_content=k;
             content_redraw();
         end
+        
+        t=get(handles.ax(option.cnt_subfig),'title');
+        set(t,'string',option.ax{option.cnt_subfig}.name,'visible',option.ax{option.cnt_subfig}.title_visible);
         if ~strcmpi(option.ax{option.cnt_subfig}.style,'Topograph')
             if strcmpi(option.ax{option.cnt_subfig}.XlimMode,'manual')
                 set(handles.ax(option.cnt_subfig),'Xlim',option.ax{option.cnt_subfig}.Xlim);

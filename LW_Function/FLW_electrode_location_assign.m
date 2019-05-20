@@ -54,7 +54,7 @@ classdef FLW_electrode_location_assign<CLW_generic
         function set_option(obj,option)
             set_option@CLW_generic(obj,option);
             set(obj.h_file_edt,'userdata',option.filepath);
-            [~,a,b]=fileparts(obj.h_file_edt);
+            [~,a,b]=fileparts(option.filepath);
             set(obj.h_file_edt,'string',[a,b]);
         end
         
