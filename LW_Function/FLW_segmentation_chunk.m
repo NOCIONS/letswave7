@@ -71,7 +71,7 @@ classdef FLW_segmentation_chunk<CLW_generic
                 xstart=max(xstart,obj.lwdataset(data_pos).header.xstart);
             end
             if chunk_onset<xstart
-                set(obj.chunk_onset,'string',num2str(xstart));
+                set(obj.h_onset_edt,'string',num2str(xstart));
             end
             
             obj.virtual_filelist=batch_pre.virtual_filelist;
