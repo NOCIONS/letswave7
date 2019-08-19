@@ -1,7 +1,6 @@
 classdef FLW_average_epochs<CLW_generic
     properties
         FLW_TYPE=1;
-            
         h_method_pop;
     end
     methods
