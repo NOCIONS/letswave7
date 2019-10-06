@@ -1238,12 +1238,16 @@ GLW_my_view_OpeningFcn;
                             set(handles.point_y(wave_idx),'visible','off');
                             continue;
                         end
-                        a=find(plot_x<userdata.cursor_point,1,'last');
-                        b=find(plot_x>userdata.cursor_point,1,'first');
+                        a=find(plot_x<=userdata.cursor_point,1,'last');
+                        b=find(plot_x>=userdata.cursor_point,1,'first');
                         plot_x=plot_x([a,b]);
                         plot_y=plot_y([a,b]);
-                        cursor_point_y=plot_y(2)-(plot_y(2)-plot_y(1))/(plot_x(2)-plot_x(1))...
-                            *(plot_x(2)-userdata.cursor_point);
+                        if(a==b)
+                            cursor_point_y=plot_y(1);
+                        else
+                            cursor_point_y=plot_y(2)-(plot_y(2)-plot_y(1))/(plot_x(2)-plot_x(1))...
+                                *(plot_x(2)-userdata.cursor_point);
+                        end
                         if cursor_point_y<userdata.last_axis(3)||cursor_point_y>userdata.last_axis(4)
                             set(handles.text_y(wave_idx),'visible','off');
                             set(handles.point_y(wave_idx),'visible','off');
