@@ -360,9 +360,12 @@ GLW_my_view_OpeningFcn;
 %% fig2_init
     function fig2_init()
         icon=load('icon.mat');
-        handles.fig2=figure('Visible','off','numbertitle','off',...
+        handles.fig2=figure('numbertitle','off',...
             'name','multiviewer_wave','PaperPositionMode','auto',...
             'CloseRequestFcn',@fig2_CloseReq_Callback,'Visible','off');
+        if ~verLessThan('matlab','9.4')
+            addToolbarExplorationButtons(handles.fig2);
+        end
         set(handles.fig2,'WindowButtonDownFcn',@fig_BtnDown);
         set(handles.fig2,'WindowButtonMotionFcn',@fig_BtnMotion);
         set(handles.fig2,'WindowButtonUpFcn',@fig_BtnUp);
@@ -378,7 +381,7 @@ GLW_my_view_OpeningFcn;
         set(handles.toolbar2_split,'CData',icon.icon_split);
         set(handles.toolbar2_split,'ClickedCallback',{@fig_split});
         set(handles.toolbar2_split,'State','on');
-         handles.toolbar2_save = uipushtool(handles.toolbar2,'Separator','on');
+        handles.toolbar2_save = uipushtool(handles.toolbar2,'Separator','on');
         set(handles.toolbar2_save,'TooltipString','Save the figure');
         set(handles.toolbar2_save,'CData',...
             get(findall(handles.fig2,'Tag','Standard.SaveFigure'),'CData'));

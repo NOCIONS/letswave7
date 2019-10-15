@@ -110,7 +110,7 @@ GLW_view_OpeningFcn;
         handles.fig1=figure('Visible','off','Color',0.94*[1,1,1],...
             'numbertitle','off','name','multiviewer_maps','MenuBar','none',...
             'position',userdata.fig1_pos,'DockControls','off');
-        
+               
         %toolbar1
         handles.toolbar1 = uitoolbar(handles.fig1);
         handles.toolbar1_split = uitoggletool(handles.toolbar1);
@@ -308,6 +308,9 @@ GLW_view_OpeningFcn;
         handles.fig2=figure('Visible','off','position',userdata.fig2_pos,...
             'numbertitle','off','name','multiviewer_maps',...
             'DockControls','off','PaperPositionMode','auto');
+         if ~verLessThan('matlab','9.4')
+            addToolbarExplorationButtons(handles.fig2);
+        end
         %toolbar2
         handles.toolbar2 = uitoolbar(handles.fig1);
         handles.toolbar2_split = uitoggletool(handles.toolbar2);
