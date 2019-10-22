@@ -78,7 +78,7 @@ Manager_Init();
         end
         
         %add batch
-        load('batch_plugins.mat');
+        load('batch_plugins.mat','batch_list','plugins_list');
         root_batch = uimenu(handles.fig,'Label','Batch');
         mh = uimenu(root_batch,'Label','*EMPTY*');
         set(mh,'callback',@(obj,event)menu_callback('LW_batch'));
