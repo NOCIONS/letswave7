@@ -253,7 +253,7 @@ classdef FLW_selection<CLW_generic
                 end
                 epoch_size=min(epoch_size,epoch_size_temp);
             end
-            if epoch_size==0;
+            if epoch_size==0
                 error('***The epoch size is zero in some datasets..***')
             end
             obj.labels_epoch=cell(epoch_size,1);
@@ -271,7 +271,7 @@ classdef FLW_selection<CLW_generic
             if idx_size_temp<idx_size
                 obj.isequal_idx=1;
             end
-            if idx_size==0;
+            if idx_size==0
                 error('***The index size is zero in some datasets..***')
             end
             obj.labels_idx=cell(idx_size,1);
@@ -541,7 +541,6 @@ classdef FLW_selection<CLW_generic
                         header_out.index_labels=header_out.index_labels(index_idx);
                     end
             end
-            
             
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];

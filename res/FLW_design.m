@@ -1,6 +1,6 @@
 function FLW_design()
-close all;
-FLW_name='FLW_bsi';
+close all;clc;
+FLW_name='FLW_marker_selection';
 
 h=findall(0,'tag','FLW_design');
 if ~isempty(h)

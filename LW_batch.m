@@ -104,7 +104,7 @@ end
         end
         
         %add batch
-        load('batch_plugins.mat');
+        load('batch_plugins.mat','batch_list','plugins_list');
         root_batch = uimenu(handle.fig,'Label','Batch');
         for k=1:length(batch_list)
             mh = uimenu(root_batch,'Label',batch_list{k}(1:end-10));
@@ -606,7 +606,7 @@ end
     function add_script(varargin)
             script_name=varargin{1};
             [pathstr,~,~]=fileparts(which('LW_manager.m'));
-            load(fullfile(pathstr,'plugins',script_name),'-mat');
+            load(fullfile(pathstr,'plugins',script_name),'-mat','option');
             idx=handle.tab_idx;
             batch_num=length(batch);
             for k=1:length(option)
