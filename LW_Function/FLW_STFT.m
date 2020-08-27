@@ -187,8 +187,8 @@ classdef FLW_STFT<CLW_generic
             
             t=header.xstart+(0:header.datasize(6)-1)*header.xstep;
             f=header.ystart+(0:header.datasize(5)-1)*header.ystep;
-            Fs=1/header.xstep;
-            winsize=round((option.hanning_width/header.xstep-1)/2)*2+1;
+            Fs=1/lwdata_in.header.xstep;
+            winsize=round((option.hanning_width/lwdata_in.header.xstep-1)/2)*2+1;
             x_step=round(option.sliding_step);
             w = window('hann',winsize);
             
