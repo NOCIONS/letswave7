@@ -2,6 +2,7 @@ function filename=CLW_save(lwdata_in,varargin)
 option.path='';
 option=CLW_check_input(option,{'path'},varargin);
 header=lwdata_in.header;
+header.datasize=size(lwdata_in.data);
 data=single(lwdata_in.data);
 
 %% check the events

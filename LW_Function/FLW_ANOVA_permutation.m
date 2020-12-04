@@ -156,7 +156,11 @@ classdef FLW_ANOVA_permutation<CLW_permutation
             dist_temp=squareform(pdist([x;y]'))<option.chan_dist;
             idx=find([temp.chanlocs.topo_enabled]==1);
             dist= false(header.datasize(2),header.datasize(2));
-            dist(idx,idx)=dist_temp;
+            if isempty(dist_temp)
+                dist(idx,idx)=0;
+            else
+                dist(idx,idx)=dist_temp;
+            end
             %% now
             wtfactornames={};
             btfactornames={};
@@ -169,7 +173,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
             end
             k=1;
             tpsubjects=[];
-            for datapos=1:length(lwdataset_in);
+            for datapos=1:length(lwdataset_in)
                 num_epochs=lwdataset_in(datapos).header.datasize(1);
                 for j=1:num_epochs
                     if option.factor_name(1)=='W'
@@ -206,7 +210,7 @@ classdef FLW_ANOVA_permutation<CLW_permutation
                 if option.multiple_sensor==0
                     for ch_idx=1:1:header.datasize(2)
                         tpdata=[];
-                        for datapos=1:length(lwdataset_in);
+                        for datapos=1:length(lwdataset_in)
                             num_epochs=lwdataset_in(datapos).header.datasize(1);
                             tpdata=[tpdata;reshape(lwdataset_in(datapos).data(:,ch_idx,1,z_idx,:,:),num_epochs,[])];
                         end

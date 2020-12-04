@@ -1591,6 +1591,10 @@ GLW_figure_openingFcn;
             set(l,'visible',option.ax{option.cnt_subfig}.ylabel_visible);
             set(l,'string',option.ax{option.cnt_subfig}.ylabel);
             set(handles.ax(option.cnt_subfig),'YDir',option.ax{option.cnt_subfig}.YDir);
+        else
+            set(handles.ax(option.cnt_subfig),...
+                'fontname',option.ax{option.cnt_subfig}.fontname,...
+                'fontsize',option.ax{option.cnt_subfig}.fontsize);  
         end
         
         
