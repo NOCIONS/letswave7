@@ -123,7 +123,6 @@ classdef FLW_ttest_constant<CLW_permutation
                 end
                 dist=zeros(length(header.chanlocs),length(header.chanlocs));
                 dist(chan_used,chan_used)=squareform(pdist([x;y]'))<option.chan_dist;
-                
             end
             
             if option.permutation && option.num_permutations>=2^(size(lwdata_in.data,1)-1)
@@ -194,14 +193,17 @@ classdef FLW_ttest_constant<CLW_permutation
                                             CLW_max_cluster(tstat.*(tstat>=t_threshold));
                                 end
                                 cluster_distribute(iter)=max_tstat;
-                                t=toc;
-                                if option.show_progress && ishandle(fig) && t-t1>0.2
-                                    t1=t;
-                                    N=(iter+(ch_idx-1+(z_idx-1)*header.datasize(2))*option.num_permutations);
-                                    N=N/option.num_permutations/header.datasize(2)/header.datasize(4);
-                                    set(run_slider,'Position',[0 0 N 1]);
-                                    set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
-                                    drawnow ;
+                                
+                                if option.show_progress
+                                    t=toc;
+                                    if ishandle(fig) && t-t1>0.2
+                                        t1=t;
+                                        N=(iter+(ch_idx-1+(z_idx-1)*header.datasize(2))*option.num_permutations);
+                                        N=N/option.num_permutations/header.datasize(2)/header.datasize(4);
+                                        set(run_slider,'Position',[0 0 N 1]);
+                                        set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
+                                        drawnow;
+                                    end
                                 end
                             end
                             
@@ -303,14 +305,16 @@ classdef FLW_ttest_constant<CLW_permutation
 %                             colormap(lines);
 %                             x=colormap;x(1,:)=[1,1,1];colormap(x);
 %                         end
-                       t=toc;
-                        if option.show_progress && ishandle(fig) && t-t1>0.2
-                            t1=t;
-                            N=(iter+(z_idx-1)*option.num_permutations);
-                            N=N/option.num_permutations/header.datasize(4);
-                            set(run_slider,'Position',[0 0 N 1]);
-                            set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
-                            drawnow;
+                        if option.show_progress 
+                            t=toc;
+                            if ishandle(fig) && t-t1>0.2
+                                t1=t;
+                                N=(iter+(z_idx-1)*option.num_permutations);
+                                N=N/option.num_permutations/header.datasize(4);
+                                set(run_slider,'Position',[0 0 N 1]);
+                                set(h_text,'string',[num2str(N*100,'%0.0f'),'% ( ',num2str(t/N*(1-N),'%0.0f'),' second left)']);
+                                drawnow;
+                            end
                         end
                     end
                     
