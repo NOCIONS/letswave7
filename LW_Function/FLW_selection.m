@@ -511,6 +511,15 @@ classdef FLW_selection<CLW_generic
                         error('No corresponding epoch is found');
                     end
                     option.items=option.items(epoch_idx);
+
+                    % RS: removing all events contained within removed epochs
+                    new_epochs =  str2double(option.items);
+                    removed_epochs = find( ~ismember( 1:epoch_size, new_epochs  ) ); % get epochs which were removed
+                    header_out.events( arrayfun(  @(x) ismember(x, removed_epochs),  [header_out.events.epoch] ) ) = []; % remove events 
+                    for k=1:size(header_out.events,2) % renumber the epoch field in the remaining events
+                        header_out.events(k).epoch =  find( header_out.events(k).epoch ==  new_epochs);
+                    end
+
                     header_out.datasize(1)=length(epoch_idx);
                 case 'channel'
                     channel_labels={header_in.chanlocs.labels};
