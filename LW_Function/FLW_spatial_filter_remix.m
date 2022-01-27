@@ -79,6 +79,7 @@ classdef FLW_spatial_filter_remix<CLW_generic
                 error('***No unmix/mix matrix can been loaded.***');
             end
             header_out=header_in;
+            header_out.datasize(2)=size(option.mix_matrix,1);
             if ~isempty(option.suffix)
                 header_out.name=[option.suffix,' ',header_out.name];
             end
