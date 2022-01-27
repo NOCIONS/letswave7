@@ -32,7 +32,7 @@ classdef FLW_concatenate_epochs<CLW_generic
             header_out.datasize(1)=1;
             if isfield(header_out,'events')
                 events=header_out.events;
-                for k=1:header_in.datasize(1)
+                for k=1:length(events)
                     events(k).latency=events(k).latency+dur*(events(k).epoch-1);
                     events(k).epoch=1;
                 end
