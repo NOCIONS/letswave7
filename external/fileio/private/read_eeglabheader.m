@@ -34,13 +34,16 @@ function header = read_eeglabheader(filename)
 if nargin < 1
   help read_eeglabheader;
   return;
-end;
+end
 
 if ~isstruct(filename)
-  load('-mat', filename);
+    load( filename, '-mat', 'EEG');
+    if ~isfield(EEG,'srate') && isfield(EEG,'EEG')
+        EEG=EEG.EEG;
+    end
 else
-  EEG = filename;
-end;
+    EEG = filename;
+end
 
 header.Fs          = EEG.srate;
 header.nChans      = EEG.nbchan;
