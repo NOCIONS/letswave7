@@ -288,7 +288,10 @@ classdef FLW_selection<CLW_generic
                         set(obj.h_not_equal_txt,'visible','on');
                     end
                     set(obj.h_old_list,'String',obj.labels_epoch);
-                    temp= intersect(obj.labels_epoch,new_list,'stable');
+                    [temp,~,temp_idx]= intersect(obj.labels_epoch,new_list,'stable');
+                    [~,temp_idx]=sort(temp_idx);
+                    temp=temp(temp_idx);
+%                     temp= intersect(obj.labels_epoch,new_list,'stable');
                     set(obj.h_new_list,'String',temp);
                     [~,~,idx] = intersect(old_idx,obj.labels_epoch,'stable');
                     set(obj.h_old_list,'value',idx);
@@ -502,14 +505,22 @@ classdef FLW_selection<CLW_generic
                 case 'epoch'
                     epoch_size=header_in.datasize(1);
                     epoch_idx=[];
+                    event_epoch_list=[header_in.events.epoch];
+                    events=[];
                     for k=1:length(option.items)
-                        if(str2num(option.items{k})<=epoch_size)
+                        temp_idx=str2num(option.items{k});
+                        if(temp_idx<=epoch_size)
                             epoch_idx=[epoch_idx,k];
+                            events_temp=header_in.events(find(event_epoch_list==temp_idx));
+                            [events_temp(:).epoch]=deal(k);
+                            events=cat(2,events,events_temp);
                         end
                     end
                     if isempty(epoch_idx)
                         error('No corresponding epoch is found');
                     end
+                    header_out.events=events;
+
                     option.items=option.items(epoch_idx);
                     header_out.datasize(1)=length(epoch_idx);
                 case 'channel'
