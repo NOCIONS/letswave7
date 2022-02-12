@@ -32,17 +32,23 @@
 function header = read_eeglabheader(filename)
 
 if nargin < 1
-  help read_eeglabheader;
-  return;
+    help read_eeglabheader;
+    return;
 end
 
 if ~isstruct(filename)
-    load( filename, '-mat', 'EEG');
-    if ~isfield(EEG,'srate') && isfield(EEG,'EEG')
-        EEG=EEG.EEG;
+    s = whos('-file', filename);
+    if any(strcmp({s.name}', 'EEG'))
+        load('-mat', filename, 'EEG');
+    else % EEGLAB > 2021.0 saves content of EEG as default
+        EEG = load('-mat', filename);
     end
 else
     EEG = filename;
+end
+
+if ~isfield(EEG,'srate') && isfield(EEG,'EEG')
+    EEG=EEG.EEG;
 end
 
 header.Fs          = EEG.srate;
@@ -51,12 +57,12 @@ header.nSamples    = EEG.pnts;
 header.nSamplesPre = -EEG.xmin*EEG.srate;
 header.nTrials     = EEG.trials;
 try
-  header.label       = { EEG.chanlocs.labels }';
+    header.label       = { EEG.chanlocs.labels }';
 catch
-  warning('creating default channel names');
-  for i=1:header.nChans
-    header.label{i} = sprintf('chan%03d', i);
-  end
+    warning('creating default channel names');
+    for i=1:header.nChans
+        header.label{i} = sprintf('chan%03d', i);
+    end
 end
 ind = 1;
 for i = 1:length( EEG.chanlocs )
