@@ -297,7 +297,6 @@ classdef FLW_import_data
                         end
                     end
                     if is_combine==1
-                        disp('Yes CombinedSignal')
                         idx=find(Value>32768);
                         Value1=Value/256;
                         idx=find(Value1>128);
@@ -317,7 +316,6 @@ classdef FLW_import_data
                             lwdata_out.header.events(eventpos)=event;
                         end
                     else
-                        disp('No CombinedSignal')
                         dict_ID_Name=struct();
                         for k=1:length(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription)
                             temp=orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID;
