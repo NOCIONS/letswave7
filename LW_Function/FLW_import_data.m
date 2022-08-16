@@ -266,7 +266,7 @@ classdef FLW_import_data
                     lwdata_out.data=permute(single(dat),[3,1,4,5,6,2]);
                     lwdata_out.header=[];
                     lwdata_out.header.filetype='time_amplitude';
-                    lwdata_out.header.name= name;
+                    lwdata_out.header.name= [name,ext];
                     lwdata_out.header.tags='';
                     lwdata_out.header.datasize=[1 hdr.nChans 1 1 1 hdr.nSamples];
                     lwdata_out.header.xstart=0;
