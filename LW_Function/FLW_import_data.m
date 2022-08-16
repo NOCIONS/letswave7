@@ -285,14 +285,55 @@ classdef FLW_import_data
                         lwdata_out.header.chanlocs(chanpos)=chanloc;
                     end
 
-                    for eventpos=1:size(orig.AsynchronData.Time,2)
-                        event.latency = (orig.AsynchronData.Time(eventpos)*lwdata_out.header.xstep)+lwdata_out.header.xstart;
-                        event.code = orig.AsynchronData.TypeID(eventpos);
-                        if isnumeric(event.code)
-                            event.code=num2str(event.code);
+
+                    Time=double(orig.AsynchronData.Time);
+                    TypeID=orig.AsynchronData.TypeID;
+                    Value=orig.AsynchronData.Value;
+                    is_combine=0;
+                    for k=1:length(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription)
+                        if strcmpi(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).IsCombinedSignal,'true')
+                            is_combine=1;
+                            break;
                         end
-                        event.epoch=1;
-                        lwdata_out.header.events(eventpos)=event;
+                    end
+                    if is_combine==1
+                        disp('Yes CombinedSignal')
+                        idx=find(Value>32768);
+                        Value1=Value/256;
+                        idx=find(Value1>128);
+                        Value1(idx)=Value1(idx)-256;
+                        lwdata_out.header.events=struct('code',{},'latency',{},'epoch',{});
+                        for eventpos=1:size(Time,2)
+                            event.latency = (Time(eventpos)*lwdata_out.header.xstep)+lwdata_out.header.xstart;
+                            event.code = Value1(eventpos);
+                            if isnumeric(event.code)
+                                if (event.code<0)
+                                    event.code=['M',num2str(-event.code)];
+                                else
+                                    event.code=['S',num2str(event.code)];
+                                end
+                            end
+                            event.epoch=1;
+                            lwdata_out.header.events(eventpos)=event;
+                        end
+                    else
+                        disp('No CombinedSignal')
+                        dict_ID_Name=struct();
+                        for k=1:length(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription)
+                            temp=orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID;
+                            dict_ID_Name.(['x' num2str(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID)])=...
+                                orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).Name;
+                        end
+                        lwdata_out.header.events=struct('code',{},'latency',{},'epoch',{});
+                        for eventpos=1:size(Time,2)
+                            event.latency = (Time(eventpos)*lwdata_out.header.xstep)+lwdata_out.header.xstart;
+                            event.code = dict_ID_Name.(['x' num2str(TypeID(eventpos))]);
+                            if isnumeric(event.code)
+                                event.code=num2str(event.code);
+                            end
+                            event.epoch=1;
+                            lwdata_out.header.events(eventpos)=event;
+                        end
                     end
                 otherwise
                     hdr=ft_read_header(str);
