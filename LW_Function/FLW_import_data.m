@@ -318,9 +318,13 @@ classdef FLW_import_data
                     else
                         dict_ID_Name=struct();
                         for k=1:length(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription)
-                            temp=orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID;
-                            dict_ID_Name.(['x' num2str(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID)])=...
-                                orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).Name;
+                            if  isempty(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).Description)
+                                dict_ID_Name.(['x' num2str(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID)])=...
+                                    orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).Name;
+                            else
+                                dict_ID_Name.(['x' num2str(orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).ID)])=...
+                                    orig.AsynchronData.AsynchronSignalTypes.AsynchronSignalDescription(k).Description;
+                            end
                         end
                         lwdata_out.header.events=struct('code',{},'latency',{},'epoch',{});
                         for eventpos=1:size(Time,2)
