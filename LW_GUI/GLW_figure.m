@@ -5181,8 +5181,11 @@ GLW_figure_openingFcn;
             set(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).surf_2D,...
                 'Xdata',ay,'Ydata',ax,'Zdata',a,'visible','off');
         end
-        
-        top = double(max(a(:))*1.05);
+        if max(a(:))>0
+            top = double(max(a(:))*1.05);
+        else
+            top = double(max(a(:))*0.95);
+        end
         if verLessThan('matlab','8.4')
             if ishandle(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour)
                 delete(handles.ax_child{option.cnt_subfig}.handle(option.cnt_content).contour);
