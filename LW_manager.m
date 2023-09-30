@@ -187,23 +187,23 @@ Manager_Init();
         set(handles.file_listbox,'max',2,'min',0);
         set(handles.file_listbox,'uicontextmenu',hcmenu);
         %label epochs
-        handles.info_text_epoch=uicontrol('style','text','string','Epochs:',...
+        handles.info_text_epoch=uicontrol('style','text','string','Ep:',...
             'position',[140,15,100,19],'HorizontalAlignment','left');
         %label channels
         handles.info_text_channel=uicontrol('style','text',...
-            'string','Channels:','position',[200,15,100,19],'HorizontalAlignment','left');
-        %label Xsize
-        handles.info_text_X=uicontrol('style','text','string','X:',...
-            'position',[280,15,100,19],'HorizontalAlignment','left');
-        %label Ysize
-        handles.info_text_Y=uicontrol('style','text','string','Y:',...
-            'position',[350,15,100,19],'HorizontalAlignment','left');
-        %label Zsize
-        handles.info_text_Z=uicontrol('style','text','string','Z:',...
-            'position',[400,15,100,19],'HorizontalAlignment','left');
+            'string','Ch:','position',[220,15,100,19],'HorizontalAlignment','left');
         %label index
         handles.info_text_Index=uicontrol('style','text','string','I:',...
-            'position',[440,15,100,19],'HorizontalAlignment','left');
+            'position',[290,15,100,19],'HorizontalAlignment','left');
+        %label Zsize
+        handles.info_text_Z=uicontrol('style','text','string','Z:',...
+            'position',[330,15,100,19],'HorizontalAlignment','left');
+        %label Ysize
+        handles.info_text_Y=uicontrol('style','text','string','Y:',...
+            'position',[370,15,100,19],'HorizontalAlignment','left');
+        %label Xsize
+        handles.info_text_X=uicontrol('style','text','string','X:',...
+            'position',[410,15,100,19],'HorizontalAlignment','left');
         %label tips
         handles.tip_text=uicontrol('style','text','string','tips:',...
             'position',[2,-1,490,19],'HorizontalAlignment','left');
@@ -259,8 +259,8 @@ Manager_Init();
         if isempty(str)|| isempty(idx)
             %listbox is empty
             filename='<empty>';
-            set(handles.info_text_epoch,'string','Epochs:');
-            set(handles.info_text_channel,'string','Channels:');
+            set(handles.info_text_epoch,'string','Ep:');
+            set(handles.info_text_channel,'string','Ch:');
             set(handles.info_text_X,'string','X:');
             set(handles.info_text_Y,'string','Y:');
             set(handles.info_text_Z,'string','Z:');
@@ -271,15 +271,15 @@ Manager_Init();
             filename=str{idx(1)};
             try
                 header = CLW_load_header(filename);
-                set(handles.info_text_epoch,'string',['Epochs:',num2str(header.datasize(1))]);
-                set(handles.info_text_channel,'string',['Channels:',num2str(header.datasize(2))]);
+                set(handles.info_text_epoch,'string',['Ep:',num2str(header.datasize(1))]);
+                set(handles.info_text_channel,'string',['Ch:',num2str(header.datasize(2))]);
                 set(handles.info_text_X,'string',['X:',num2str(header.datasize(6))]);
                 set(handles.info_text_Y,'string',['Y:',num2str(header.datasize(5))]);
                 set(handles.info_text_Z,'string',['Z:',num2str(header.datasize(4))]);
                 set(handles.info_text_Index,'string',['I:',num2str(header.datasize(3))]);
             catch
-                set(handles.info_text_epoch,'string',['Epochs:Error']);
-                set(handles.info_text_channel,'string',['Channels:Error']);
+                set(handles.info_text_epoch,'string',['Ep:Error']);
+                set(handles.info_text_channel,'string',['Ch:Error']);
                 set(handles.info_text_X,'string',['X:Error']);
                 set(handles.info_text_Y,'string',['Y:Error']);
                 set(handles.info_text_Z,'string',['Z:Error']);
@@ -367,7 +367,7 @@ Manager_Init();
         lwdata=lwdata(1);
         if isfield(lwdata,'header')&&isfield(lwdata,'data')
             t=questdlg('Are you sure?');
-            if strcmpi(t,'Yes');
+            if strcmpi(t,'Yes')
                 lwdata.header.name=option.file_str{1};
                 CLW_save(lwdata,'path',option.file_path);
             end
@@ -543,20 +543,17 @@ Manager_Init();
 
     function check_version()
         temp=load('version.txt');
-        address = GetAddress();
-        url=['http://letswave.applinzi.com/check_update.wigs?',address,'_',computer,'_',num2str(temp)];
-        %         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
+        url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
         try
-            lw_version = str2num(urlread(url,'Timeout',0.5));
-            % lw_version = str2num(urlread(url));
+            urlread(['https://huanggan.site/letswave7?',GetAddress(),'_',computer,'_',num2str(temp)],'Timeout',1);
+            lw_version = str2num(urlread(url,'Timeout',1));
             handles.version_checkked=1;
             if temp<lw_version
-                set(handles.tip_text,'string',['tips: There is new version of Letswave (',...
-                    num2str(floor(lw_version/1000000)),'), please update Letswave']);
+                set(handles.tip_text,'string',['tips: There is new version of letswave7 (',...
+                    num2str(floor(lw_version/1000000)),'), please update']);
             else
-                %set(handles.tip_text,'string','tips: The currest version of Letswave is the latest.');
+                %set(handles.tip_text,'string','tips: The currest version of letswave7 is the latest.');
             end
-            %urlread('https://github.com/NOCIONS/letswave7/blob/master/res/version.txt','Timeout',0.5);
         catch
             handles.version_checkked=handles.version_checkked+1;
         end
