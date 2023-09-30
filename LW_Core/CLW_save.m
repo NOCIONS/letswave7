@@ -21,7 +21,10 @@ if ~isempty(header.events)
 else
     header.events=[];
 end
-[~,n]=fileparts(header.name);
+[~,n,ext]=fileparts(header.name);
+if ~isempty(ext) && (~strcmp(ext,'.lw6') || ~strcmp(ext,'.mat'))
+    n=[n,ext];
+end
 save(fullfile(option.path,[n,'.lw6']),'header');
 save(fullfile(option.path,[n,'.mat']),'-v7.3','data');
 filename=n;
