@@ -711,6 +711,15 @@ GLW_my_view_OpeningFcn;
             fig2_SizeChangedFcn();
         end
         fig_legend;
+        for idx_axes=1:length(handles.axes)
+            a=get(handles.axes(idx_axes),'Children');
+            b=zeros(length(a),1);
+            for idx_axes_children=1:length(a)
+                b(idx_axes_children)=str2num(a(idx_axes_children).Tag(1));
+            end
+            [~,b]=sort(b,'descend');
+            set(handles.axes(idx_axes),'Children',a(b));
+        end
     end
 
 %% fig_BtnDown
@@ -987,16 +996,19 @@ GLW_my_view_OpeningFcn;
             ax_idx=ceil(wave_idx/userdata.num_waves);
             switch userdata.linestyle
                 case 1
-                    handles.line(wave_idx)=line(1,1,'Parent',handles.axes(ax_idx));
+                    handles.line(wave_idx)=line(1,1,...
+                        'Parent',handles.axes(ax_idx),'Tag','1_line');
                 case 2
-                    handles.line(wave_idx)=stem(1,1,'Parent',handles.axes(ax_idx),'Marker','.');
+                    handles.line(wave_idx)=stem(1,1,...
+                        'Parent',handles.axes(ax_idx),'Marker','.','Tag','1_line');
                 case 3
-                    handles.line(wave_idx)=stairs(1,1,'Parent',handles.axes(ax_idx));
+                    handles.line(wave_idx)=stairs(1,1,...
+                        'Parent',handles.axes(ax_idx),'Tag','1_line');
             end
         end
+        set(handles.line,'Visible','off');
         set(handles.line,'LineWidth',1);
-        set(handles.line(1:userdata.num_cols*userdata.num_rows*userdata.num_waves),'Visible','on');
-        set(handles.line(userdata.num_cols*userdata.num_rows*userdata.num_waves+1:end),'Visible','off');
+        set(handles.line,'Parent',handles.axes(1));
         userdata.minmax_axis=[];
         for dataset_index=1:length(userdata.selected_datasets)
             header=datasets_header(userdata.selected_datasets(dataset_index)).header;
@@ -1067,6 +1079,7 @@ GLW_my_view_OpeningFcn;
                 end
             end
         end
+        set(handles.line(1:userdata.num_cols*userdata.num_rows*userdata.num_waves),'Visible','on');
     end
 
 %% fig_polarity
@@ -1089,6 +1102,7 @@ GLW_my_view_OpeningFcn;
     function fig_shade(~, ~)
         userdata.is_shade=strcmp(get(handles.toolbar2_shade,'State'),'on');
         if userdata.is_shade
+            set(handles.shade,'Visible','off');
             zoom off;
             pan off;
             rotate3d off;
@@ -1096,15 +1110,19 @@ GLW_my_view_OpeningFcn;
             set(handles.toolbar2_zoomout,'State','off');
             set(handles.toolbar2_pan,'State','off');
             set(handles.toolbar2_rotate,'State','off');
-            for ax_idx=length(handles.shade)+1:userdata.num_cols*userdata.num_rows
-                handles.shade(ax_idx)=fill(userdata.shade_x([1,2,2,1]),...
-                    userdata.minmax_axis([3,3,4,4]),[0.8,0.8,0.8],...
-                    'EdgeColor','None','FaceAlpha',0.3,...
-                    'Parent',handles.axes(ax_idx));
+            for ax_idx=1:userdata.num_cols*userdata.num_rows
+                if (ax_idx>length(handles.shade))
+                    handles.shade(ax_idx)=fill(userdata.shade_x([1,2,2,1]),...
+                        userdata.minmax_axis([3,3,4,4]),[0.8,0.8,0.8],...
+                        'EdgeColor','None','FaceAlpha',0.3,...
+                        'Parent',handles.axes(ax_idx),'Tag','2_shade');
+                else
+                    set(handles.shade(ax_idx),'Parent',handles.axes(ax_idx));
+                end
             end
             set(handles.shade(1:userdata.num_rows*userdata.num_cols),'Visible','on');
-            set(handles.shade(userdata.num_rows*userdata.num_cols+1:end),'Visible','off');
             fig_shade_Update();
+            fig_legned_Update();
         else
             if ~isempty(handles.shade)
                 set(handles.shade,'Visible','off');
@@ -1120,14 +1138,15 @@ GLW_my_view_OpeningFcn;
         handles.legend=[];
         userdata.is_legend=strcmp(get(handles.toolbar2_legend,'State'),'on');
         fig_legned_Update();
-        if userdata.is_legend
-            set(handles.legend,'FontSize',10,'Location','SouthEast','Interpreter', 'none');
-        end
     end
 
 %% fig_legned_Update
     function fig_legned_Update(~,~)
         if userdata.is_legend
+            if ~isempty(handles.legend)
+                delete(handles.legend);
+            end
+            handles.legend=[];
             userdata.title_wave=cell(userdata.num_waves,1);
             switch(userdata.graph_style(3))
                 case 1
@@ -1139,7 +1158,8 @@ GLW_my_view_OpeningFcn;
             end
             handles.legend=legend(handles.axes(userdata.num_cols*userdata.num_rows),...
                 handles.line((userdata.num_cols*userdata.num_rows-1)*userdata.num_waves+(1:userdata.num_waves)),...
-                userdata.title_wave);
+                userdata.title_wave,'Tag','5_cursor');
+            set(handles.legend,'FontSize',10,'Location','SouthEast','Interpreter', 'none');
         end
     end
 
@@ -1302,13 +1322,13 @@ GLW_my_view_OpeningFcn;
                     ax_idx=(col_pos-1)*userdata.num_rows+row_pos;
                     if length(handles.cursor)<ax_idx
                         handles.cursor(ax_idx)=line(userdata.cursor_point([1,1]),userdata.minmax_axis([3,4]),...
-                            'Parent',handles.axes(ax_idx),'Linewidth',0.1);
+                            'Parent',handles.axes(ax_idx),'Linewidth',0.1,'Tag','3_cursor');
                     end
                     for wave_pos=1:userdata.num_waves
                         wave_idx=((col_pos-1)*userdata.num_rows+row_pos-1)*userdata.num_waves+wave_pos;
                         if length(handles.text_y)<wave_idx
                             handles.point_y(wave_idx)=plot(userdata.cursor_point,userdata.minmax_axis(3),...
-                                'r.','MarkerSize',18,'Parent',handles.axes(ax_idx));
+                                'r.','MarkerSize',18,'Parent',handles.axes(ax_idx),'Tag','4_cursor');
                             handles.text_y(wave_idx)=uicontrol('Parent',handles.panel_fig,'Style','text','String','32',...
                                 'FontSize',10,'ForegroundColor',[1,1,1],'BackgroundColor',[0,0,0]);
                         end
@@ -1325,8 +1345,8 @@ GLW_my_view_OpeningFcn;
             set(handles.text_y(userdata.num_rows*userdata.num_cols*userdata.num_waves+1:end),'Visible','off');
             set(handles.point_y(1:userdata.num_rows*userdata.num_cols*userdata.num_waves),'Visible','on');
             set(handles.point_y(userdata.num_rows*userdata.num_cols*userdata.num_waves+1:end),'Visible','off');
-            fig_cursor_Update();
-            fig_legned_Update();
+            fig_cursor_Update;
+            fig_legned_Update;
         else
             if ~isempty(handles.cursor)
                 set(handles.cursor,'Visible','off');
@@ -1969,7 +1989,7 @@ GLW_my_view_OpeningFcn;
         [FileName,PathName] = GLW_getfile();
         %[FileName,PathName] = uigetfile({'*.lw6','Select the lw6 file'},'MultiSelect','on');
         userdata.datasets_path=PathName;
-        if PathName~=0;
+        if PathName~=0
             FileName=cellstr(FileName);
             for k=1:length(FileName)
                 userdata.datasets_filename{end+1}=FileName{k}(1:end-4);
