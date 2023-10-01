@@ -552,6 +552,7 @@ Manager_Init();
                 set(handles.tip_text,'string',['tips: There is new version of letswave7 (',...
                     num2str(floor(lw_version/1000000)),'), please update']);
             else
+                set(handles.tip_text,'string','tips:.');
                 %set(handles.tip_text,'string','tips: The currest version of letswave7 is the latest.');
             end
         catch
