@@ -215,7 +215,7 @@ classdef FLW_import_data
                     lwdata_out.header.name= name;
                     lwdata_out.header.tags='';
                     lwdata_out.header.datasize=[1 length(hdr.label) 1 1 1 hdr.nSamples];
-                    lwdata_out.header.xstart=1/hdr.Fs;
+                    lwdata_out.header.xstart=0;
                     lwdata_out.header.ystart=0;
                     lwdata_out.header.zstart=0;
                     lwdata_out.header.xstep=1/hdr.Fs;
