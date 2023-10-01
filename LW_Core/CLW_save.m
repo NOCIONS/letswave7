@@ -22,7 +22,7 @@ else
     header.events=[];
 end
 [~,n,ext]=fileparts(header.name);
-if ~isempty(ext) && (~strcmp(ext,'.lw6') || ~strcmp(ext,'.mat'))
+if ~isempty(ext) && (~strcmp(ext,'.lw6') && ~strcmp(ext,'.mat'))
     n=[n,ext];
 end
 save(fullfile(option.path,[n,'.lw6']),'header');
