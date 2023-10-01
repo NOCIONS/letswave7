@@ -196,9 +196,53 @@ classdef FLW_import_data
 
             str=fullfile(option.pathname,option.filename);
             [~,name,ext] = fileparts(str);
-
-
+            if strcmp(lower(ext),'.bdf')
+                fid=fopen(str,'r','ieee-le');
+                H1=char(fread(fid,256,'char')');
+                if strcmp(H1(115:123),'iRecorder')
+                    ext='.econ';
+                end
+                fclose(fid);
+            end
             switch lower(ext)
+                case '.econ'
+                    hdr = read_bdf(str);
+                    dat = read_bdf(str, hdr, 1, hdr.nSamples, 1:hdr.nChans);
+                    lwdata_out.data=permute(single(dat),[3,1,4,5,6,2]);
+
+                    lwdata_out.header=[];
+                    lwdata_out.header.filetype='time_amplitude';
+                    lwdata_out.header.name= name;
+                    lwdata_out.header.tags='';
+                    lwdata_out.header.datasize=[1 length(hdr.label) 1 1 1 hdr.nSamples];
+                    lwdata_out.header.xstart=1/hdr.Fs;
+                    lwdata_out.header.ystart=0;
+                    lwdata_out.header.zstart=0;
+                    lwdata_out.header.xstep=1/hdr.Fs;
+                    lwdata_out.header.ystep=1;
+                    lwdata_out.header.zstep=1;
+                    lwdata_out.header.history=[];
+                    lwdata_out.header.source=str;
+
+                    chanloc.labels='';
+                    chanloc.topo_enabled=0;
+                    chanloc.SEEG_enabled=0;
+                    for chanpos=1:length(hdr.label)
+                        chanloc.labels=hdr.label{chanpos};
+                        lwdata_out.header.chanlocs(chanpos)=chanloc;
+                    end
+
+                    lwdata_out.header.events=struct('code',{},'latency',{},'epoch',{});
+                    for eventpos=1:length(hdr.event)
+                        event.code=hdr.event{eventpos}.eventvalue;
+                        if isnumeric(event.code)
+                            event.code=num2str(event.code);
+                        end
+                        event.latency=hdr.event{eventpos}.offset_in_sec;
+                        event.epoch=1;
+                        lwdata_out.header.events(eventpos)=event;
+                    end
+
                 case '.edf'
                     [data, header] = Read_EDF_BDF(str);
                     temp=unique(header.samplerate);
@@ -210,7 +254,7 @@ classdef FLW_import_data
                     lwdata_out.header.name= name;
                     lwdata_out.header.tags='';
                     lwdata_out.header.datasize=[1 length(header.labels) 1 1 1 length(data{1})];
-                    lwdata_out.header.xstart=0;
+                    lwdata_out.header.xstart=1/temp;
                     lwdata_out.header.ystart=0;
                     lwdata_out.header.zstart=0;
                     lwdata_out.header.xstep=1/temp;
@@ -266,7 +310,7 @@ classdef FLW_import_data
                     lwdata_out.data=permute(single(dat),[3,1,4,5,6,2]);
                     lwdata_out.header=[];
                     lwdata_out.header.filetype='time_amplitude';
-                    lwdata_out.header.name= [name,ext];
+                    lwdata_out.header.name= name;
                     lwdata_out.header.tags='';
                     lwdata_out.header.datasize=[1 hdr.nChans 1 1 1 hdr.nSamples];
                     lwdata_out.header.xstart=0;
@@ -338,77 +382,81 @@ classdef FLW_import_data
                         end
                     end
                 otherwise
-                    hdr=ft_read_header(str);
-                    trg=ft_read_event(str,'header',hdr);
-                    [~,name,~] = fileparts(str);
-                    lwdata_out.data=permute(single(ft_read_data(str,'header',hdr)),[3,1,4,5,6,2]);
-                    %epoch,channel,index,Z,Y,X
-                    %channel,X,epoch,1,1,1
-
-                    lwdata_out.header=[];
-                    lwdata_out.header.filetype='time_amplitude';
-                    lwdata_out.header.name= name;
-                    lwdata_out.header.tags='';
-                    lwdata_out.header.datasize=[hdr.nTrials hdr.nChans 1 1 1 hdr.nSamples];
-                    lwdata_out.header.xstart=(hdr.nSamplesPre/hdr.Fs)*-1;
-                    lwdata_out.header.ystart=0;
-                    lwdata_out.header.zstart=0;
-                    lwdata_out.header.xstep=1/hdr.Fs;
-                    lwdata_out.header.ystep=1;
-                    lwdata_out.header.zstep=1;
-                    lwdata_out.header.history=[];
-                    lwdata_out.header.source=str;
-
-                    chanloc.labels='';
-                    chanloc.topo_enabled=0;
-                    chanloc.SEEG_enabled=0;
-                    for chanpos=1:hdr.nChans
-                        chanloc.labels=hdr.label{chanpos};
-                        lwdata_out.header.chanlocs(chanpos)=chanloc;
-                    end
-
-
-                    numevents=size(trg,2);
-                    if numevents==0
-                        lwdata_out.header.events=[];
+                    if lower(ext)=='.bdf'
+                        hdr = read_bdf(str);
                     else
-                        k=0;
-                        for eventpos=1:numevents
-                            event.code='unknown';
-                            if strcmpi('.set',ext)
-                                if isempty(trg(eventpos).value)
-                                    event.code=trg(eventpos).type;
+                        hdr=ft_read_header(str);
+                        trg=ft_read_event(str,'header',hdr);
+                        [~,name,~] = fileparts(str);
+                        lwdata_out.data=permute(single(ft_read_data(str,'header',hdr)),[3,1,4,5,6,2]);
+                        %epoch,channel,index,Z,Y,X
+                        %channel,X,epoch,1,1,1
+
+                        lwdata_out.header=[];
+                        lwdata_out.header.filetype='time_amplitude';
+                        lwdata_out.header.name= name;
+                        lwdata_out.header.tags='';
+                        lwdata_out.header.datasize=[hdr.nTrials hdr.nChans 1 1 1 hdr.nSamples];
+                        lwdata_out.header.xstart=(hdr.nSamplesPre/hdr.Fs)*-1;
+                        lwdata_out.header.ystart=0;
+                        lwdata_out.header.zstart=0;
+                        lwdata_out.header.xstep=1/hdr.Fs;
+                        lwdata_out.header.ystep=1;
+                        lwdata_out.header.zstep=1;
+                        lwdata_out.header.history=[];
+                        lwdata_out.header.source=str;
+
+                        chanloc.labels='';
+                        chanloc.topo_enabled=0;
+                        chanloc.SEEG_enabled=0;
+                        for chanpos=1:hdr.nChans
+                            chanloc.labels=hdr.label{chanpos};
+                            lwdata_out.header.chanlocs(chanpos)=chanloc;
+                        end
+
+
+                        numevents=size(trg,2);
+                        if numevents==0
+                            lwdata_out.header.events=[];
+                        else
+                            k=0;
+                            for eventpos=1:numevents
+                                event.code='unknown';
+                                if strcmpi('.set',ext)
+                                    if isempty(trg(eventpos).value)
+                                        event.code=trg(eventpos).type;
+                                    else
+                                        event.code=trg(eventpos).value;
+                                    end
+                                    if isnumeric(event.code)
+                                        event.code=num2str(event.code);
+                                    end
+                                    if(lwdata_out.header.datasize(1)==1) %if it is continous data or just a single epoch
+                                        event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
+                                        event.epoch=1;
+                                    else %if it is an epoched dataset
+                                        if isempty(trg(eventpos).epoch)
+                                            continue;
+                                        end
+                                        event.epoch = floor(trg(eventpos).sample/lwdata_out.header.datasize(6))+1;
+                                        event.latency=((trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart)-...
+                                            (event.epoch-1)*lwdata_out.header.xstep*lwdata_out.header.datasize(6);
+                                    end
                                 else
-                                    event.code=trg(eventpos).value;
-                                end
-                                if isnumeric(event.code)
-                                    event.code=num2str(event.code);
-                                end
-                                if(lwdata_out.header.datasize(1)==1) %if it is continous data or just a single epoch
+                                    if isempty(trg(eventpos).value)
+                                        event.code=trg(eventpos).type;
+                                    else
+                                        event.code=trg(eventpos).value;
+                                    end
+                                    if isnumeric(event.code)
+                                        event.code=num2str(event.code);
+                                    end
                                     event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
                                     event.epoch=1;
-                                else %if it is an epoched dataset
-                                    if isempty(trg(eventpos).epoch)
-                                        continue;
-                                    end
-                                    event.epoch = floor(trg(eventpos).sample/lwdata_out.header.datasize(6))+1;
-                                    event.latency=((trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart)-...
-                                        (event.epoch-1)*lwdata_out.header.xstep*lwdata_out.header.datasize(6);
                                 end
-                            else
-                                if isempty(trg(eventpos).value)
-                                    event.code=trg(eventpos).type;
-                                else
-                                    event.code=trg(eventpos).value;
-                                end
-                                if isnumeric(event.code)
-                                    event.code=num2str(event.code);
-                                end
-                                event.latency=(trg(eventpos).sample*lwdata_out.header.xstep)+lwdata_out.header.xstart;
-                                event.epoch=1;
+                                k=k+1;
+                                lwdata_out.header.events(k)=event;
                             end
-                            k=k+1;
-                            lwdata_out.header.events(k)=event;
                         end
                     end
             end
