@@ -81,22 +81,11 @@ classdef FLW_import_data
         end
 
         function obj=add_file(obj,varargin)
-            %             filterspec={'*.avr;*.cnt','ANT Neuro, eeprobe/cnt-riff (*.avr, *.cnt)';
-            %                 '*.bdf','Biosemi BDF (*.bdf)';
-            %                 '*.smr','CED - Cambridge Electronic Design (*.smr)';
-            %                 '*.egis;*.ave;*.gave;*.ses;*.raw;*.mff','Electrical Geodesics, Inc. (EGI) (*.egis, *.ave, *.gave, *.ses, *.raw, *.mff)';
-            %                 '*.avr;*.swf','BESA (*.avr, *.swf)';
-            %                 '*.set','EEGLAB (*.set)';
-            %                 '*.eeg;*.cnt;*.avg','NeuroScan (*.eeg, *.cnt, *.avg)';
-            %                 '*.nxe','Nexstim (*.nxe)';
-            %                 '*.eeg;*.seg;*.dat;*.vhdr;*.vmrk','BrainVision (*.eeg, *.seg, *.dat, *.vhdr, *.vmrk)';
-            %                 '*.Poly5','TMSi (*.Poly5)';
-            %                 '*.edf;*.gdf','generic standard formats (*.edf, *.gdf)'};
             filterspec={'*.set;*.avr;*.cnt;*.eeg;*.bdf;*.raw;*.hdf5;*.edf;*.gdf;*.avg','All support files';
                 '*.set','EEGLAB (*.set)';
                 '*.avr;*.cnt','ANT Neuro, eeprobe/cnt-riff (*.avr, *.cnt)';
                 '*.eeg;*.cnt;*.avg','NeuroScan (*.eeg, *.cnt, *.avg)';
-                '*.bdf','Biosemi BDF (*.bdf)';
+                '*.bdf','Biosemi BDF，eCon BDF (*.bdf)';
                 '*.eeg','BrainVision ( *.eeg)';
                 '*.raw','Electrical Geodesics, Inc. (EGI) (*.raw)';
                 '*.hdf5','g.tec medical engineering GmbH (gtec) (*.hdf5)';
