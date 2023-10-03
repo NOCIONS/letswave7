@@ -545,7 +545,7 @@ Manager_Init();
         temp=load('version.txt');
         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
         try
-            urlread(['https://huanggan.site/letswave7?',GetAddress(),'_',computer,'_',num2str(temp)],'Timeout',1);
+            urlread(['https://huanggan.site/letswave7/',GetAddress(),'_',computer,'_',num2str(temp)],'Timeout',1);
             lw_version = str2num(urlread(url,'Timeout',1));
             handles.version_checkked=1;
             if temp<lw_version
