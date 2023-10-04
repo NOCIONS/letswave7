@@ -1,7 +1,8 @@
 function LW_manager()
-% LW_init : set paths
+%% LW_init : set paths
 LW_init();
-% Manager_Init
+
+%% Manager_Init
 handles=[];
 Manager_Init();
 
@@ -21,7 +22,7 @@ Manager_Init();
         end
         set(handles.fig,'Position',pos);
         h=670-pos(4);
-       %% init menu
+        %% init menu
         % menu labels
         menu_name={'File','Edit','Process','Statistics','View','Figure'};
         for k=1:length(menu_name)
@@ -35,7 +36,7 @@ Manager_Init();
             if ~isfield(s,'LW_Manager')||~isfield(s.LW_Manager,'menu')
                 continue;
             end
-            
+
             %build titlebar menu (labels and callback)
             root = uimenu(handles.fig,'Label',s.LW_Manager.Attributes.Label);
             s=s.LW_Manager.menu;
@@ -76,7 +77,7 @@ Manager_Init();
                 end
             end
         end
-        
+
         %add batch
         load('batch_plugins.mat','batch_list','plugins_list');
         root_batch = uimenu(handles.fig,'Label','Batch');
@@ -85,12 +86,12 @@ Manager_Init();
         for k=1:length(batch_list)
             mh = uimenu(root_batch,'Label',batch_list{k}(1:end-10));
             set(mh,'callback',@(obj,event)menu_callback(['LW_batch(',batch_list{k},')']));
-            
+
         end
         root_plugins = uimenu(handles.fig,'Label','Plugins');
         for k=1:length(plugins_list)
             str=fullfile(fileparts(which(mfilename)),'Plugins',plugins_list{k},'menu.xml');
-            
+
             if ~exist(str,'file')
                 continue;
             end
@@ -139,7 +140,7 @@ Manager_Init();
                 end
             end
         end
-        
+
         %build context menu (labels and callbacks)
         hcmenu = uicontextmenu('parent',handles.fig);
         uimenu(hcmenu,'Label','view','Callback',{@(obj,events)dataset_view()});
@@ -148,7 +149,7 @@ Manager_Init();
         uimenu(hcmenu,'Label','send to workspace','Callback',{@(obj,events)sendworkspace_btn_Callback});
         uimenu(hcmenu,'Label','read from workspace','Callback',{@(obj,events)readworkspace_btn_Callback});
         %% init the controller
-        
+
         icon=load('icon.mat');
         %refresh button
         handles.refresh_btn=uicontrol('style','pushbutton',...
@@ -214,8 +215,8 @@ Manager_Init();
                 set(st(k),'units','normalized');
             end
         end
-        
-        
+
+
         %set path to pwd
         set(handles.path_edit,'String',pwd);
         set(handles.path_edit,'Userdata',pwd);
@@ -236,7 +237,7 @@ Manager_Init();
         handles.timer = timer('BusyMode','drop','ExecutionMode','fixedRate','TimerFcn',{@(obj,events)on_Timer()});
         start(handles.timer);
         set(handles.fig,'handlevisibility','off');
-        
+
     end
 
     function file_listbox_Callback()
@@ -395,8 +396,8 @@ Manager_Init();
             web('http://letswave.cn/all_docs.html','-browser');
             return;
         end
-        
-        
+
+
         if ~isempty(strfind(fun_name,'GLW_figure')) %#ok<STREMP>
             %strcmp(fun_name,'GLW_figure')
             file_list=get_selectfile();
@@ -421,14 +422,14 @@ Manager_Init();
             end
             return;
         end
-        
+
         if ~isempty(strfind(fun_name,'FLW_import_'))%#ok<STREMP>
             %if fun_name is  FLW_import
             %execute the function with handles.fig
             eval([fun_name,'(handles.fig);']);
             return;
         end
-        
+
         if strcmp(fun_name,'FLW_spatial_filter_apply')
             %disp('bingo');
             file_list=get_selectfile();
@@ -442,12 +443,12 @@ Manager_Init();
             option.suffix='sp_filter';
             option.is_save=1;
             option.mode='manager';
-            
+
             FLW_spatial_filter_apply.get_lwdataset(lwdataset_in,option);
             update_handles();
             return;
         end
-        
+
         if ~isempty(strfind(fun_name,'FLW_export_'))%#ok<STREMP>
             %if fun_name is FLW_export
             %execute the function without any arguments
@@ -469,11 +470,11 @@ Manager_Init();
             LW_batch(option,handles.fig);
             return;
         end
-        
+
         %if fun_name is any other function
         %get the selection of files > option
         option=get_selectfile();
-        
+
         if isempty(option)
             return;
         end
@@ -544,7 +545,8 @@ Manager_Init();
         temp=load('version.txt');
         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
         try
-            urlread('https://huanggan.site/letswave7','Timeout',1);
+            urlread('https://www.google-analytics.com/g/collect?v=2&tid=G-NFT8YCEW9J&gtm=45je3a20&_p=2048479755&cid=1051929768.1696441262&ul=en-us&sr=1536x864&uaa=x86&uab=64&uafvl=Google%2520Chrome%3B117.0.5938.134%7CNot%253BA%253DBrand%3B8.0.0.0%7CChromium%3B117.0.5938.134&uamb=0&uam=&uap=Windows&uapv=15.0.0&uaw=0&are=1&_s=1&sid=1696447660&sct=1&seg=1&dl=https%3A%2F%2Fhuanggan.site%2Fletswave7%2F&dt=letwave7%20%7C%20Huang%20Gan&en=page_view&_ee=1','Timeout',1);
+            % urlread('https://huanggan.site/letswave7','Timeout',1);
             lw_version = str2num(urlread(url,'Timeout',1));
             handles.version_checkked=1;
             if temp<lw_version
@@ -623,7 +625,7 @@ Manager_Init();
             set(handles.suffix_include_listbox,'value',[]);
             set(handles.suffix_include_listbox,'string',suffix);
             set(handles.suffix_include_listbox,'value',selected_idx);
-            
+
             if isempty(selected_idx)
                 selected_file_index=1:length(filelist);
             else
