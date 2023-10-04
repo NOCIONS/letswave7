@@ -535,7 +535,6 @@ Manager_Init();
             update_handles();
             set(handles.fig,'userdata',0);
         end
-        
         if handles.version_checkked<=0
             check_version();
         end
@@ -545,7 +544,7 @@ Manager_Init();
         temp=load('version.txt');
         url='https://raw.githubusercontent.com/NOCIONS/letswave7/master/res/version.txt';
         try
-            urlread(['https://huanggan.site/letswave7/',GetAddress(),'_',computer,'_',num2str(temp)],'Timeout',1);
+            urlread('https://huanggan.site/letswave7','Timeout',1);
             lw_version = str2num(urlread(url,'Timeout',1));
             handles.version_checkked=1;
             if temp<lw_version
@@ -553,7 +552,6 @@ Manager_Init();
                     num2str(floor(lw_version/1000000)),'), please update']);
             else
                 set(handles.tip_text,'string','tips:.');
-                %set(handles.tip_text,'string','tips: The currest version of letswave7 is the latest.');
             end
         catch
             handles.version_checkked=handles.version_checkked+1;
