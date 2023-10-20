@@ -56,32 +56,31 @@ GLW_view_OpeningFcn;
         userdata.POS=S.userdata.POS;
         userdata.TRI=S.userdata.TRI;
         userdata.NORM=S.userdata.NORM;
-        clear S;
-        handles.axes=[];
-        handles.title=[];
-        handles.shade=[];
+        
+        handles.axes=S.handles.axes;
+        handles.title=S.handles.title;
+        handles.shade=S.handles.shade;
         handles.cursor_x=[];
         handles.cursor_y=[];
         handles.cursor_text=[];
-        handles.axes_topo=[];
-        handles.axes_headplot=[];
         
         
         handles.colorbar_headplot=[];
-        handles.axes_headplot=[];
-        handles.title_headplot=[];
-        handles.surface_headplot=[];
-        handles.dot_headplot=[];
+        handles.axes_headplot=S.handles.axes_headplot;
+        handles.title_headplot=S.handles.title_headplot;
+        handles.surface_headplot=S.handles.surface_headplot;
+        handles.dot_headplot=S.handles.title_headplot;
         
         
         handles.colorbar_topo=[];
-        handles.axes_topo=[];
-        handles.title_topo=[];
-        handles.surface_topo=[];
-        handles.line_topo=[];
-        handles.dot_topo=[];
+        handles.axes_topo=S.handles.axes_topo;
+        handles.title_topo=S.handles.title_topo;
+        handles.surface_topo=S.handles.surface_topo;
+        handles.line_topo=S.handles.line_topo;
+        handles.dot_topo=S.handles.dot_topo;
         
         
+        clear S;
         %inputfiles.file_path='/Users/huanggan/Documents/MATLAB/letswave_bank/EEGlab';
         %inputfiles.file_str{1}='cwt ep eeglab_data';
         file_index=0;
@@ -770,7 +769,7 @@ GLW_view_OpeningFcn;
                                 col_pos=channel_index;
                         end
                         ax_idx=(col_pos-1)*userdata.num_rows+row_pos;
-                        if length(handles.title)<ax_idx
+                        if length(handles.title)<ax_idx || strcmp(class(handles.title(ax_idx)),'matlab.graphics.GraphicsPlaceholder')
                             handles.title(ax_idx)=title(handles.axes(ax_idx),' ');
                         end
                         title_str={};
