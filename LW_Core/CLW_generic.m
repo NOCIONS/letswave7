@@ -90,13 +90,13 @@ classdef CLW_generic<handle
             temp=[temp,');'];
             switch obj.FLW_TYPE
                 case 1 % 1 for the function dealing with single dataset (1in-1out)
-                    str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdata,option);']}];
+                    str=[{temp},{['lwdata = ',class(obj),'.get_lwdata(lwdata,option);']}];
                 case 2% 2 for the function with Nin-1out, like merge
-                    str=[{temp},{['lwdata= ',class(obj),'.get_lwdata(lwdataset,option);']}];
+                    str=[{temp},{['lwdata = ',class(obj),'.get_lwdata(lwdataset,option);']}];
                 case 3% 3 for the function with 1in-Nout, like segmentation_separate
-                    str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdata,option);']}];
+                    str=[{temp},{['lwdataset = ',class(obj),'.get_lwdataset(lwdata,option);']}];
                 case 4% 4 for the function with Nin-Mout, like math_multiple, t-test
-                    str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdataset,option);']}];
+                    str=[{temp},{['lwdataset = ',class(obj),'.get_lwdataset(lwdataset,option);']}];
             end
         end
         
@@ -106,7 +106,7 @@ classdef CLW_generic<handle
             temp=[temp,'''suffix'',''',option.suffix,''','];
             temp=[temp,'''is_save'',',num2str(option.is_save)];
             temp=[temp,');'];
-            str=[{temp},{['lwdataset= ',class(obj),'.get_lwdataset(lwdataset,option);']}];
+            str=[{temp},{['lwdataset = ',class(obj),'.get_lwdataset(lwdataset,option);']}];
         end
         
         function view_Script(obj,varargin)
